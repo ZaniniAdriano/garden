@@ -962,14 +962,14 @@ noArgs:
 	// Precisamos mostrar a janela e não repintar 
 	// a tela toda.
 	
-    APIRegisterWindow (hWindow);
+    //APIRegisterWindow (hWindow);
     //APISetActiveWindow (hWindow);	
     //APISetFocus (hWindow);
 	
 	//#test
 	//vamos mostrar a janela do shell antes de criarmos a janela 
 	//da área de cliente
-	apiShowWindow (hWindow);
+	//apiShowWindow (hWindow);
 	
 	//#test 
 	//Criando um timer.
@@ -1106,7 +1106,26 @@ noArgs:
 	apiShowWindow (hWindow2);
 	*/
 	
+	//definidos em outro lugar
+	//wpWindowLeft = 40;
+	//wpWindowTop = 40;
+	//wsWindowWidth = 600;
+	//wsWindowHeight = 480;
 	
+	//#test - provisorio
+	editboxWindow = (void *) APICreateWindow ( WT_EDITBOX, 1, 1, "editbox-navbar",     
+                                wpWindowLeft +4, wpWindowTop +24, wsWindowWidth -80, 24,    
+                                0, 0, COLOR_WINDOW, COLOR_WINDOW );
+	if ( (void *) editboxWindow == NULL)
+	{	
+		printf("edit box fail");
+		
+		refresh_screen();
+		while(1){}
+		//exit(0);
+	};
+	APIRegisterWindow (editboxWindow);
+	apiShowWindow (editboxWindow);
 	
 	//===========================================================
 
@@ -1172,12 +1191,18 @@ noArgs:
 	enterCriticalSection();
 
     //#BUGBUG
-    //Estamos passando um ponteiro que é uma variável local.	
-
-	Status = (int) shellInit (hWindow); 
+    //Estamos passando um ponteiro que é uma variável local.
 	
+	//#atenção.
+	//mudamos a janela, para o prompt ficar dentro do edibox.
+	//isso pode dar problema.
+
+	//Status = (int) shellInit (hWindow);
+	Status = (int) shellInit (editboxWindow);
+	
+		
 	if ( Status != 0 ){
-		die ("SHELL.BIN: app_main: shellInit fail");
+		die ("spr: app_main: shellInit fail");
 	};
 	exitCriticalSection();     		
 	
@@ -1353,6 +1378,7 @@ end:
  *     Procedimento de janela.
  *     LOCAL
  */
+
 unsigned long 
 shellProcedure( struct window_d *window, 
                 int msg, 

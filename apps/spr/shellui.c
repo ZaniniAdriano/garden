@@ -482,9 +482,10 @@ done:
 // Criando edit box
 // o tipo dois funciona.
 // testando colocar o ponteiro no edit box. setar foco.
+
 void shellCreateEditBox (){
     
-	editboxWindow = (void *) APICreateWindow ( WT_EDITBOX, 1, 1, "shell-editbox1",     
+	editboxWindow = (void *) APICreateWindow ( WT_EDITBOX, 1, 1, "editbox-navbar",     
                                 10, 600-100, 300, 24,    
                                 0, 0, COLOR_WINDOW, COLOR_WINDOW );
 									   
