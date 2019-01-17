@@ -12,7 +12,7 @@ VERSION = 0
 PATCHLEVEL = 0
 SUBLEVEL = 0
 EXTRAVERSION =
-#NAME = init for holambra kernel
+#NAME = init 
 
 #todo:
 #We need to simplify these flags
@@ -28,17 +28,19 @@ CFLAGS = -m32 \
 	-fno-builtin \
 	-fno-pie \
 	-no-pie \
-	-fleading-underscore \
 	-fno-stack-protector \
 	-s
+
+#	-fleading-underscore \
+#	-fno-stack-protector \
+#	-s
 
 
 	##
 	## Objects
 	##
 
-myObjects = head.o \
-main.o \
+myObjects = main.o \
 api.o \
 ctype.o \
 stdio.o \
@@ -53,13 +55,14 @@ unistd.o
 
 .PHONY: all all-c init-link finalize clean
 
-all: head.o main.o all-c init-link finalize clean
+all: main.o all-c init-link finalize clean
 	@echo "Ok?"
 
-head.o:
-	nasm  head.s  -felf -o head.o
+#head.o:
+#	nasm  head.s  -felf -o head.o
 
 main.o:
+	gcc  -c  crt0.c -I ../../../lib/libc01/include/ -I ../../../lib/api01/include/ $(CFLAGS) -o crt0.o
 	gcc  -c  main.c -I ../../../lib/libc01/include/ -I ../../../lib/api01/include/ $(CFLAGS) -o main.o
 
 all-c:
@@ -75,7 +78,7 @@ all-c:
 	cp ../../../lib/libc01/obj/unistd.o .
 
 init-link:
-	ld -m i386pe -T link.ld -o GDEINIT.BIN $(myObjects) -Map APP_map.s
+	ld -m elf_i386 -T link.ld -o GDEINIT.BIN $(myObjects) -Map APP_map.s
 
 finalize:
 	cp GDEINIT.BIN ../../../../bin

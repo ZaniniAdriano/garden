@@ -37,13 +37,7 @@
 // Includes.
 // 
  
-#include "api.h"      //api.
-
-#include <stdio.h>    //libC em user mode.
-#include <stddef.h>   //libC em user mode. 
-#include <string.h>
-#include <ctype.h>
-#include <stdlib.h>
+#include "init.h"  
 
 //
 // Variáveis internas.
@@ -125,22 +119,23 @@ void idleLoop (){
  *     main().
  *
  */ 
-static char * argv[] = { "-init",NULL };
-static char * envp[] = { "ROOT=root:/volume0", NULL };
+//static char * argv[] = { "-init",NULL };
+//static char * envp[] = { "ROOT=root:/volume0", NULL };
 
-void initMain (void){
+int initMain (int argc, char *argv[]){
 	
 	//nothing for now.
 	
-	
-	libcInitRT ();
-    
-	stdioInitialize ();		
+	//isso foi feito no crt0.
+	//libcInitRT ();
+	//stdioInitialize ();		
 	
 	// #debug
 	// Testing output message.
 	printf("initMain: INIT.BIN is alive \n");
     refresh_screen();	
+	
+	return 0;
 };
 
 

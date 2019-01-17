@@ -8,9 +8,6 @@
 #include "compiler.h"
 
 
-//lib C
-//Isso deveria estar em um mesmo lugar para todos os aplicativos.
-//ex: c:\gramado\g02\branch\libc
 #include <types.h>
 #include <stddef.h>
 #include <stdarg.h>   
@@ -23,7 +20,9 @@
 #include "shell.h"
 #include "globals.h"
 #include "builtins.h"
-#include "api.h"
+
+#include <api.h>
+
 #include "desktop.h"
 
 //# bash 1.05 stuff #
