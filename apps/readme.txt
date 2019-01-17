@@ -43,6 +43,8 @@
 
 /scripts
 
+/spr
+    sprinkler web browser
 
 //...
 	
