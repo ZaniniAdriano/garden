@@ -54,9 +54,10 @@ $(OUTPUT): $(OBJECTS)
 	-cp ../../lib/libc01/obj/stdlib.o  build/
 	-cp ../../lib/libc01/obj/stdio.o   build/
 	-cp ../../lib/libc01/obj/string.o  build/
+	-cp ../../lib/libc01/obj/ctype.o   build/
 
 #	$(NOECHO)gcc -O3 -o $@ $(OBJECTS) $(LDFLAGS) 
-	ld -m elf_i386 -T link.ld -o CHASM32.BIN build/stdlib.o build/stdio.o build/string.o $(OBJECTS) -Map app_map.s
+	ld -m elf_i386 -T link.ld -o CHASM32.BIN build/stdlib.o build/stdio.o build/ctype.o build/string.o $(OBJECTS) -Map app_map.s
 
 
 build/%.c.o: %.c

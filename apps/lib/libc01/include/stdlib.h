@@ -118,6 +118,10 @@ int system(const char *command);
 
 
 
+
+int abs( int j);
+
+
 //rt support
 //pegando informações sobre o heap usado pela biblioteca C99 em user mode.
 unsigned long rtGetHeapStart();
