@@ -24,6 +24,7 @@
 #include <ctype.h>
 
 
+
 // Testando define.
 
 #define	SYSTEMCALL_READ_LBA    1

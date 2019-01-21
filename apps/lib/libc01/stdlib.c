@@ -16,13 +16,11 @@
 #include <mm.h>
 #include <heap.h>
 
-#include <stdio.h> //test
+#include <stdio.h> 
 
 #include <stdlib.h>
 #include <string.h>
-
-//Interrupção do sistema
-//#define	SYSTEM  200  
+ 
 
 //Número de serviços.
 #define	SYSTEMCALL_EXIT  70
@@ -712,13 +710,19 @@ void *xmalloc( int size){
     return (void *) value;
 };
 
+
 void stdlib_die (char *str){
 	
 	printf("stdlib_die: %s",str);
 	//@todo
 	fprintf(stderr,"%s\n",str);
-	exit(1);
-};
+	
+	while (1){
+	    asm ("pause");
+	}
+	//exit(1);
+}
+
 
 /*
  *****************
@@ -1195,7 +1199,8 @@ int system ( const char *command ){
     if ( stdlib_strncmp ( (char *) command, "exit", 4 ) == 0 )
 	{
 		//exit(exit_code);
-		exit(0);
+		//exit(0);
+		printf ("#todo: ~exit");
 		goto fail;
     };
 		
