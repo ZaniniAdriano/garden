@@ -20,7 +20,9 @@
 #include <stdio.h>
 #include <types.h> 
 #include <stdarg.h> 
+
 #include <stddef.h>
+//#include <stdlib.h> 
 #include <ctype.h>
 
 
@@ -483,6 +485,18 @@ int puts ( const char *str ){
 	//provisório ...
 	return (int) printf ("%s",str);
 };
+
+
+//#todo
+size_t fread(void *ptr, size_t size, size_t n, FILE *fp)
+{
+    return -1;
+}
+
+size_t fwrite(const void *ptr, size_t size, size_t n, FILE *fp)
+{
+	return -1;
+}
 
 
 /*
@@ -2607,8 +2621,21 @@ void rewind ( FILE * stream ){
 };
 
 
-
-
+//#todo
+int snprintf(char *str,size_t count,const char *fmt,...)
+{
+	size_t ret;
+	va_list ap;
+    
+	va_start(ap, fmt);
+	
+	//#todo 
+	//Isso parece fácil
+	//ret = vsnprintf(str, count, fmt, ap);
+	
+	va_end(ap);
+	return ret;
+}
 
 
 //

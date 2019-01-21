@@ -15,7 +15,8 @@
 #ifndef __STDIO_H__
 #define __STDIO_H__
  
- 
+#include <stddef.h>
+
 typedef char *stdio_va_list; 
 
  
@@ -344,6 +345,9 @@ int putchar(int ch);
 //#define putchar(x)  putc((x), stdout)
 
 
+size_t fread(void *ptr, size_t size, size_t n, FILE *fp);
+size_t fwrite(const void *ptr, size_t size, size_t n, FILE *fp);
+
 /*
  * Direct Input and Output Functions
  */
@@ -379,6 +383,10 @@ void scroll(void);
 //int app_clear(int color);
 
 int drawBar(int color);  //??
+
+
+//#todo
+int snprintf(char *str,size_t count,const char *fmt,...);
 
 
 

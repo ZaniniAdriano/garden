@@ -5,6 +5,17 @@
  *     Operações com strings. Padrão C.
  */
 
+
+long double strtold(const char *nptr, char **endptr);
+
+char *strdup(const char *str);
+
+char *strrchr(const char *p, int ch);
+
+int strcasecmp (const char *s1, const char*s2);
+
+char *strncpy(char *s1, const char *s2, size_t n);
+
 //@todo: Deve ser const char.
 int strcmp(char *s1, char *s2);
 int strncmp(char *s1, char *s2, int len);

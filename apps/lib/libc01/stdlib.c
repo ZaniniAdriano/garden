@@ -794,6 +794,10 @@ void *malloc ( size_t size ){
 };
 
 
+void *realloc(void *ptr, size_t size)
+{
+    return NULL;  //#todo
+}
 
 /*
  * free:

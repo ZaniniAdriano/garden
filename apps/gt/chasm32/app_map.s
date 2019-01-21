@@ -51,7 +51,7 @@ Linker script and memory map
                 0x0000000000401000                __code = .
  *(.head_x86)
  *(.text)
- .text          0x0000000000401000      0xd8d build/stdlib.o
+ .text          0x0000000000401000      0xd97 build/stdlib.o
                 0x0000000000401000                stdlib_system_call
                 0x0000000000401028                rtGetHeapStart
                 0x0000000000401032                rtGetHeapEnd
@@ -69,141 +69,152 @@ Linker script and memory map
                 0x00000000004015a8                xmalloc
                 0x00000000004015da                stdlib_die
                 0x0000000000401610                malloc
-                0x000000000040164c                free
-                0x0000000000401652                calloc
-                0x0000000000401691                system
-                0x0000000000401a55                stdlib_strncmp
-                0x0000000000401ab9                __findenv
-                0x0000000000401b84                getenv
-                0x0000000000401bb1                atoi
-                0x0000000000401c78                reverse
-                0x0000000000401cdf                itoa
- .text          0x0000000000401d8d     0x275a build/stdio.o
-                0x0000000000401db8                stdio_atoi
-                0x0000000000401e7f                stdio_fntos
-                0x0000000000401fa9                fclose
-                0x000000000040200f                fopen
-                0x0000000000402141                scroll
-                0x000000000040220f                puts
-                0x00000000004025eb                printf3
-                0x0000000000402608                printf_atoi
-                0x00000000004026f8                printf_i2hex
-                0x000000000040275a                printf2
-                0x00000000004028df                sprintf
-                0x0000000000402934                putchar
-                0x0000000000402955                outbyte
-                0x0000000000402b13                _outbyte
-                0x0000000000402b42                input
-                0x0000000000402c96                stdio_system_call
-                0x0000000000402cbe                getchar
-                0x0000000000402cd6                stdioInitialize
-                0x0000000000402ec3                fflush
-                0x0000000000402f56                fprintf
-                0x0000000000402fc7                fputs
-                0x0000000000403038                gets
-                0x00000000004030c3                ungetc
-                0x00000000004030fa                ftell
-                0x000000000040311b                fileno
-                0x0000000000403133                fgetc
-                0x00000000004031a1                feof
-                0x00000000004031d6                ferror
-                0x00000000004031f1                fseek
-                0x000000000040325d                fputc
-                0x00000000004032ac                stdioSetCursor
-                0x00000000004032c4                stdioGetCursorX
-                0x00000000004032dc                stdioGetCursorY
-                0x00000000004032f4                scanf
-                0x0000000000403534                kvprintf
-                0x000000000040439e                printf
-                0x00000000004043c8                vfprintf
-                0x000000000040443d                stdout_printf
-                0x0000000000404469                stderr_printf
-                0x0000000000404495                perror
-                0x00000000004044ac                rewind
- .text          0x00000000004044e7      0x48d build/string.o
-                0x00000000004044e7                strcmp
-                0x000000000040454c                strncmp
-                0x00000000004045af                memset
-                0x00000000004045f6                memoryZeroMemory
-                0x000000000040461d                memcpy
-                0x000000000040465a                strcpy
-                0x000000000040468e                strcat
-                0x00000000004046bd                bcopy
-                0x00000000004046e9                bzero
-                0x0000000000404709                strlen
-                0x0000000000404737                strcspn
-                0x00000000004047d6                strspn
-                0x0000000000404875                strtok_r
-                0x000000000040495c                strtok
- .text          0x0000000000404974      0x9aa build/main.c.o
-                0x0000000000404974                read_file
-                0x0000000000404a4a                replace_extension
-                0x0000000000404b28                main
- .text          0x000000000040531e      0x5b9 build/arch.c.o
-                0x0000000000405390                arch_register
-                0x00000000004055dd                arch_select
-                0x000000000040561d                arch_list_all
-                0x000000000040567f                arch_help_all
-                0x00000000004056cf                arch_help
-                0x00000000004056f7                arch_get_defexec
-                0x0000000000405714                arch_option
-                0x0000000000405757                arch_lex
-                0x00000000004057a6                arch_parse
-                0x00000000004057e6                arch_gen
-                0x000000000040582c                arch_ttype
-                0x0000000000405869                arch_tfree
-                0x00000000004058a0                arch_tprint
- .text          0x00000000004058d7      0xf0d build/codegen.c.o
-                0x00000000004058d7                codegen_new
-                0x0000000000405910                codegen_free
-                0x00000000004059df                codegen_write_byte
-                0x0000000000405a82                codegen_write_word
-                0x0000000000405ad3                codegen_write_dword
-                0x0000000000405b4a                codegen_write_qword
-                0x0000000000405bc1                codegen_add_relocation
-                0x0000000000405ccd                codegen_select_section
-                0x0000000000405deb                codegen_get_section_start
-                0x0000000000405e7b                codegen_add_label
-                0x0000000000405f8e                codegen_get_label
-                0x000000000040600e                codegen_have_label
-                0x0000000000406090                codegen_gen
- .text          0x00000000004067e4     0x1173 build/elf32.c.o
- .text          0x0000000000407957      0x3a6 build/exec.c.o
-                0x00000000004079c9                exec_register
-                0x0000000000407b5a                exec_select
-                0x0000000000407b9a                exec_list_all
-                0x0000000000407bfc                exec_help_all
-                0x0000000000407c4c                exec_help
-                0x0000000000407c74                exec_option
-                0x0000000000407cb7                exec_gen
- .text          0x0000000000407cfd     0x10c5 build/lexer.c.o
-                0x0000000000407cfd                token_free_list
-                0x0000000000407d31                token_rewind_list
-                0x0000000000407d54                token_free
-                0x0000000000407db1                token_print
-                0x0000000000407edf                lexer_new
-                0x0000000000407f56                lexer_free
-                0x0000000000408234                lexer_lex
- .text          0x0000000000408dc2      0xc17 build/parser.c.o
-                0x0000000000408dc2                node_free_list
-                0x0000000000408e12                node_rewind_list
-                0x0000000000408e35                node_free
-                0x0000000000408e52                parser_new
-                0x0000000000408e88                parser_free
-                0x0000000000408ed5                parser_check_noval
-                0x0000000000408f14                parser_check_val
-                0x0000000000408f87                parser_accept_noval
-                0x0000000000408fc7                parser_accept_val
-                0x0000000000409010                parser_expect_noval
-                0x00000000004090b4                parser_expect_val
-                0x0000000000409264                parser_parse_identifier
-                0x00000000004092ba                parser_parse_number
-                0x0000000000409376                parser_parse_string
-                0x00000000004093cc                parser_parse_float
-                0x000000000040944a                parser_parse
- .text          0x00000000004099d9     0x38a6 build/x86.c.o
+                0x000000000040164c                realloc
+                0x0000000000401656                free
+                0x000000000040165c                calloc
+                0x000000000040169b                system
+                0x0000000000401a5f                stdlib_strncmp
+                0x0000000000401ac3                __findenv
+                0x0000000000401b8e                getenv
+                0x0000000000401bbb                atoi
+                0x0000000000401c82                reverse
+                0x0000000000401ce9                itoa
+ .text          0x0000000000401d97     0x2782 build/stdio.o
+                0x0000000000401dc2                stdio_atoi
+                0x0000000000401e89                stdio_fntos
+                0x0000000000401fb3                fclose
+                0x0000000000402019                fopen
+                0x000000000040214b                scroll
+                0x0000000000402219                puts
+                0x0000000000402234                fread
+                0x000000000040223e                fwrite
+                0x0000000000402609                printf3
+                0x0000000000402626                printf_atoi
+                0x0000000000402716                printf_i2hex
+                0x0000000000402778                printf2
+                0x00000000004028fd                sprintf
+                0x0000000000402952                putchar
+                0x0000000000402973                outbyte
+                0x0000000000402b31                _outbyte
+                0x0000000000402b60                input
+                0x0000000000402cb4                stdio_system_call
+                0x0000000000402cdc                getchar
+                0x0000000000402cf4                stdioInitialize
+                0x0000000000402ee1                fflush
+                0x0000000000402f74                fprintf
+                0x0000000000402fe5                fputs
+                0x0000000000403056                gets
+                0x00000000004030e1                ungetc
+                0x0000000000403118                ftell
+                0x0000000000403139                fileno
+                0x0000000000403151                fgetc
+                0x00000000004031bf                feof
+                0x00000000004031f4                ferror
+                0x000000000040320f                fseek
+                0x000000000040327b                fputc
+                0x00000000004032ca                stdioSetCursor
+                0x00000000004032e2                stdioGetCursorX
+                0x00000000004032fa                stdioGetCursorY
+                0x0000000000403312                scanf
+                0x0000000000403552                kvprintf
+                0x00000000004043bc                printf
+                0x00000000004043e6                vfprintf
+                0x000000000040445b                stdout_printf
+                0x0000000000404487                stderr_printf
+                0x00000000004044b3                perror
+                0x00000000004044ca                rewind
+                0x0000000000404505                snprintf
+ .text          0x0000000000404519      0x5f3 build/string.o
+                0x0000000000404519                strtold
+                0x0000000000404520                strdup
+                0x0000000000404572                strrchr
+                0x00000000004045ad                strtoimax
+                0x00000000004045b7                strtoumax
+                0x00000000004045c1                strcasecmp
+                0x0000000000404629                strncpy
+                0x000000000040467f                strcmp
+                0x00000000004046e4                strncmp
+                0x0000000000404747                memset
+                0x000000000040478e                memoryZeroMemory
+                0x00000000004047b5                memcpy
+                0x00000000004047f2                strcpy
+                0x0000000000404826                strcat
+                0x0000000000404855                bcopy
+                0x0000000000404881                bzero
+                0x00000000004048a1                strlen
+                0x00000000004048cf                strcspn
+                0x000000000040496e                strspn
+                0x0000000000404a0d                strtok_r
+                0x0000000000404af4                strtok
+ .text          0x0000000000404b0c      0x9aa build/main.c.o
+                0x0000000000404b0c                read_file
+                0x0000000000404be2                replace_extension
+                0x0000000000404cc0                main
+ .text          0x00000000004054b6      0x5b9 build/arch.c.o
+                0x0000000000405528                arch_register
+                0x0000000000405775                arch_select
+                0x00000000004057b5                arch_list_all
+                0x0000000000405817                arch_help_all
+                0x0000000000405867                arch_help
+                0x000000000040588f                arch_get_defexec
+                0x00000000004058ac                arch_option
+                0x00000000004058ef                arch_lex
+                0x000000000040593e                arch_parse
+                0x000000000040597e                arch_gen
+                0x00000000004059c4                arch_ttype
+                0x0000000000405a01                arch_tfree
+                0x0000000000405a38                arch_tprint
+ .text          0x0000000000405a6f      0xf0e build/codegen.c.o
+                0x0000000000405a6f                codegen_new
+                0x0000000000405aa8                codegen_free
+                0x0000000000405b77                codegen_write_byte
+                0x0000000000405c1b                codegen_write_word
+                0x0000000000405c6c                codegen_write_dword
+                0x0000000000405ce3                codegen_write_qword
+                0x0000000000405d5a                codegen_add_relocation
+                0x0000000000405e66                codegen_select_section
+                0x0000000000405f84                codegen_get_section_start
+                0x0000000000406014                codegen_add_label
+                0x0000000000406127                codegen_get_label
+                0x00000000004061a7                codegen_have_label
+                0x0000000000406229                codegen_gen
+ .text          0x000000000040697d     0x1175 build/elf32.c.o
+ .text          0x0000000000407af2      0x3a6 build/exec.c.o
+                0x0000000000407b64                exec_register
+                0x0000000000407cf5                exec_select
+                0x0000000000407d35                exec_list_all
+                0x0000000000407d97                exec_help_all
+                0x0000000000407de7                exec_help
+                0x0000000000407e0f                exec_option
+                0x0000000000407e52                exec_gen
+ .text          0x0000000000407e98     0x10c5 build/lexer.c.o
+                0x0000000000407e98                token_free_list
+                0x0000000000407ecc                token_rewind_list
+                0x0000000000407eef                token_free
+                0x0000000000407f4c                token_print
+                0x000000000040807a                lexer_new
+                0x00000000004080f1                lexer_free
+                0x00000000004083cf                lexer_lex
+ .text          0x0000000000408f5d      0xc11 build/parser.c.o
+                0x0000000000408f5d                node_free_list
+                0x0000000000408fad                node_rewind_list
+                0x0000000000408fd0                node_free
+                0x0000000000408fed                parser_new
+                0x0000000000409023                parser_free
+                0x0000000000409070                parser_check_noval
+                0x00000000004090af                parser_check_val
+                0x0000000000409122                parser_accept_noval
+                0x0000000000409162                parser_accept_val
+                0x00000000004091ab                parser_expect_noval
+                0x000000000040924f                parser_expect_val
+                0x00000000004093ff                parser_parse_identifier
+                0x0000000000409455                parser_parse_number
+                0x0000000000409511                parser_parse_string
+                0x0000000000409567                parser_parse_float
+                0x00000000004095df                parser_parse
+ .text          0x0000000000409b6e     0x38a6 build/x86.c.o
                 0x000000000040e000                . = ALIGN (0x1000)
- *fill*         0x000000000040d27f      0xd81 
+ *fill*         0x000000000040d414      0xbec 
 
 .iplt           0x000000000040e000        0x0
  .iplt          0x000000000040e000        0x0 build/x86.c.o
@@ -224,58 +235,58 @@ Linker script and memory map
  .rodata        0x000000000040ee0c      0x10c build/parser.c.o
  .rodata        0x000000000040ef18     0x14ec build/x86.c.o
 
-.eh_frame       0x0000000000410404     0x1b5c
- .eh_frame      0x0000000000410404      0x35c build/stdlib.o
- .eh_frame      0x0000000000410760      0x658 build/stdio.o
-                                        0x670 (size before relaxing)
- .eh_frame      0x0000000000410db8      0x1c0 build/string.o
-                                        0x1d8 (size before relaxing)
- .eh_frame      0x0000000000410f78       0x7c build/main.c.o
+.eh_frame       0x0000000000410404     0x1cbc
+ .eh_frame      0x0000000000410404      0x37c build/stdlib.o
+ .eh_frame      0x0000000000410780      0x6b8 build/stdio.o
+                                        0x6d0 (size before relaxing)
+ .eh_frame      0x0000000000410e38      0x2a0 build/string.o
+                                        0x2b8 (size before relaxing)
+ .eh_frame      0x00000000004110d8       0x7c build/main.c.o
                                          0x94 (size before relaxing)
- .eh_frame      0x0000000000410ff4      0x1c8 build/arch.c.o
+ .eh_frame      0x0000000000411154      0x1c8 build/arch.c.o
                                         0x1e0 (size before relaxing)
- .eh_frame      0x00000000004111bc      0x1b4 build/codegen.c.o
+ .eh_frame      0x000000000041131c      0x1b4 build/codegen.c.o
                                         0x1cc (size before relaxing)
- .eh_frame      0x0000000000411370      0x250 build/elf32.c.o
+ .eh_frame      0x00000000004114d0      0x250 build/elf32.c.o
                                         0x268 (size before relaxing)
- .eh_frame      0x00000000004115c0      0x108 build/exec.c.o
+ .eh_frame      0x0000000000411720      0x108 build/exec.c.o
                                         0x120 (size before relaxing)
- .eh_frame      0x00000000004116c8      0x204 build/lexer.c.o
+ .eh_frame      0x0000000000411828      0x204 build/lexer.c.o
                                         0x21c (size before relaxing)
- .eh_frame      0x00000000004118cc      0x264 build/parser.c.o
+ .eh_frame      0x0000000000411a2c      0x264 build/parser.c.o
                                         0x27c (size before relaxing)
- .eh_frame      0x0000000000411b30      0x430 build/x86.c.o
+ .eh_frame      0x0000000000411c90      0x430 build/x86.c.o
                                         0x448 (size before relaxing)
 
 .note.gnu.property
-                0x0000000000411f60       0x1c
+                0x00000000004120c0       0x1c
  .note.gnu.property
-                0x0000000000411f60       0x1c build/x86.c.o
+                0x00000000004120c0       0x1c build/x86.c.o
 
-.rel.dyn        0x0000000000411f7c        0x0
- .rel.got       0x0000000000411f7c        0x0 build/x86.c.o
- .rel.iplt      0x0000000000411f7c        0x0 build/x86.c.o
- .rel.text      0x0000000000411f7c        0x0 build/x86.c.o
+.rel.dyn        0x00000000004120dc        0x0
+ .rel.got       0x00000000004120dc        0x0 build/x86.c.o
+ .rel.iplt      0x00000000004120dc        0x0 build/x86.c.o
+ .rel.text      0x00000000004120dc        0x0 build/x86.c.o
 
-.data           0x0000000000411f80     0xc080
-                0x0000000000411f80                data = .
-                0x0000000000411f80                _data = .
-                0x0000000000411f80                __data = .
+.data           0x00000000004120e0     0xbf20
+                0x00000000004120e0                data = .
+                0x00000000004120e0                _data = .
+                0x00000000004120e0                __data = .
  *(.data)
- .data          0x0000000000411f80        0x0 build/stdlib.o
- .data          0x0000000000411f80        0x0 build/stdio.o
- .data          0x0000000000411f80        0x0 build/string.o
- .data          0x0000000000411f80        0x0 build/main.c.o
- .data          0x0000000000411f80        0x0 build/arch.c.o
- .data          0x0000000000411f80        0x0 build/codegen.c.o
- .data          0x0000000000411f80        0x0 build/elf32.c.o
- .data          0x0000000000411f80        0x0 build/exec.c.o
- .data          0x0000000000411f80       0x20 build/lexer.c.o
- .data          0x0000000000411fa0        0x0 build/parser.c.o
- .data          0x0000000000411fa0     0xb6d8 build/x86.c.o
-                0x0000000000412de0                instructions
+ .data          0x00000000004120e0        0x0 build/stdlib.o
+ .data          0x00000000004120e0        0x0 build/stdio.o
+ .data          0x00000000004120e0        0x0 build/string.o
+ .data          0x00000000004120e0        0x0 build/main.c.o
+ .data          0x00000000004120e0        0x0 build/arch.c.o
+ .data          0x00000000004120e0        0x0 build/codegen.c.o
+ .data          0x00000000004120e0        0x0 build/elf32.c.o
+ .data          0x00000000004120e0        0x0 build/exec.c.o
+ .data          0x00000000004120e0       0x20 build/lexer.c.o
+ .data          0x0000000000412100        0x0 build/parser.c.o
+ .data          0x0000000000412100     0xb6d8 build/x86.c.o
+                0x0000000000412f40                instructions
                 0x000000000041e000                . = ALIGN (0x1000)
- *fill*         0x000000000041d678      0x988 
+ *fill*         0x000000000041d7d8      0x828 
 
 .init_array     0x000000000041e000        0x8
  .init_array    0x000000000041e000        0x4 build/elf32.c.o

@@ -14,6 +14,125 @@
  
 #include <stddef.h>
 #include <string.h>
+#include <inttypes.h>
+
+
+//todo
+long double strtold(const char *nptr, char **endptr)
+{
+    return 0;
+}
+
+/*
+ * strdup --
+ *
+ * PUBLIC: #ifndef HAVE_STRDUP
+ * PUBLIC: char *strdup __P((const char *));
+ * PUBLIC: #endif
+ */
+
+char *strdup(const char *str){
+	
+	size_t len;
+	char *copy;
+
+	len = strlen(str) + 1;
+	if (!(copy = (char *) malloc( ( size_t ) len ) ))
+		return (NULL);
+	memcpy(copy, str, len);
+	return (copy);
+}
+
+/*
+ * strrchr --
+ *
+ * PUBLIC: #ifndef HAVE_STRRCHR
+ * PUBLIC: char *strrchr __P((const char *, int));
+ * PUBLIC: #endif
+ */
+char *strrchr(const char *p, int ch)
+{
+	char *save;
+	char c;
+
+	c = ch;
+	for (save = NULL;; ++p) {
+		if (*p == c)
+			save = (char *)p;
+		if (*p == '\0')
+			return (save);
+	}
+	/* NOTREACHED */
+}
+
+
+//definido em inttypes.h
+intmax_t strtoimax (const char* str, char** endptr, int base)
+{
+   return 0;
+}
+
+//definido em inttypes.h
+uintmax_t strtoumax (const char* str, char** endptr, int base)
+{
+   return 0;
+}
+
+
+
+/*
+ * strcasecmp --
+ *	Do strcmp(3) in a case-insensitive manner.
+ *
+ * PUBLIC: #ifndef HAVE_STRCASECMP
+ * PUBLIC: int strcasecmp __P((const char *, const char *));
+ * PUBLIC: #endif
+ */
+
+int strcasecmp (const char *s1, const char*s2){
+	
+	unsigned char s1ch, s2ch;
+
+	for (;;) {
+		s1ch = *s1++;
+		s2ch = *s2++;
+		if (s1ch >= 'A' && s1ch <= 'Z')		/* tolower() */
+			s1ch += 32;
+		if (s2ch >= 'A' && s2ch <= 'Z')		/* tolower() */
+			s2ch += 32;
+		if (s1ch != s2ch)
+			return (s1ch - s2ch);
+		if (s1ch == '\0')
+			return (0);
+	}
+	/* NOTREACHED */
+}
+
+
+/* ANSI sez:
+ *   The `strncpy' function copies not more than `n' characters (characters
+ *   that follow a null character are not copied) from the array pointed to
+ *   by `s2' to the array pointed to by `s1'.  If copying takes place between
+ *   objects that overlap, the behavior is undefined.
+ *   If the array pointed to by `s2' is a string that is shorter than `n'
+ *   characters, null characters are appended to the copy in the array
+ *   pointed to by `s1', until `n' characters in all have been written.
+ *   The `strncpy' function returns the value of `s1'.  [4.11.2.4]
+ */
+char *
+strncpy(char *s1, const char *s2, size_t n)
+{
+    char *s = s1;
+    while (n > 0 && *s2 != '\0') {
+	*s++ = *s2++;
+	--n;
+    }
+    while (n > 0) {
+	*s++ = '\0';
+	--n;
+    }
+    return s1;
+}
 
 
 /*
