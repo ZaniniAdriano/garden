@@ -89,13 +89,19 @@ int exec_select(char *name) {
 	return 0;																							// :(
 }
 
+
 void exec_list_all() {
-	for (exec_list_t *cur = exec_list; cur != NULL; cur = cur->next) {									// Just print all the avaliable executable formats
-		printf("%s%s", cur != exec_list ? ", " : "", cur->exec->name);
+	
+	// Just print all the avaliable executable formats
+	
+	for ( exec_list_t *cur = exec_list; cur != NULL; cur = cur->next )
+	{									
+		printf ( "%s%s", cur != exec_list ? ", " : "", cur->exec->name);
 	}
 	
 	printf("\n");
 }
+
 
 void exec_help_all() {
 	for (exec_list_t *cur = exec_list; cur != NULL; cur = cur->next) {									// Just print the help for all the avaliable executable formats

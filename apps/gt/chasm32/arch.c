@@ -135,15 +135,31 @@ char *arch_get_defexec() {
 	return NULL;
 }
 
-int arch_option(int argc, char **argv, int i) {
-	if (arch_current != NULL && arch_current->option != NULL && argv != NULL) {							// Check if the arguments are valid
-		return arch_current->option(argc, argv, i);														// And redirect
+
+int arch_option ( int argc, char **argv, int i ){
+	
+	
+	printf ("arch_option: \n");
+	
+	// Check if the arguments are valid
+	
+	if ( arch_current != NULL &&               //pointer 
+		 arch_current->option != NULL &&       //function
+		 argv != NULL )                        //args
+	{
+		// And redirect
+		printf ("arch_option: >>option\n");
+		return arch_current->option( argc, argv, i );														
 	}
 	
+	
+	printf ("arch_option: nothing\n");
 	return 0;
 }
 
-token_t *arch_lex(lexer_t *lexer, token_t *list, token_t *cur) {
+
+token_t *arch_lex (lexer_t *lexer, token_t *list, token_t *cur)
+{
 	if (arch_current != NULL && arch_current->lex != NULL && lexer != NULL && list != NULL &&
 	    cur != NULL) {																					// Check if the arguments are valid
 		return arch_current->lex(lexer, list, cur);														// And redirect
@@ -151,6 +167,7 @@ token_t *arch_lex(lexer_t *lexer, token_t *list, token_t *cur) {
 	
 	return 0;
 }
+
 
 node_t *arch_parse(parser_t *parser, node_t *cur) {
 	if (arch_current != NULL && arch_current->parse != NULL && parser != NULL) {						// Check if the arguments are valid

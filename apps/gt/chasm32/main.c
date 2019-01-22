@@ -260,6 +260,7 @@ int chasm32_main ( int argc, char **argv ){
 
 	// Check if we have any arguments
 	// We don't have any, just print the usage
+	
 	if (argc < 2)
 	{																						
 		printf("Usage: %s [options] file\n", argv[0]);													
@@ -282,10 +283,24 @@ int chasm32_main ( int argc, char **argv ){
 			printf("    -o or --output        Set the output filename\n");
 			printf("    -f or --format        Set the output executable format\n");
 			printf("    -a or --arch          Set the output processor architecture\n");
-			printf("Supported executable formats: "); exec_list_all();
-			printf("Supported processor architectures: "); arch_list_all();
-			exec_help_all();
-			arch_help_all();
+			
+			printf("#todo\n");
+			
+		    //#bugbug
+		    //Isso pode acessar estruturas que ainda não foram inicializadas				
+			
+			//printf("Supported executable formats: "); 
+			//#todo
+			//exec_list_all();
+			
+			//printf("Supported processor architectures: "); 
+			//#todo
+			//arch_list_all();
+			
+			//#todo
+			//exec_help_all();
+			//arch_help_all();
+			
 			return 0;
 			
 		// Version	
@@ -305,6 +320,8 @@ int chasm32_main ( int argc, char **argv ){
 				output = argv[++i];
 			}
 			
+			printf("#debug: Set the output OK");
+			while(1){}
 			
 		// Set output executable format	
 		} else if ((!strcmp(argv[i], "-f")) || (!strcmp(argv[i], "--format"))) {						
@@ -316,6 +333,9 @@ int chasm32_main ( int argc, char **argv ){
 				exec = argv[++i];
 			}
 			
+			printf("#debug: Set output executable format OK");
+			while(1){}			
+			
 		// Set output processor architecture	
 		} else if ((!strcmp(argv[i], "-a")) || (!strcmp(argv[i], "--arch"))) {							
 			
@@ -325,6 +345,9 @@ int chasm32_main ( int argc, char **argv ){
 			} else {
 				arch = argv[++i];
 			}
+			
+		//#bugbug
+		//Isso pode acessar estruturas que ainda não foram inicializadas	
 			
 		// Architecture-specific option	
 		} else if ((temp = arch_option(argc, argv, i)) != 0) {											
@@ -350,90 +373,156 @@ int chasm32_main ( int argc, char **argv ){
 	
 	
 	//#debug
+	//printf ("#breakpoint\n");
+	//while (1){
+	//    asm ("pause");
+	//}		
+	
+	// Try to select the output processor architecture
+	if (!arch_select(arch == NULL ? "x86" : arch)){	
+		
+		// Failed...
+		printf("Error: invalid arch '%s'\n", arch == NULL ? "x86" : arch);								
+		return 1;
+		
+	// Try to select the output executable format	
+	} else if (!exec_select(exec == NULL ? arch_get_defexec() : exec)){
+		
+		// Failed...
+		printf("Error: invalid executable format '%s'\n", exec == NULL ? arch_get_defexec() : exec);	
+		return 1;
+		
+	} else if (input == NULL){
+		
+		// No...
+		// We have any input file?
+		printf("Error: expected input file\n");															
+		return 1;
+		
+	// Set the output name?	
+	} else if (output == NULL){
+		
+		// Yeah
+		output = replace_extension(input, ".o");														
+	}
+	
+	
+	//===================
+	
+	
+	//#debug
 	printf ("#breakpoint\n");
 	while (1){
 	    asm ("pause");
 	}		
 	
 	
-	if (!arch_select(arch == NULL ? "x86" : arch)) {													// Try to select the output processor architecture
-		printf("Error: invalid arch '%s'\n", arch == NULL ? "x86" : arch);								// Failed...
-		return 1;
-	} else if (!exec_select(exec == NULL ? arch_get_defexec() : exec)) {								// Try to select the output executable format
-		printf("Error: invalid executable format '%s'\n", exec == NULL ? arch_get_defexec() : exec);	// Failed...
-		return 1;
-	} else if (input == NULL) {																			// We have any input file?
-		printf("Error: expected input file\n");															// No...
-		return 1;
-	} else if (output == NULL) {																		// Set the output name?
-		output = replace_extension(input, ".o");														// Yeah
-	}
+	// #importante:
+	// Essa parte começa usar funções da libc que precisam ser implmetadas.
 	
-	char *code = read_file(input);																		// Try to read the source code
+	// Try to read the source code
 	
-	if (code == NULL) {
-		printf("Error: couldn't open '%s'\n", input);													// Failed to read it...
+	char *code = read_file(input);																		
+	
+	// Failed to read it...
+	if (code == NULL) 
+	{
+		printf("Error: couldn't open '%s'\n", input);													
 		return 1;
 	}
 	
-	lexer_t *lexer = lexer_new(input, code);															// Create the lexer
+	// Create the lexer
+	lexer_t *lexer = lexer_new ( input, code );															
 	
-	if (lexer == NULL) {
-		printf("compilation failed\n");																	// Failed...
+	// Failed...
+	if (lexer == NULL)
+	{
+		printf("compilation failed\n");																	
 		free(code);
 		return 1;
 	}
 	
-	token_t *toks = lexer_lex(lexer);																	// Lex!
+	//
+	// Lex!
+	//
 	
-	if (toks == NULL) {
-		printf("compilation failed\n");																	// Failed to lex...
+	token_t *toks = lexer_lex(lexer);																	
+	
+	// Failed to lex...
+	if (toks == NULL) 
+	{
+		printf("compilation failed\n");																	
 		lexer_free(lexer);
 		return 1;
 	}
 	
-	parser_t *parser = parser_new(toks);																// Create the parser
+	// Create the parser
+	parser_t *parser = parser_new(toks);																
 	
-	if (parser == NULL) {
-		printf("compilation failed\n");																	// Failed...
+	// Failed...
+	if (parser == NULL)
+	{
+		printf("compilation failed\n");																	
 		parser_free(parser);
 		lexer_free(lexer);
 		return 1;
 	}
 	
-	node_t *ast = parser_parse(parser);																	// Parse!
+	//
+	// Parse!
+	//
 	
-	if (ast == NULL) {
-		printf("compilation failed\n");																	// Failed to parse...
+	node_t *ast = parser_parse(parser);																	
+	
+	// Failed to parse...
+	if (ast == NULL) 
+	{
+		printf("compilation failed\n");																	
 		parser_free(parser);
 		lexer_free(lexer);
 		return 1;
 	}
 	
-	codegen_t *codegen = codegen_new(ast);																// Create the code generator
+	// Create the code generator
+	codegen_t *codegen = codegen_new(ast);																
 	
-	if (codegen == NULL) {
-		printf("compilation failed\n");																	// Failed...
+	// Failed...
+	if (codegen == NULL) 
+	{
+		printf("compilation failed\n");																	
 		parser_free(parser);
 		lexer_free(lexer);
 		return 1;
-	} else if (!codegen_gen(codegen)) {																	// Generate!
-		printf("compilation failed\n");																	// Failed to generate...
+		
+		
+	// Generate!
+	} else if (!codegen_gen(codegen)) {																	
+		
+		// Failed to generate...
+		printf("compilation failed\n");																	
 		codegen_free(codegen);
 		parser_free(parser);
 		lexer_free(lexer);
 		return 1;
 	}
 	
-	FILE *out = fopen(output, "wb");																	// Try to open the output file
+	// Try to open the output file
 	
+	FILE *out = fopen(output, "wb");																
+	
+	// Failed...
 	if (out == NULL) {
-		codegen_free(codegen);																			// Failed...
+		
+		codegen_free(codegen);																			
 		parser_free(parser);
 		lexer_free(lexer);
 		return 1;
-	} else if (!exec_gen(codegen, out)) {																// Try to write the data to the output file!
-		printf("compilation failed\n");																	// Failed...
+	
+	// Try to write the data to the output file!	
+	} else if (!exec_gen(codegen, out)) {
+		
+		// Failed...
+		printf("compilation failed\n");																	
 		fclose(out);
 		codegen_free(codegen);
 		parser_free(parser);
@@ -441,10 +530,21 @@ int chasm32_main ( int argc, char **argv ){
 		return 1;
 	}
 	
-	fclose(out);																						// Close the output file
-	codegen_free(codegen);																				// Free the codegen struct
-	parser_free(parser);																				// Free the parser struct
-	lexer_free(lexer);																					// Free the lexer struct
+	//
+	// Cleaning
+	//
+	
+	// Close the output file
+	fclose(out);
+	
+	// Free the codegen struct
+	codegen_free(codegen);	
+	
+	// Free the parser struct
+	parser_free(parser);
+	
+	// Free the lexer struct
+	lexer_free(lexer);																					
 	
 	return 0;
 }
