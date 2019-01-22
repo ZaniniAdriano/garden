@@ -17,6 +17,10 @@
 //protótipo de função interna.
 int chasm32_main ( int argc, char **argv );
 
+
+
+
+
 void *read_file(char *fname){
 	
 	// Try to open the file
@@ -130,7 +134,7 @@ int chasm32_crt1 (){
 	
 	
 //#ifdef GRAMC_VERBOSE
-	printf("\n");
+	printf("\n\n");
 	printf("chasm32_crt1: Initializing chasm32 ...\n");
 	//printf("\n");
 	printf ("# cmdline={%s} #\n", shared_memory );
@@ -170,6 +174,7 @@ int chasm32_crt1 (){
 	
 	// #debug 
 	// Mostra argumentos.
+	/*
 #ifdef GRAMC_VERBOSE	
 	// Mostra a quantidade de argumentos. 	
 	printf("\n");
@@ -189,6 +194,7 @@ int chasm32_crt1 (){
 	    printf ("# argv{%d}={%s} #\n", index, tokenList[index] );		
 	};
 #endif
+	*/
  
 	//
 	// ## Main ##	
@@ -260,18 +266,15 @@ int chasm32_main ( int argc, char **argv ){
 		return 1;
 	}
 	
-	//#debug
-	printf ("#breakpoint\n");
-	while (1){
-	    asm ("pause");
-	}	
 	
 	// Let's parse the arguments!
 	for ( int i=1; i < argc; i++ ) 
 	{																	
 		int temp = 0;
 		
-		if ((!strcmp(argv[i], "-h")) || (!strcmp(argv[i], "--help"))) {									// Help
+		// Help
+		if ( ( !strcmp(argv[i], "-h")) || (!strcmp(argv[i], "--help")) ){
+			
 			printf("Usage: %s [options] file...\n", argv[0]);
 			printf("Options:\n");
 			printf("    -h or --help          Show this help dialog\n");
@@ -284,40 +287,74 @@ int chasm32_main ( int argc, char **argv ){
 			exec_help_all();
 			arch_help_all();
 			return 0;
-		} else if ((!strcmp(argv[i], "-v")) || (!strcmp(argv[i], "--version"))) {						// Version
+			
+		// Version	
+		} else if ((!strcmp(argv[i], "-v")) || (!strcmp(argv[i], "--version"))) {
+			
 			printf("CHicago Operating System Project\n");
 			printf("CHicago Intermediate Language Compiler Version 1.0\n");
 			return 0;
-		} else if ((!strcmp(argv[i], "-o")) || (!strcmp(argv[i], "--output"))) {						// Set the output
+			
+		// Set the output	
+		} else if ((!strcmp(argv[i], "-o")) || (!strcmp(argv[i], "--output"))) {						
+			
 			if ((i + 1) >= argc) {
 				printf("Expected filename after '%s'\n", argv[i]);
 				return 1;
 			} else {
 				output = argv[++i];
 			}
-		} else if ((!strcmp(argv[i], "-f")) || (!strcmp(argv[i], "--format"))) {						// Set output executable format
+			
+			
+		// Set output executable format	
+		} else if ((!strcmp(argv[i], "-f")) || (!strcmp(argv[i], "--format"))) {						
+			
 			if ((i + 1) >= argc) {
 				printf("Expected format name after '%s'\n", argv[i]);
 				return 1;
 			} else {
 				exec = argv[++i];
 			}
-		} else if ((!strcmp(argv[i], "-a")) || (!strcmp(argv[i], "--arch"))) {							// Set output processor architecture
+			
+		// Set output processor architecture	
+		} else if ((!strcmp(argv[i], "-a")) || (!strcmp(argv[i], "--arch"))) {							
+			
 			if ((i + 1) >= argc) {
 				printf("Expected filename after '%s'\n", argv[i]);
 				return 1;
 			} else {
 				arch = argv[++i];
 			}
-		} else if ((temp = arch_option(argc, argv, i)) != 0) {											// Architecture-specific option
+			
+		// Architecture-specific option	
+		} else if ((temp = arch_option(argc, argv, i)) != 0) {											
+			
 			i += temp;
-		} else if (input == NULL) {																		// It's the input?
-			input = argv[i];																			// Yes!
+			
+		// It's the input?	
+		} else if (input == NULL) {																		
+			
+			// Yes!
+			input = argv[i];
+			
 		} else {
-			printf("Error: unrecognized option: '%s'\n", argv[i]);										// No, so it's a unrecognized option
+			
+			// No, so it's a unrecognized option
+			printf("Error: unrecognized option: '%s'\n", argv[i]);										
 			return 1;
 		}
 	}
+	
+	
+	//===================
+	
+	
+	//#debug
+	printf ("#breakpoint\n");
+	while (1){
+	    asm ("pause");
+	}		
+	
 	
 	if (!arch_select(arch == NULL ? "x86" : arch)) {													// Try to select the output processor architecture
 		printf("Error: invalid arch '%s'\n", arch == NULL ? "x86" : arch);								// Failed...
