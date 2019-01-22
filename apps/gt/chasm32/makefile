@@ -27,8 +27,8 @@ VERBOSE ?= false
 DEBUG ?= false
 
 	
-OBJECTS := main.c.o	
-OBJECTS += arch.c.o codegen.c.o elf32.c.o exec.c.o
+OBJECTS := crt0.c.o	
+OBJECTS += main.c.o arch.c.o codegen.c.o elf32.c.o exec.c.o
 OBJECTS += lexer.c.o parser.c.o x86.c.o
 
 OBJECTS := $(addprefix build/,$(OBJECTS))
@@ -57,8 +57,10 @@ $(OUTPUT): $(OBJECTS)
 	-cp ../../lib/libc01/obj/ctype.o   build/
 
 #	$(NOECHO)gcc -O3 -o $@ $(OBJECTS) $(LDFLAGS) 
-	ld -m elf_i386 -T link.ld -o CHASM32.BIN build/stdlib.o build/stdio.o build/ctype.o build/string.o $(OBJECTS) -Map app_map.s
-
+	ld -m elf_i386 -T link.ld -o CHASM32.BIN $(OBJECTS) build/stdlib.o build/stdio.o build/ctype.o build/string.o  -Map app_map.s
+	
+	-cp CHASM32.BIN  ../../../bin
+	-rm CHASM32.BIN 
 
 build/%.c.o: %.c
 	$(NOECHO)echo Compiling $<

@@ -232,6 +232,7 @@ int gramc_main2 ( int argc, char *argv[] ){
 	printf("gramc_main2: Initializing ..\n");
 #endif 
 
+	//todo: tem que inicializar isso antes.
     libcInitRT();
     stdioInitialize();
 	

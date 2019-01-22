@@ -11,34 +11,56 @@
 #include <stdlib.h>
 #include <string.h>
 
-void *read_file(char *fname) {
-	FILE *file = fopen(fname, "rb");																	// Try to open the file
+#include "r/chasm32.h"
+
+
+//protótipo de função interna.
+int chasm32_main ( int argc, char **argv );
+
+void *read_file(char *fname){
 	
-	if (file == NULL) {
-		return NULL;																					// Failed...
+	// Try to open the file
+	FILE *file = fopen (fname, "rb");																	
+	
+	if (file == NULL) 
+	{
+		return NULL;																					
 	}
 	
-	fseek(file, 0, SEEK_END);																			// Go to the end of the file (to get the length)
 	
-	long length = ftell(file);																			// Get the current position!
-	void *buf = malloc(length);																			// Try to alloc our buffer
 	
-	if (buf == NULL) {
+	//#todo
+	// Go to the end of the file (to get the length)
+	fseek (file, 0, SEEK_END);																			
+	
+	// Get the current position!
+	long length = ftell (file);
+	
+	// Try to alloc our buffer
+	void *buf = malloc (length);																			
+	
+	if (buf == NULL) 
+	{
 		fclose(file);
 		return NULL;
 	}
 	
-	rewind(file);																						// Rewind it back to the beginning
+	// Rewind it back to the beginning
+	rewind(file);																						
 	
-	if (!fread(buf, length, 1, file)) {																	// Try to read it!
-		free(buf);																						// Failed...
+	// Try to read it!
+	if (!fread(buf, length, 1, file)) 
+	{																	
+		free(buf);																						
 		fclose(file);
 		return NULL;
 	}
 	
-	fclose(file);																						// Close the file
+	// Close the file
+	fclose(file);																						
 	
-	return buf;																							// Return the buffer!
+	// Return the buffer!
+	return buf;																							
 }
 
 char *replace_extension(char *fname, char *newext) {
@@ -65,18 +87,188 @@ char *replace_extension(char *fname, char *newext) {
 	return p;
 }
 
-int main(int argc, char **argv) {
+
+
+
+
+/*
+ ************************************************************
+ * mainGetMessage:
+ *     Função principaL chamada pelo crt0.asm.
+ *     Testando o recebimento de mensagens enviadas pelo shell.
+ *
+ * #importante:
+ *	Recebendo mensagens via memória compartilhada.
+ *	Obs: Esse não é o melhor endereço para se usar,
+ *	mas isso é um teste por enquanto.
+ * Origem: Provavelmente está dentro do backbuffer na parte não visível.	 
+ *
+ */
+
+#define LSH_TOK_DELIM " \t\r\n\a" 
+#define SPACE " "
+#define TOKENLIST_MAX_DEFAULT 80
+
+
+int chasm32_crt1 (){
+	
+	//Lexemes suport.
+	char *tokenList[TOKENLIST_MAX_DEFAULT];
+	char *token;
+	int token_count;
+	int index;
+    int Ret;	
+	
+	// #importante
+	// Linha de comandos passada pelo shell.
+	char *shared_memory = (char *) (0xC0800000 -0x100);
+	
+	
+	//#testando inicializar.
+    libcInitRT();
+    stdioInitialize();	
+	
+	
+//#ifdef GRAMC_VERBOSE
+	printf("\n");
+	printf("chasm32_crt1: Initializing chasm32 ...\n");
+	//printf("\n");
+	printf ("# cmdline={%s} #\n", shared_memory );
+//#endif
+	
+    
+	// Criando o ambiente.
+	// Transferindo os ponteiros do vetor para o ambiente.
+
+	tokenList[0] = strtok ( &shared_memory[0], LSH_TOK_DELIM);
+	
+ 	// Salva a primeira palavra digitada.
+	token = (char *) tokenList[0];
+ 
+	index = 0;                                  
+    while ( token != NULL )
+	{
+        // Coloca na lista.
+        // Salva a primeira palavra digitada.
+		tokenList[index] = token;
+
+		//#debug
+        //printf("shellCompare: %s \n", tokenList[i] );
+		
+		token = strtok( NULL, LSH_TOK_DELIM );
+		
+		// Incrementa o índice da lista
+        index++;
+		
+		// Salvando a contagem.
+		token_count = index;
+    }; 
+
+	//Finalizando a lista.
+    tokenList[index] = NULL;	
+	
+	
+	// #debug 
+	// Mostra argumentos.
+#ifdef GRAMC_VERBOSE	
+	// Mostra a quantidade de argumentos. 	
+	printf("\n");
+	printf("token_count={%d}\n", token_count );
+	
+	//Mostra os primeiros argumentos.
+	for ( index=0; index < token_count; index++ )
+	{
+		token = (char *) tokenList[index];
+	    if( token == NULL )
+		{
+			printf ("chasm32_crt1: for fail!\n");
+			while(1){}
+			//exit (1);
+			//goto hang;
+		};
+	    printf ("# argv{%d}={%s} #\n", index, tokenList[index] );		
+	};
+#endif
+ 
+	//
+	// ## Main ##	
+    //
+	
+	Ret = (int) chasm32_main ( token_count, tokenList );	
+	
+	//#bugbug
+	//precisamos trocar o cr0, ele não tem tratamento algum 
+	//de retorno e exit.
+	//então vamos sair aqui mesmo.
+	
+	switch (Ret)
+	{
+		case 0:
+		    printf("chasm32_crt1: exit(0)\n");
+			//exit(0);
+			while(1){}
+		    break;
+			
+		case 1:
+            printf("chasm32_crt1: exit(1)\n");
+			//exit(1);
+			while(1){}
+		    break;
+			
+		default:
+		    printf("chasm32_crt1: default exit(%d)\n", Ret );
+            //exit(Ret);
+			while(1){}
+		    break;
+	};	
+	
+	//
+	// End
+	//
+	
+	printf("chasm32_crt1: unexpected exit code %d\n", Ret );
+	//exit(1);
+	while(1){}
+	
+	return 0;
+}
+
+
+/*
+ *************************************************************
+ * main:
+ *     chasm32_main
+ *     Main function for chasm32. 
+ */
+
+int chasm32_main ( int argc, char **argv ){
+	
 	char *arch = NULL;
 	char *exec = NULL;
 	char *input = NULL;
 	char *output = NULL;
 	
-	if (argc < 2) {																						// Check if we have any arguments
-		printf("Usage: %s [options] file\n", argv[0]);													// We don't have any, just print the usage
+	
+	printf ("chasm32_main: Initializing ...\n");
+	
+
+	// Check if we have any arguments
+	// We don't have any, just print the usage
+	if (argc < 2)
+	{																						
+		printf("Usage: %s [options] file\n", argv[0]);													
 		return 1;
 	}
 	
-	for (int i = 1; i < argc; i++) {																	// Let's parse the arguments!
+	//#debug
+	printf ("#breakpoint\n");
+	while (1){
+	    asm ("pause");
+	}	
+	
+	// Let's parse the arguments!
+	for ( int i=1; i < argc; i++ ) 
+	{																	
 		int temp = 0;
 		
 		if ((!strcmp(argv[i], "-h")) || (!strcmp(argv[i], "--help"))) {									// Help
