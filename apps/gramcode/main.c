@@ -696,7 +696,9 @@ teditorProcedure( struct window_d *window,
 					//o cursor do ldisc no kernel precisa ser atualizado tambem.
 					//textCurrentCol--;
 					//apiSetCursor (textCurrentCol,textCurrentRow);
-					//teditorInsertNextChar ( (char) ' ' ); 					
+					//teditorInsertNextChar ( (char) ' ' ); 	
+					
+					MessageBox ( 3, "String1","String2" );
 					
                     break;					
 				
