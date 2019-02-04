@@ -201,11 +201,7 @@ int gramcode_main (){
 
 
 /*
- * main2:
- *     O editor de textos.
- *     Initializes crt.
- *     Initializes stdio.
- */
+ * main2: */
  
 int main2 ( int argc, char *argv[] ){
 	
@@ -250,15 +246,6 @@ int main2 ( int argc, char *argv[] ){
 	//printf("argvString={%s}\n" , &buf[0] );
 	
 	//printf("argv={%s}\n", &argv[2] );
-	
-	
-    //stdlib
-	//inicializando o suporte a alocação dinâmica de memória.
-	libcInitRT();
-
-	//stdio
-	//inicializando o suporte ao fluxo padrão.
-    stdioInitialize();	
 	
 	
 	//#importante

@@ -103,11 +103,11 @@ Linker script and memory map
                 0x0000000000401000                __code = .
  *(.head_x86)
  *(.text)
- .text          0x0000000000401000       0x3d crt0.o
+ .text          0x0000000000401000       0x47 crt0.o
                 0x0000000000401000                crt0
- .text          0x000000000040103d      0x983 main.o
-                0x000000000040103d                gramcode_main
-                0x000000000040115a                main2
+ .text          0x0000000000401047      0x979 main.o
+                0x0000000000401047                gramcode_main
+                0x0000000000401164                main2
                 0x000000000040136f                editorClearScreen
                 0x00000000004013e8                editor_save_file
                 0x0000000000401513                teditorProcedure

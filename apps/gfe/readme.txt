@@ -10,16 +10,16 @@ O envio da mensagem funcionou.
 crt0.asm contém o entry point, chamando main em seguida.
 
 
-entry point em crt0.asm
-__crt0Main:
+entry point em  
+crt0 ()
   
 
 
-//função principal em main.c
-mainGetMessage()
+função principal em main.c
+gfeMain ();
 
 
 flags na linha de comando poderão alterar o funcionamento desse aplicativo,
 para que ele sirva de suporte ao desenvovledor.
 
-ex: tgfe.bin -list-files
+ex: gfe.bin -ls

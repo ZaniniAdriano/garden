@@ -48,20 +48,22 @@ void crt0 (){
 
     // Inicializando o suporte a alocação dinâmica de memória.
 	// Inicializando o suporte ao fluxo padrão.
-    // Call main().	
+ 
 	
-	//libcInitRT ();
-	//stdioInitialize ();	
+    //stdlib
+	//inicializando o suporte a alocação dinâmica de memória.
+	libcInitRT();
+
+	//stdio
+	//inicializando o suporte ao fluxo padrão.
+    stdioInitialize();	
 
 
 	Response = (int) gramcode_main (); 
-								
-									
-	//
+																	
 	// Chama kill ou exit de acordo com o problema ocorrido em main.
 	// O erro pode vir no retorno ou implementa-se uma forma de pegar a execessão 
 	// ocorrida durante a execussão de main.
-	//
 	
 	switch (Response)
 	{
