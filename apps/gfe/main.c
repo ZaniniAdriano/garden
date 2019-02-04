@@ -4,18 +4,9 @@
 // Gramado 0.3.
 //
 
-#include <types.h>
 
-#include "heap.h"
-#include "api.h"
 
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-
-#include "status.h"
-#include "addrbar.h"
+#include "gfe.h"
 
 
 //#define TEDITOR_VERBOSE 1
@@ -45,71 +36,156 @@ int tgfeProcedure ( struct window_d *window,
 					unsigned long long1, 
 					unsigned long long2 );
 
+int gfeMain2 ( int argc, char **argv );
+
+ 
+
 /*
  ************************************************************
- * mainGetMessage:
+ * gramcode_main:
+ *
  *     Função principla chamada pelo crt0.asm.
  *     Testando o recebimento de mensagens enviadas pelo shell.
- *
  */
-int mainGetMessage (){
+ 
+#define LSH_TOK_DELIM " \t\r\n\a" 
+#define SPACE " "
+#define TOKENLIST_MAX_DEFAULT 80
+ 
+int gfeMain (){	
 	
-	//char buff[512];
-
-	// #importante:
-	// Recebendo mensagens via memória compartilhada.
-	// Obs: Esse não é o melhor endereço para se usar,
-	// mas isso é um teste por enquanto.
+	char *tokenList[TOKENLIST_MAX_DEFAULT];
+	char *token;
+	int token_count;
+	int index;	
 	
-	// Origem.
-    // Provavelmente está dentro do backbuffer na parte não visível.	 
-	unsigned char* shared_memory = (unsigned char*) (0xC0800000 -0x100);	
+	int retval;
+	
+	// #importante
+	// Linha de comandos passada pelo shell.
+	char *shared_memory = (char *) (0xC0800000 -0x100);	
+	
 	
 #ifdef TEDITOR_VERBOSE	
-	printf("\n");
-	printf("mainGetMessage:\n");
-	printf("Initializing teditor.bin ...\n\n");
-#endif	
 	
-#ifdef TEDITOR_VERBOSE		
 	printf("\n");
-	printf(".\n");
+	printf("gfeMain:\n");
+	printf("Initializing ...\n\n");	
+	//printf("\n");
+	//printf(".\n");
 	printf("..\n");
 	printf("# MESSAGE={%s} #\n", shared_memory );
 	printf("..\n");
-	printf(".\n");
-	printf("\n");
+	//printf(".\n");
+	//printf("\n");
+	
+	//#debug
+	//while(1){
+	//	asm ("pause");
+	//}
+	
 #endif
+	
+
+    // Criando o ambiente.
+	// Transferindo os ponteiros do vetor para o ambiente.
+
+	tokenList[0] = strtok ( &shared_memory[0], LSH_TOK_DELIM );
+	
+ 	// Salva a primeira palavra digitada.
+	token = (char *) tokenList[0];
+ 
+	index = 0;                                  
+    while ( token != NULL )
+	{
+        // Coloca na lista.
+        // Salva a primeira palavra digitada.
+		tokenList[index] = token;
+
+		//#debug
+        //printf("shellCompare: %s \n", tokenList[i] );
+		
+		token = strtok ( NULL, LSH_TOK_DELIM );
+		
+		// Incrementa o índice da lista
+        index++;
+		
+		// Salvando a contagem.
+		token_count = index;
+    }; 
+
+	//Finalizando a lista.
+    tokenList[index] = NULL;	
+	
+	
+	// #debug 
+	// Mostra argumentos.
+#ifdef TEDITOR_VERBOSE	
+	// Mostra a quantidade de argumentos. 	
+	printf("\n");
+	printf("token_count={%d}\n", token_count );
+	
+	//Mostra os primeiros argumentos.
+	for ( index=0; index < token_count; index++ )
+	{
+		token = (char *) tokenList[index];
+	    if ( token == NULL )
+		{
+			printf("gramcode_main: for fail!\n")
+			goto hang;
+		}
+	    printf("# argv{%d}={%s} #\n", index, tokenList[index] );		
+	};
+#endif	
+	
+	
+
 	
 #ifdef TEDITOR_VERBOSE		
     //Inicializando o editor propriamente dito.	
-	printf("Calling main() ... \n"); 
+	printf("Calling main2 ... \n"); 
 #endif	
+
+	retval = (int) gfeMain2 ( token_count, tokenList );
 	
-	//mainTextEditor( 1, (char*)NULL );
 	
-    int ret_val;
-	ret_val = mainTextEditor( 1, (char *) shared_memory );
+	switch (retval)
+	{
+		case 0:
+		    printf("gfeMain: main2 returned 0.\n");
+			exit (0);
+			break;
+			
+		case 1:
+		    printf("gfeMain: main2 returned 1.\n");
+		    exit (1);
+			break;
+			
+		//...
+		
+	    default:
+		    printf("gfeMain: main2 returned default\n");
+            exit (-1);
+			break; 		
+	};
+		
+	//
+    // Não retornaremos para crt0.asm
+    //
 	
-	printf("mainGetMessage: mainTextEditor returned %d.\n", ret_val );	
     printf("*HANG\n");
-	
-hang:
-    asm("pause");
-    goto hang;
+	exit (-1);
 };
+
 
 
 /*
  ********************************************
- * mainTextEditor:
- *     O editor de textos.
- * In this fuction:
- *     Initializes crt.
- *     Initializes stdio.
+ * gfeMain2:
  *
  */
-int mainTextEditor ( int argc, char *argv[] ){
+
+int gfeMain2 ( int argc, char **argv ){
 	
 	int ch;
 	FILE *fp;
@@ -143,18 +219,6 @@ int mainTextEditor ( int argc, char *argv[] ){
 	//printf("argvString={%s}\n" , &buf[0] );
 	
 	//printf("argv={%s}\n", &argv[2] );
-	
-	
-    //stdlib
-	//inicializando o suporte a alocação dinâmica de memória.
-	//#todo: isso deve ir par ao crt0
-	libcInitRT();
-
-	//stdio
-	//inicializando o suporte ao fluxo padrão.
-    //#todo: isso deve ir par ao crt0
-	stdioInitialize();	
-	
 
     //
 	// ## app window ##
@@ -167,7 +231,7 @@ int mainTextEditor ( int argc, char *argv[] ){
 
 	if ( (void *) hWindow == NULL )
 	{	
-		printf("TGFE.BIN: hWindow fail");
+		printf("gfeMain2: hWindow fail");
 		apiEndPaint();
 		goto fail;
 	}
@@ -243,7 +307,7 @@ int mainTextEditor ( int argc, char *argv[] ){
 
 	if ( (void *) gWindow == NULL )
 	{	
-		printf("TGFE.BIN: gWindow fail");
+		printf("gfeMain2: gWindow fail");
 		apiEndPaint();
 		goto fail;
 	}
@@ -262,7 +326,7 @@ int mainTextEditor ( int argc, char *argv[] ){
 
 	if ( (void *) mWindow == NULL )
 	{	
-		printf("TGFE.BIN: mWindow fail");
+		printf("gfeMain2: mWindow fail");
 		apiEndPaint();
 		goto fail;
 	}
@@ -429,12 +493,10 @@ done:
 
 
 /*
- *  
- *     Limpar a tela 
- */
+ * Limpar a tela */
 
-void editorClearScreen()
-{
+void editorClearScreen (){
+	
 	int lin, col;    
 
 	// @todo:
