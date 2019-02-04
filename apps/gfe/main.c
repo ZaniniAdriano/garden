@@ -361,38 +361,36 @@ int gfeMain2 ( int argc, char **argv ){
 	//#debug 
     //printf("## test done ##\n");	 
 	
-	
-	/*
+	struct window *tmpWindow;
 	int i;
-	for( i=0; i<8; i++ )
+	for( i=0; i<7; i++ )
 	{
 		// #isso é um teste.
 		// Criando janelas para os ícones, mas deveria 
 		// criar grid ou menu.
 		// #bugbug: Não temos acesso aos elementos da estrutura 
 		// da janela, pois estão em ring0.
-	    apiBeginPaint(); 
-	    hWindow = (void*) APICreateWindow( WT_SIMPLE, 1, 1,"ICON-WINDOW",
+	    /*
+        apiBeginPaint(); 
+	    tmpWindow = (void*) APICreateWindow( WT_SIMPLE, 1, 1,"ICON-WINDOW",
 	                    20, 1+20+(i*24), 
 						800-40, 24,    
                         0, 0, COLOR_BLUE, COLOR_BLUE );	  
 
-	    if((void*) hWindow == NULL)
+	    if((void*) tmpWindow == NULL)
 	    {	
 		    printf("WINDOW-FAIL");
 		    apiEndPaint();
 		    goto fail;
 	    }
         apiEndPaint();		
-		
+		*/
 		
 		
 	    //Usando a API para exibir o bmp carregado. 
 	    //ACHO QUE ISSO SOMENTE PINTA NO BACKBUFFER
-	    apiDisplayBMP( (char *) b, 40, 1+20+(i*24) ); 
+	    apiDisplayBMP ( (char *) b, 40, 1 + 60 + (i*24) ); 
     };
-	
-	*/
 	
 	//MOSTRA
 	
