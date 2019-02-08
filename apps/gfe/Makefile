@@ -1,3 +1,5 @@
+# gde file explorer
+# file explorer for gde.
 
 #history:
 #2019 - Created by Fred Nora.
