@@ -18,10 +18,17 @@ XXXCFLAGS = -m32 \
 	-fno-stack-protector \
 	-s	
 	
-	
 #	-fleading-underscore \
 #	-fno-stack-protector \
 #	-s
+
+LIBC    = ../../../lib/gdelibs/libc01/include/
+LIBCOBJ = ../../../lib/gdelibs/libc01/obj
+
+API01   = ../../../lib/gdelibs/api01/include/
+APIOBJ  = ../../../lib/gdelibs/api01/obj
+
+
 
 VERBOSE ?= false
 DEBUG ?= false
@@ -51,10 +58,10 @@ remake: clean all
 $(OUTPUT): $(OBJECTS)	
 	$(NOECHO)echo Linking $@
 	$(NOECHO)if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
-	-cp ../../lib/libc01/obj/stdlib.o  build/
-	-cp ../../lib/libc01/obj/stdio.o   build/
-	-cp ../../lib/libc01/obj/string.o  build/
-	-cp ../../lib/libc01/obj/ctype.o   build/
+	-cp $(LIBCOBJ)/stdlib.o  build/
+	-cp $(LIBCOBJ)/stdio.o   build/
+	-cp $(LIBCOBJ)/string.o  build/
+	-cp $(LIBCOBJ)/ctype.o   build/
 
 #	$(NOECHO)gcc -O3 -o $@ $(OBJECTS) $(LDFLAGS) 
 	ld -m elf_i386 -T link.ld -o CHASM32.BIN $(OBJECTS) build/stdlib.o build/stdio.o build/ctype.o build/string.o  -Map app_map.s
@@ -66,7 +73,7 @@ build/%.c.o: %.c
 	$(NOECHO)echo Compiling $<
 	$(NOECHO)if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
 ifeq ($(DEBUG),yes)
-	$(NOECHO)gcc  $(XXXCFLAGS) $(CFLAGS) -I ../../lib/libc01/include/ -c $< -o $@
+	$(NOECHO)gcc  $(XXXCFLAGS) $(CFLAGS) -I $(LIBC) -c $< -o $@
 else
-	$(NOECHO)gcc  $(XXXCFLAGS) $(CFLAGS) -I ../../lib/libc01/include/ -c $<  -o $@
+	$(NOECHO)gcc  $(XXXCFLAGS) $(CFLAGS) -I $(LIBC) -c $<  -o $@
 endif

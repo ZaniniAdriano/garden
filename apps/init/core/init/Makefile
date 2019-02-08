@@ -1,3 +1,5 @@
+#init para o gde
+
 
 #history:
 #2019 - Created by Fred Nora and Luciano Gonçalez.
@@ -36,6 +38,14 @@ CFLAGS = -m32 \
 #	-s
 
 
+
+LIBC    = ../../../../lib/gdelibs/libc01/include/
+LIBCOBJ = ../../../../lib/gdelibs/libc01/obj
+
+API01   = ../../../../lib/gdelibs/api01/include/
+APIOBJ  = ../../../../lib/gdelibs/api01/obj
+
+
 	##
 	## Objects
 	##
@@ -52,7 +62,6 @@ unistd.o
 
 
 
-
 .PHONY: all all-c init-link finalize clean
 
 all: main.o all-c init-link finalize clean
@@ -62,20 +71,20 @@ all: main.o all-c init-link finalize clean
 #	nasm  head.s  -felf -o head.o
 
 main.o:
-	gcc  -c  crt0.c -I ../../../lib/libc01/include/ -I ../../../lib/api01/include/ $(CFLAGS) -o crt0.o
-	gcc  -c  main.c -I ../../../lib/libc01/include/ -I ../../../lib/api01/include/ $(CFLAGS) -o main.o
+	gcc  -c  crt0.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o crt0.o
+	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o main.o
 
 all-c:
 
-	cp ../../../lib/api01/obj/api.o .
+	cp $(APIOBJ)/api.o      .
 	
-	cp ../../../lib/libc01/obj/ctype.o .
-	cp ../../../lib/libc01/obj/stdio.o .
-	cp ../../../lib/libc01/obj/stdlib.o .
-	cp ../../../lib/libc01/obj/string.o .
-	cp ../../../lib/libc01/obj/conio.o .
-	cp ../../../lib/libc01/obj/wait.o .
-	cp ../../../lib/libc01/obj/unistd.o .
+	cp $(LIBCOBJ)/ctype.o   .
+	cp $(LIBCOBJ)/stdio.o .
+	cp $(LIBCOBJ)/stdlib.o .
+	cp $(LIBCOBJ)/string.o .
+	cp $(LIBCOBJ)/conio.o .
+	cp $(LIBCOBJ)/wait.o .
+	cp $(LIBCOBJ)/unistd.o .
 
 init-link:
 	ld -m elf_i386 -T link.ld -o GDEINIT.BIN $(myObjects) -Map APP_map.s
