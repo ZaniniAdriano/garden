@@ -62,7 +62,6 @@ all: main.o all-c gramcode-link finalize clean
 	@echo "Ok?"
 
 main.o:
-#	nasm crt0.asm -f elf -o crt0.o
 	gcc  -c  crt0.c    $(CFLAGS) -I $(LIBC) -I $(API01) -o crt0.o
 	gcc  -c  main.c    $(CFLAGS) -I $(LIBC) -I $(API01) -o main.o
 	gcc  -c  status.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o status.o

@@ -33,6 +33,17 @@ CFLAGS = -m32 \
 #	-fno-stack-protector \
 #	-s
 
+
+
+LIBC    = ../../lib/gdelibs/libc01/include/
+LIBCOBJ = ../../lib/gdelibs/libc01/obj
+
+API01   = ../../lib/gdelibs/api01/include/
+APIOBJ  = ../../lib/gdelibs/api01/obj
+
+
+
+
 	##
 	## Objects
 	##
@@ -56,22 +67,20 @@ all: main.o all-c gfe-link finalize clean
 	@echo "Ok?"
 
 main.o:
-	gcc  -c  crt0.c     $(CFLAGS) -I ../lib/libc01/include/ -I ../lib/api01/include/ -o crt0.o
-	gcc  -c  main.c     $(CFLAGS) -I ../lib/libc01/include/ -I ../lib/api01/include/ -o main.o
-	gcc  -c  status.c   $(CFLAGS) -I ../lib/libc01/include/ -I ../lib/api01/include/ -o status.o
-	gcc  -c  addrbar.c  $(CFLAGS) -I ../lib/libc01/include/ -I ../lib/api01/include/ -o addrbar.o
+	gcc  -c  crt0.c    $(CFLAGS) -I $(LIBC) -I $(API01) -o crt0.o
+	gcc  -c  main.c    $(CFLAGS) -I $(LIBC) -I $(API01) -o main.o
+	gcc  -c  status.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o status.o
+	gcc  -c  addrbar.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o addrbar.o
 	
 all-c:
-	cp ../lib/libc01/obj/ctype.o   .
-	cp ../lib/libc01/obj/stdio.o   .
-	cp ../lib/libc01/obj/stdlib.o  .	
-	cp ../lib/libc01/obj/string.o  .
-	cp ../lib/libc01/obj/time.o    .
+	cp $(APIOBJ)/api.o      .
 	
-	#todo
-	cp ../lib/api01/obj/api.o      .
-	
-	cp ../lib/libc01/obj/unistd.o  .
+	cp $(LIBCOBJ)/ctype.o   .
+	cp $(LIBCOBJ)/stdio.o   .
+	cp $(LIBCOBJ)/stdlib.o  .	
+	cp $(LIBCOBJ)/string.o  .
+	cp $(LIBCOBJ)/time.o    .
+	cp $(LIBCOBJ)/unistd.o  .
 	
 
 
