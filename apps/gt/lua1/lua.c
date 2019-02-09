@@ -5,10 +5,8 @@
 ** 28 Apr 93
 */
 
-#include <stdio.h>
 
-#include "lua.h"
-#include "lualib.h"
+#include "lua1.h"
 
 
 void test (void)
@@ -30,7 +28,11 @@ static void execstr (void)
  if (lua_isstring(obj)) lua_dostring(lua_getstring(obj));
 }
 
-void main (int argc, char *argv[])
+
+
+
+
+void main2 (int argc, char *argv[])
 {
  int i;
  if (argc < 2)
@@ -50,5 +52,15 @@ void main (int argc, char *argv[])
   lua_call (argv[i],0);
  }
 }
+
+
+int lua1_main ()
+{
+    main2 (1,NULL);
+}
+
+
+
+
 
 

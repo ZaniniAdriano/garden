@@ -1,6 +1,15 @@
 
+
+
+//incluido pelo fred
+#include <types.h>
+#include <stddef.h>
+
+
+
 //# include "stdio.h"
 #include <stdio.h>
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -15,8 +24,10 @@
 # define YYOPTIM 1
 # define YYLMAX BUFSIZ
 # define output(c) putc(c,stdout)
-# define input() (((yytchar=yysptr>yysbuf?U(*--yysptr):getc(stdin))==10?(yylineno++,yytchar):yytchar)==EOF?0:yytchar)
-# define unput(c) {yytchar= (c);if(yytchar=='\n')yylineno--;*yysptr++=yytchar;}
+
+# define xxxinput() (((yytchar=yysptr>yysbuf?U(*--yysptr):getc(stdin))==10?(yylineno++,yytchar):yytchar)==EOF?0:yytchar)
+# define xxxunput(c) {yytchar= (c);if(yytchar=='\n')yylineno--;*yysptr++=yytchar;}
+
 # define yymore() (yymorfg=1)
 # define ECHO fprintf(stdout, "%s",yytext)
 # define REJECT { nstr = yyreject(); goto yyfussy;}
@@ -42,20 +53,22 @@ extern struct yysvf yysvec[], *yybgin;
 #include "table.h"
 #include "y_tab.h"
 
+
+//#bugbug checar isso ???
 #undef input
 #undef unput
 
-static Input input;
-static Unput unput;
+static Input input_d;
+static Unput unput_d;
 
 void lua_setinput (Input fn)
 {
- input = fn;
+ input_d = fn;
 }
 
 void lua_setunput (Unput fn)
 {
- unput = fn;
+ unput_d = fn;
 }
 
 char *lua_lasttext (void)
@@ -793,7 +806,7 @@ yylook(){
 				if(yyz == 0)break;
 				if(yyz->yystoff == yycrank)break;
 				}
-			*yylastch++ = yych = input();
+			*yylastch++ = yych = xxxinput();
 			yyfirst=0;
 		tryagain:
 # ifdef LEXDEBUG
@@ -808,7 +821,7 @@ yylook(){
 				yyt = yyr + yych;
 				if (yyt <= yytop && yyt->verify+yysvec == yystate){
 					if(yyt->advance+yysvec == YYLERR)	/* error transitions */
-						{unput(*--yylastch);break;}
+						{ xxxunput(*--yylastch);break;}
 					*lsp++ = yystate = yyt->advance+yysvec;
 					goto contin;
 					}
@@ -822,7 +835,7 @@ yylook(){
 				yyt = yyt + yych;
 				if(yyt <= yytop && yyt->verify+yysvec == yystate){
 					if(yyt->advance+yysvec == YYLERR)	/* error transitions */
-						{unput(*--yylastch);break;}
+						{ xxxunput(*--yylastch);break;}
 					*lsp++ = yystate = yyt->advance+yysvec;
 					goto contin;
 					}
@@ -836,7 +849,7 @@ yylook(){
 # endif
 				if(yyt <= yytop && yyt->verify+yysvec == yystate){
 					if(yyt->advance+yysvec == YYLERR)	/* error transition */
-						{unput(*--yylastch);break;}
+						{ xxxunput(*--yylastch);break;}
 					*lsp++ = yystate = yyt->advance+yysvec;
 					goto contin;
 					}
@@ -849,7 +862,7 @@ yylook(){
 				}
 # endif
 			else
-				{unput(*--yylastch);break;}
+				{ xxxunput(*--yylastch);break;}
 		contin:
 # ifdef LEXDEBUG
 			if(debug){
@@ -874,7 +887,7 @@ yylook(){
 				if(yyextra[*yyfnd]){		/* must backup */
 					while(yyback((*lsp)->yystops,-*yyfnd) != 1 && lsp > yylstate){
 						lsp--;
-						unput(*yylastch--);
+						xxxunput(*yylastch--);
 						}
 					}
 				yyprevious = YYU(*yylastch);
@@ -890,14 +903,14 @@ yylook(){
 # endif
 				return(*yyfnd++);
 				}
-			unput(*yylastch);
+			xxxunput(*yylastch);
 			}
 		if (yytext[0] == 0  /* && feof(stdin) */)
 			{
 			yysptr=yysbuf;
 			return(0);
 			}
-		yyprevious = yytext[0] = input();
+		yyprevious = yytext[0] = xxxinput();
 		if (yyprevious>0)
 			output(yyprevious);
 		yylastch=yytext;
@@ -919,7 +932,7 @@ return(0);
 }
 	/* the following are only used in the lex library */
 yyinput(){
-	return(input());
+	return ( xxxinput());
 	}
 yyoutput(c)
   int c; {
@@ -927,5 +940,5 @@ yyoutput(c)
 	}
 yyunput(c)
    int c; {
-	unput(c);
+	xxxunput(c);
 	}

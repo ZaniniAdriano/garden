@@ -1,5 +1,11 @@
 # line 2 "lua.stx"
 
+
+//incluido pelo fred
+#include <types.h>
+#include <stddef.h>
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

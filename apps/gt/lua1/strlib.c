@@ -7,6 +7,12 @@
 ** 19 May 93
 */
 
+//#incluido por fred
+#include <types.h>
+#include <stddef.h>
+
+
+
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -14,24 +20,44 @@
 
 #include "lua.h"
 
+
+
 /*
 ** Return the position of the first caracter of a substring into a string
 ** LUA interface:
 **			n = strfind (string, substring)
 */
-static void str_find (void)
-{
- int n;
- char *s1, *s2;
- lua_Object o1 = lua_getparam (1);
- lua_Object o2 = lua_getparam (2);
- if (!lua_isstring(o1) || !lua_isstring(o2))
- { lua_error ("incorrect arguments to function `strfind'"); return; }
- s1 = lua_getstring(o1);
- s2 = lua_getstring(o2);
- n = strstr(s1,s2) - s1 + 1;
- lua_pushnumber (n);
+
+static void str_find (void){
+	
+    int n;
+    char *s1, *s2;
+    
+	lua_Object o1 = lua_getparam (1);
+    lua_Object o2 = lua_getparam (2);
+    
+	if (!lua_isstring(o1) || !lua_isstring(o2))
+    { 
+        lua_error ("incorrect arguments to function `strfind'"); 
+		return; 
+    }
+	
+    s1 = lua_getstring(o1);
+    s2 = lua_getstring(o2);
+    
+	//n = strstr(s1,s2) - s1 + 1;
+	
+	n = (int) strstr(s1,s2);
+	
+	n = (int) (n - (int) s1);
+	
+	n = n+1;
+    
+	//salva.
+	
+	lua_pushnumber (n);
 }
+
 
 /*
 ** Return the string length

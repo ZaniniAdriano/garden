@@ -4,6 +4,11 @@
 ** 26 Apr 93
 */
 
+
+//incluido pelo fred
+#include <types.h>
+#include <stddef.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

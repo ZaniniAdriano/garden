@@ -6,6 +6,11 @@
 ** 12 May 93
 */
 
+//incluido pelo fred
+#include <types.h>
+#include <stddef.h>
+
+
 #include <string.h>
 #include <stdlib.h>
 
