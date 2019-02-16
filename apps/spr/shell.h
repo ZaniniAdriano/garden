@@ -994,7 +994,7 @@ COMMANDHISTORY_T *CommandHistory;
 //#define DeclareStructHandle(name) struct nameJABUTICABA__ { int unused; }; typedef struct nameJABUTICABA__ *name 
 //#define DeclareHandle(name) typedef void* name 
   
-int shmain ( int argc, char **argv );
+int main ( int argc, char *argv[] );
  
  
 //

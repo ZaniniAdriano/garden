@@ -577,7 +577,7 @@ void quit ( int status ){
  * Obs: Esses argumentos podem ser um padrão.
  */
  
-int shmain ( int argc, char **argv ){
+int main ( int argc, char *argv[] ){
 	
 	//int arg_index = 1;
 	
@@ -686,33 +686,25 @@ int shmain ( int argc, char **argv ){
 		//#todo: (possibilidades)
 		//As flags poderia começar com f. Ex: fInteractive, fLoginShell,
 		
-	    if ( strncmp ( (char *) argv[0], "-interactive", 12 ) == 0 ){
-			
+	    if ( strncmp ( (char *) argv[0], "--interactive", 13 ) == 0 )
+		{	
 			interactive = 1;
-            
-            //printf("Initializing an interactive shell ...\n");
-            //printf("arg[0]={%s}\n",argv[0]);			
         };
 
-        //Se o shell foi iniciado com um arquivo de script para ser 
-        //executado.
-		//a Flag -f indica que o que segue é um arquivo de script.
-        //if( strncmp( (char *) argv[0], "-f", 2 ) == 0 )
-        //{
-		//	goto dosh2;
-		//}			
 		
-	    if ( strncmp ( (char *) argv[1], "-login", 6 ) == 0 ){
-			
+	    if ( strncmp ( (char *) argv[1], "--login", 7 ) == 0 )
+		{	
 			login_shell = 1;
-			
-			//printf("Initializing login ...\n");
-            //printf("arg[1]={%s}\n",argv[1]);    
         };	
 		
 		//Nome passado viar argumento.
 		//shell_name = (char*) argv[2];
 
+		//#importante
+		//flags provisórias.
+		interactive = 1;
+		login_shell = 1;
+		
         //...		
 	};
 	
@@ -1114,7 +1106,7 @@ noArgs:
 	
 	//#test - provisorio
 	editboxWindow = (void *) APICreateWindow ( WT_EDITBOX, 1, 1, "editbox-navbar",     
-                                wpWindowLeft +4, wpWindowTop +24, wsWindowWidth -80, 24,    
+                                wpWindowLeft +8, wpWindowTop +40, wsWindowWidth -80, 24,    
                                 0, 0, COLOR_WINDOW, COLOR_WINDOW );
 	if ( (void *) editboxWindow == NULL)
 	{	
