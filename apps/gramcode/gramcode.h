@@ -16,6 +16,6 @@
 #include "teditor.h"
 
 
-int gramcode_main ();
+int main ( int argc, char *argv[] );
 
 	

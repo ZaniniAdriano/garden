@@ -60,150 +60,11 @@ teditorProcedure ( struct window_d *window,
 				   unsigned long long1, 
 				   unsigned long long2 );
 				   
-int main2 ( int argc, char *argv[] );
-
 
 /*
- ************************************************************
- * gramcode_main:
- *
- *     Função principla chamada pelo crt0.asm.
- *     Testando o recebimento de mensagens enviadas pelo shell.
- */
+ * main: */
  
-#define LSH_TOK_DELIM " \t\r\n\a" 
-#define SPACE " "
-#define TOKENLIST_MAX_DEFAULT 80
- 
-int gramcode_main (){
-	
-	char *tokenList[TOKENLIST_MAX_DEFAULT];
-	char *token;
-	int token_count;
-	int index;	
-	
-	int retval;
-	
-	// #importante
-	// Linha de comandos passada pelo shell.
-	char *shared_memory = (char *) (0xC0800000 -0x100);	
-	
-	
-#ifdef TEDITOR_VERBOSE	
-	
-	printf("\n");
-	printf("gramcode_main:\n");
-	printf("Initializing teditor.bin ...\n\n");	
-	//printf("\n");
-	//printf(".\n");
-	printf("..\n");
-	printf("# MESSAGE={%s} #\n", shared_memory );
-	printf("..\n");
-	//printf(".\n");
-	//printf("\n");
-	
-	//#debug
-	//while(1){
-	//	asm ("pause");
-	//}
-	
-#endif
-	
-
-    // Criando o ambiente.
-	// Transferindo os ponteiros do vetor para o ambiente.
-
-	tokenList[0] = strtok ( &shared_memory[0], LSH_TOK_DELIM );
-	
- 	// Salva a primeira palavra digitada.
-	token = (char *) tokenList[0];
- 
-	index = 0;                                  
-    while ( token != NULL )
-	{
-        // Coloca na lista.
-        // Salva a primeira palavra digitada.
-		tokenList[index] = token;
-
-		//#debug
-        //printf("shellCompare: %s \n", tokenList[i] );
-		
-		token = strtok ( NULL, LSH_TOK_DELIM );
-		
-		// Incrementa o índice da lista
-        index++;
-		
-		// Salvando a contagem.
-		token_count = index;
-    }; 
-
-	//Finalizando a lista.
-    tokenList[index] = NULL;	
-	
-	
-	// #debug 
-	// Mostra argumentos.
-#ifdef TEDITOR_VERBOSE	
-	// Mostra a quantidade de argumentos. 	
-	printf("\n");
-	printf("token_count={%d}\n", token_count );
-	
-	//Mostra os primeiros argumentos.
-	for ( index=0; index < token_count; index++ )
-	{
-		token = (char *) tokenList[index];
-	    if ( token == NULL )
-		{
-			printf("gramcode_main: for fail!\n")
-			goto hang;
-		}
-	    printf("# argv{%d}={%s} #\n", index, tokenList[index] );		
-	};
-#endif	
-	
-	
-
-	
-#ifdef TEDITOR_VERBOSE		
-    //Inicializando o editor propriamente dito.	
-	printf("Calling main2 ... \n"); 
-#endif	
-
-    retval = (int) main2 ( token_count, tokenList );
-	
-	switch (retval)
-	{
-		case 0:
-		    printf("gramcode_main: main2 returned 0.\n");
-			exit (0);
-			break;
-			
-		case 1:
-		    printf("gramcode_main: main2 returned 1.\n");
-		    exit (1);
-			break;
-			
-		//...
-		
-	    default:
-		    printf("gramcode_main: main2 returned default\n");
-            exit (-1);
-			break; 		
-	};
-		
-	//
-    // Não retornaremos para crt0.asm
-    //
-	
-    printf("*HANG\n");
-	exit (-1);
-};
-
-
-/*
- * main2: */
- 
-int main2 ( int argc, char *argv[] ){
+int main ( int argc, char *argv[] ){
 	
 	int ch;
 	FILE *fp;
@@ -327,11 +188,11 @@ int main2 ( int argc, char *argv[] ){
 	
 //file:
 
-#ifdef TEDITOR_VERBOSE		
+//#ifdef TEDITOR_VERBOSE		
 	//printf("\n");
 	printf("\n");
     printf("Loading file ...\n");
-#endif	
+//#endif	
 	
 	// Page fault:    
 	// Pegando o argumento 1, porque o argumento 0 é o nome do editor.
@@ -345,11 +206,11 @@ int main2 ( int argc, char *argv[] ){
 	};
 	
 	
-#ifdef TEDITOR_VERBOSE		
+//#ifdef TEDITOR_VERBOSE		
 	//printf("\n");
 	printf("\n");
     printf("Loading file fopen ...\n");
-#endif	
+//#endif	
 
 
 	
@@ -368,26 +229,52 @@ int main2 ( int argc, char *argv[] ){
 		
 		//Mostrando o arquivo.
 		
-#ifdef TEDITOR_VERBOSE			
+//#ifdef TEDITOR_VERBOSE			
         printf(".\n");		
         printf("..\n");		
         //printf("...\n");
-#endif 
+//#endif 
 	
        // printf("Show file\n");
-		printf ( "%s", fp->_base );	
+		//printf ( "%s", fp->_base );	
        // printf("Show file done\n");
 		
 		//#test 
 		//configurando o endereço do buffer do arquivo carregado.
 		//file_buffer = fp->_base;
 		
+		int ch_test;
+	    printf("Testing fgetc ... \n\n");
+		while(1)
+		{
+			//#bugbug: page fault quando chamamos fgetc.
+			//printf("1");
+			ch_test = (int) fgetc (fp);
+			//ch_test = (int) getc (f1); 
+			
+			if( ch_test == EOF )
+			{
+				printf("\n\n");
+				printf("EOF reached :)\n\n");
+				goto out;
+				
+			}else{
+				//printf("2");
+			    printf("%c", ch_test);	
+			};
+		};	
 		
-#ifdef TEDITOR_VERBOSE	        
+out:
+		
+		
+		
+		
+		
+//#ifdef TEDITOR_VERBOSE	        
 		//printf("...\n");
         printf("..\n");		
         printf(".\n");		
-#endif
+//#endif
 
 startTyping:
 
