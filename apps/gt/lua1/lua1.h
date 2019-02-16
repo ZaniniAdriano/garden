@@ -13,7 +13,11 @@
 #include "lua.h"
 #include "lualib.h"
 
-int lua1_main ();
+//int lua1_main ();
+int main ( int argc, char *argv[] );
+
+
+
 
 
 

@@ -19,7 +19,8 @@ table.o \
 y_tab.o \
 iolib.o \
 mathlib.o \
-strlib.o   
+strlib.o \
+math.o    
 
 
 
@@ -104,10 +105,12 @@ xxxcompile:
 	cp $(LIBCOBJ)/stdlib.o  .
 	cp $(LIBCOBJ)/string.o  .
 	cp $(LIBCOBJ)/time.o    .
-	cp $(LIBCOBJ)/unistd.o  .	
+	cp $(LIBCOBJ)/unistd.o  .
+	cp $(LIBCOBJ)/math.o    .
 	
 	
 	ld -m elf_i386 -T link.ld -o LUA.BIN $(myObjects) -Map app_map.s
+	-cp LUA.BIN  ../../../bin
 	
 	@echo "Ok ?"
 	
@@ -119,6 +122,9 @@ xxxlink:
 	
 xxxclean:
 	rm *.o
+	-rm LUA.BIN
+	
+	
 	
 	
 
