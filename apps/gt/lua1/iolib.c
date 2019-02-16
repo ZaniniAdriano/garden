@@ -22,6 +22,16 @@
 
 #include "lua.h"
 
+//#todo
+//serve para remover um arquivo ...
+//talvez pertença a libc,
+//coloquei aqui s'o pra compilar
+int remove (const char *file)
+{
+	return 0;
+}
+
+
 //static FILE *in=stdin, *out=stdout;
 
 /*
@@ -370,27 +380,32 @@ void io_execute (void)
  return;
 }
 
+
+
 /*
-** Remove a file.
-** On error put 0 on stack, otherwise put 1.
-*/
-void io_remove  (void)
-{
- lua_Object o = lua_getparam (1);
- if (o == NULL || !lua_isstring (o))
- {
-  lua_error ("incorrect argument to function 'execute`");
-  lua_pushnumber (0);
- }
- else
- {
-  if (remove(lua_getstring(o)) == 0)
-   lua_pushnumber (1);
-  else
-   lua_pushnumber (0);
- }
- return;
+ ** Remove a file.
+ ** On error put 0 on stack, otherwise put 1. */
+
+void io_remove (void){
+	
+    lua_Object o = lua_getparam (1);
+    
+	if (o == NULL || !lua_isstring (o))
+    {
+        lua_error ("incorrect argument to function 'execute`");
+        lua_pushnumber (0);
+    }else{
+		
+        if ( remove(lua_getstring(o)) == 0 )
+            lua_pushnumber (1);
+        else
+            lua_pushnumber (0);
+    }
+	
+	return;
 }
+
+
 
 /*
 ** Open io library

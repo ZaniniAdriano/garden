@@ -81,7 +81,7 @@ all-c:
 
 
 jackpot-link:
-	ld -m elf_i386 -T link.ld -o JACKPOT.BIN $(myObjects) -Map app_map.s
+	ld -m elf_i386 -T link.ld -o JACKPOT.BIN $(myObjects) -Map map.s
 
 finalize:
 	cp JACKPOT.BIN  ../../../bin

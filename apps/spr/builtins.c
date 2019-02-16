@@ -7,45 +7,41 @@
  */
 
  
-#include "sh.h"
+#include "spr.h"
 
 
 void cd_buitins (){
 	
 	printf("cd_buitins:\n");
-};
+}
 
 
 //cls
 void cls_builtins (){
 	
     shellClearScreen();
-};
+}
 
 
 void copy_builtins()
-{
-	
-};
+{	
+}
 
 
 void date_builtins()
-{
-	
-};
+{	
+}
 
 
 void del_builtins()
-{
-	
-};
+{	
+}
 
 
 void dir_builtins (){
 	
-	//
-	// @todo: get set disk id e directory id.
-	//
+	// @todo: 
+	// get set disk id e directory id.
 
     printf("~dir \n");		
         
@@ -54,31 +50,32 @@ void dir_builtins (){
     //o número do volume e o número do diretório,	
     system_call(173,0,0,0);		
 		
-	printf("~done\n");	
-};
+	printf ("~done\n");	
+}
 
 
 //echo command.
 //imprimir a lista de comandos de uma linha de comandos.
+
 void echo_builtins (char *list[]){
 	
-    shell_print_tokenList( list, " ");
+    shell_print_tokenList ( list, " ");
 	//shell_print_tokenList( list, "/");
-};
+}
 
 
 void exec_builtins (){
 	
-    printf("@todo: ~exec\n");	
-};
+    printf ("@todo: ~exec\n");	
+}
 
 
 void exit_builtins (){
 	
     //printf("~exit\n");
-	printf("Exiting shell process..\n");
-	exit(0);	
-};
+	printf ("Exiting shell process..\n");
+	exit (0);	
+}
 
 
 int getpid_builtins (){
@@ -86,7 +83,7 @@ int getpid_builtins (){
     shellShowPID();	
 	
 	return (int) 0; 
-};
+}
 
 
 int getppid_builtins (){
@@ -124,7 +121,7 @@ void help_builtins (int arg){
 		    break;
 		//min
 		case 2:
-		    printf("cls, help, exit..\n");
+		    //printf("cls, help, exit..\n");
 			break;
 		
 		default:

@@ -6,11 +6,11 @@
  * File: crt0.c
  *
  * Environment: Gramado Core.
- * Usado para inicializar a rt na libc
+ * Usado para inicializar a rt na libc99
  */
 
 
-#include "spr.h"
+#include "gramtext.h"
 
 
 static char *argv[] = { 
@@ -35,19 +35,14 @@ extern int main ( int argc, char *argv[] );
 
 
 
-#define xxxLSH_TOK_DELIM " \t\r\n\a" 
-#define xxxSPACE " "
-#define xxxTOKENLIST_MAX_DEFAULT 80
+#define LSH_TOK_DELIM " \t\r\n\a" 
+#define SPACE " "
+#define TOKENLIST_MAX_DEFAULT 80
 
-
-//
-// Main function in C part.
-// The entry point is in head.s
-//
 
 int crt0 (){
 	
-	char *tokenList[xxxTOKENLIST_MAX_DEFAULT];
+	char *tokenList[TOKENLIST_MAX_DEFAULT];
 	char *token;
 	int token_count;
 	int index;	
@@ -63,7 +58,7 @@ int crt0 (){
 	
 	printf("\n");
 	printf("crt0:\n");
-	printf("Initializing Sprinkler ...\n\n");	
+	printf("Initializing teditor.bin ...\n\n");	
 	//printf("\n");
 	//printf(".\n");
 	printf("..\n");
@@ -83,7 +78,7 @@ int crt0 (){
     // Criando o ambiente.
 	// Transferindo os ponteiros do vetor para o ambiente.
 
-	tokenList[0] = strtok ( &shared_memory[0], xxxLSH_TOK_DELIM );
+	tokenList[0] = strtok ( &shared_memory[0], LSH_TOK_DELIM );
 	
  	// Salva a primeira palavra digitada.
 	token = (char *) tokenList[0];
@@ -98,7 +93,7 @@ int crt0 (){
 		//#debug
         //printf("shellCompare: %s \n", tokenList[i] );
 		
-		token = strtok ( NULL, xxxLSH_TOK_DELIM );
+		token = strtok ( NULL, LSH_TOK_DELIM );
 		
 		// Incrementa o índice da lista
         index++;
@@ -133,6 +128,7 @@ int crt0 (){
 	
 	
 
+	
 #ifdef TEDITOR_VERBOSE		
     //Inicializando o editor propriamente dito.	
 	printf("Calling main ... \n"); 
@@ -159,8 +155,79 @@ int crt0 (){
             exit (-1);
 			break; 		
 	};
-			
-    printf ("*HANG\n");
+		
+	//
+    // Não retornaremos para crt0.asm
+    //
+	
+    printf("*HANG\n");
 	exit (-1);
-}
+};
+
+
+
+
+//
+// Main function in C part.
+// The entry point is in head.s
+//
+
+/*
+void crt0 (){
+	
+	int Response;
+	
+	//char **empty_string_pool;
+	
+
+    // Inicializando o suporte a alocação dinâmica de memória.
+	// Inicializando o suporte ao fluxo padrão.
+ 
+	
+    //stdlib
+	//inicializando o suporte a alocação dinâmica de memória.
+	libcInitRT();
+
+	//stdio
+	//inicializando o suporte ao fluxo padrão.
+    stdioInitialize();	
+
+
+	Response = (int) gramcode_main (); 
+																	
+	// Chama kill ou exit de acordo com o problema ocorrido em main.
+	// O erro pode vir no retorno ou implementa-se uma forma de pegar a execessão 
+	// ocorrida durante a execussão de main.
+	
+	switch (Response)
+	{
+	    case 0:
+		    //exit (0);
+            break;
+ 
+        default:
+		    //exit(app_response);
+			//exit(1);
+			//die ("crt0: EXIT ERROR! \n");
+            break;		
+	};
+	
+	//
+	// ## ERROR ##
+	//
+	
+hang:	
+    printf("crt0: EXIT ERROR! \n");
+    printf("crt0: *Hang!\n");
+	while(1)
+	{
+		asm("pause");
+		asm("pause");
+		asm("pause");
+		asm("pause");
+	};
+};
+*/
+
+
 

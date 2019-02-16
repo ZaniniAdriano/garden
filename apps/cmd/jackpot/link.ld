@@ -1,5 +1,5 @@
 OUTPUT_FORMAT("elf32-i386")
-ENTRY(__main)
+ENTRY(main)
 SECTIONS
 { 
 	/* Essa aplicação está usando o diretório do processo kernel. */

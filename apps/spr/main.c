@@ -1,6 +1,7 @@
 /*
  * File: main.c spr - sprinkler web browser
  *
+ * ------------------ cut ----------------
  * Essa é uma versão do shell apenas par ao kernel norax,
  * deve ser full screens sem frames. Só o suficiente para digitar
  * linhas de comando.
@@ -82,7 +83,7 @@
 #define WINDOW_TOP       0      //10
 
  
-#include "sh.h"
+#include "spr.h"
 
 
 // Input flags.
@@ -6967,28 +6968,31 @@ read_name (str, infile)
 }
 */
 
+
 //Qual será a linha que estará no topo da janela.
 void textSetTopRow ( int number )
 {
     textTopRow = (int) number; 	
-};
+}
+
 
 int textGetTopRow ()
 {
     return (int) textTopRow; 	
-};
+}
+
 
 //Qual será a linha que estará na parte de baixo da janela.
 void textSetBottomRow ( int number )
 {
     textBottomRow = (int) number; 	
-};
+}
+
 
 int textGetBottomRow ()
 {
     return (int) textBottomRow; 	
-};
-
+}
 
 
 void clearLine ( int line_number )

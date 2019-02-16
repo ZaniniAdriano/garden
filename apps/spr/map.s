@@ -469,7 +469,7 @@ Linker script and memory map
                 0x000000000040bde7                cputs
                 0x000000000040be1c                getch
                 0x000000000040be34                getche
- .text          0x000000000040be4c      0x17a builtins.o
+ .text          0x000000000040be4c      0x16a builtins.o
                 0x000000000040be4c                cd_buitins
                 0x000000000040be65                cls_builtins
                 0x000000000040be73                copy_builtins
@@ -484,21 +484,21 @@ Linker script and memory map
                 0x000000000040bf40                getuid_builtins
                 0x000000000040bf52                getgid_builtins
                 0x000000000040bf64                help_builtins
-                0x000000000040bfaa                pwd_builtins
- .text          0x000000000040bfc6       0x49 desktop.o
-                0x000000000040bfc6                desktopInitialize
- .text          0x000000000040c00f       0x67 unistd.o
-                0x000000000040c00f                unistd_system_call
-                0x000000000040c037                execve
-                0x000000000040c041                exit
-                0x000000000040c061                fork
+                0x000000000040bf9a                pwd_builtins
+ .text          0x000000000040bfb6       0x49 desktop.o
+                0x000000000040bfb6                desktopInitialize
+ .text          0x000000000040bfff       0x67 unistd.o
+                0x000000000040bfff                unistd_system_call
+                0x000000000040c027                execve
+                0x000000000040c031                exit
+                0x000000000040c051                fork
                 0x000000000040d000                . = ALIGN (0x1000)
- *fill*         0x000000000040c076      0xf8a 
+ *fill*         0x000000000040c066      0xf9a 
 
 .iplt           0x000000000040d000        0x0
  .iplt          0x000000000040d000        0x0 unistd.o
 
-.rodata         0x000000000040d000     0x3a6f
+.rodata         0x000000000040d000     0x3a4f
  .rodata        0x000000000040d000      0x51f crt0.o
  *fill*         0x000000000040d51f        0x1 
  .rodata        0x000000000040d520     0x187b main.o
@@ -515,77 +515,77 @@ Linker script and memory map
  .rodata        0x000000000040fc18      0x500 stdlib.o
  .rodata        0x0000000000410118        0x6 conio.o
  *fill*         0x000000000041011e        0x2 
- .rodata        0x0000000000410120      0x4ad builtins.o
- *fill*         0x00000000004105cd       0x13 
- .rodata        0x00000000004105e0      0x48f desktop.o
+ .rodata        0x0000000000410120      0x49a builtins.o
+ *fill*         0x00000000004105ba        0x6 
+ .rodata        0x00000000004105c0      0x48f desktop.o
 
-.eh_frame       0x0000000000410a70     0x2bac
- .eh_frame      0x0000000000410a70       0x38 crt0.o
- .eh_frame      0x0000000000410aa8      0xc70 main.o
+.eh_frame       0x0000000000410a50     0x2bac
+ .eh_frame      0x0000000000410a50       0x38 crt0.o
+ .eh_frame      0x0000000000410a88      0xc70 main.o
                                         0xc88 (size before relaxing)
- .eh_frame      0x0000000000411718      0x140 shellui.o
+ .eh_frame      0x00000000004116f8      0x140 shellui.o
                                         0x158 (size before relaxing)
- .eh_frame      0x0000000000411858      0xc2c api.o
+ .eh_frame      0x0000000000411838      0xc2c api.o
                                         0xc44 (size before relaxing)
- .eh_frame      0x0000000000412484      0x714 stdio.o
+ .eh_frame      0x0000000000412464      0x714 stdio.o
                                         0x72c (size before relaxing)
- .eh_frame      0x0000000000412b98      0x444 stdlib.o
+ .eh_frame      0x0000000000412b78      0x444 stdlib.o
                                         0x45c (size before relaxing)
- .eh_frame      0x0000000000412fdc      0x320 string.o
+ .eh_frame      0x0000000000412fbc      0x320 string.o
                                         0x338 (size before relaxing)
- .eh_frame      0x00000000004132fc       0xa0 conio.o
+ .eh_frame      0x00000000004132dc       0xa0 conio.o
                                          0xb8 (size before relaxing)
- .eh_frame      0x000000000041339c      0x1e0 builtins.o
+ .eh_frame      0x000000000041337c      0x1e0 builtins.o
                                         0x1f8 (size before relaxing)
- .eh_frame      0x000000000041357c       0x20 desktop.o
+ .eh_frame      0x000000000041355c       0x20 desktop.o
                                          0x38 (size before relaxing)
- .eh_frame      0x000000000041359c       0x80 unistd.o
+ .eh_frame      0x000000000041357c       0x80 unistd.o
                                          0x98 (size before relaxing)
 
 .note.gnu.property
-                0x000000000041361c       0x1c
+                0x00000000004135fc       0x1c
  .note.gnu.property
-                0x000000000041361c       0x1c unistd.o
+                0x00000000004135fc       0x1c unistd.o
 
-.rel.dyn        0x0000000000413638        0x0
- .rel.got       0x0000000000413638        0x0 unistd.o
- .rel.iplt      0x0000000000413638        0x0 unistd.o
- .rel.text      0x0000000000413638        0x0 unistd.o
+.rel.dyn        0x0000000000413618        0x0
+ .rel.got       0x0000000000413618        0x0 unistd.o
+ .rel.iplt      0x0000000000413618        0x0 unistd.o
+ .rel.text      0x0000000000413618        0x0 unistd.o
 
-.data           0x0000000000413640     0x29c0
-                0x0000000000413640                data = .
-                0x0000000000413640                _data = .
-                0x0000000000413640                __data = .
+.data           0x0000000000413620     0x29e0
+                0x0000000000413620                data = .
+                0x0000000000413620                _data = .
+                0x0000000000413620                __data = .
  *(.data)
- .data          0x0000000000413640      0x4c4 crt0.o
- *fill*         0x0000000000413b04       0x1c 
- .data          0x0000000000413b20      0x538 main.o
-                0x0000000000413fc0                running
-                0x0000000000413fc4                primary_prompt
-                0x0000000000413fc8                secondary_prompt
-                0x0000000000413fcc                remember_on_history
-                0x0000000000413fd0                current_command_number
-                0x0000000000413fd4                bashrc_file
-                0x0000000000413fd8                shell_config_file
-                0x0000000000413fdc                deltaValue
-                0x0000000000413fe0                long_args
- *fill*         0x0000000000414058        0x8 
- .data          0x0000000000414060      0x4a0 shellui.o
- .data          0x0000000000414500      0x440 api.o
- .data          0x0000000000414940        0x0 ctype.o
- .data          0x0000000000414940        0x0 stdio.o
- .data          0x0000000000414940        0x8 stdlib.o
-                0x0000000000414940                _infinity
- .data          0x0000000000414948        0x0 string.o
- .data          0x0000000000414948        0x0 conio.o
- *fill*         0x0000000000414948       0x18 
- .data          0x0000000000414960      0x4a0 builtins.o
- .data          0x0000000000414e00      0x4a8 desktop.o
-                0x00000000004152a0                primary_desktop_folder
-                0x00000000004152a4                secondary_desktop_folder
- .data          0x00000000004152a8        0x0 unistd.o
+ .data          0x0000000000413620      0x4c4 crt0.o
+ *fill*         0x0000000000413ae4       0x1c 
+ .data          0x0000000000413b00      0x538 main.o
+                0x0000000000413fa0                running
+                0x0000000000413fa4                primary_prompt
+                0x0000000000413fa8                secondary_prompt
+                0x0000000000413fac                remember_on_history
+                0x0000000000413fb0                current_command_number
+                0x0000000000413fb4                bashrc_file
+                0x0000000000413fb8                shell_config_file
+                0x0000000000413fbc                deltaValue
+                0x0000000000413fc0                long_args
+ *fill*         0x0000000000414038        0x8 
+ .data          0x0000000000414040      0x4a0 shellui.o
+ .data          0x00000000004144e0      0x440 api.o
+ .data          0x0000000000414920        0x0 ctype.o
+ .data          0x0000000000414920        0x0 stdio.o
+ .data          0x0000000000414920        0x8 stdlib.o
+                0x0000000000414920                _infinity
+ .data          0x0000000000414928        0x0 string.o
+ .data          0x0000000000414928        0x0 conio.o
+ *fill*         0x0000000000414928       0x18 
+ .data          0x0000000000414940      0x4a0 builtins.o
+ .data          0x0000000000414de0      0x4a8 desktop.o
+                0x0000000000415280                primary_desktop_folder
+                0x0000000000415284                secondary_desktop_folder
+ .data          0x0000000000415288        0x0 unistd.o
                 0x0000000000416000                . = ALIGN (0x1000)
- *fill*         0x00000000004152a8      0xd58 
+ *fill*         0x0000000000415288      0xd78 
 
 .got            0x0000000000416000        0x0
  .got           0x0000000000416000        0x0 unistd.o

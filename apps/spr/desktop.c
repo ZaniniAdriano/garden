@@ -1,11 +1,9 @@
 
-
 // gerenciamento do desktop,
 // manipulação dos ícones no desktop.
-//
 
 
-#include "sh.h"
+#include "spr.h"
 
 
 //desktop folders.
@@ -26,9 +24,8 @@ int desktopInitialize (){
 	
 	printf("Initializing desktop ...\n");
 	printf("%s\n",primary_desktop_folder);
-    printf("%s\n",secondary_desktop_folder);	
-	
+    printf("%s\n",secondary_desktop_folder);		
 	return 0;
-};
+}
 
 

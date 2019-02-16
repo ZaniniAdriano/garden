@@ -97,7 +97,7 @@ all-c:
 	cp $(LIBCOBJ)/unistd.o  .
 
 shell-link:
-	ld -m elf_i386 -T link.ld -o SPR.BIN $(myObjects) -Map shell_map.s
+	ld -m elf_i386 -T link.ld -o SPR.BIN $(myObjects) -Map map.s
 
 finalize:
 	cp SPR.BIN ../../bin

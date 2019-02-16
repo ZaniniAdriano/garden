@@ -1,7 +1,5 @@
 
-// sh.h 
-
-//onde ficarão todos os header se possível. 
+// spr.h 
 
 
 //Setup current compiler 

@@ -33,9 +33,9 @@ int jackpot_main ();
 
 /*
  * app_main:
- *     Entry point.
- */
-void app_main (){
+ *     Entry point. */
+
+void main (){
 	
 	int code = 0;
 	
@@ -99,12 +99,12 @@ void Start (){
 		if (c == -1){
 			
 			//printf("EOF reached! ?? \n");
-		    asm ("pause");				
+		    //asm ("pause");				
 		};
 			
 	    if ( c != -1 ){
 			
-	        //printf("%c",c);	        
+	        printf ("%c",c);	        
 			goto selected;
 		};
 	};	
@@ -145,7 +145,7 @@ selected:
 	j = rand() % maxrand;  
 	
     GetResults ();
-};
+}
 
 
 void GetResults (){
@@ -259,15 +259,17 @@ int jackpot_atoi (char * s){
  * jackpot_main:
  *     Initialize the game.
  */
+
 int jackpot_main (){
 	
-    //stdlib
-	//inicializando o suporte a alocação dinâmica de memória.
-	libcInitRT ();
-
+    // stdlib
+	// inicializando o suporte a alocação dinâmica de memória.
 	//stdio
 	//inicializando o suporte ao fluxo padrão.
-    stdioInitialize ();		
+	
+	libcInitRT ();
+    
+	stdioInitialize ();		
 	
     printf ("** Jackpot game **\n");
     printf ("The goal of this game is to guess a number. You will be ask to type\n");
@@ -276,8 +278,7 @@ int jackpot_main (){
     
 	Start ();
 	
-//done:	
-	return (int) 0;
-};
+	return 0;
+}
 
 

@@ -10,7 +10,7 @@
  */
  
  
-#include "sh.h"
+#include "spr.h"
 
 
 extern int ShellFlag;
@@ -72,6 +72,7 @@ void shellui_fntos (char *name){
  *     Procedimento de janela.
  *     LOCAL
  */
+
 unsigned long 
 shellTopbarProcedure ( struct window_d *window, 
                        int msg, 

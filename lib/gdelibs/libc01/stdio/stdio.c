@@ -1100,13 +1100,19 @@ int input_file_buffer_size(void)
 */
 
 
-// getchar:
-// pegando diretamente do kernel e não do arquivo.
-// me parece que o tradicional é pegar do arquivo,
-// mas isso acontece em outras situações.
-//@todo:
-//Podemos pegar esse char e colocá-lo stdin 
-//slave (local) de input.
+
+/*
+ *************************************
+ * getchar:
+ *
+ * getchar:
+ * pegando diretamente do kernel e não do arquivo.
+ * me parece que o tradicional é pegar do arquivo,
+ * mas isso acontece em outras situações.
+ * @todo:
+ * Podemos pegar esse char e colocá-lo stdin 
+ * slave (local) de input. 
+ */
 
 int getchar (void){
 	
@@ -1243,7 +1249,8 @@ int fputs ( const char *str, FILE *stream ){
  *********************************
  * gets:
  *
- * obs: gets() devolve um ponteiro para string
+ * obs: 
+ * gets() devolve um ponteiro para string
  */
  
 char *gets (char *s){
@@ -1252,8 +1259,7 @@ char *gets (char *s){
 	
     int t = 0;
 	char *p;
-	
-	
+		
 	//printf("gets:\n");
 	
     //salva
@@ -1297,14 +1303,10 @@ char *gets (char *s){
 		asm ("pause");
     };
 	
-    
-	
 done:	
-
     //s[t] = (char) '\0';
-	
 	return (char *) p;
-};
+}
 
 
 /*
@@ -2265,6 +2267,16 @@ int vfprintf ( FILE *stream, const char *format, stdio_va_list argptr )
  
 	return (int) (-1);	
 };  
+
+
+/*
+ #bsd
+int vprintf(const char *fmt, va_list ap);
+int vprintf(const char *fmt, va_list ap)
+{
+	return vfprintf(stdout, fmt, ap);
+}
+*/
 
 
 //printf que escreve no stdout. 
