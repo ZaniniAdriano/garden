@@ -1,6 +1,6 @@
 
 
-int chasm32_crt1 ();
+int main ( int argc, char *argv[] );
 
 
 
