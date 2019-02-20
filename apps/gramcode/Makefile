@@ -52,7 +52,9 @@ stdio.o \
 string.o \
 unistd.o \
 api.o \
-status.o  
+status.o \
+stubs.o    
+
 
 
 
@@ -76,6 +78,8 @@ all-c:
 	cp $(LIBCOBJ)/string.o  .
 	cp $(LIBCOBJ)/time.o    .
 	cp $(LIBCOBJ)/unistd.o  .
+	
+	cp $(LIBCOBJ)/stubs.o   .
 	
 
 

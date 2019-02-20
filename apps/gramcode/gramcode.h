@@ -15,6 +15,9 @@
 #include "status.h"
 #include "teditor.h"
 
+//system calls.
+#include <stubs/gramado.h> 
+
 
 int main ( int argc, char *argv[] );
 
