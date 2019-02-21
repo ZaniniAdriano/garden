@@ -20,6 +20,18 @@
 #include <stdio.h>
 #include <string.h>
 
+//provisoria
+//o tipo 'e size_t
+int puts_strlen (const char *str)
+{
+	int ret_val;
+
+	for(ret_val = 0; *str != '\0'; str++)
+		ret_val ++;
+
+	return ret_val;
+}
+
 //extern size_t strlen (const char *str);
 
 /* Uses the above routine to output a string... */
@@ -39,7 +51,15 @@ void puts (const char *text)
 	
 	//provisório ...
 	//return (int) printf ("%s",text);
-	printf ("%s",text);
+	//printf ("%s",text);
+	int i;
+	//o tipo 'e size_t
+	int l = puts_strlen (text);
+	
+	for (i=0; i < l; i++)
+	{
+		putch ( (char) text[i] );
+	}
 }
 
 

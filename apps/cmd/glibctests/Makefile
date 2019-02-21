@@ -57,10 +57,14 @@ APIOBJ  = ../../../lib/gdelibs/api01/obj
 
 myObjects = main.o \
 stubs.o \
-putch.o  
+putch.o \
+puts.o  
 
 
-  
+
+#myObjects = main.o   
+
+
 
 
 
@@ -82,7 +86,8 @@ all-c:
 #	cp $(LIBCOBJ)/string.o .
 #	cp $(LIBCOBJ)/time.o    .
 #	cp $(LIBCOBJ)/unistd.o  .
-	
+
+	cp $(LIBCOBJ)/puts.o  .
 	cp $(LIBCOBJ)/putch.o  .
 	cp $(LIBCOBJ)/stubs.o  .
 	

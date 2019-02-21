@@ -26,16 +26,20 @@
 void crt0()
 {
 	
-	gramado_system_call ( 7, 8* 4,  8* 4, (unsigned long) 66 );
+	unsigned long ch = '.';
+	unsigned long ch2 = '.';
+	unsigned long ch3 = '.';	
 	
-    putch("g");
-    putch("l");
-    putch("i");
-    putch("b");
-    putch("c");
-    putch("0");
-    putch(".");
-    putch("1");
+
+	gramado_system_call ( 65, (unsigned long) ch, (unsigned long) ch, 
+		(unsigned long) ch );
+	
+	gramado_system_call ( 65, (unsigned long) ch2, (unsigned long) ch2, 
+		(unsigned long) ch2 );	
+	
+    putch ( (char) ch3 );
+	
+	puts ("    Aplicativo com glibc 0.1.1 \n");
 	
 	while(1){}
 }

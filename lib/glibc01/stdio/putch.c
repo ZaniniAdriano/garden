@@ -29,29 +29,7 @@ void putch (char c)
 		:: "g" (c) : "%eax", "%ebx");
 	*/
 	
-	
-	//#debug 
-	//gramado_system_call ( 7, 8* 10,  8* 10, (unsigned long) c );	
-	//return;
-	
-	unsigned long x, y;
-	
-	//#bugbug
-	//Essa biblioteca n~ao tem os valores de x e y.
-	//esses valores sao gerenciados pelo kernel ...
-	//talvez possamos aqui chamar as funçoes que pegam esse posicionamento. 
-	
-	 //get x and y
-	 x = (unsigned long) gramado_system_call ( 240, 0, 0, 0 );
-	 y = (unsigned long) gramado_system_call ( 241, 0, 0, 0 );
-	
-	
-	
-	//set cursor.
-	//gramado_system_call ( 34, (unsigned long) x, (unsigned long) y, 0 );
-	
-	//_outbyte
-	// put char.
-	gramado_system_call ( 7, 8*x,  8*y, (unsigned long) c );	
+	gramado_system_call ( 65, (unsigned long) c, (unsigned long) c, 
+		(unsigned long) c );	
 }
 
