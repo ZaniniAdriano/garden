@@ -25,6 +25,7 @@
 #define O_RDONLY	0x2
 #define O_WRONLY	0x4
 
+/*
 extern void putch (char c);
 extern void puts (const char *text);
 extern void printf (const char *fmt, ...);
@@ -38,5 +39,23 @@ extern void beep (unsigned freq);
 extern int open (const char *pathname, int flags);
 extern int close (int fd);
 extern int read (unsigned fd, void *buf, unsigned len);
+*/
+
+void putch (char c);
+void puts (const char *text);
+
+void printf (const char *fmt, ...);
+//int printf(const char *fmt, ...);
+
+void cls ();
+unsigned char getch ();
+unsigned char getkey ();
+void gotoxy (int x, int y);
+void setcolor (int t, int f);
+int sprintf (char *buffer, const char *fmt, ...);
+void beep (unsigned freq);
+int open (const char *pathname, int flags);
+int close (int fd);
+int read (unsigned fd, void *buf, unsigned len);
 
 #endif

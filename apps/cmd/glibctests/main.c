@@ -3,11 +3,13 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+
+
 #include <stdio.h>
 
 #include <unistd.h>
 
-#include <api.h>
+//#include <api.h>
 
 
 #include <stubs/gramado.h>
@@ -40,6 +42,15 @@ void crt0()
     putch ( (char) ch3 );
 	
 	puts ("    Aplicativo com glibc 0.1.1 \n");
+	
+	int value = 1234;
+	
+	
+	//#bugbug
+	/* STATE 3: AWAITING MODIFIER CHARS (FNlh) */
+	//aparece a mensagem nesse estagio da funçao >>> 'hee4'
+	
+	printf ("Testing printf ... value=%3d  x=%3x ", value, value);
 	
 	while(1){}
 }

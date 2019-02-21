@@ -5,7 +5,13 @@ MAKEFILE=Makefile
 MAKEDEP=$(MAKEFILE)
 INCDIR	=./include
 NASM	=nasm -f elf -i$(INCDIR)/
-CC	=gcc -m32 -g -Wall -W -O2 -nostdinc -fno-builtin -I$(INCDIR)
+
+# __stack_chk_fail_local
+# Se aparecer esse erro tem que incluir a flag -fno-stack-protector
+# talvez o stack protector foi incluido no gcc depois que essa versão da glibc foi criada.
+
+#CC	=gcc -m32 -g -Wall -W -O2 -nostdinc -fno-builtin -I$(INCDIR)
+CC	=gcc -m32 -g -Wall -W -O2 -nostdinc -fno-builtin -fno-stack-protector -I$(INCDIR)
 
 STDIO	=stdio/doprintf.o stdio/delay.o stdio/printf.o stdio/sprintf.o stdio/puts.o stdio/putch.o stdio/cls.o stdio/getch.o stdio/getkey.o stdio/gotoxy.o stdio/setcolor.o stdio/beep.o stdio/open.o stdio/close.o stdio/read.o 
 STRING	=string/memsetw.o string/memcpy.o string/strlen.o string/strcpy.o string/strncpy.o string/strcat.o string/memset.o string/strcmp.o string/strdup.o

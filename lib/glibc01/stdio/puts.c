@@ -49,9 +49,6 @@ void puts (const char *text)
 	
 	*/
 	
-	//provisório ...
-	//return (int) printf ("%s",text);
-	//printf ("%s",text);
 	int i;
 	//o tipo 'e size_t
 	int l = puts_strlen (text);

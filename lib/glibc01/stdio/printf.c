@@ -23,9 +23,11 @@
 
 extern size_t strlen (const char *str);
 
+
 static int printf_help (unsigned c, void **ptr)
 {
-	putch (c);
+	//putch (c);
+	putch((char)c);
 
 	return 0;
 }

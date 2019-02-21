@@ -4,6 +4,9 @@
 #2019 - Created by Fred Nora.
 
 
+#__stack_chk_fail_local
+#se aparecer esse erro tem que incluir a flag -fno-stack-protector
+
 VERSION = 0
 PATCHLEVEL = 0
 SUBLEVEL = 0
@@ -37,9 +40,8 @@ LIBC    = ../../../lib/glibc01/include/
 LIBCOBJ = ../../../lib/glibc01/obj
 
 #api do gramado.
-API01   = ../../../lib/gdelibs/api01/include/
-APIOBJ  = ../../../lib/gdelibs/api01/obj
-
+#API01   = ../../../lib/gdelibs/api01/include/
+#APIOBJ  = ../../../lib/gdelibs/api01/obj
 
 
 	##
@@ -58,7 +60,13 @@ APIOBJ  = ../../../lib/gdelibs/api01/obj
 myObjects = main.o \
 stubs.o \
 putch.o \
-puts.o  
+puts.o \
+doprintf.o \
+strlen.o \
+printf.o    
+
+
+
 
 
 
@@ -74,7 +82,7 @@ all: main.o all-c glibct1-link finalize clean
 	@echo "Ok?"
 
 main.o:
-	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o main.o
+	gcc  -c  main.c  $(CFLAGS) -I $(LIBC)  -o main.o
 
 all-c:
 	
@@ -90,7 +98,9 @@ all-c:
 	cp $(LIBCOBJ)/puts.o  .
 	cp $(LIBCOBJ)/putch.o  .
 	cp $(LIBCOBJ)/stubs.o  .
-	
+	cp $(LIBCOBJ)/doprintf.o  .	
+	cp $(LIBCOBJ)/strlen.o  .		
+	cp $(LIBCOBJ)/printf.o  .	
 	
 glibct1-link:
 	ld -m elf_i386 -T link.ld -o GLIBCT1.BIN $(myObjects) -Map map.s
