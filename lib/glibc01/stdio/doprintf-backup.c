@@ -88,31 +88,45 @@ Revised May 12, 2000
  *    Essa função é chamada por outras
  */
 
-int do_printf(const char *fmt, va_list args, fnptr_t fn, void *ptr)
-{
+int do_printf (const char *fmt, va_list args, fnptr_t fn, void *ptr){
+	
 	unsigned state, flags, radix, actual_wd, count, given_wd;
-	unsigned char *where, buf[PR_BUFLEN];
+	unsigned char *where;
 	long num;
 
+	//
+	// ## buffer ##
+	//
+	
+	unsigned long buffer[512];
+	
+	//unsigned char *buf = (unsigned char *) malloc (sizeof (unsigned char *) * PR_BUFLEN );
+	unsigned char *buf = (unsigned char *) &buffer[0];	
+	
 	state = flags = count = given_wd = 0;
-/* begin scanning format specifier list */
-	for(; *fmt; fmt++)
+	
+    /* begin scanning format specifier list */
+	
+	for (; *fmt; fmt++)
 	{
 		switch(state)
 		{
-/* STATE 0: AWAITING % */
+				
+        /* STATE 0: AWAITING % */
 		case 0:
-			if(*fmt != '%')	/* not %... */
+			if (*fmt != '%')	/* not %... */
 			{
 				fn(*fmt, &ptr);	/* ...just echo it */
 				count++;
 				break;
 			}
+				
 /* found %, get next char and advance state to check if next char is a flag */
 			state++;
 			fmt++;
-			/* FALL THROUGH */
-/* STATE 1: AWAITING FLAGS (%-0) */
+				
+		/* FALL THROUGH */
+        /* STATE 1: AWAITING FLAGS (%-0) */
 		case 1:
 			if(*fmt == '%')	/* %% */
 			{
@@ -146,11 +160,12 @@ int do_printf(const char *fmt, va_list args, fnptr_t fn, void *ptr)
 					(*fmt - '0');
 				break;
 			}
-/* not field width: advance state to check if it's a modifier */
+            /* not field width: advance state to check if it's a modifier */
 			state++;
-			/* FALL THROUGH */
-/* STATE 3: AWAITING MODIFIER CHARS (FNlh) */
-		case 3:
+				
+		/* FALL THROUGH */
+        /* STATE 3: AWAITING MODIFIER CHARS (FNlh) */
+		case 3: puts ("hee4\n");
 			if(*fmt == 'F')
 			{
 				flags |= PR_FP;
@@ -304,9 +319,10 @@ EMIT2:				if((flags & PR_LJ) == 0)
 			state = flags = given_wd = 0;
 			break;
 		}
-	}
+	}	
 	return count;
 }
+
 
 
 

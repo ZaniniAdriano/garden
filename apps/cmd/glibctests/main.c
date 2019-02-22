@@ -18,6 +18,7 @@
 //função interna.
 //int main ( int argc, char *argv[] );
 
+int test1(void);
 
 #define LSH_TOK_DELIM " \t\r\n\a" 
 #define SPACE " "
@@ -41,7 +42,7 @@ void crt0()
 	
     putch ( (char) ch3 );
 	
-	puts ("    Aplicativo com glibc 0.1.1 \n");
+	puts ("  \n\n  Aplicativo com glibc 0.1.1 \n\n");
 	
 	int value = 1234;
 	
@@ -50,9 +51,26 @@ void crt0()
 	/* STATE 3: AWAITING MODIFIER CHARS (FNlh) */
 	//aparece a mensagem nesse estagio da funçao >>> 'hee4'
 	
-	printf ("Testing printf ... value=%3d  x=%3x ", value, value);
+	printf ("Testing printf ... value=%d  hex=%x \n", value, value);
+	
+	
+	test1 ();
 	
 	while(1){}
+}
+
+int test1(void)
+{
+	char buf[64];
+
+	sprintf(buf, "%u score and %i years ago...\n", 4, -7);
+	puts(buf);
+
+	sprintf(buf, "-1L == 0x%lX == octal %lo\n", -1L, -1L);
+	puts(buf);
+
+	printf("<%-08s> and <%08s> justified strings\n", "left", "right");
+	return 0;
 }
 
 /*

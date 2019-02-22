@@ -63,9 +63,8 @@ putch.o \
 puts.o \
 doprintf.o \
 strlen.o \
-printf.o    
-
-
+printf.o \
+sprintf.o  
 
 
 
@@ -101,6 +100,7 @@ all-c:
 	cp $(LIBCOBJ)/doprintf.o  .	
 	cp $(LIBCOBJ)/strlen.o  .		
 	cp $(LIBCOBJ)/printf.o  .	
+	cp $(LIBCOBJ)/sprintf.o  .	
 	
 glibct1-link:
 	ld -m elf_i386 -T link.ld -o GLIBCT1.BIN $(myObjects) -Map map.s
