@@ -19,7 +19,11 @@
 
 void schedule ()
 {
-	asm volatile ("movl $10, %%eax;"
-	     "int $0x80;" ::: "%eax");
+	// #todo
+	// Talvez possamos chamar o scheduler.
+	// Mas não vejo motivos pra isso.
+	
+	//asm volatile ("movl $10, %%eax;"
+	//     "int $0x80;" ::: "%eax");
 }
 

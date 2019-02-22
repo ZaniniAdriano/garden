@@ -17,6 +17,9 @@
  */
 
 
+// #obs:
+// A função do_printf foi substituída por uma de outra versão, a 0.08.
+
 #include <_printf.h>    /* fnptr_t */
 #include <string.h>     /* strlen() */
 #include <stdarg.h>     /* va_list, va_arg() */
