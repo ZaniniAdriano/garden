@@ -23,13 +23,14 @@
 
 
 //protótipo de função interna.
-int chasm32_main ( int argc, char **argv );
-
-
-
+int run ( int argc, char **argv );
 
 
 void *read_file(char *fname){
+	
+	
+	//#bugbug
+	//falahndo porque não tem heap o suficiente.
 	
 	// Try to open the file
 	FILE *file = fopen (fname, "rb");																	
@@ -38,8 +39,6 @@ void *read_file(char *fname){
 	{
 		return NULL;																					
 	}
-	
-	
 	
 	//#todo
 	// Go to the end of the file (to get the length)
@@ -58,7 +57,7 @@ void *read_file(char *fname){
 	}
 	
 	// Rewind it back to the beginning
-	rewind(file);																						
+	rewind (file);																						
 	
 	// Try to read it!
 	if (!fread(buf, length, 1, file)) 
@@ -75,25 +74,42 @@ void *read_file(char *fname){
 	return buf;																							
 }
 
-char *replace_extension(char *fname, char *newext) {
+
+char *replace_extension (char *fname, char *newext){
+	
+	printf ("replace_extension\n");
+	
 	char *p;
 	
-	if ((p = strrchr(fname, '.')) == NULL) {															// Let's find the last '.' (the extension)
-		p = malloc(strlen(fname) + strlen(newext) + 1);													// Not found, just add the new extension to the fname
+	// Let's find the last '.' (the extension)
+	if ((p = strrchr(fname, '.')) == NULL)
+	{
 		
-		strcpy(p, fname);
-		strcat(p, newext);
+		// Not found, just add the new extension to the fname
+		p = malloc(strlen(fname) + strlen(newext) + 1);													
+		
+		strcpy (p, fname);
+		strcat (p, newext);
+		
+		
+		
 	} else {
-		int n;																							// Ok, let's overwrite the extension!
+		
+		// Ok, let's overwrite the extension!
+		
+		int n;																							
 		
 		n = p - fname;
-		p = malloc(n + strlen(newext) + 1);																// Alloc some space
 		
-		strncpy(p, fname, n);																			// Copy the original string
+		// Alloc some space
+		p = malloc (n + strlen(newext) + 1);																
+		
+		// Copy the original string
+		strncpy (p, fname, n);																			
 		
 		p[n] = '\0';																					// Put the NULL-terminator
 		
-		strcat(p, newext);																				// Put the new extension
+		strcat (p, newext);																				// Put the new extension
 	}
 	
 	return p;
@@ -102,28 +118,25 @@ char *replace_extension(char *fname, char *newext) {
 
 /*
  *************************************************************
- * main:
- *     chasm32_main
+ * run:
  *     Main function for chasm32. 
  */
 
-int chasm32_main ( int argc, char **argv ){
+int run ( int argc, char **argv ){
 	
 	char *arch = NULL;
 	char *exec = NULL;
+	
 	char *input = NULL;
 	char *output = NULL;
-	
-	
-	printf ("chasm32_main: Initializing ...\n");
-	
+		
 
 	// Check if we have any arguments
-	// We don't have any, just print the usage
+	// We don't have args enough, just print the usage
 	
 	if (argc < 2)
 	{																						
-		printf("Usage: %s [options] file\n", argv[0]);													
+		printf ("Usage: %s [options] file\n", argv[0]);													
 		return 1;
 	}
 	
@@ -136,18 +149,18 @@ int chasm32_main ( int argc, char **argv ){
 		// Help
 		if ( ( !strcmp(argv[i], "-h")) || (!strcmp(argv[i], "--help")) ){
 			
-			printf("Usage: %s [options] file...\n", argv[0]);
-			printf("Options:\n");
-			printf("    -h or --help          Show this help dialog\n");
-			printf("    -v or --version       Show the version of this program\n");
-			printf("    -o or --output        Set the output filename\n");
-			printf("    -f or --format        Set the output executable format\n");
-			printf("    -a or --arch          Set the output processor architecture\n");
+			printf ("Usage: %s [options] file...\n", argv[0]);
+			printf ("Options:\n");
+			printf ("    -h or --help       Show this help dialog\n");
+			printf ("    -v or --version    Show the version of this program\n");
+			printf ("    -o or --output     Set the output filename\n");
+			printf ("    -f or --format     Set the output executable format\n");
+			printf ("    -a or --arch       Set the output processor architecture\n");
 			
 			printf("#todo\n");
 			
-		    //#bugbug
-		    //Isso pode acessar estruturas que ainda não foram inicializadas				
+		    // #bugbug
+		    // Isso pode acessar estruturas que ainda não foram inicializadas				
 			
 			//printf("Supported executable formats: "); 
 			//#todo
@@ -166,22 +179,23 @@ int chasm32_main ( int argc, char **argv ){
 		// Version	
 		} else if ((!strcmp(argv[i], "-v")) || (!strcmp(argv[i], "--version"))) {
 			
-			printf("CHicago Operating System Project\n");
-			printf("CHicago Intermediate Language Compiler Version 1.0\n");
+			//printf("CHicago Operating System Project\n");
+			//printf("CHicago Intermediate Language Compiler Version 1.0\n");
+			printf ( "chasm32 for Gramado\n" );
 			return 0;
 			
 		// Set the output	
 		} else if ((!strcmp(argv[i], "-o")) || (!strcmp(argv[i], "--output"))) {						
 			
-			if ((i + 1) >= argc) {
-				printf("Expected filename after '%s'\n", argv[i]);
+			if ((i + 1) >= argc){
+				printf ("Expected filename after '%s'\n", argv[i]);
 				return 1;
 			} else {
 				output = argv[++i];
 			}
 			
-			printf("#debug: Set the output OK");
-			while(1){}
+			//printf("#debug: Set the output");
+			//while(1){}
 			
 		// Set output executable format	
 		} else if ((!strcmp(argv[i], "-f")) || (!strcmp(argv[i], "--format"))) {						
@@ -193,15 +207,17 @@ int chasm32_main ( int argc, char **argv ){
 				exec = argv[++i];
 			}
 			
-			printf("#debug: Set output executable format OK");
-			while(1){}			
+			//printf("#debug: Set output executable format");
+			//while(1){}			
 			
 		// Set output processor architecture	
 		} else if ((!strcmp(argv[i], "-a")) || (!strcmp(argv[i], "--arch"))) {							
 			
 			if ((i + 1) >= argc) {
-				printf("Expected filename after '%s'\n", argv[i]);
+				
+				printf ("Expected filename after '%s'\n", argv[i]);
 				return 1;
+				
 			} else {
 				arch = argv[++i];
 			}
@@ -234,9 +250,9 @@ int chasm32_main ( int argc, char **argv ){
 	
 	//#debug
 	//printf ("#breakpoint\n");
-	//while (1){
-	//    asm ("pause");
-	//}		
+	//while (1){ asm ("pause"); }
+	
+	/*
 	
 	// Try to select the output processor architecture
 	if (!arch_select(arch == NULL ? "x86" : arch)){	
@@ -263,26 +279,48 @@ int chasm32_main ( int argc, char **argv ){
 	} else if (output == NULL){
 		
 		// Yeah
-		output = replace_extension(input, ".o");														
+		output = replace_extension (input, ".o");														
 	}
 	
+	*/
+	
+	
+	//mostrando se temos os ponteiros.
+	
+	if ( (void *) arch == NULL )
+	{
+	    printf ("arch fail\n");
+	}
+		
+	if ( (void *) exec == NULL )
+	{
+	    printf ("exec fail\n");
+	}
+	
+	if ( (void *) input == NULL )
+	{
+	    printf ("input fail\n");
+	}
+	
+	if ( (void *) output == NULL  )
+	{
+	    printf ("output fail\n");
+	}
 	
 	//===================
 	
-	
 	//#debug
-	printf ("#breakpoint\n");
-	while (1){
-	    asm ("pause");
-	}		
+	//printf ("#breakpoint\n");
+	//while (1){ asm ("pause"); }			
 	
 	
 	// #importante:
 	// Essa parte começa usar funções da libc que precisam ser implmetadas.
 	
 	// Try to read the source code
+	printf ("Try to read the source code %s\n", input );
 	
-	char *code = read_file(input);																		
+	char *code = read_file (input);																		
 	
 	// Failed to read it...
 	if (code == NULL) 
@@ -290,6 +328,11 @@ int chasm32_main ( int argc, char **argv ){
 		printf("Error: couldn't open '%s'\n", input);													
 		return 1;
 	}
+	
+	//#debug
+	printf ("#breakpoint\n");
+	while (1){ asm ("pause"); }				
+	
 	
 	// Create the lexer
 	lexer_t *lexer = lexer_new ( input, code );															
@@ -419,7 +462,10 @@ int chasm32_main ( int argc, char **argv ){
 
 int main ( int argc, char *argv[] ){
 
-    return (int) chasm32_main ( argc, argv );
+	printf ("\n\n");
+	printf ("Initializing chasm32 for Gramado ...\n\n");
+	
+    return (int) run ( argc, argv );
 }
 
 

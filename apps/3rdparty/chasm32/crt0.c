@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "r/chasm32.h"
 
 
@@ -17,7 +16,6 @@ extern int main ( int argc, char *argv[] );
 #define LSH_TOK_DELIM " \t\r\n\a" 
 #define SPACE " "
 #define TOKENLIST_MAX_DEFAULT 80
-
 
 int crt0 (){
 	
@@ -39,10 +37,10 @@ int crt0 (){
 	
 	
 //#ifdef GRAMC_VERBOSE
-	printf("\n\n");
-	printf("crt0: Initializing chasm32 ...\n");
+	//printf("\n\n");
+	//printf("crt0: Initializing app ...\n");
 	//printf("\n");
-	printf ("# cmdline={%s} #\n", shared_memory );
+	//printf ("# cmdline={%s} #\n", shared_memory );
 //#endif
 	
     
@@ -92,10 +90,12 @@ int crt0 (){
 	//de retorno e exit.
 	//então vamos sair aqui mesmo.
 	
+	printf("\n\n");
+	
 	switch (Ret)
 	{
-		case 0:
-		    printf("crt0: exit(0)\n");
+		case 0:	   
+			printf("crt0: exit(0)\n");
 			//exit(0);
 			while(1){}
 		    break;

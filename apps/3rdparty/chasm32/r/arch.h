@@ -12,18 +12,27 @@
 
 #define REGISTER_ARCH(name, namestr, defexec, help, option, lex, parse, gen, ttype, tfree, tprint) static __attribute__((constructor)) void name ## _register(void) { arch_register(namestr, defexec, help, option, lex, parse, gen, ttype, tfree, tprint); }
 
+
 typedef struct {
+	
 	char *name;
 	char *defexec;
 	void (*help)();
+	
 	int (*option)(int, char**, int);
+	
 	token_t *(*lex)(lexer_t*, token_t*, token_t*);
+	
 	node_t *(*parse)(parser_t*, node_t*);
+	
 	int (*gen)(codegen_t*, node_t*);
+	
 	uint8_t (*ttype)(char*);
 	void (*tfree)(token_t*);
 	void (*tprint)(token_t*);
+	
 } arch_t;
+
 
 typedef struct arch_list_s {
 	arch_t *arch;

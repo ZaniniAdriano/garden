@@ -11,10 +11,14 @@
 exec_list_t *exec_list = NULL;
 exec_t *exec_current = NULL;
 
-static exec_t *exec_find(char *name) {
+
+static exec_t *exec_find (char *name){
+	
+	printf ("exec_find:\n");
+	
 	exec_list_t *cur = exec_list;
 	
-	while (cur != NULL) {																				// Let's search!
+	while (cur != NULL){																				// Let's search!
 		if ((strlen(cur->exec->name) == strlen(name)) && !strcmp(cur->exec->name, name)) {				// Found?
 			return cur->exec;																			// Yes!
 		}
@@ -78,10 +82,15 @@ int exec_register(char *name, void (*help)(), int (*option)(int, char**, int), i
 	return 1;
 }
 
-int exec_select(char *name) {
+int exec_select(char *name){
+	
+	printf ("exec_select:\n");
+	
 	exec_t *exec = NULL;
 	
-	if (name != NULL && (exec = exec_find(name)) != NULL) {												// Try to find this exec!
+	// Try to find this exec!
+	if (name != NULL && (exec = exec_find(name)) != NULL) 
+	{												
 		exec_current = exec;																			// :)
 		return 1;
 	}

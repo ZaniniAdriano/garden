@@ -20,7 +20,8 @@ y_tab.o \
 iolib.o \
 mathlib.o \
 strlib.o \
-math.o    
+math.o \
+stubs.o  
 
 
 
@@ -55,31 +56,33 @@ APIOBJ  = ../../../lib/gdelibs/api01/obj
 
 
 
-T= lua
+all: xxxcompile clean
 
-all:	$T
+#T= lua
 
-$T:	$(OBJS)
-	$(CC) -o $@ $(OBJS) -lm
+#all:	$T
 
-A=--------------------------------------------------------------------------
-test:	$T
-	@echo "$A"
-	./$T sort.lua main
-	@echo "$A"
-	./$T globals.lua | sort | column
-	@echo "$A"
-	./$T array.lua
-	@echo "$A"
-	./$T save.lua
-	@echo "$A"
-	./$T test.lua retorno_multiplo norma
+#$T:	$(OBJS)
+#	$(CC) -o $@ $(OBJS) -lm
 
-clean:
-	rm -f $T $(OBJS) core core.*
+#A=--------------------------------------------------------------------------
+#test:	$T
+#	@echo "$A"
+#	./$T sort.lua main
+#	@echo "$A"
+#	./$T globals.lua | sort | column
+#	@echo "$A"
+#	./$T array.lua
+#	@echo "$A"
+#	./$T save.lua
+#	@echo "$A"
+#	./$T test.lua retorno_multiplo norma
 
-diff:
-	diff . fixed | grep -v ^Only
+#clean:
+#	rm -f $T $(OBJS) core core.*
+
+#diff:
+#	diff . fixed | grep -v ^Only
 	
 	
 	
@@ -107,6 +110,7 @@ xxxcompile:
 	cp $(LIBCOBJ)/time.o    .
 	cp $(LIBCOBJ)/unistd.o  .
 	cp $(LIBCOBJ)/math.o    .
+	cp $(LIBCOBJ)/stubs.o    .	
 	
 	
 	ld -m elf_i386 -T link.ld -o LUA.BIN $(myObjects) -Map app_map.s
@@ -120,7 +124,7 @@ xxxlink:
 	
 	@echo "Link Ok ?"	
 	
-xxxclean:
+clean:
 	rm *.o
 	-rm LUA.BIN
 	

@@ -62,9 +62,10 @@ $(OUTPUT): $(OBJECTS)
 	-cp $(LIBCOBJ)/stdio.o   build/
 	-cp $(LIBCOBJ)/string.o  build/
 	-cp $(LIBCOBJ)/ctype.o   build/
+	-cp $(LIBCOBJ)/stubs.o   build/	
 
 #	$(NOECHO)gcc -O3 -o $@ $(OBJECTS) $(LDFLAGS) 
-	ld -m elf_i386 -T link.ld -o CHASM32.BIN $(OBJECTS) build/stdlib.o build/stdio.o build/ctype.o build/string.o  -Map app_map.s
+	ld -m elf_i386 -T link.ld -o CHASM32.BIN $(OBJECTS) build/stdlib.o build/stdio.o build/ctype.o build/string.o build/stubs.o  -Map app_map.s
 	
 	-cp CHASM32.BIN  ../../../bin
 	-rm CHASM32.BIN 

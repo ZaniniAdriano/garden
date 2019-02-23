@@ -9,22 +9,42 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 arch_list_t *arch_list = NULL;
 arch_t *arch_current = NULL;
 
-static arch_t *arch_find(char *name) {
+
+// #bugbug
+// comparamos com uma lista de estruturas de arquitetura.
+// então precisamos configurar essa lista antes.
+
+static arch_t *arch_find (char *name){
+	
+	//#bugbug
+	printf ("arch_find: #todo\n");
+	
 	arch_list_t *cur = arch_list;
 	
-	while (cur != NULL) {																				// Let's search!
-		if ((strlen(cur->arch->name) == strlen(name)) && !strcmp(cur->arch->name, name)) {				// Found?
-			return cur->arch;																			// Yes!
+	// Let's search!
+	while (cur != NULL) 
+	{
+		// Found?
+		if ( ( strlen (cur->arch->name) == strlen (name) ) &&  !strcmp (cur->arch->name, name) ) 
+		{
+			// Yes!
+			//retornando ponteiro de estrutura.
+			printf ("arch_find: OK\n");
+			return cur->arch;																			
 		}
 		
-		cur = cur->next;																				// No, go to the next entry
+		// No, go to the next entry
+		cur = cur->next;																				
 	}
-	
+
+	printf ("arch_find: fail\n");
 	return NULL;
 }
+
 
 int arch_register(char *name, char *defexec, void (*help)(), int (*option)(int, char**, int), token_t *(*lex)(lexer_t*, token_t*, token_t*), node_t *(*parse)(parser_t*, node_t*), int (*gen)(codegen_t*, node_t*), uint8_t (*ttype)(char*), void (*tfree)(token_t*), void (*tprint)(token_t*)) {
 	if (name == NULL || defexec == NULL) {																// We have everything we need?
@@ -92,16 +112,25 @@ int arch_register(char *name, char *defexec, void (*help)(), int (*option)(int, 
 	return 1;
 }
 
+
 int arch_select(char *name) {
+	
+	printf ("arch_select: #todo\n");
+	
+	//isso é uma estrutura.
 	arch_t *arch = NULL;
 	
-	if (name != NULL && (arch = arch_find(name)) != NULL) {												// Try to find this arch!
+	// Try to find this arch!
+	if (name != NULL && (arch = arch_find(name)) != NULL) 
+	{												
 		arch_current = arch;																			// :)
 		return 1;
 	}
 	
+	printf ("arch_select: erro\n");
 	return 0;																							// :(
 }
+
 
 void arch_list_all() {
 	for (arch_list_t *cur = arch_list; cur != NULL; cur = cur->next) {									// Just print all the avaliable architectures
@@ -110,6 +139,7 @@ void arch_list_all() {
 	
 	printf("\n");
 }
+
 
 void arch_help_all() {
 	for (arch_list_t *cur = arch_list; cur != NULL; cur = cur->next) {									// Just print the help for all the avaliable architectures
@@ -121,15 +151,24 @@ void arch_help_all() {
 	}
 }
 
+
 void arch_help() {
 	if (arch_current != NULL && arch_current->help != NULL) {											// Check if the arguments are valid
 		arch_current->help();																			// And redirect
 	}
 }
 
-char *arch_get_defexec() {
-	if (arch_current != NULL) {																			// Check if the arguments are valid
-		return arch_current->defexec;																	// And return
+
+char *arch_get_defexec (){
+	
+	
+	printf ("arch_get_defexec:\n");
+	
+	// Check if the arguments are valid
+	if (arch_current != NULL) 
+	{
+		// And return
+		return arch_current->defexec;																	
 	}
 	
 	return NULL;
@@ -137,21 +176,22 @@ char *arch_get_defexec() {
 
 
 int arch_option ( int argc, char **argv, int i ){
-	
-	
+		
 	printf ("arch_option: \n");
 	
 	// Check if the arguments are valid
 	
-	if ( arch_current != NULL &&               //pointer 
-		 arch_current->option != NULL &&       //function
-		 argv != NULL )                        //args
+	//pointer, function, args 
+	
+	if ( arch_current != NULL &&               
+		 arch_current->option != NULL &&       
+		 argv != NULL )                        
 	{
 		// And redirect
 		printf ("arch_option: >>option\n");
+		
 		return arch_current->option( argc, argv, i );														
 	}
-	
 	
 	printf ("arch_option: nothing\n");
 	return 0;
