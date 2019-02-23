@@ -16,11 +16,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 //system calls.
 #include <stubs/gramado.h> 
 
-void putch (char c)
-{
+
+void putch (char c){
+	
 	/*
 	asm volatile (
 		"movl $4, %%eax;"

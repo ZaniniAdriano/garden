@@ -20,6 +20,10 @@
 #include <stdio.h>
 #include <string.h>
 
+
+//extern size_t strlen (const char *str);
+
+
 //provisoria
 //o tipo 'e size_t
 int puts_strlen (const char *str)
@@ -32,11 +36,16 @@ int puts_strlen (const char *str)
 	return ret_val;
 }
 
-//extern size_t strlen (const char *str);
 
-/* Uses the above routine to output a string... */
-void puts (const char *text)
-{
+/*
+ *********************************************
+ * puts:
+ *     Uses the above routine to output a string...
+ *     Uses putch.
+ */
+
+void puts (const char *text){
+	
 	/*
    	unsigned i = strlen (text);
 
@@ -45,19 +54,19 @@ void puts (const char *text)
 	     	"movl %0, %%ebx;"
 		"movl %1, %%ecx;"
 		"movl $0, %%edx;"
-	     	"int $0x80;" :: "b" (text), "g" (i) : "%eax", "%ecx", "%edx", "memory");
-	
+	     	"int $0x80;" :: "b" (text), "g" (i) : "%eax", "%ecx", "%edx", "memory");	
 	*/
+
 	
 	int i;
-	//o tipo 'e size_t
+	
+	//O tipo é 'size_t'.
 	int l = puts_strlen (text);
 	
-	for (i=0; i < l; i++)
-	{
+	for (i=0; i < l; i++){
+		
 		putch ( (char) text[i] );
 	}
 }
-
 
 

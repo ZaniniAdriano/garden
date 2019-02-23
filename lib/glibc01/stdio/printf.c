@@ -16,10 +16,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
 #include <_printf.h>
+
 
 extern size_t strlen (const char *str);
 
@@ -27,16 +29,20 @@ extern size_t strlen (const char *str);
 static int printf_help (unsigned c, void **ptr)
 {
 	//putch (c);
-	putch((char)c);
+	putch ( (char) c );
 
 	return 0;
 }
 
-void printf (const char *fmt, ...)
-{
-	va_list args;
 
+void printf ( const char *fmt, ... ){
+	
+	va_list args;
 	va_start (args, fmt);
+	
 	(void) do_printf (fmt, args, printf_help, NULL);
+	
 	va_end (args);
 }
+
+

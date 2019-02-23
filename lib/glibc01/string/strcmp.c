@@ -25,16 +25,19 @@
  * @ct: Another string
  */
 
-int strcmp(const char *cs, const char *ct)
-{
+int strcmp (const char *cs, const char *ct){
+	
 	signed char __res;
 
-	while (1) {
+	while (1) 
+	{
 		if ((__res = *cs - *ct++) != 0 || !*cs++)
 			break;
 	}
+	
 	return __res;
 }
+
 
 /**
  * strncmp - Compare two length-limited strings
@@ -42,14 +45,18 @@ int strcmp(const char *cs, const char *ct)
  * @ct: Another string
  * @count: The maximum number of bytes to compare
  */
-int strncmp(const char *cs, const char *ct, size_t count)
-{
+
+int strncmp (const char *cs, const char *ct, size_t count){
+	
 	signed char __res = 0;
 
-	while (count) {
+	while (count) 
+	{
 		if ((__res = *cs - *ct++) != 0 || !*cs++)
 			break;
 		count--;
 	}
+	
 	return __res;
 }
+

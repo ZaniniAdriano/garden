@@ -32,5 +32,4 @@ void gotoxy (int x, int y)
 	
 	//set cursor.
 	gramado_system_call ( 34, (unsigned long) x, (unsigned long) y, 0 );
-
 } 

@@ -20,15 +20,22 @@
 #include <string.h>
 #include <stdarg.h>
 
+
 extern int vsprintf(char *buffer, const char *fmt, va_list args);
 
-int sprintf (char *buffer, const char *fmt, ...)
-{
-	va_list args;
-	int ret_val;
 
-	va_start(args, fmt);
+int sprintf ( char *buffer, const char *fmt, ... ){
+
+	int ret_val;
+	
+	va_list args;
+	va_start (args, fmt);
+	
 	ret_val = vsprintf (buffer, fmt, args);
+	
 	va_end (args);
+	
 	return ret_val;
 }
+
+

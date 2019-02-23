@@ -21,8 +21,10 @@
 #include <sys/socket.h>
 
 
-int connect (int fd, sockaddr_in *addr, socklen_t len) //int connect (int fd, const char *host, int port)
+//int connect (int fd, const char *host, int port)
+int connect (int fd, sockaddr_in *addr, socklen_t len) 
 {
+	/*
 	asm volatile (
 		"movl $13, %%eax;"
 	     	"movl %0, %%ecx;"
@@ -30,6 +32,10 @@ int connect (int fd, sockaddr_in *addr, socklen_t len) //int connect (int fd, co
 	     	"movl %2, %%edx;"
 	     	"int $0x80;" :: "g" (fd), "b" (addr), "g" ((unsigned) len) : "%eax", "%ecx", "%edx", "memory");
 
+	return 1;
+	*/
+	
+	//#todo
 	return 1;
 }
 

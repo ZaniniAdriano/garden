@@ -17,8 +17,8 @@
  */
 
 
-int mount (const char *devname, const char *mountpoint)
-{
+int mount (const char *devname, const char *mountpoint){
+	
 	/*asm volatile (
 		"movl $28, %%eax;"
 		"movl %0, %%ebx;"

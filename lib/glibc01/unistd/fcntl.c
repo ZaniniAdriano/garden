@@ -16,8 +16,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-int fcntl (int fd, int cmd, long arg)
-{
+int fcntl ( int fd, int cmd, long arg ){
+	
+	/*
 	asm volatile (
 		"movl $33, %%eax;"
 	     	"movl %0, %%ebx;"
@@ -25,10 +26,13 @@ int fcntl (int fd, int cmd, long arg)
 		"movl %2, %%edx;"
 	     	"int $0x80;" :: "g" (fd), "g" (cmd), "g" (arg) : "%eax", "%ebx", "%ecx", "%edx");
 
-	/* get return value */
+	// get return value 
 	int *memptr = (int *) 0x9000;
 	int *ret = memptr;
 
 	return (int) *ret;
+	*/
+	
+	return -1;
 }
 

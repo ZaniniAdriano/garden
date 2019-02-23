@@ -21,8 +21,10 @@
 
 
 /* Uses the above routine to output a string... */
-sighandler_t signal (int signum, sighandler_t handler)
-{
+
+sighandler_t signal ( int signum, sighandler_t handler ){
+	
+	/*
 	asm volatile (
 		"movl $27, %%eax;"
 	     	"movl %0, %%ebx;"
@@ -30,5 +32,10 @@ sighandler_t signal (int signum, sighandler_t handler)
 	     	"int $0x80;" :: "g" (signum), "g" (handler) : "%eax", "%ebx", "%ecx");
 
 	return handler;
+	*/
+	
+	//todo
+	
+	return 0;
 }
 

@@ -19,8 +19,11 @@
 
 void setcolor (int t, int f)
 {
+	/*
 	asm volatile ("movl $5, %%eax;"
 	     "movl %0, %%ebx;"
 	     "movl %1, %%ecx;"
 	     "int $0x80;" :: "g" (t), "g" (f) : "%eax", "%ebx", "%ecx");
+	*/
 }
+

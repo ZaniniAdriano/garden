@@ -16,11 +16,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 //system calls.
 #include <stubs/gramado.h> 
 
-int close (int fd)
-{
+
+int close (int fd){
+	
 	/*
 	asm volatile (
 		"pushl %%eax;"

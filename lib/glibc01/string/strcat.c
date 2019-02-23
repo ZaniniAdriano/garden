@@ -17,10 +17,12 @@
  */
 
 
-char *strcat (unsigned char *s, const unsigned char *add)
-{
+char *strcat (unsigned char *s, const unsigned char *add){
+	
 	register char *ret = s;
+	
 	while (*s) s++;
 	while ((*s++ = *add++) != 0);
 	return ret;
 }
+

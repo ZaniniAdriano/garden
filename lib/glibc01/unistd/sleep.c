@@ -18,20 +18,29 @@
 
 unsigned int sleep (unsigned int s)
 {
+	/*
 	asm volatile (
 		"movl $3, %%eax;"
 	     	"movl %0, %%ebx;"
-	     	"int $0x80;" :: "g" (s) : "%eax", "%ebx");
+	     	"int $0x80;" :: "g" (s) : "%eax", "%ebx");	
+	*/
+	
+	//#todo
 
 	return 0;
 }
 
 unsigned int usleep (unsigned int s)
 {
+	/*
 	asm volatile (
 		"movl $20, %%eax;"
 	     	"movl %0, %%ebx;"
 	     	"int $0x80;" :: "g" (s) : "%eax", "%ebx");
+	*/
+	
+	//#todo
 
 	return 0;
 }
+

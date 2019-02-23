@@ -67,6 +67,7 @@
 
 static unsigned long delay_count = 1;
 
+
 /*
  * When I was testing the delay code, I notice that the calibration we use
  * is very delicate.  Originally, I had inlined the delay for() loops into
@@ -81,15 +82,22 @@ static unsigned long delay_count = 1;
  * calibration without it losing its finesse afterwards.
  */
 
-void __delay(loops)
-{
+
+void __delay (loops){
+//void __delay ( unsigned long loops){	
+	
     unsigned long c;
-    for(c=0;c<loops;c++);
+	
+    for ( c=0; c<loops; c++ );
 }
 
-void delay(unsigned long milliseconds)
-{
-    __delay(milliseconds*delay_count);     /* Delay milliseconds ms */
+
+void delay (unsigned long milliseconds){
+	
+	/* Delay milliseconds ms */
+    __delay ( milliseconds*delay_count );     
 }
+
 
 /* The end */
+

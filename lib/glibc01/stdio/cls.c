@@ -17,8 +17,10 @@
  */
 
 
-void cls ()
-{
-	asm volatile ("movl $6, %%eax;"
-	     "int $0x80;" ::: "%eax");
+void cls (){
+	
+	//asm volatile ("movl $6, %%eax;"
+	//     "int $0x80;" ::: "%eax");
+	
+	//#todo.
 } 

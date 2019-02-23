@@ -21,8 +21,9 @@
 #include <sys/socket.h>
 
 
-int socket (int family, int type, int protocol)
-{
+int socket ( int family, int type, int protocol ){
+	
+	/*
 	asm volatile (
 		"movl $12, %%eax;"
 	     	"movl %0, %%ebx;"
@@ -30,11 +31,16 @@ int socket (int family, int type, int protocol)
 	     	"movl %2, %%edx;"
 	     	"int $0x80;" :: "g" (family), "g" (type), "g" (protocol) : "%eax", "%ebx", "%ecx", "%edx");
 
-	/* get return value */
+	//get return value
 
 	int *memptr = (int *) 0x9000;
 	int *ret = memptr;
 
 	return (int) *ret;
+	*/
+	
+	//#todo
+	
+	return -1;
 }
 
