@@ -20,40 +20,42 @@
 #define _SOCKET_H
 
 /* Supported address families. */
-#define AF_UNSPEC	0
-#define AF_UNIX		1	/* Unix domain sockets 		*/
-#define AF_LOCAL	1	/* POSIX name for AF_UNIX	*/
-#define AF_INET		2	/* Internet IP Protocol 	*/
-#define AF_AX25		3	/* Amateur Radio AX.25 		*/
-#define AF_IPX		4	/* Novell IPX 			*/
-#define AF_APPLETALK	5	/* AppleTalk DDP 		*/
-#define AF_NETROM	6	/* Amateur Radio NET/ROM 	*/
-#define AF_BRIDGE	7	/* Multiprotocol bridge 	*/
-#define AF_ATMPVC	8	/* ATM PVCs			*/
-#define AF_X25		9	/* Reserved for X.25 project 	*/
-#define AF_INET6	10	/* IP version 6			*/
-#define AF_ROSE		11	/* Amateur Radio X.25 PLP	*/
-#define AF_DECnet	12	/* Reserved for DECnet project	*/
-#define AF_NETBEUI	13	/* Reserved for 802.2LLC project*/
-#define AF_SECURITY	14	/* Security callback pseudo AF */
-#define AF_KEY		15      /* PF_KEY key management API */
-#define AF_NETLINK	16
-#define AF_ROUTE	AF_NETLINK /* Alias to emulate 4.4BSD */
-#define AF_PACKET	17	/* Packet family		*/
-#define AF_ASH		18	/* Ash				*/
-#define AF_ECONET	19	/* Acorn Econet			*/
-#define AF_ATMSVC	20	/* ATM SVCs			*/
-#define AF_SNA		22	/* Linux SNA Project (nutters!) */
-#define AF_IRDA		23	/* IRDA sockets			*/
-#define AF_PPPOX	24	/* PPPoX sockets		*/
-#define AF_WANPIPE	25	/* Wanpipe API Sockets */
-#define AF_LLC		26	/* Linux LLC			*/
-#define AF_TIPC		30	/* TIPC sockets			*/
-#define AF_BLUETOOTH	31	/* Bluetooth sockets 		*/
-#define AF_IUCV		32	/* IUCV sockets			*/
-#define AF_RXRPC	33	/* RxRPC sockets 		*/
-#define AF_MAX		34	/* For now.. */
-#define AF_RS232	35	/* Serial socket (NEW!) */
+
+#define AF_UNSPEC     0
+#define AF_UNIX       1     /* Unix domain sockets 		*/
+#define AF_LOCAL      1     /* POSIX name for AF_UNIX	*/
+#define AF_INET       2     /* Internet IP Protocol 	*/
+#define AF_AX25       3     /* Amateur Radio AX.25 		*/
+#define AF_IPX        4     /* Novell IPX 			*/
+#define AF_APPLETALK  5     /* AppleTalk DDP 		*/
+#define AF_NETROM     6     /* Amateur Radio NET/ROM 	*/
+#define AF_BRIDGE     7     /* Multiprotocol bridge 	*/
+#define AF_ATMPVC     8     /* ATM PVCs			*/
+#define AF_X25        9     /* Reserved for X.25 project 	*/
+#define AF_INET6      10    /* IP version 6			*/
+#define AF_ROSE       11    /* Amateur Radio X.25 PLP	*/
+#define AF_DECnet     12    /* Reserved for DECnet project	*/
+#define AF_NETBEUI    13    /* Reserved for 802.2LLC project*/
+#define AF_SECURITY   14    /* Security callback pseudo AF */
+#define AF_KEY        15    /* PF_KEY key management API */
+#define AF_NETLINK    16
+#define AF_ROUTE      AF_NETLINK    /* Alias to emulate 4.4BSD */
+#define AF_PACKET     17            /* Packet family		*/
+#define AF_ASH        18            /* Ash				*/
+#define AF_ECONET     19            /* Acorn Econet			*/
+#define AF_ATMSVC     20            /* ATM SVCs			*/
+#define AF_SNA        22            /* Linux SNA Project (nutters!) */
+#define AF_IRDA       23            /* IRDA sockets			*/
+#define AF_PPPOX      24            /* PPPoX sockets		*/
+#define AF_WANPIPE    25            /* Wanpipe API Sockets */
+#define AF_LLC        26            /* Linux LLC			*/
+#define AF_TIPC       30            /* TIPC sockets			*/
+#define AF_BLUETOOTH  31            /* Bluetooth sockets 		*/
+#define AF_IUCV       32            /* IUCV sockets			*/
+#define AF_RXRPC      33            /* RxRPC sockets 		*/
+#define AF_MAX        34            /* For now.. ??? */
+#define AF_RS232      35            /* Serial socket (NEW!) */
+
 
 /* Protocol families, same as address families. */
 #define PF_UNSPEC	AF_UNSPEC
@@ -91,12 +93,13 @@
 #define PF_MAX		AF_MAX
 #define PF_RS232	AF_RS232
 
+
 /* Maximum queue length specifiable by listen.  */
 #define SOMAXCONN	128
 
+
 /* Flags we can use with send/ and recv. 
-   Added those for 1003.1g not all are supported yet
- */
+   Added those for 1003.1g not all are supported yet */
  
 #define MSG_OOB		1
 #define MSG_PEEK	2
@@ -156,13 +159,21 @@
 /* IPX options */
 #define IPX_TYPE	1
 
-/* Sock types */
-#define SOCK_STREAM	1		/* stream (connection) socket	*/
-#define SOCK_DGRAM	2		/* datagram (conn.less) socket	*/
-#define SOCK_RAW	3		/* raw socket			*/
-#define SOCK_RDM	4		/* reliably-delivered message	*/
-#define SOCK_SEQPACKET	5		/* sequential packet socket	*/
-#define SOCK_PACKET	10		/* linux specified 		*/
+
+/* 
+ *  ** Sock types  ** 
+ */
+
+#define SOCK_STREAM     1    /* stream (connection) socket	*/
+#define SOCK_DGRAM      2    /* datagram (conn.less) socket	*/
+#define SOCK_RAW        3    /* raw socket			        */
+#define SOCK_RDM        4    /* reliably-delivered message	*/
+#define SOCK_SEQPACKET  5    /* sequential packet socket	*/
+#define SOCK_PACKET    10    /* linux specified 		    */
+
+//#test
+#define SOCK_GRAMADO_MSG    8000    /* window, msg, long1, long2 */
+
 
 #define 	_NETINET_IN_H_
 #define 	IPPROTO_IP   	0	// Dummy for IP.

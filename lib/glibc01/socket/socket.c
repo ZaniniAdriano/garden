@@ -17,10 +17,30 @@
  */
 
 
+//#importante
+//Os serviços atendidos pela system call para socket da libc vao de 7000 `a 7999.
+
+
 #include <string.h>
 #include <sys/socket.h>
 
 
+
+/*
+//?? domain, type, protocol
+socket() creates an endpoint for communication and returns a file
+       descriptor that refers to that endpoint.  The file descriptor
+       returned by a successful call will be the lowest-numbered file
+       descriptor not currently open for the process.
+	   
+The domain argument specifies a communication domain; this selects
+       the protocol family which will be used for communication.  These
+       families are defined in <sys/socket.h>. 
+	 
+The socket has the indicated type, which specifies the communication
+       semantics.
+*/
+		   
 int socket ( int family, int type, int protocol ){
 	
 	/*
@@ -39,8 +59,7 @@ int socket ( int family, int type, int protocol ){
 	return (int) *ret;
 	*/
 	
-	//#todo
-	
-	return -1;
+    //serviço 7000.
+	return (int) system_call ( 7000, (unsigned long) family, (unsigned long) type, (unsigned long) protocol );
 }
 
