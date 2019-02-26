@@ -16,11 +16,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+//http://man7.org/linux/man-pages/man3/psignal.3.html
+//http://man7.org/linux/man-pages/man2/signal.2.html
+//http://man7.org/linux/man-pages/man2/sigaction.2.html
 
 #include <signal.h>
 
 
 /* Uses the above routine to output a string... */
+//void ( *signal(int signum, void (*handler)(int)) ) (int);
 
 sighandler_t signal ( int signum, sighandler_t handler ){
 	
