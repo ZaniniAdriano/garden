@@ -1,5 +1,6 @@
 /*
- * doscan.c - scan formatted input
+ *  scan formatted input
+ * credits: minix 3
  */
 /* $Header$ */
 
