@@ -14,6 +14,10 @@
 #include "status.h"
 #include "addrbar.h"
 
-int gfeMain ();
+ 
+
+int main ( int argc, char *argv[] );
+
+
 
 
