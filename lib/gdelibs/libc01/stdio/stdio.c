@@ -1619,26 +1619,15 @@ int scanf ( const char *fmt, ... ){
    // va_end(ap);
    
    return (int) 0;
-};
-
+}
 //======================================================================
 // scanf support (end)
 //======================================================================
 
 
-// #bugbug
-// Essa funções está implementada em fscanf/fscanf.c
 
-//(since C99)	
-//int fscanf( FILE *restrict stream, const char *restrict format, ... );
-//(until C99)
-int fscanf (FILE *stream, const char *format, ... ){
-	
-	printf ("fscanf: todo \n");
-    return -1;
-}
-
- /*
+/*
+ * sscanf: 
  * Scan items from a string in accordance with a format.  This is much
  * simpler than the C standard function: it only recognises %d without a
  * field width, and does not treat space in the format string or the
@@ -1649,7 +1638,7 @@ int fscanf (FILE *stream, const char *format, ... ){
  * Credits: apple open source.
  */
 
-int sscanf(const char *str, const char *format, ...){
+int sscanf ( const char *str, const char *format, ... ){
 	
 	const char *start = str;
 	va_list args;
