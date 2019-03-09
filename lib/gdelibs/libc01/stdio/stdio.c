@@ -1626,6 +1626,8 @@ int scanf ( const char *fmt, ... ){
 //======================================================================
 
 
+// #bugbug
+// Essa funções está implementada em fscanf/fscanf.c
 
 //(since C99)	
 //int fscanf( FILE *restrict stream, const char *restrict format, ... );
