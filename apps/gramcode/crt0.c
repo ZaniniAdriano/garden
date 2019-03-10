@@ -161,10 +161,10 @@ int crt0 (){
     //
 	
     printf("*HANG\n");
+	
 	exit (-1);
+	//exit (retval);
 };
-
-
 
 
 //

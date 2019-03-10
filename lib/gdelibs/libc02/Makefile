@@ -1,13 +1,13 @@
 
-# libc01
-# libc version 0.1 for GDE project.
-# 2018 -  Created by Fred Nora.
+# libc02
+# libc version 0.2 for GDE project
+# 2019 - Created by Fred Nora.
 
 
 VERSION = 0
-PATCHLEVEL = 1
+PATCHLEVEL = 2
 SUBLEVEL = 0
-EXTRAVERSION = .0
+EXTRAVERSION = -rc0
 NAME = Gramado LibC
 
 
@@ -17,8 +17,8 @@ TARGETOS ?= gramado
 #TARGETOS ?= linux
 
 
-#STATIC_LIB = obj/lib/libc01.a
-#SHARED_LIB = obj/lib/libc01.so
+#STATIC_LIB = obj/lib/libc02.a
+#SHARED_LIB = obj/lib/libc02.so
 
 
 #todo:
@@ -44,10 +44,10 @@ CFLAGS = -m32 \
 
 
 #.PHONY: all all-c jackpot-link finalize clean
-.PHONY: all all-c libc01-link finalize clean
+.PHONY: all all-c libc-link finalize clean
 
 #all: main.o all-c jackpot-link finalize clean
-all: main.o all-c libc01-link finalize clean
+all: main.o all-c libc-link finalize clean
 	@echo "Ok?"
 
 main.o:
@@ -88,7 +88,14 @@ all-c:
 	gcc  -c  wait.c    $(CFLAGS) -I. -I include/ -o wait.o		
 	gcc  -c  math.c    $(CFLAGS) -I. -I include/ -o math.o			
 #...	
-	
+
+ 
+# test
+# entry point para a biblioteca compartilhada. .so
+
+	gcc  -c  socrt0.c -fno-stack-protector -fpic -mno-red-zone  -DEFI_FUNCTION_WRAPPER  $(CFLAGS) -I. -I include/ -o socrt0.o	
+	gcc  -c  somain.c -fno-stack-protector -fpic -mno-red-zone  -DEFI_FUNCTION_WRAPPER  $(CFLAGS) -I. -I include/ -o somain.o	
+
 	
 #ifeq ($(TARGETOS),gramado)
 #	gcc  -c  sysdeps/gramado/gramado.c  $(CFLAGS) -I. -I include/ -o gramado.o			
@@ -97,20 +104,30 @@ all-c:
 #ifeq ($(TARGETOS),linux)
 #	gcc  -c  sysdeps/gramado/linux.c  $(CFLAGS) -I. -I include/ -o linux.o	
 #endif	
+
 	
 
 #create 'ar'
-libc01-link:
-#	ld -m i386pe -T link.ld -o JACKPOT.BIN $(myObjects) -Map app_map.s
+libc-link:
+	ar rc LIBC02.A $(OBJECTS)
+	ld -m elf_i386 socrt0.o somain.o -nostdlib -T elf_ia32_efi.lds -shared -znocombreloc -Bsymbolic -L . -l:LIBC02.A -o LIBC02.SO -Map map.s
 
 finalize:
 #	cp JACKPOT.BIN  ../../../bin
 	-mkdir obj/
 	-cp *.o obj/
+	-cp LIBC02.A obj/
+	-cp LIBC02.SO obj/
+	
+	
 	
 clean:
 	-rm *.o
+	-rm *.A
+	-rm *.SO
 	
 	
+
 	
 	
+
