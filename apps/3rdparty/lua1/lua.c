@@ -68,9 +68,52 @@ void main2 (int argc, char *argv[]){
 //int lua1_main ()
 int main ( int argc, char *argv[] ){
 	
-	//printf ("main: Starting lua 1.0 ...\n");
+	printf ("main: Starting lua 1.0 (debug) ...\n");
 	
-    main2 (1,NULL);
+    //main2 (1,NULL);
+	//return 0;
+	
+    int i;
+    if (argc < 2)
+	{
+		puts ("\n");
+        puts ("usage: lua filename [functionnames] \n");
+		printf ("argc=%d \n", argc);
+		puts ("\n");
+        return 1;
+    }
+    
+	puts ("\n");
+	printf ("register ...\n");
+	
+	lua_register ("callfunc", callfunc);
+    lua_register ("execstr", execstr);
+    lua_register ("test", test);
+    
+	puts ("\n");
+	printf ("streams ...\n");
+	
+	iolib_open ();
+    strlib_open ();
+    
+	puts ("\n");
+	printf ("math ...\n");
+	
+	mathlib_open ();
+	
+	puts ("\n");
+	printf ("file ...\n");
+    
+	lua_dofile (argv[1]);
+    
+	puts ("\n");
+	printf ("loop ...\n");
+	
+	for (i=2; i<argc; i++)
+    {
+        lua_call (argv[i],0);
+    }	
+	 
 	return 0;
 }
 

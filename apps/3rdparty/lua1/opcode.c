@@ -755,18 +755,24 @@ int lua_pushstring (char *s)
 }
 
 /*
-** Push an object (tag=cfunction) to stack. Return 0 on success or 1 on error.
-*/
+ ** Push an object (tag=cfunction) to stack. Return 0 on success or 1 on error.
+ */
+
 int lua_pushcfunction (lua_CFunction fn)
 {
- if ((top-stack) >= MAXSTACK-1)
- {
-  lua_error ("stack overflow");
-  return 1;
- }
- tag(top) = T_CFUNCTION; fvalue(top++) = fn;
- return 0;
+    if ((top-stack) >= MAXSTACK-1)
+    {
+        lua_error ("stack overflow");
+        return 1;
+    }
+    
+	tag(top) = T_CFUNCTION; 
+	
+	fvalue(top++) = fn;
+    
+	return 0;
 }
+
 
 /*
 ** Push an object (tag=userdata) to stack. Return 0 on success or 1 on error.
