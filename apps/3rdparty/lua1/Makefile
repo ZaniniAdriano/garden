@@ -21,9 +21,10 @@ iolib.o \
 mathlib.o \
 strlib.o \
 math.o \
-stubs.o  
-
-
+fscanf.o \
+strtol.o \
+strtoul.o \
+stubs.o   
 
 
 
@@ -48,8 +49,8 @@ XXXCFLAGS = -m32 \
 #	-s
 
 
-LIBC    = ../../../lib/gdelibs/libc01/include/
-LIBCOBJ = ../../../lib/gdelibs/libc01/obj
+LIBC    = ../../../lib/gdelibs/libc02/include/
+LIBCOBJ = ../../../lib/gdelibs/libc02/obj
 
 API01   = ../../../lib/gdelibs/api01/include/
 APIOBJ  = ../../../lib/gdelibs/api01/obj
@@ -111,7 +112,9 @@ xxxcompile:
 	cp $(LIBCOBJ)/unistd.o  .
 	cp $(LIBCOBJ)/math.o    .
 	cp $(LIBCOBJ)/stubs.o    .	
-	
+	cp $(LIBCOBJ)/fscanf.o    .	
+	cp $(LIBCOBJ)/strtol.o    .
+	cp $(LIBCOBJ)/strtoul.o    .
 	
 	ld -m elf_i386 -T link.ld -o LUA.BIN $(myObjects) -Map app_map.s
 	-cp LUA.BIN  ../../../bin
