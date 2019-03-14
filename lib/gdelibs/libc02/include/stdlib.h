@@ -51,6 +51,9 @@
 #define _STDLIB_H 1
 
 
+#include <stddef.h>
+
+
 
 #ifdef	_BSD_SIZE_T_
 typedef	_BSD_SIZE_T_	size_t;

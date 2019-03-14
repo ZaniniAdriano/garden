@@ -127,7 +127,8 @@ int crt0 (){
 #endif	
 	
 	
-
+	libcInitRT ();
+	stdioInitialize ();	
 	
 #ifdef TEDITOR_VERBOSE		
     //Inicializando o editor propriamente dito.	
