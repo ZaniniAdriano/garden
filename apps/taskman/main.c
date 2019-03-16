@@ -468,6 +468,7 @@ int tmInit (){
  * @todo:
  *     +... 
  */
+
 int appMain ( int argc, char *argv[] ){
 	
 	//int Status;	
@@ -494,9 +495,9 @@ int appMain ( int argc, char *argv[] ){
     //esse é o serviço usado pelos servidores 
     //para dialogar com o kernel.
 	
-#ifdef TASKMAN_VERBOSE
-	printf("appMain: Initializing taskman server..\n");
-#endif	
+
+	printf ("GDETM.BIN: Initializing ... #todo \n");
+
 	
 	//o kernel deverá associar o PID a um magic.
 	
@@ -595,7 +596,7 @@ int appMain ( int argc, char *argv[] ){
     // Uma mensagem de sinal de vida.
 	apiBeginPaint();
 	    //(type, string1, string2)
-	    MessageBox( 1, "TASKMAN.BIN:", "Initializing..");
+	    MessageBox ( 1, "TASKMAN.BIN:", "Initializing..");
 	apiEndPaint();
 	
 	
@@ -764,7 +765,7 @@ int appMain ( int argc, char *argv[] ){
 	
 	apiBeginPaint();
 	    //(type, string1, string2)
-	    MessageBox( 1, "TASKMAN:", "Get message loop");	
+	    MessageBox ( 1, "TASKMAN:", "Get message loop");	
 	apiEndPaint();
     
 	while (1)

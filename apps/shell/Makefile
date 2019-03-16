@@ -38,11 +38,11 @@ CFLAGS = -m32 \
 
 
 
-LIBC    = ../../../../lib/gdelibs/libc01/include/
-LIBCOBJ = ../../../../lib/gdelibs/libc01/obj
+LIBC    = ../../lib/gdelibs/libc01/include/
+LIBCOBJ = ../../lib/gdelibs/libc01/obj
 
-API01   = ../../../../lib/gdelibs/api01/include/
-APIOBJ  = ../../../../lib/gdelibs/api01/obj
+API01   = ../../lib/gdelibs/api01/include/
+APIOBJ  = ../../lib/gdelibs/api01/obj
 
 
 
@@ -62,9 +62,8 @@ string.o \
 conio.o \
 builtins.o \
 desktop.o \
-unistd.o 
-
-
+unistd.o \
+stubs.o    
 
 
 
@@ -102,12 +101,14 @@ all-c:
 	cp $(LIBCOBJ)/conio.o .
 	cp $(LIBCOBJ)/wait.o .
 	cp $(LIBCOBJ)/unistd.o .
+	cp $(LIBCOBJ)/stubs.o .	
+	
 
 shell-link:
 	ld -m elf_i386 -T link.ld -o GDESHELL.BIN $(myObjects) -Map shell_map.s
 
 finalize:
-	cp GDESHELL.BIN ../../../../bin
+	cp GDESHELL.BIN ../../bin
 
 clean:
 	-rm *.o

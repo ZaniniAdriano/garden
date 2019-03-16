@@ -8,8 +8,8 @@
 VERSION = 0
 PATCHLEVEL = 0
 SUBLEVEL = 0
-EXTRAVERSION =
-#NAME = gramcode
+EXTRAVERSION = 
+#NAME = gramtext
 
 #todo:
 #We need to simplify these flags
@@ -48,8 +48,8 @@ stdio.o \
 string.o \
 unistd.o \
 api.o \
-status.o  
-
+status.o \
+stubs.o  
 
 
 .PHONY: all all-c gramtext-link finalize clean
@@ -72,6 +72,7 @@ all-c:
 	cp $(LIBCOBJ)/string.o  .
 	cp $(LIBCOBJ)/time.o    .
 	cp $(LIBCOBJ)/unistd.o  .
+	cp $(LIBCOBJ)/stubs.o   .
 	
 
 

@@ -111,36 +111,6 @@ void idleLoop (){
 
  
 
-
- 
-/*
- ************************
- * initMain:
- *     main().
- *
- */ 
-//static char * argv[] = { "-init",NULL };
-//static char * envp[] = { "ROOT=root:/volume0", NULL };
-
-int initMain (int argc, char *argv[]){
-	
-	//nothing for now.
-	
-	//isso foi feito no crt0.
-	//libcInitRT ();
-	//stdioInitialize ();		
-	
-	// #debug
-	// Testing output message.
-	printf("initMain: INIT.BIN is alive \n");
-    refresh_screen();	
-	
-	return 0;
-};
-
-
-
-
 /*
  *********************************************************
  * driverInitialize:
@@ -248,6 +218,7 @@ unsigned long idleServices (unsigned long number){
  * idleInit:
  *     Inicializando a aplicação Idle.
  */
+
 int idleInit (){
 	
 	idleStatus = 0;
@@ -258,6 +229,23 @@ int idleInit (){
 	//...
 	return (int) 0;
 };
+
+
+/*
+ ************************
+ * main:
+ *     Main function for gdeinit
+ */ 
+
+int main ( int argc, char *argv[] ){
+	
+
+	printf ("GDEINIT.BIN: Initializing ... #todo \n");
+    
+	//refresh_screen();	
+	
+	return 0;
+}
 
 
 //

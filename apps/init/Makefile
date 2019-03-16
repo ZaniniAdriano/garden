@@ -39,25 +39,26 @@ CFLAGS = -m32 \
 
 
 
-LIBC    = ../../../../lib/gdelibs/libc01/include/
-LIBCOBJ = ../../../../lib/gdelibs/libc01/obj
+LIBC    = ../../lib/gdelibs/libc01/include/
+LIBCOBJ = ../../lib/gdelibs/libc01/obj
 
-API01   = ../../../../lib/gdelibs/api01/include/
-APIOBJ  = ../../../../lib/gdelibs/api01/obj
+API01   = ../../lib/gdelibs/api01/include/
+APIOBJ  = ../../lib/gdelibs/api01/obj
 
 
 	##
 	## Objects
 	##
 
-myObjects = main.o \
+myObjects = crt0.o main.o \
 api.o \
 ctype.o \
 stdio.o \
 stdlib.o \
 string.o \
 conio.o \
-unistd.o   
+unistd.o \
+stubs.o    
 
 
 
@@ -85,12 +86,13 @@ all-c:
 	cp $(LIBCOBJ)/conio.o .
 	cp $(LIBCOBJ)/wait.o .
 	cp $(LIBCOBJ)/unistd.o .
+	cp $(LIBCOBJ)/stubs.o .
 
 init-link:
 	ld -m elf_i386 -T link.ld -o GDEINIT.BIN $(myObjects) -Map APP_map.s
 
 finalize:
-	cp GDEINIT.BIN ../../../../bin
+	cp GDEINIT.BIN ../../bin
 
 clean:
 	-rm *.o

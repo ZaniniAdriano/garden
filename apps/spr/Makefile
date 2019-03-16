@@ -57,7 +57,8 @@ string.o \
 conio.o \
 builtins.o \
 desktop.o \
-unistd.o 
+unistd.o \
+stubs.o    
 
 
 
@@ -95,6 +96,9 @@ all-c:
 	cp $(LIBCOBJ)/conio.o   .
 	cp $(LIBCOBJ)/wait.o    .
 	cp $(LIBCOBJ)/unistd.o  .
+	cp $(LIBCOBJ)/stubs.o  .
+	
+	
 
 shell-link:
 	ld -m elf_i386 -T link.ld -o SPR.BIN $(myObjects) -Map map.s

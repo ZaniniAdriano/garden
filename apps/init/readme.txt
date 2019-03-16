@@ -1,24 +1,15 @@
+Informações sobre o aplicativo IDLE.BIN:
+=======================================
 
+    Idle process.
+   	P3 - Processos em ring3, User Mode.	
 
-    ===================================
-   /init
-
-   Conjunto de programas que são usados durante a inicialização do sistema.
-   Um desses programas podem ser o primeiro processo a rodar, normalmente 
-   é o programa INIT.BIN.
-
-   
-   ===============================================
-   /init/core
-
-   Gramado Core Environment.
-
-   Ambiente básico onde esses programas de habitam.
-   Outros componentes do sistema podem atuar diretamente 
-   no gramado core.
-
-   Os programas do gramado core são:
-   /init/core/init
-   /init/core/shell
-   /init/core/taskman   
-  
+Atribuições:	
+    Por enquanto esse processão dão deve realizar tarefa nenhuma.
+	
+Obs:    
+	Por enquando cada aplicativo tem um endereço diferente na memória virtual,
+    mas todos eles terão o mesmo endereço, só que cada processo deverá seu próprio 
+	diretório de páginas.
+	
+	versão 1.0, 2016.

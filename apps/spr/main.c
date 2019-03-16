@@ -556,7 +556,7 @@ void quit ( int status ){
  
 /*
  **************
- * shmain: 
+ * main: 
  *     Função principal.
  *     The Application Entry Point.
  *
@@ -653,11 +653,17 @@ int main ( int argc, char *argv[] ){
 	//Ok isso funcionou.
 	//Argumentos passados com sucesso do crt0 para o main.
 	
-	//printf("argc={%d}\n",argc);
+	//#debug
+	printf ("Initializing ...\n ");
+	printf ("argc={%d}\n", argc );
 	
-	//printf("arg[0]={%s}\n",argv[0]);
-	//printf("arg[1]={%s}\n",argv[1]);
-	//printf("arg[2]={%s}\n",argv[2]);
+	if ( argc >= 2 )
+	{
+	    printf ("arg[0]={%s}\n", argv[0] );
+	    printf ("arg[1]={%s}\n", argv[1] );
+	    //printf ("arg[2]={%s}\n", argv[2] );	
+	}
+
 	
 	//
 	// Filtra a quantidade de argumentos.
@@ -679,34 +685,38 @@ int main ( int argc, char *argv[] ){
 		goto noArgs; 
 	}else{
 		
-		//argv[0] = Tipo de shell: interativo ou não
-		//argv[1] = Tipo de uso: login ... outros ?? 
 		
-		//printf("Testing args ...\n");
-		
-		//#todo: (possibilidades)
-		//As flags poderia começar com f. Ex: fInteractive, fLoginShell,
-		
-	    if ( strncmp ( (char *) argv[0], "--interactive", 13 ) == 0 )
-		{	
-			interactive = 1;
-        };
-
-		
-	    if ( strncmp ( (char *) argv[1], "--login", 7 ) == 0 )
-		{	
-			login_shell = 1;
-        };	
-		
-		//Nome passado viar argumento.
-		//shell_name = (char*) argv[2];
-
 		//#importante
 		//flags provisórias.
+		
 		interactive = 1;
 		login_shell = 1;
 		
-        //...		
+		// #bugbug
+		// Importante
+		// Se alguns dos ponteiros aqui for null vai dar page fault.
+		// Então so podemos comparar até o limite da quantidade de argumentos 
+		// disponíveis.
+		
+		if ( argc >= 2 )
+		{
+		    //printf ("cmp 1\n");
+		    if ( strncmp ( (char *) argv[1], "--interactive", 13 ) == 0 )
+		    {	
+			    interactive = 1;
+            };
+
+		    //printf ("cmp 2\n");
+	        if ( strncmp ( (char *) argv[1], "--login", 7 ) == 0 )
+		    {	
+			    login_shell = 1;
+            };	
+			
+		}else{
+			
+		    interactive = 1;
+		    login_shell = 1;		
+		}		
 	};
 	
 	//Nothing.
@@ -735,6 +745,8 @@ noArgs:
 	// Os argumentos tratados abaixo podem modificar esses padrões
 	// Ex: Um argumento de entrada pode solicitar a troca de cor de fonte.
 	
+	printf ("Calling shellShell...\n");
+	
 	shellShell (); 	
 	
 	//Apenas inicialize. Continuaremos com o procedimento 
@@ -742,6 +754,9 @@ noArgs:
 	
     
 //again:	
+	
+	printf ("Creating window ...\n");
+	
 	enterCriticalSection ();    
     hWindow = shellCreateMainWindow (1);
 	exitCriticalSection ();

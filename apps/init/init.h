@@ -11,7 +11,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-int initMain (int argc, char *argv[]);
+int main ( int argc, char *argv[] );
 
 
 

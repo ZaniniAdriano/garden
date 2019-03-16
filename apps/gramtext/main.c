@@ -61,307 +61,6 @@ teditorProcedure ( struct window_d *window,
 				   unsigned long long2 );
 				   
 
-/*
- * main: */
- 
-int main ( int argc, char *argv[] ){
-	
-	int ch;
-	FILE *fp;
-    int char_count = 0;	
-	
-	struct window_d *hWindow;
-	
-	
-	//#todo: analizar a contagem de argumentos.
-	
-	
-#ifdef TEDITOR_VERBOSE			
-	printf("\n");
-	printf("Initializing Text Editor:\n");
-	printf("mainTextEditor: # argv0={%s} # \n", argv[0] );	
-	printf("mainTextEditor: # argv1={%s} # \n", argv[1] );
-#endif	
-
-    //#debug
-    //while(1){
-	//	asm ("pause");
-	//}
-	
-	//
-	// ## vamos repetir o que dá certo ...
-	//
-	
-	//vamos passar mais coisas via registrador.
-	
-	//ok
-	//foi passado ao crt0 via registrador
-	//printf("argc={%d}\n", argc ); 
-	
-	//foi passado ao crt0 via memória compartilhada.
-	//printf("argvAddress={%x}\n", &argv[0] ); //endereço.
-	
-	
-	//unsigned char* buf = (unsigned char*) (0x401000 - 0x100) ;
-	//printf("argvString={%s}\n" ,  &argv[0] );
-	//printf("argvString={%s}\n" , &buf[0] );
-	
-	//printf("argv={%s}\n", &argv[2] );
-	
-	
-	//#importante
-	//inicializa as variáveis antes de pintar.
-    teditorTeditor ();	
-	
-
-	//
-	// ## Window ##
-	//
-    
-	//frame
-	//Criando uma janela para meu editor de textos.
-	
-	apiBeginPaint(); 
-
-	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, argv[1],
-	                    wpWindowLeft, wpWindowTop, wsWindowWidth, wsWindowHeight,    
-                        0, 0, 0x303030, 0x303030 );	   
-	
-
-	if ( (void *) hWindow == NULL )
-	{	
-		printf("TEDITOR.BIN: hWindow fail");
-		apiEndPaint();
-		goto fail;
-	}
-    apiEndPaint();
-	
-    APIRegisterWindow (hWindow);
-	
-	
-	//set active efetua um redraw ...
-	//isso parece ser redundante na inicialização do 
-	//programa. Talvez o certo seria desenhar a janela 
-	//ja setando ativando.	
-    APISetActiveWindow (hWindow);	
-    
-	//set focus efetua um redraw ...
-	//isso parece ser redundante na inicialização do 
-	//programa. Talvez o certo seria desenhar a janela 
-	//ja setando o foco.
-	APISetFocus (hWindow);	
-	
-	//#suspenso 
-	//vamos tentar refresh só da janela.
-	//refresh_screen ();	
-	
-	apiShowWindow (hWindow);
-
-
-	//apiBeginPaint();    
-	//editorClearScreen(); 
-	//topbarInitializeTopBar();
-	//statusInitializeStatusBar();
-	//update_statuts_bar("# Status bar string 1","# Status bar string 2");
-	//apiEndPaint();
-	
-	
-	//apiBeginPaint();
-	//?? edit box ??
-	//apiEndPaint();
-	
-	//
-	//  ## Testing file support. ##
-	//
-	
-	
-    //
-	//  ## buffer ##
-	//
-	
-	
-    //Inicializando buffer.
-	//É nesse buffer que ficará o arquivo de texto que será salvo no disco.
-
-    //strcat( RAW_TEXT, "initializing file ...");		
-	
-	
-//file:
-
-//#ifdef TEDITOR_VERBOSE		
-	//printf("\n");
-	printf("\n");
-    printf("Loading file ...\n");
-//#endif	
-	
-	// Page fault:    
-	// Pegando o argumento 1, porque o argumento 0 é o nome do editor.
-	
-    // ## No file ## 
-	//Se nenhum nome de arquivo foi especificado, então começamos a digitar.
-	
-	if ( (char *) argv[1] == NULL )
-	{	
-	    goto startTyping;	
-	};
-	
-	
-//#ifdef TEDITOR_VERBOSE		
-	//printf("\n");
-	printf("\n");
-    printf("Loading file fopen ...\n");
-//#endif	
-
-
-	
-	// ## Carregando arquivo. ##
-
-	
-	fp = fopen ( (char *) argv[1], "rb" );	
-	
-	if ( fp == NULL )
-    {
-        printf("fopen fail start typing ...\n");
-				
-        goto startTyping;
-		
-    }else{
-		
-		//Mostrando o arquivo.
-		
-//#ifdef TEDITOR_VERBOSE			
-        printf(".\n");		
-        printf("..\n");		
-        //printf("...\n");
-//#endif 
-	
-       // printf("Show file\n");
-		//printf ( "%s", fp->_base );	
-       // printf("Show file done\n");
-		
-		//#test 
-		//configurando o endereço do buffer do arquivo carregado.
-		//file_buffer = fp->_base;
-		
-		int ch_test;
-	    printf("Testing fgetc ... \n\n");
-		while(1)
-		{
-			//#bugbug: page fault quando chamamos fgetc.
-			//printf("1");
-			ch_test = (int) fgetc (fp);
-			//ch_test = (int) getc (f1); 
-			
-			if( ch_test == EOF )
-			{
-				printf("\n\n");
-				printf("EOF reached :)\n\n");
-				goto out;
-				
-			}else{
-				//printf("2");
-			    printf("%c", ch_test);	
-			};
-		};	
-		
-out:
-		
-		
-		
-		
-		
-//#ifdef TEDITOR_VERBOSE	        
-		//printf("...\n");
-        printf("..\n");		
-        printf(".\n");		
-//#endif
-
-startTyping:
-
-    //É aqui que fica o arquivo que vamos salvar.
-    //file_buffer = &RAW_TEXT[0];
-
-#ifdef TEDITOR_VERBOSE	
-		printf("\n");
-		printf("Typing a text ...\n");
-#endif
-
-
-//#importante:
-//Esse loop deve ser um loop de mensagens 
-//e não de chars. Quem tem loop de chars 
-//é message box.
-//Pois o aplicativo deve receber mensagens 
-//sobre eventos de input de teclado e mouse,
-//assim como os controles.
-
-
-
-	//
-	// Habilitando o cursor de textos.
-	//
-	
-	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );	
-
-	
-		//saiu.
-        printf(".\n");		
-        printf(".\n");		
-        printf(".\n");
-
-	};
-	
-	unsigned long message_buffer[5];	
-	
-Mainloop:		    
-	//
-    // #importante:
-    // Nessa hora podemos usar esse loop para pegarmos mensagens 
-    // e enviarmos para o procedimento de janela do editor de texto.
-    // Para assim tratarmos mensagens de mouse, para clicarmos e 
-    // botões para salvarmos o arquivo. 
-    // Devemos copiar a forma que foi feita o shell.
-    //   
-
-    
-	
-	while (running)
-	{
-		enterCriticalSection(); 
-		system_call ( 111,
-		    (unsigned long)&message_buffer[0],
-			(unsigned long)&message_buffer[0],
-			(unsigned long)&message_buffer[0] );
-		exitCriticalSection(); 
-			
-		if (	message_buffer[1] != 0 )
-		{
-	        teditorProcedure ( (struct window_d *) message_buffer[0], 
-		        (int) message_buffer[1], 
-		        (unsigned long) message_buffer[2], 
-		        (unsigned long) message_buffer[3] );
-			
-			message_buffer[0] = 0;
-            message_buffer[1] = 0;
-            message_buffer[3] = 0;
-            message_buffer[4] = 0;	
-        };				
-	};	
-	
-fail:	
-    printf("fail.\n");
-done:
-    running = 0;
-    printf("Exiting editor ...\n");
-    printf("done.\n");
-	while (1){
-		asm("pause");
-		exit(0);
-	};
-    // Never reach this.	
-	return (int) 0;
-};
-
 
 /*
  * Limpar a tela 
@@ -838,6 +537,317 @@ void teditorRefreshCurrentChar (){
 	
 	printf ("%c", LINES[textCurrentRow].CHARS[textCurrentCol] );
 };
+
+
+
+/*
+ * main: 
+ */
+ 
+int main ( int argc, char *argv[] ){
+	
+	int ch;
+	FILE *fp;
+    int char_count = 0;	
+	
+	struct window_d *hWindow;
+	
+	
+	//#todo: analizar a contagem de argumentos.
+	
+	
+#ifdef TEDITOR_VERBOSE			
+	printf("\n");
+	printf("Initializing Text Editor:\n");
+	printf("mainTextEditor: # argv0={%s} # \n", argv[0] );	
+	printf("mainTextEditor: # argv1={%s} # \n", argv[1] );
+#endif	
+
+    //#debug
+    //while(1){
+	//	asm ("pause");
+	//}
+	
+	//
+	// ## vamos repetir o que dá certo ...
+	//
+	
+	//vamos passar mais coisas via registrador.
+	
+	//ok
+	//foi passado ao crt0 via registrador
+	//printf("argc={%d}\n", argc ); 
+	
+	//foi passado ao crt0 via memória compartilhada.
+	//printf("argvAddress={%x}\n", &argv[0] ); //endereço.
+	
+	
+	//unsigned char* buf = (unsigned char*) (0x401000 - 0x100) ;
+	//printf("argvString={%s}\n" ,  &argv[0] );
+	//printf("argvString={%s}\n" , &buf[0] );
+	
+	//printf("argv={%s}\n", &argv[2] );
+	
+	
+	//#importante
+	//inicializa as variáveis antes de pintar.
+    teditorTeditor ();	
+	
+
+	//
+	// ## Window ##
+	//
+    
+	//frame
+	//Criando uma janela para meu editor de textos.
+	
+	apiBeginPaint(); 
+
+	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, argv[1],
+	                    wpWindowLeft, wpWindowTop, wsWindowWidth, wsWindowHeight,    
+                        0, 0, 0x303030, 0x303030 );	   
+	
+
+	if ( (void *) hWindow == NULL )
+	{	
+		printf("TEDITOR.BIN: hWindow fail");
+		apiEndPaint();
+		goto fail;
+	}
+    apiEndPaint();
+	
+    APIRegisterWindow (hWindow);
+	
+	
+	//set active efetua um redraw ...
+	//isso parece ser redundante na inicialização do 
+	//programa. Talvez o certo seria desenhar a janela 
+	//ja setando ativando.	
+    APISetActiveWindow (hWindow);	
+    
+	//set focus efetua um redraw ...
+	//isso parece ser redundante na inicialização do 
+	//programa. Talvez o certo seria desenhar a janela 
+	//ja setando o foco.
+	APISetFocus (hWindow);	
+	
+	//#suspenso 
+	//vamos tentar refresh só da janela.
+	//refresh_screen ();	
+	
+	apiShowWindow (hWindow);
+
+
+	//apiBeginPaint();    
+	//editorClearScreen(); 
+	//topbarInitializeTopBar();
+	//statusInitializeStatusBar();
+	//update_statuts_bar("# Status bar string 1","# Status bar string 2");
+	//apiEndPaint();
+	
+	
+	//apiBeginPaint();
+	//?? edit box ??
+	//apiEndPaint();
+	
+	//
+	//  ## Testing file support. ##
+	//
+	
+	
+    //
+	//  ## buffer ##
+	//
+	
+	
+    //Inicializando buffer.
+	//É nesse buffer que ficará o arquivo de texto que será salvo no disco.
+
+    //strcat( RAW_TEXT, "initializing file ...");		
+	
+	
+//file:
+
+//#ifdef TEDITOR_VERBOSE		
+	//printf("\n");
+	printf("\n");
+    printf("Loading file ...\n");
+//#endif	
+	
+	// Page fault:    
+	// Pegando o argumento 1, porque o argumento 0 é o nome do editor.
+	
+    // ## No file ## 
+	//Se nenhum nome de arquivo foi especificado, então começamos a digitar.
+	
+	if ( (char *) argv[1] == NULL )
+	{	
+	    goto startTyping;	
+	};
+	
+	
+//#ifdef TEDITOR_VERBOSE		
+	//printf("\n");
+	printf("\n");
+    printf("Loading file fopen ...\n");
+//#endif	
+
+
+	
+	// ## Carregando arquivo. ##
+
+	
+	fp = fopen ( (char *) argv[1], "rb" );	
+	
+	if ( fp == NULL )
+    {
+        printf("fopen fail start typing ...\n");
+				
+        goto startTyping;
+		
+    }else{
+		
+		//Mostrando o arquivo.
+		
+//#ifdef TEDITOR_VERBOSE			
+        printf(".\n");		
+        printf("..\n");		
+        //printf("...\n");
+//#endif 
+	
+       // printf("Show file\n");
+		//printf ( "%s", fp->_base );	
+       // printf("Show file done\n");
+		
+		//#test 
+		//configurando o endereço do buffer do arquivo carregado.
+		//file_buffer = fp->_base;
+		
+		int ch_test;
+	    printf("Testing fgetc ... \n\n");
+		while(1)
+		{
+			//#bugbug: page fault quando chamamos fgetc.
+			//printf("1");
+			ch_test = (int) fgetc (fp);
+			//ch_test = (int) getc (f1); 
+			
+			if( ch_test == EOF )
+			{
+				printf("\n\n");
+				printf("EOF reached :)\n\n");
+				goto out;
+				
+			}else{
+				//printf("2");
+			    printf("%c", ch_test);	
+			};
+		};	
+		
+out:
+		
+		
+		
+		
+		
+//#ifdef TEDITOR_VERBOSE	        
+		//printf("...\n");
+        printf("..\n");		
+        printf(".\n");		
+//#endif
+
+startTyping:
+
+    //É aqui que fica o arquivo que vamos salvar.
+    //file_buffer = &RAW_TEXT[0];
+
+#ifdef TEDITOR_VERBOSE	
+		printf("\n");
+		printf("Typing a text ...\n");
+#endif
+
+
+//#importante:
+//Esse loop deve ser um loop de mensagens 
+//e não de chars. Quem tem loop de chars 
+//é message box.
+//Pois o aplicativo deve receber mensagens 
+//sobre eventos de input de teclado e mouse,
+//assim como os controles.
+
+
+
+	//
+	// Habilitando o cursor de textos.
+	//
+	
+	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );	
+
+	
+		//saiu.
+        printf(".\n");		
+        printf(".\n");		
+        printf(".\n");
+
+	};
+	
+	unsigned long message_buffer[5];	
+	
+Mainloop:		    
+	//
+    // #importante:
+    // Nessa hora podemos usar esse loop para pegarmos mensagens 
+    // e enviarmos para o procedimento de janela do editor de texto.
+    // Para assim tratarmos mensagens de mouse, para clicarmos e 
+    // botões para salvarmos o arquivo. 
+    // Devemos copiar a forma que foi feita o shell.
+    //   
+
+    
+	
+	while (running)
+	{
+		enterCriticalSection(); 
+		system_call ( 111,
+		    (unsigned long)&message_buffer[0],
+			(unsigned long)&message_buffer[0],
+			(unsigned long)&message_buffer[0] );
+		exitCriticalSection(); 
+			
+		if (	message_buffer[1] != 0 )
+		{
+	        teditorProcedure ( (struct window_d *) message_buffer[0], 
+		        (int) message_buffer[1], 
+		        (unsigned long) message_buffer[2], 
+		        (unsigned long) message_buffer[3] );
+			
+			message_buffer[0] = 0;
+            message_buffer[1] = 0;
+            message_buffer[3] = 0;
+            message_buffer[4] = 0;	
+        };				
+	};	
+	
+fail:	
+    printf("fail\n");
+	
+done:
+	
+    running = 0;
+    
+	printf("Exiting editor ...\n");
+    printf("done\n");
+	
+	//while (1){
+	//	asm("pause");
+	//	exit(0);
+	//};
+	
+	return 0;
+}
+
+
+
 
 
 

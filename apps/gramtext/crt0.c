@@ -23,12 +23,12 @@ static char *argv[] = {
 
 
 // Fake environment.
-static char *envp[] = { 
-    "VFSROOT=root:/volume0",           //root dir do vfs
-    "BOOTVOLUMEROOT=root:/volume1",    //root dir do volume de boot
-    "SYSTEMVOLUMEROOT=root:/volume2",  //root dir do volume do sistema
-	NULL 
-};
+//static char *envp[] = { 
+//    "VFSROOT=root:/volume0",           //root dir do vfs
+//    "BOOTVOLUMEROOT=root:/volume1",    //root dir do volume de boot
+//    "SYSTEMVOLUMEROOT=root:/volume2",  //root dir do volume do sistema
+//	NULL 
+//};
 
 
 extern int main ( int argc, char *argv[] );
@@ -40,7 +40,7 @@ extern int main ( int argc, char *argv[] );
 #define TOKENLIST_MAX_DEFAULT 80
 
 
-int crt0 (){
+void crt0 (){
 	
 	char *tokenList[TOKENLIST_MAX_DEFAULT];
 	char *token;
@@ -144,14 +144,14 @@ int crt0 (){
 			break;
 			
 		case 1:
-		    printf("crt0: main2 returned 1.\n");
+		    printf("crt0: main returned 1.\n");
 		    exit (1);
 			break;
 			
 		//...
 		
 	    default:
-		    printf("crt0: main2 returned default\n");
+		    printf("crt0: main returned default\n");
             exit (-1);
 			break; 		
 	};
@@ -160,9 +160,10 @@ int crt0 (){
     // Não retornaremos para crt0.asm
     //
 	
-    printf("*HANG\n");
+    printf("*exit\n");
+	
 	exit (-1);
-};
+}
 
 
 

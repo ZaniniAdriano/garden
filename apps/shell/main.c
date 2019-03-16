@@ -555,7 +555,7 @@ void quit ( int status ){
  
 /*
  **************
- * shmain: 
+ * main: 
  *     Função principal.
  *     The Application Entry Point.
  *
@@ -577,7 +577,7 @@ void quit ( int status ){
  * Obs: Esses argumentos podem ser um padrão.
  */
  
-int shmain ( int argc, char **argv ){
+int main ( int argc, char *argv[] ){
 	
 	//int arg_index = 1;
 	
@@ -654,9 +654,12 @@ int shmain ( int argc, char **argv ){
 	
 	//printf("argc={%d}\n",argc);
 	
-	//printf("arg[0]={%s}\n",argv[0]);
-	//printf("arg[1]={%s}\n",argv[1]);
-	//printf("arg[2]={%s}\n",argv[2]);
+	//if ( argc >=2 )
+	//{
+	//    printf("arg[0]={%s}\n",argv[0]);
+	//    printf("arg[1]={%s}\n",argv[1]);	
+	//}
+
 	
 	//
 	// Filtra a quantidade de argumentos.
@@ -678,8 +681,11 @@ int shmain ( int argc, char **argv ){
 		goto noArgs; 
 	}else{
 		
-		//argv[0] = Tipo de shell: interativo ou não
-		//argv[1] = Tipo de uso: login ... outros ?? 
+         if (argc < 2)
+		 {
+		     printf ("main: argc=%d We need 2 args or more\n", argc );
+			 return 1;
+		 }
 		
 		//printf("Testing args ...\n");
 		
@@ -905,7 +911,7 @@ noArgs:
     //                            0, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
 
 
-	//printf("HOLAMBRA KERNEL SHELL\n");	
+	//printf("SHELL\n");	
     //printf("#debug breakpoint");	
 	//while(1){} 
 
@@ -919,7 +925,7 @@ noArgs:
 	}
 	
 	
-	//printf("HOLAMBRA KERNEL SHELL\n");	
+	//printf("SHELL\n");	
     //printf("#debug breakpoint");	
 	//while(1){} 
 	
@@ -980,7 +986,7 @@ noArgs:
 	//system_call ( 222, (unsigned long) hWindow, 100, 2);		
 
 	
-	//printf("HOLAMBRA KERNEL SHELL\n");	
+	//printf("SHELL\n");	
     //printf("#debug breakpoint");
     //while(1){} 	
 	
@@ -1054,7 +1060,7 @@ noArgs:
 			terminal_rect.height );	
 	   */
 	
-	//printf("HOLAMBRA KERNEL SHELL\n");	
+	//printf("SHELL\n");	
     //printf("#debug breakpoint");
     //while(1){} 	
 	
@@ -1120,15 +1126,11 @@ noArgs:
 	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );
 	
     //Mensagem ...
-	printf("Starting SHELL.BIN in Holambra Kernel ...\n");	
+	//printf ("\n");
+	//printf ("Starting GDESHELL.BIN ... \n\n");	
 	
     //printf("#debug breakpoint");
     //while(1){} 	
-	
-	
-	//printf("HOLAMBRA KERNEL SHELL\n");	
-   // printf("#debug breakpoint");
-   // while(1){} 		
 	
 	//#bugbug
 	//janela usada para input de textos ...
@@ -4485,12 +4487,17 @@ done:
        em seguida trablharemos nesse input  também
        Esse input é o input usado pela libc.
      */
-	   
+	  
+	
+	// #bugbug
+	// suspendendo isso porque deu porblemas. #pf
+	
+	/*
 	if ( shellCheckPassword() != 1 ){
 		
 	    printf("shellCheckPassword FAIL \n");		
 	}
-
+    /
 
 	// @todo:
 	// Gerenciamento do heap do processo. ??
