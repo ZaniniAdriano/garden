@@ -1,6 +1,6 @@
 # lib
 
- Different sets of libraries used int the project GDE.
+ Different sets of libraries used in the project GDE.
 
     /gdelibs - Libs that belongs to the project.
    

@@ -55,7 +55,8 @@ stdlib.o \
 string.o \
 time.o \
 api.o \
-unistd.o  
+unistd.o \
+stubs.o    
 
 
 
@@ -77,6 +78,7 @@ all-c:
 	cp $(LIBCOBJ)/string.o .
 	cp $(LIBCOBJ)/time.o    .
 	cp $(LIBCOBJ)/unistd.o  .
+	cp $(LIBCOBJ)/stubs.o  .
 	
 
 

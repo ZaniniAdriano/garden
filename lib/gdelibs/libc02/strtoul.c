@@ -62,12 +62,14 @@
 #include <errno.h>
 #include <stdlib.h>
 
+
 /*
  * Convert a string to an unsigned long integer.
  *
  * Ignores `locale' stuff.  Assumes that the upper and lower case
  * alphabets and digits are each contiguous.
  */
+
 
 /*
  89 style
@@ -78,22 +80,23 @@ strtoul(nptr, endptr, base)
 	register int base;
 {
 */	
+
+
+unsigned long strtoul ( const char *nptr, char **endptr, int base){
 	
-unsigned long
-strtoul( const char *nptr, char **endptr, int base)
-{
 	register const char *s = nptr;
 	register unsigned long acc;
 	register int c;
 	register unsigned long cutoff;
 	register int neg = 0, any, cutlim;
 
-	/*
-	 * See strtol for comments as to the logic used.
-	 */
+	
+	// See strtol for comments as to the logic used.
+	
 	do {
 		c = *s++;
 	} while (isspace(c));
+	
 	if (c == '-') {
 		neg = 1;
 		c = *s++;
@@ -135,3 +138,4 @@ strtoul( const char *nptr, char **endptr, int base)
 		*endptr = (char *)(any ? s - 1 : nptr);
 	return (acc);
 }
+
