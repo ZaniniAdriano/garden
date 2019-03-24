@@ -1,6 +1,6 @@
 # gdelibs
 
-    GDE libs for Gramado operating system.
+ GDE libs for Gramado operating system.
 
     /api01 - API version 0.1. 
    
