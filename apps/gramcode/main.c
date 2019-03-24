@@ -571,7 +571,7 @@ teditorProcedure( struct window_d *window,
 					//apiSetCursor (textCurrentCol,textCurrentRow);
 					//teditorInsertNextChar ( (char) ' ' ); 	
 					
-					MessageBox ( 3, "String1","String2" );
+					//MessageBox ( 3, "String1","String2" );
 					
                     break;					
 				
