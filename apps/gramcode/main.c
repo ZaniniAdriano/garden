@@ -559,7 +559,7 @@ teditorProcedure( struct window_d *window,
 
 				//#test	
                 case VK_TAB:					
-					printf("\t");
+					printf ("\t");
 				    break;
 
 				//#todo	
@@ -607,27 +607,45 @@ teditorProcedure( struct window_d *window,
 				//mas no futuro usaremos as setas.
 				//o problema é que o procedimento do sistema também usa isso
 		        
-				//esquerda
-				case VK_F1:
-				   //textCurrentCol -= 1;
+				
+				//#teste: Isso é um improviso.	
+				//Criando o botão para salvar o arquivo.	
+				case VK_F1:	
+				   saveCreateButton ();	
 				   break;
 				
-				//direita
+				
 				case VK_F2:
-				   //textCurrentCol += 1;
 				   break;
 
-				//baixo  
+			
 				case VK_F3:
-				   //textCurrentRow += 1;
 				   break;
 
-				//cima   
 				case VK_F4:
-				   //textCurrentRow -= 1;
 				   break;
 
 			};
+			break;
+			
+		// MSG_MOUSEKEYDOWN
+		case 30:
+			//qual botão?
+			switch (long1)
+			{
+				case 1:
+					if ( window == save_button )
+					{
+						 editor_save_file ();
+					}
+					break;
+					
+				case 2:
+					break;
+					
+				case 3:
+					break;
+			}
 			break;
 			
 		default:
@@ -839,4 +857,57 @@ void teditorRefreshCurrentChar (){
 };
 
 
+/*
+ **********************************************
+ * shellCreateTaskBar:
+ *
+ */
 
+
+int saveCreateButton (){
+	
+	// Tamanho da tela.	
+	unsigned long ScreenWidth = apiGetSystemMetrics(1);
+    unsigned long ScreenHeight = apiGetSystemMetrics(2); 
+	
+	
+	printf ("Creating save button ... %d %d\n", ScreenWidth, ScreenHeight);
+	
+	enterCriticalSection (); 
+	
+	/*
+    //em shell.h está o ponteiro.	
+	taskbar_window = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "Taskbar",     
+                                0, ScreenHeight-24, ScreenWidth, 24,    
+                                0, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );	
+	
+	if ( (void *) taskbar_window == NULL )
+	{
+		printf ("Couldn't create taskbar window\n");
+		return 1;
+	}
+	
+	 APIRegisterWindow (taskbar_window);
+	 apiShowWindow (taskbar_window);
+	*/
+	
+	
+    //em shell.h está o ponteiro.	
+	save_button = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " Save ",     
+                                4, ScreenHeight-50, 80, 24,    
+                                0, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
+	
+	if ( (void *) save_button == NULL )
+	{
+		printf ("Couldn't create save button\n");
+		return 1;
+	}
+								
+    APIRegisterWindow (save_button);
+	apiShowWindow (save_button);
+	
+	exitCriticalSection ();	
+	
+	//refresh_screen();
+	return 0;
+}

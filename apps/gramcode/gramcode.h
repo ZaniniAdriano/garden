@@ -19,6 +19,13 @@
 #include <stubs/gramado.h> 
 
 
+//botão para salvar arquivo.
+struct window_d *save_button;
+
 int main ( int argc, char *argv[] );
+
+int saveCreateButton ();
+
+
 
 	
