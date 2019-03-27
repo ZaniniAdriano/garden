@@ -54,11 +54,10 @@ void teditorRefreshCurrentChar ();
 void gramcodeLinesInsertChar ( int line_number, int at, int c );
 
 
-unsigned long 
-teditorProcedure ( struct window_d *window, 
-                   int msg, 
-				   unsigned long long1, 
-				   unsigned long long2 );
+void *teditorProcedure ( struct window_d *window, 
+                         int msg, 
+				         unsigned long long1, 
+				         unsigned long long2 );
 				   
 
 /*
@@ -520,11 +519,14 @@ int editor_save_file (){
 };
 
 
-unsigned long 
-teditorProcedure( struct window_d *window, 
-                int msg, 
-				unsigned long long1, 
-				unsigned long long2 )
+//
+// procedure
+//
+
+void *teditorProcedure ( struct window_d *window, 
+                         int msg, 
+				         unsigned long long1, 
+				         unsigned long long2 )
 {
 	unsigned long input_ret;
     unsigned long compare_return;	
@@ -653,8 +655,8 @@ teditorProcedure( struct window_d *window,
 				
 	};
 	
-	return 0;
-};
+	return (void *) gde_system_procedure ( window, msg, long1, long2 );
+}
 
 
 /*
