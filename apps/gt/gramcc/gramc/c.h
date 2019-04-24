@@ -1,6 +1,10 @@
 
 // c.h 
 
+#define LSH_TOK_DELIM " \t\r\n\a" 
+#define SPACE " "
+#define TOKENLIST_MAX_DEFAULT 80
+
 #include "config/config.h"
 #include "debug/debug.h"
 

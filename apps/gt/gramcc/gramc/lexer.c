@@ -1,7 +1,11 @@
 /*
  * File: lexer.c
+ *
+ * 2018 - Created by Fred Nora.
+ *        Based on gcc 0.9.
  */
  
+
 #include  "c.h" 
 
 
@@ -91,15 +95,16 @@ int check_newline ()
 */
 
 
+// Skipping white spaces.
+
 int skip_white_space (){
     
 	register int c;
-    register int inside;
-	
+    register int inside;	
 	
 begin:		
 
-    c = getc(finput);
+    c = getc (finput);
 
     for (;;)
     {		
@@ -108,6 +113,7 @@ begin:
 			// ## spaces ##	
 			//se encontramos um espaço, pegamos o próximo e saímos do switch 
 			//para reentrarmos no switch
+                
             case ' ':
             case '\t':
             case '\f':
@@ -117,6 +123,7 @@ begin:
                 break;
 
 			// ## new lines ##	
+                
 	        case '\n':
 			    lineno++;
 				//próximo.
@@ -126,29 +133,33 @@ begin:
 			// ## comments ##
 			// '/' 
 			//(#importante: Isso pode ser a primeira barra do comentário ou uma divisão.)
+                
 	        case '/':
 			
-			    c = getc(finput);
+			    c = getc (finput);
 				
 				//#### inicia um comentário de uma linha ####
 				//Aqui encontramos a segunda barra de dias consecutivas.
 				//single line comments.
+                
 				if ( c == '/' )
 				{	
 			        while (1)
 					{
-					    c = getc(finput);
+					    c = getc (finput);
 						
 						//quando alinha acabar,
 						//apenas saímos do switch
 				        //sairemos com '\n'
 						//??? e se chegarmos ao fim do arquivo ??? #todo
 						
+                        //acho que isso só sai do while.
 						if( c == '\n')
 						{
-							//acho que isso só sai do while.
 					        break;
 				        }
+                        
+                        // ?
 				    };
 					//isso sai do switch
 					break;
@@ -160,11 +171,13 @@ begin:
 				//lembrando que a barra aparecei depois de um espaço em branco.
 				//por enquanto vamos dizer que algo está errado com essa barra,
 				//printf("skip_white_space: todo: depois da barra / .");
-				//exit(1);		
+				//exit(1);
+                
 				if (c == '*')
 				{
-				    c = getc(finput);	
-					inside = 1; 
+				    c = getc (finput);	
+					
+                    inside = 1; 
 				  	
 				    while (inside)
 	                {
@@ -172,8 +185,9 @@ begin:
 					    {
 						
 						    //sequência de **************
+                            
 		                    while (c == '*')
-		                        c = getc(finput);
+		                        c = getc (finput);
 
 		                    //se logo em seguida do * tiver uma barra /.
 						    if (c == '/')
@@ -199,28 +213,31 @@ begin:
 		                        lineno++;
 							  
 							    //printf(" [LF2] ");
-		                        c = getc(finput);
+                            
+		                        c = getc (finput);
 							  
 					            //?? para onde vamos??
 								//precisamos continuar no while até encontrarmos a barra /. ou o *.
 								
 					    }else if (c == EOF || c == '\0'){  		  
-					    //}else if (c == EOF){
 							
 							eofno++;
 							
-		                    printf("skip_white_space: unterminated comment in line %d",lineno);
-	                        exit(1);
+		                    printf ("skip_white_space: unterminated comment in line %d",lineno);
+	                        exit (1);
 							
 						//default
+                            
 						}else{
 		                    
 							//isso são letras do comentário.
 							//continuaremos dentro do while(inside)
 							//??#bugbug: mas até quando ??
-                            //temos que contar ou confiar no EOF.						
-							c = getc(finput);
+                            //temos que contar ou confiar no EOF.	
+                            
+							c = getc (finput);
 						};
+                        
 						//nothing;
 	                };					
 				};
@@ -232,10 +249,7 @@ begin:
 				ungetc ( c, finput );	
 				//return (int) '/';
 				break;
-
-
-
-
+                
 
             //#test 
             // ## ignorando diretivas do preprocessdor '#' ##
@@ -260,12 +274,12 @@ begin:
 				
 
             default:
-                return (int) (c);
+                return (int) c;
 
         };//switch
 
     }; // for
-};
+}
 
 
 /*
@@ -580,8 +594,9 @@ again:
 			    *p = c;
 			    p++;
 
-				c = getc(finput);
-				if( c == 'x' || c == 'X' )
+				c = getc (finput);
+                
+				if ( c == 'x' || c == 'X' )
 				{
 					//base = 16;
 					//*p++ = c; //coloca o x.
@@ -604,6 +619,7 @@ again:
 						    value = TOKENCONSTANT;
 							//constant_type_found = //#todo tem que contar. 
 							constant_base_found = CONSTANT_BASE_HEX;
+                            
                             goto constant_done;
 						}
 
@@ -620,7 +636,8 @@ again:
 				//base = 10.
 
 				*p++ = c; 
-				while(1)
+                
+				while (1)
 				{
 					c = getc (finput);
 
@@ -635,6 +652,7 @@ again:
 						value = TOKENCONSTANT;
 						//constant_type_found = //#todo tem que contar. 
 						constant_base_found = CONSTANT_BASE_DEC;
+                        
                         goto constant_done;
 					}
 
@@ -649,7 +667,8 @@ again:
         //String
         case '\"':
         {
-	        c = getc(finput);
+	        c = getc (finput);
+            
 	        p = token_buffer;
 
 			//coloca no token_buffer.
@@ -775,7 +794,7 @@ again:
 					break;
 	        }	
 
-	        c1 = getc(finput);
+	        c1 = getc (finput);
 			
 	        if (c1 == '=')
 	        {
@@ -845,9 +864,11 @@ again:
     
     }; //switch
 
+    
 done:
+    
     return (value);
-};
+}
 
 
 /*
@@ -894,9 +915,8 @@ int lexerInit (){
 
 	//...
 
-    return (int) 0;
-};
-
+    return 0;
+}
 
 
 /*
@@ -920,7 +940,16 @@ int check_subseq ( int c, int a, int b )
 };
 */
 
-void error ( char *msg ){
 
-    printf("error: %s\n", msg);
-};
+void error ( char *msg )
+{
+    printf ("error: %s\n", msg );
+}
+
+
+//
+// End.
+//
+
+
+

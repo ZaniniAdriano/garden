@@ -238,5 +238,11 @@ struct type_d
 
 unsigned long functionList[FUNCTION_COUNT_MAX];
 
-int gramc_main2 ( int argc, char *argv[] );
+int main ( int argc, char *argv[] );
+
+int gramcInitialize ();
+	
+	
+	
+	
 

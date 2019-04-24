@@ -1519,6 +1519,11 @@ int parse (){
 	char save_symbol[32];
 	
 	int running = 1;
+    
+    // #bugbug
+    // Não temos mais acesso a elementos da estrutura em user mode.
+    // Tem que usar outro recurso para encontrar o tamanho.
+    
 	size_t size = (size_t) strlen ( (const char *) stdin->_base );
 	
 	
@@ -1536,10 +1541,10 @@ int parse (){
 	//steps;
 	int State = 1;
 	
-    printf("\n");
+    printf ("\n");
 	
 #ifdef GRAMC_VERBOSE	
-    printf("parse: Initializing ...\n");
+    printf ("parse: Initializing ...\n");
 #endif		
 	
 	
@@ -1575,11 +1580,11 @@ int parse (){
 						
 			//################################
 			// #State 1
-			// Esperamos um MODIFIER,  TYPE and SEPARATOR
-			//
+			// Esperamos um MODIFIER, TYPE and SEPARATOR
+                
 			case 1:
 #ifdef PARSER_VERBOSE						
-			    printf("<1> ");
+			    printf ("<1> ");
 #endif
 				switch (c)
 				{
@@ -2221,43 +2226,42 @@ int parse (){
 	//printf("%s\n",stdin->_base);
 	//printf("number of lines: %d \n",lineno);
 	//...
+    
 debug_output:
 
-    //incluimos no arquivo de output os segmentos de dados,
-	strcat( outfile,DATA);
-    strcat( outfile,BSS);
+    // Incluindo no arquivo de output os segmentos de dados.
+    
+	strcat ( outfile, DATA );
+    strcat ( outfile, BSS );
 	
+    
 #ifdef PARSER_OUTPUT_VERBOSE	
-	//exibimos o arquivo de output.
-	printf("\n OUTPUT: \n");
-	printf("%s\n",outfile);
-	printf("number of lines: %d \n",lineno);
+	// Exibimos o arquivo de output.
+	printf ("\n OUTPUT: %s\n", outfile);
+	printf ("number of lines: %d \n", lineno );
 #endif	
 
     goto parse_exit;	
 	
 hang:	
 
-	printf("parse: *hang");
-	//goto done;    
-		while (1){
-			
-			asm ("pause");
-		}
+	printf ("parse: *hang");   
+	while (1){ asm ("pause"); };
 		
 		
 syntax:	
-    printf("parser: systax error in line %d \n",lineno);	
-	exit(1);
+    
+    printf ("parser: Systax error in line %d \n", lineno );	
+	exit (1);
 	
 parse_exit:
 
 #ifdef GRAMC_VERBOSE	
-    printf("parse: done\n");
+    printf ("parse: done\n");
 #endif		
   	
 	return 0;
-}; 
+}
 
 
 /*
@@ -2265,13 +2269,14 @@ parse_exit:
  * parserInit:
  *     Initializing parser.
  */
+
 int parserInit (){
 	
-	register int i;
+	register int i=0;
 	
 	
 #ifdef GRAMC_VERBOSE	
-    printf("parserInit: Initializing ...\n");
+    printf ("parserInit:\n");
 #endif		
 	
 	//infile_size = 0;
@@ -2282,8 +2287,7 @@ int parserInit (){
 	stack_count = 0;
 	stack_index = 0;
 	
-
-	    
+ 
 	for ( i=0; i<8; i++ )
 		id[i] = 0;
 	
@@ -2301,13 +2305,19 @@ int parserInit (){
 	//esses endereços vão depender do arquivo de configuração do 
 	//linker ...
 	//#test: default em 0.
-    program_header_address =     0;
-    program_text_address   =   100;
-    program_data_address   = 2*100;
-    program_bss_address    = 3*100;	
+    
+    program_header_address = 0;
+    program_text_address = 1*100;
+    program_data_address = 2*100;
+    program_bss_address  = 3*100;	
 	
 	//...
 	
-	return (int) 0;
-};
+	return 0;
+}
+
+//
+// End.
+//
+
 

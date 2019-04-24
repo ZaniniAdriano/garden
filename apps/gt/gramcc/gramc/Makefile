@@ -35,11 +35,11 @@ CFLAGS = -m32 \
 #	-s
 
 
-LIBC    = ../../../../lib/gdelibs/libc01/include/
-LIBCOBJ = ../../../../lib/gdelibs/libc01/obj
+LIBC    = ../../../../lib/gdelibs/libc02/include/
+LIBCOBJ = ../../../../lib/gdelibs/libc02/obj
 
-API01   = ../../../../lib/gdelibs/api01/include/
-APIOBJ  = ../../../../lib/gdelibs/api01/obj
+API     = ../../../../lib/gdelibs/api02/include/
+APIOBJ  = ../../../../lib/gdelibs/api02/obj
 
 
 	##
@@ -56,7 +56,10 @@ unistd.o \
 api.o \
 lexer.o \
 parser.o \
-tree.o  
+tree.o \
+stubs.o    
+
+
 
 
 
@@ -66,12 +69,14 @@ all: main.o all-c gramcc-link finalize clean
 	@echo "Ok?"
 
 main.o:
-	nasm crt0.asm -f elf -o crt0.o
-	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o main.o
-	gcc  -c  lexer.c  -I $(LIBC) -I $(API01) $(CFLAGS) -o lexer.o
-	gcc  -c  parser.c -I $(LIBC) -I $(API01) $(CFLAGS) -o parser.o
-	gcc  -c  tree.c   -I $(LIBC) -I $(API01) $(CFLAGS) -o tree.o
-#	gcc  -c  compiler.c -I $(LIBC) -I $(API01) $(CFLAGS) -o compiler.o
+#	nasm crt0.asm -f elf -o crt0.o
+
+	gcc  -c  crt0.c  $(CFLAGS) -I $(LIBC) -I $(API) -o crt0.o
+	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API) -o main.o
+	gcc  -c  lexer.c  -I $(LIBC) -I $(API) $(CFLAGS) -o lexer.o
+	gcc  -c  parser.c -I $(LIBC) -I $(API) $(CFLAGS) -o parser.o
+	gcc  -c  tree.c   -I $(LIBC) -I $(API) $(CFLAGS) -o tree.o
+#	gcc  -c  compiler.c -I $(LIBC) -I $(API) $(CFLAGS) -o compiler.o
 
 
 all-c:
@@ -85,10 +90,10 @@ all-c:
 	cp $(LIBCOBJ)/time.o    .
 	cp $(LIBCOBJ)/unistd.o  .
 	
-
+	cp $(LIBCOBJ)/stubs.o   .
 
 gramcc-link:
-	ld -m i386pe -T link.ld -o GRAMC.BIN $(myObjects) -Map app_map.s
+	ld -m elf_i386 -T link.ld -o GRAMC.BIN $(myObjects) -Map app_map.s
 
 finalize:
 	cp GRAMC.BIN  ../../../../bin
