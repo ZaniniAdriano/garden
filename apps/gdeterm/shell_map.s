@@ -466,7 +466,7 @@ Linker script and memory map
                 0x000000000040bca2                cputs
                 0x000000000040bcd7                getch
                 0x000000000040bcef                getche
- .text          0x000000000040bd07      0x18a builtins.o
+ .text          0x000000000040bd07      0x17a builtins.o
                 0x000000000040bd07                cd_buitins
                 0x000000000040bd20                cls_builtins
                 0x000000000040bd2e                copy_builtins
@@ -481,43 +481,43 @@ Linker script and memory map
                 0x000000000040bdfb                getuid_builtins
                 0x000000000040be0d                getgid_builtins
                 0x000000000040be1f                help_builtins
-                0x000000000040be75                pwd_builtins
- .text          0x000000000040be91       0x49 desktop.o
-                0x000000000040be91                desktopInitialize
- .text          0x000000000040beda      0x1b3 unistd.o
-                0x000000000040beda                execve
-                0x000000000040bee4                exit
-                0x000000000040bf04                fork
-                0x000000000040bf1c                setuid
-                0x000000000040bf26                getpid
-                0x000000000040bf3e                getppid
-                0x000000000040bf56                getgid
-                0x000000000040bf60                dup
-                0x000000000040bf6a                dup2
-                0x000000000040bf74                dup3
-                0x000000000040bf7e                fcntl
-                0x000000000040bf88                nice
-                0x000000000040bf92                pause
-                0x000000000040bf9c                mkdir
-                0x000000000040bfb0                rmdir
-                0x000000000040bfba                link
-                0x000000000040bfc4                mlock
-                0x000000000040bfce                munlock
-                0x000000000040bfd8                mlockall
-                0x000000000040bfe2                munlockall
-                0x000000000040bfec                sysconf
-                0x000000000040bff6                fsync
-                0x000000000040c000                fdatasync
-                0x000000000040c00a                fpathconf
-                0x000000000040c014                pathconf
-                0x000000000040c01e                ioctl
-                0x000000000040c028                open
-                0x000000000040c04e                close
-                0x000000000040c06c                pipe
- .text          0x000000000040c08d       0x28 stubs.o
-                0x000000000040c08d                gramado_system_call
+                0x000000000040be65                pwd_builtins
+ .text          0x000000000040be81       0x49 desktop.o
+                0x000000000040be81                desktopInitialize
+ .text          0x000000000040beca      0x1b3 unistd.o
+                0x000000000040beca                execve
+                0x000000000040bed4                exit
+                0x000000000040bef4                fork
+                0x000000000040bf0c                setuid
+                0x000000000040bf16                getpid
+                0x000000000040bf2e                getppid
+                0x000000000040bf46                getgid
+                0x000000000040bf50                dup
+                0x000000000040bf5a                dup2
+                0x000000000040bf64                dup3
+                0x000000000040bf6e                fcntl
+                0x000000000040bf78                nice
+                0x000000000040bf82                pause
+                0x000000000040bf8c                mkdir
+                0x000000000040bfa0                rmdir
+                0x000000000040bfaa                link
+                0x000000000040bfb4                mlock
+                0x000000000040bfbe                munlock
+                0x000000000040bfc8                mlockall
+                0x000000000040bfd2                munlockall
+                0x000000000040bfdc                sysconf
+                0x000000000040bfe6                fsync
+                0x000000000040bff0                fdatasync
+                0x000000000040bffa                fpathconf
+                0x000000000040c004                pathconf
+                0x000000000040c00e                ioctl
+                0x000000000040c018                open
+                0x000000000040c03e                close
+                0x000000000040c05c                pipe
+ .text          0x000000000040c07d       0x28 stubs.o
+                0x000000000040c07d                gramado_system_call
                 0x000000000040d000                . = ALIGN (0x1000)
- *fill*         0x000000000040c0b5      0xf4b 
+ *fill*         0x000000000040c0a5      0xf5b 
 
 .iplt           0x000000000040d000        0x0
  .iplt          0x000000000040d000        0x0 stubs.o
@@ -539,8 +539,8 @@ Linker script and memory map
  .rodata        0x000000000040fbd8      0x510 stdlib.o
  .rodata        0x00000000004100e8        0x6 conio.o
  *fill*         0x00000000004100ee       0x12 
- .rodata        0x0000000000410100      0x4b2 builtins.o
- *fill*         0x00000000004105b2        0xe 
+ .rodata        0x0000000000410100      0x4ad builtins.o
+ *fill*         0x00000000004105ad       0x13 
  .rodata        0x00000000004105c0      0x48f desktop.o
 
 .eh_frame       0x0000000000410a50     0x2e80

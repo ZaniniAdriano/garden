@@ -1,5 +1,5 @@
 /*
- * File: main.c - gdeshell
+ * File: main.c - gdeterm
  *
  * Essa é uma versão do shell apenas par ao kernel norax,
  * deve ser full screens sem frames. Só o suficiente para digitar
@@ -302,12 +302,12 @@ void updateObject ()
       deltaX = deltaValue;
    }
    else if ( objectX > 78 ) {
-	   
+
       objectX = 78; 
       deltaX = -deltaValue;  //muda a direção.
    }
-   
-   
+
+
    if (objectY < 2){
       objectY = 2;
       deltaY = deltaValue;
@@ -317,23 +317,23 @@ void updateObject ()
       deltaY = -deltaValue;
    }
 
-    
+
 	//
 	// ## test ##
 	//
-	
+
 	//update.
 	//textCurrentRow = objectX;
     //textCurrentCol = objectY;
-   
+
     //putchar.
 	//shellInsertNextChar ( (char) 'T' );  
-	
-	shellSetCursor ( objectX, objectY );	
-	
-	printf("%c",(char) 'X');
-	
-};
+
+    shellSetCursor ( objectX, objectY );
+
+    printf ("%c",(char) 'X');
+}
+
 
 /*
 struct {
@@ -370,16 +370,18 @@ struct {
 //é semelhante à estrutura acima.
 /* Some long-winded argument names.  These are obviously new. */
 // Argumentos.
+
 #define Int 1
 #define Charp 2
+
 struct 
 {
     char *name;
     int *value;
     int type;
-	
+
 } long_args[] = {
-	
+
     { 
         "debug", 
         &debugging, 
@@ -460,26 +462,27 @@ int argbuf_index;
 
 // Protótipos
 void die (char * str);
-void error( char *msg, char *arg1, char *arg2 );
-void fatal( char *msg, char *arg1, char *arg2 );
+void error ( char *msg, char *arg1, char *arg2 );
+void fatal ( char *msg, char *arg1, char *arg2 );
 
 //isso foi para stdlib.c
 //void *xmalloc( int size);
 
-char *concat( char *s1, char *s2, char *s3 );
+char *concat ( char *s1, char *s2, char *s3 );
 char *save_string ( char *s, int len );
 
-int shell_save_file();
+int shell_save_file ();
 
-void shellInitSystemMetrics();
-void shellInitWindowLimits();
-void shellInitWindowSizes();
-void shellInitWindowPosition();
+void shellInitSystemMetrics ();
+void shellInitWindowLimits ();
+void shellInitWindowSizes ();
+void shellInitWindowPosition ();
+
 
 //
 // testes de scroll.
 //
-void testScrollChar();
+void testScrollChar ();
 
 //row support
 void textSetTopRow ( int number );
@@ -491,30 +494,35 @@ int textGetBottomRow ();
 void clearLine ( int line_number );
 
 
-void testShowLines();
-void testChangeVisibleArea();
-void updateVisibleArea( int direction );
+void testShowLines ();
+void testChangeVisibleArea ();
+void updateVisibleArea ( int direction );
 
 
-void shellRefreshVisibleArea();
+void shellRefreshVisibleArea ();
 
-void shellSocketTest();
+void shellSocketTest ();
+
 
 //
 // Internas.
 //
 
 static inline void pause (void){
-	
-    asm volatile ("pause" ::: "memory"); 
-}; 
+
+    asm volatile ("pause" ::: "memory");
+}
 
 
-/* REP NOP (PAUSE) is a good thing to insert into busy-wait loops. */
+/* 
+ REP NOP (PAUSE) 
+ is a good thing to insert into busy-wait loops. 
+ */
+
 static inline void rep_nop (void){
-	
+
     __asm__ __volatile__ ("rep;nop": : :"memory");
-};
+}
 
 
 #define cpu_relax()  rep_nop()
@@ -528,31 +536,32 @@ static inline void rep_nop (void){
 unsigned long 
 shellProcedure ( struct window_d *window, 
                  int msg, 
- 			     unsigned long long1, 
-				 unsigned long long2 );
-				
-				
-//diálogo para alimentar o terminal usado pelos aplicativos.				
+                 unsigned long long1, 
+                 unsigned long long2 );
+
+
+//diálogo para alimentar o terminal usado pelos aplicativos.
+
 int feedterminalDialog( struct window_d *window, 
                       int msg, 
 				      unsigned long long1, 
 				      unsigned long long2 );
 							  
 
-// Procedimento de janela da topbar.							  
+// Procedimento de janela da topbar.
 unsigned long 
 shellTopbarProcedure ( struct window_d *window, 
                        int msg, 
 			           unsigned long long1, 
 					   unsigned long long2 );
-					  
- 
+
+
 void quit ( int status ){
-	
-	running = 0;
-}; 
- 
- 
+
+    running = 0;
+}
+
+
 /*
  **************
  * main: 
@@ -578,15 +587,17 @@ void quit ( int status ){
  */
  
 int main ( int argc, char *argv[] ){
-	
+
 	//int arg_index = 1;
-	
+
     FILE *default_input = stdin;
-    char *local_pending_command = (char *) NULL;	
-	
+    char *local_pending_command = (char *) NULL;
+
 	//char **internal;
-	char *filename;
-	register int i;
+
+    char *filename;
+    register int i;
+
 	//
 	// Obs: Esse não é um programa que roda em modo terminal,
 	// ele na verdade cria um terminal dentro de uma janela filha.
@@ -677,10 +688,10 @@ int main ( int argc, char *argv[] ){
 		//#Test.
         //fprintf( stderr,"Starting Shell with no arguments...\n");	 	
 		die("No args");
-		
+
 		goto noArgs; 
 	}else{
-		
+
          if (argc < 2)
 		 {
 		     printf ("main: argc=%d We need 2 args or more\n", argc );
@@ -919,16 +930,16 @@ noArgs:
 	if ( (void *) hWindow == NULL )
 	{
 		printf ("FAIL!");
-		while(1){}
+		while (1){}
 		
-		die ("shell.bin: hWindow fail");
+		die ("gdeterm: hWindow fail");
 	}
-	
-	
+
+
 	//printf("SHELL\n");	
-    //printf("#debug breakpoint");	
+	//printf("#debug breakpoint");	
 	//while(1){} 
-	
+
 	/*
 	 Imprimindo o ponteiro para a estrutura da janela criada 
 	 Estamos testando se o retorno está funcionando nesse caso.
@@ -939,7 +950,7 @@ noArgs:
 	printf("Testing resize window\n");
 	APIresize_window( hWindow, 640, 480);
 	*/
- 
+
 	
 	//apiEndPaint();
 	
@@ -947,11 +958,11 @@ noArgs:
 	
 	//printf("OK FUNCIONOU");
 	//while(1){}
-	
+
 	//
 	// Funcionou setar o foco, e a mensagem foi para a janela certa.
 	//
-	
+
     // Registrar.
 	// Configurar como ativa.
     // Setar foco.
@@ -967,16 +978,16 @@ noArgs:
 	// ?? Show Window !!
 	// Precisamos mostrar a janela e não repintar 
 	// a tela toda.
-	
+
     APIRegisterWindow (hWindow);
     //APISetActiveWindow (hWindow);	
     //APISetFocus (hWindow);
-	
+
 	//#test
 	//vamos mostrar a janela do shell antes de criarmos a janela 
 	//da área de cliente
 	apiShowWindow (hWindow);
-	
+
 	//#test 
 	//Criando um timer.
 	
@@ -1019,37 +1030,36 @@ noArgs:
 	//terminal_rect.height = xbuffer[3];	
 	
 	//...
-	
-	terminal_rect.left = wpWindowLeft;
-	terminal_rect.top = wpWindowTop;
-	terminal_rect.width = wsWindowWidth;
-	terminal_rect.height = wsWindowHeight;
+
+    terminal_rect.left = wpWindowLeft;
+    terminal_rect.top = wpWindowTop;
+    terminal_rect.width = wsWindowWidth;
+    terminal_rect.height = wsWindowHeight;
 
 
 	//
 	// ## Se der problema no tamanho da área de cliente ##
 	//
-	
-	if ( terminal_rect.left < wpWindowLeft ||
+
+    if ( terminal_rect.left < wpWindowLeft ||
          terminal_rect.top < wpWindowTop ||	
-	     terminal_rect.width > wsWindowWidth ||
-		 terminal_rect.height > wsWindowHeight )
-	{
+         terminal_rect.width > wsWindowWidth ||
+         terminal_rect.height > wsWindowHeight )
+    {
         //#debug
-		printf("## fail ## \n");
-	    printf("terminal_rect: 2\n");	
-        printf("l={%d} t={%d} w={%d} h={%d}\n", 
-	        terminal_rect.left, 
-			terminal_rect.top,
-		    terminal_rect.width, 
-			terminal_rect.height );
-        while (1){
-			asm ("pause");
-		}			
-	}
-	
-	
-        //#debug
+        printf ("## fail ## \n");
+        printf ("terminal_rect: 2\n");	
+        printf ("l={%d} t={%d} w={%d} h={%d}\n", 
+            terminal_rect.left, 
+            terminal_rect.top,
+            terminal_rect.width, 
+            terminal_rect.height );
+
+        while (1){ asm ("pause"); };
+    };
+
+
+		//#debug
 		/*
 	    printf("## debug ## \n");
 	    printf("terminal_rect: 2\n");	
@@ -1120,11 +1130,11 @@ noArgs:
 	//
 	// Habilitando o cursor piscante de textos.
 	//
-	
-	shellSetCursor ( (terminal_rect.left / 8) , ( terminal_rect.top/8) );	
-	
-	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );
-	
+
+    shellSetCursor ( (terminal_rect.left / 8) , ( terminal_rect.top/8) );
+
+    system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );
+
     //Mensagem ...
 	//printf ("\n");
 	//printf ("Starting GDESHELL.BIN ... \n\n");	
@@ -1162,7 +1172,7 @@ noArgs:
 	
 	//printf("HOLAMBRA KERNEL SHELL\n");	
     //printf("#debug breakpoint");
-    //while(1){} 		
+    //while(1){} 	
 	
 	
 	//===========================
@@ -1171,21 +1181,22 @@ noArgs:
 	// Init Shell:
 	//     Inicializa variáveis, buffers e estruturas. Atualiza a tela.
 	
-	enterCriticalSection();
+	enterCriticalSection ();
 
     //#BUGBUG
     //Estamos passando um ponteiro que é uma variável local.	
 
 	Status = (int) shellInit (hWindow); 
 	
-	if ( Status != 0 ){
-		die ("SHELL.BIN: app_main: shellInit fail");
+	if ( Status != 0 )
+	{
+		die ("gdeterm: app_main: shellInit fail");
 	};
-	exitCriticalSection();     		
+	exitCriticalSection (); 
 	
 	//printf("HOLAMBRA KERNEL SHELL\n");	
     //printf("#debug breakpoint");
-    //while(1){} 			
+    //while(1){} 
 
 	
 	//
@@ -1198,7 +1209,7 @@ noArgs:
 	if ( interactive != 1 ){
 		
 		//#debug
-        printf("shell is not interactive\n");
+        printf ("shell is not interactive\n");
 		
 		goto skip_input;
 	};
@@ -1225,15 +1236,15 @@ noArgs:
 	 * *IMPORTANTE:Cabe a cada processo pegar as mensagens deixadas no buffer de mensagens 
 	 * em seu PCB, atravez de uma chamada ao kernel.
 	 */
-    
-   
+
+
 	//
 	// Por fim: Testar cursor e terminar.
 	//
 
 	//@todo: 0,0 não está na área de cliente.
 	
- 
+
 	
 	//
 	// **** Mensagens  ****
@@ -1261,11 +1272,11 @@ noArgs:
 	// #bugbug: ??
 	// Na verdade essa rotina está pegando a mensagem na janela 
 	// com o foco de entrada. Esse argumento foi passado mas não foi usado.
-		
+
 	unsigned long message_buffer[5];	
 		
 Mainloop:
-    
+
 	/* Nesse teste vamos enviar um ponteiro de array, pegarmos os quatro 
 	   elementos da mensagem e depois zerar o buffer */
 	
@@ -1281,7 +1292,7 @@ Mainloop:
 			
 		if ( message_buffer[1] != 0 )
         {
-            //printf(".");			
+            //printf(".");
 		}	
 		
 		if ( message_buffer[1] != 0 )
@@ -1290,7 +1301,7 @@ Mainloop:
 		        (int) message_buffer[1], 
 		        (unsigned long) message_buffer[2], 
 		        (unsigned long) message_buffer[3] );
-			
+
 			message_buffer[0] = 0;
             message_buffer[1] = 0;
             message_buffer[3] = 0;
@@ -1418,7 +1429,7 @@ shellProcedure( struct window_d *window,
                     break; 
 
 				//#test	
-                case VK_TAB:					
+                case VK_TAB:
 					printf("\t");
 					goto done;
 				    break;	
@@ -1433,7 +1444,7 @@ shellProcedure( struct window_d *window,
 					//shellSetCursor (textCurrentCol,textCurrentRow);
 					//shellInsertNextChar ( (char) ' ' ); 
 					goto done;
-                    break;					
+                    break;
                               
                 // Mensagens de digitação.
 				// Texto. Envia o caractere.
@@ -1465,13 +1476,13 @@ shellProcedure( struct window_d *window,
 					//printf ("%c", (char) long1 ); 	//deletar.				
 					
 					goto done;
-                    break;               
+                    break; 
             };
         break;
 		
 		case MSG_KEYUP: 
 		    // printf("%c", (char) 'u');
-            // printf("%c", (char) long1);  			
+            // printf("%c", (char) long1);  
 		    break;
 		
 		//Não interceptaremos mensagens do sistema por enquanto.
@@ -1481,7 +1492,7 @@ shellProcedure( struct window_d *window,
 		case MSG_SYSKEYDOWN:
 		    switch (long1)
 			{
-		        
+
 				case VK_F1:
                     
 

@@ -525,8 +525,8 @@ Linker script and memory map
 .rodata         0x000000000040d000     0x3a4f
  .rodata        0x000000000040d000      0x4e5 crt0.o
  *fill*         0x000000000040d4e5       0x1b 
- .rodata        0x000000000040d500     0x186f main.o
- *fill*         0x000000000040ed6f       0x11 
+ .rodata        0x000000000040d500     0x186b main.o
+ *fill*         0x000000000040ed6b       0x15 
  .rodata        0x000000000040ed80      0x6c3 shellui.o
  *fill*         0x000000000040f443        0x1 
  .rodata        0x000000000040f444      0x3ab api.o
@@ -539,8 +539,8 @@ Linker script and memory map
  .rodata        0x000000000040fbd8      0x510 stdlib.o
  .rodata        0x00000000004100e8        0x6 conio.o
  *fill*         0x00000000004100ee       0x12 
- .rodata        0x0000000000410100      0x4b2 builtins.o
- *fill*         0x00000000004105b2        0xe 
+ .rodata        0x0000000000410100      0x4b1 builtins.o
+ *fill*         0x00000000004105b1        0xf 
  .rodata        0x00000000004105c0      0x48f desktop.o
 
 .eh_frame       0x0000000000410a50     0x2e80
@@ -820,7 +820,7 @@ LOAD builtins.o
 LOAD desktop.o
 LOAD unistd.o
 LOAD stubs.o
-OUTPUT(GDESHELL.BIN elf32-i386)
+OUTPUT(GDETERM.BIN elf32-i386)
 
 .comment        0x0000000000000000       0x1a
  .comment       0x0000000000000000       0x1a crt0.o

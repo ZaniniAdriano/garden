@@ -12,27 +12,27 @@
 
 void cd_buitins (){
 	
-	printf("cd_buitins:\n");
-};
+	printf ("cd_buitins:\n");
+}
 
 
 //cls
 void cls_builtins (){
 	
-    shellClearScreen();
-};
+    shellClearScreen ();
+}
 
 
 void copy_builtins()
 {
 	
-};
+}
 
 
 void date_builtins()
 {
 	
-};
+}
 
 
 void del_builtins()
@@ -55,7 +55,7 @@ void dir_builtins (){
 	
     system_call (173,0,0,0);		
 		
-	printf ("~done\n");	
+	printf ("done\n");	
 }
 
 
@@ -64,27 +64,27 @@ void dir_builtins (){
 
 void echo_builtins (char *list[])
 {	
-    shell_print_tokenList( list, " ");
+    shell_print_tokenList ( list, " ");
 	//shell_print_tokenList( list, "/");
 }
 
 
 void exec_builtins (){
 	
-    printf("@todo: ~exec\n");	
+    printf ("todo: ~exec\n");	
 }
 
 
 void exit_builtins (){
 	
-	printf ("Exiting shell ...\n");
+	printf ("Exiting gdeterm ...\n");
 	exit (0);	
 }
 
 
 int getpid_builtins (){
 	
-    shellShowPID ();	
+    shellShowPID ();		
 	return 0; 
 }
 
@@ -99,39 +99,39 @@ int getppid_builtins (){
 int getuid_builtins (){
 	
 	shellShowUID ();
+	
 	return 0;
 }
 
 
 int getgid_builtins (){
 	
-	shellShowGID ();	
+	shellShowGID ();
 	return 0;
 }
 
 
-void help_builtins (int arg){
+void help_builtins (int arg){	
 	
-	printf ("gdeshell:\n");
+	printf ("gdeterm:\n");
 	
 	switch (arg)
 	{
 		//all
 		case 1:
-		    printf("Show all help topics\n");
-			shellHelp();
+		    printf ("Show all help topics\n");
+			shellHelp ();
 		    break;
 		//min
 		case 2:
-		    printf("cls, help, exit..\n");
+		    printf ("cls, help, exit..\n");
 			break;
 		
 		default:
 			shellHelp ();
 			break;
-			
 	};
-};
+}
 
 
 void pwd_builtins (){
