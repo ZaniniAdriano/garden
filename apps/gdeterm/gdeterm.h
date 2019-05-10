@@ -17,7 +17,7 @@
 
 
 //shell stuff 
-#include "shell.h"
+#include "term.h"
 #include "globals.h"
 #include "builtins.h"
 

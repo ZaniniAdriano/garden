@@ -10,7 +10,7 @@
  */
 
 
-#include "sh.h" 
+#include "gdeterm.h" 
 
 
 static char *argv[] = { 
@@ -23,12 +23,12 @@ static char *argv[] = {
 
 
 // Fake environment.
-static char *envp[] = { 
-    "VFSROOT=root:/volume0",           //root dir do vfs
-    "BOOTVOLUMEROOT=root:/volume1",    //root dir do volume de boot
-    "SYSTEMVOLUMEROOT=root:/volume2",  //root dir do volume do sistema
-	NULL 
-};
+//static char *envp[] = { 
+//    "VFSROOT=root:/volume0",           //root dir do vfs
+//    "BOOTVOLUMEROOT=root:/volume1",    //root dir do volume de boot
+//    "SYSTEMVOLUMEROOT=root:/volume2",  //root dir do volume do sistema
+//	NULL 
+//};
 
 
 extern int main ( int argc, char *argv[] );	
@@ -46,7 +46,7 @@ extern int main ( int argc, char *argv[] );
 
 void crt0 (){
 	
-	int Response;
+	int Response = 0;
 	
 	//char **empty_string_pool;
 	

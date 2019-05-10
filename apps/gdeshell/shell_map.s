@@ -520,63 +520,58 @@ Linker script and memory map
  *fill*         0x000000000040c0b5      0xf4b 
 
 .iplt           0x000000000040d000        0x0
- .iplt          0x000000000040d000        0x0 stubs.o
+ .iplt          0x000000000040d000        0x0 crt0.o
 
-.rodata         0x000000000040d000     0x3a4f
+.rodata         0x000000000040d000     0x3a6f
  .rodata        0x000000000040d000      0x4e5 crt0.o
  *fill*         0x000000000040d4e5       0x1b 
- .rodata        0x000000000040d500     0x186f main.o
- *fill*         0x000000000040ed6f       0x11 
- .rodata        0x000000000040ed80      0x6c3 shellui.o
- *fill*         0x000000000040f443        0x1 
- .rodata        0x000000000040f444      0x3ab api.o
- *fill*         0x000000000040f7ef       0x11 
- .rodata        0x000000000040f800      0x100 ctype.o
-                0x000000000040f800                _ctype
- .rodata        0x000000000040f900      0x2d4 stdio.o
-                0x000000000040fa40                hex2ascii_data
- *fill*         0x000000000040fbd4        0x4 
- .rodata        0x000000000040fbd8      0x510 stdlib.o
- .rodata        0x00000000004100e8        0x6 conio.o
- *fill*         0x00000000004100ee       0x12 
- .rodata        0x0000000000410100      0x4b2 builtins.o
- *fill*         0x00000000004105b2        0xe 
- .rodata        0x00000000004105c0      0x48f desktop.o
+ .rodata        0x000000000040d500     0x1883 main.o
+ *fill*         0x000000000040ed83       0x1d 
+ .rodata        0x000000000040eda0      0x6c3 shellui.o
+ *fill*         0x000000000040f463        0x1 
+ .rodata        0x000000000040f464      0x3ab api.o
+ *fill*         0x000000000040f80f       0x11 
+ .rodata        0x000000000040f820      0x100 ctype.o
+                0x000000000040f820                _ctype
+ .rodata        0x000000000040f920      0x2d4 stdio.o
+                0x000000000040fa60                hex2ascii_data
+ *fill*         0x000000000040fbf4        0x4 
+ .rodata        0x000000000040fbf8      0x510 stdlib.o
+ .rodata        0x0000000000410108        0x6 conio.o
+ *fill*         0x000000000041010e       0x12 
+ .rodata        0x0000000000410120      0x4b2 builtins.o
+ *fill*         0x00000000004105d2        0xe 
+ .rodata        0x00000000004105e0      0x48f desktop.o
 
-.eh_frame       0x0000000000410a50     0x2e80
- .eh_frame      0x0000000000410a50       0x34 crt0.o
- .eh_frame      0x0000000000410a84      0xc70 main.o
+.eh_frame       0x0000000000410a70     0x2e80
+ .eh_frame      0x0000000000410a70       0x34 crt0.o
+ .eh_frame      0x0000000000410aa4      0xc70 main.o
                                         0xc88 (size before relaxing)
- .eh_frame      0x00000000004116f4      0x140 shellui.o
+ .eh_frame      0x0000000000411714      0x140 shellui.o
                                         0x158 (size before relaxing)
- .eh_frame      0x0000000000411834      0xc2c api.o
+ .eh_frame      0x0000000000411854      0xc2c api.o
                                         0xc44 (size before relaxing)
- .eh_frame      0x0000000000412460      0x6f0 stdio.o
+ .eh_frame      0x0000000000412480      0x6f0 stdio.o
                                         0x708 (size before relaxing)
- .eh_frame      0x0000000000412b50      0x400 stdlib.o
+ .eh_frame      0x0000000000412b70      0x400 stdlib.o
                                         0x418 (size before relaxing)
- .eh_frame      0x0000000000412f50      0x320 string.o
+ .eh_frame      0x0000000000412f70      0x320 string.o
                                         0x338 (size before relaxing)
- .eh_frame      0x0000000000413270       0xa0 conio.o
+ .eh_frame      0x0000000000413290       0xa0 conio.o
                                          0xb8 (size before relaxing)
- .eh_frame      0x0000000000413310      0x1e0 builtins.o
+ .eh_frame      0x0000000000413330      0x1e0 builtins.o
                                         0x1f8 (size before relaxing)
- .eh_frame      0x00000000004134f0       0x20 desktop.o
+ .eh_frame      0x0000000000413510       0x20 desktop.o
                                          0x38 (size before relaxing)
- .eh_frame      0x0000000000413510      0x39c unistd.o
+ .eh_frame      0x0000000000413530      0x39c unistd.o
                                         0x3b4 (size before relaxing)
- .eh_frame      0x00000000004138ac       0x24 stubs.o
+ .eh_frame      0x00000000004138cc       0x24 stubs.o
                                          0x3c (size before relaxing)
 
-.note.gnu.property
-                0x00000000004138d0       0x1c
- .note.gnu.property
-                0x00000000004138d0       0x1c stubs.o
-
-.rel.dyn        0x00000000004138ec        0x0
- .rel.got       0x00000000004138ec        0x0 stubs.o
- .rel.iplt      0x00000000004138ec        0x0 stubs.o
- .rel.text      0x00000000004138ec        0x0 stubs.o
+.rel.dyn        0x00000000004138f0        0x0
+ .rel.got       0x00000000004138f0        0x0 crt0.o
+ .rel.iplt      0x00000000004138f0        0x0 crt0.o
+ .rel.text      0x00000000004138f0        0x0 crt0.o
 
 .data           0x0000000000413900     0x2700
                 0x0000000000413900                data = .
@@ -586,7 +581,7 @@ Linker script and memory map
  .data          0x0000000000413900      0x4c4 crt0.o
  *fill*         0x0000000000413dc4       0x1c 
  .data          0x0000000000413de0      0x538 main.o
-                0x0000000000414280                running
+                0x0000000000414280                _running
                 0x0000000000414284                primary_prompt
                 0x0000000000414288                secondary_prompt
                 0x000000000041428c                remember_on_history
@@ -615,13 +610,13 @@ Linker script and memory map
  *fill*         0x0000000000415568      0xa98 
 
 .got            0x0000000000416000        0x0
- .got           0x0000000000416000        0x0 stubs.o
+ .got           0x0000000000416000        0x0 crt0.o
 
 .got.plt        0x0000000000416000        0x0
- .got.plt       0x0000000000416000        0x0 stubs.o
+ .got.plt       0x0000000000416000        0x0 crt0.o
 
 .igot.plt       0x0000000000416000        0x0
- .igot.plt      0x0000000000416000        0x0 stubs.o
+ .igot.plt      0x0000000000416000        0x0 crt0.o
 
 .bss            0x0000000000416000    0x16d34
                 0x0000000000416000                bss = .
@@ -822,21 +817,22 @@ LOAD unistd.o
 LOAD stubs.o
 OUTPUT(GDESHELL.BIN elf32-i386)
 
-.comment        0x0000000000000000       0x1a
- .comment       0x0000000000000000       0x1a crt0.o
+.comment        0x0000000000000000       0x2b
+ .comment       0x0000000000000000       0x11 crt0.o
+                                         0x12 (size before relaxing)
+ .comment       0x0000000000000011       0x12 main.o
+ .comment       0x0000000000000011       0x12 shellui.o
+ .comment       0x0000000000000011       0x1a api.o
                                          0x1b (size before relaxing)
- .comment       0x000000000000001a       0x1b main.o
- .comment       0x000000000000001a       0x1b shellui.o
- .comment       0x000000000000001a       0x1b api.o
- .comment       0x000000000000001a       0x1b ctype.o
- .comment       0x000000000000001a       0x1b stdio.o
- .comment       0x000000000000001a       0x1b stdlib.o
- .comment       0x000000000000001a       0x1b string.o
- .comment       0x000000000000001a       0x1b conio.o
- .comment       0x000000000000001a       0x1b builtins.o
- .comment       0x000000000000001a       0x1b desktop.o
- .comment       0x000000000000001a       0x1b unistd.o
- .comment       0x000000000000001a       0x1b stubs.o
+ .comment       0x000000000000002b       0x1b ctype.o
+ .comment       0x000000000000002b       0x1b stdio.o
+ .comment       0x000000000000002b       0x1b stdlib.o
+ .comment       0x000000000000002b       0x1b string.o
+ .comment       0x000000000000002b       0x1b conio.o
+ .comment       0x000000000000002b       0x12 builtins.o
+ .comment       0x000000000000002b       0x12 desktop.o
+ .comment       0x000000000000002b       0x1b unistd.o
+ .comment       0x000000000000002b       0x1b stubs.o
 
 .note.GNU-stack
                 0x0000000000000000        0x0

@@ -53,7 +53,7 @@ APIOBJ  = ../../lib/gdelibs/api01/obj
 
 myObjects = crt0.o \
 main.o \
-shellui.o \
+termui.o \
 api.o \
 ctype.o \
 stdio.o \
@@ -82,7 +82,7 @@ main.o:
 	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o main.o
 
 all-c:
-	gcc  -c  shellui.c   -I $(LIBC) -I $(API01)  $(CFLAGS) -o shellui.o
+	gcc  -c  termui.c   -I $(LIBC) -I $(API01)  $(CFLAGS) -o termui.o
 	gcc  -c  builtins.c  -I $(LIBC) -I $(API01)  $(CFLAGS) -o builtins.o
 	gcc  -c  desktop.c   -I $(LIBC) -I $(API01)  $(CFLAGS) -o desktop.o
 	

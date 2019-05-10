@@ -1,13 +1,13 @@
 /*
  * File: builtins.c
- *     Buittin commands for Gramado Core Shell.
+ *     Buittin commands for gdeterm.
  *
  * History:
- *     2018 - Created by Fred Nora.
+ *     2019 - Created by Fred Nora.
  */
 
  
-#include "sh.h"
+#include "gdeterm.h"
 
 
 void cd_buitins (){
@@ -25,20 +25,17 @@ void cls_builtins (){
 
 void copy_builtins()
 {
-	
 }
 
 
 void date_builtins()
 {
-	
 }
 
 
 void del_builtins()
 {
-	
-};
+}
 
 
 void dir_builtins (){
@@ -113,7 +110,7 @@ int getgid_builtins (){
 
 void help_builtins (int arg){	
 	
-	printf ("gdeterm:\n");
+	printf ("\n gdeterm: \n\n");
 	
 	switch (arg)
 	{
@@ -139,6 +136,7 @@ void pwd_builtins (){
     //printf("~pwd - print working directory\n");
     system_call ( 170, 0, 0, 0 );		
 }
+
 
 //
 // End.

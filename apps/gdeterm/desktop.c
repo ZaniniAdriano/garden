@@ -1,11 +1,11 @@
 
+// #todo rever. Não teremos um desktop no terminal do gde;
 
 // gerenciamento do desktop,
 // manipulação dos ícones no desktop.
-//
 
 
-#include "sh.h"
+#include "gdeterm.h"
 
 
 //desktop folders.
@@ -29,6 +29,6 @@ int desktopInitialize (){
     printf("%s\n",secondary_desktop_folder);	
 	
 	return 0;
-};
+}
 
 

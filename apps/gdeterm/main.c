@@ -1,6 +1,9 @@
 /*
  * File: main.c - gdeterm
  *
+ * #todo: A intenção é que isso seja um terminal virtual e não um shell.
+ *        para isso teremos que fazer muitas modificações, pois isso era um shell.
+ *
  * Essa é uma versão do shell apenas par ao kernel norax,
  * deve ser full screens sem frames. Só o suficiente para digitar
  * linhas de comando.
@@ -82,7 +85,7 @@
 #define WINDOW_TOP       0      //10
 
  
-#include "sh.h"
+#include "gdeterm.h"
 
 
 // Input flags.
@@ -174,7 +177,6 @@ char *primary_prompt = PPROMPT;
 #define SPROMPT "shell> "
 #endif
 char *secondary_prompt = SPROMPT;
-
 
 
 COMMAND *global_command = (COMMAND *) NULL;
