@@ -14,10 +14,10 @@
 
 
 static char *argv[] = { 
-    "-interactive",        //shell interativo
-	"-login",              //login
-	"Gramado Core Shell",  //nome do shell
-	"test.sh",             //nome do arquivo de script.
+    "--interactive",        //shell interativo
+	"--login",              //login
+	"Gramado Core Shell",   //nome do shell
+	"test.sh",              //nome do arquivo de script.
 	NULL 
 };
 

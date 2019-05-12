@@ -616,10 +616,9 @@ int main ( int argc, char *argv[] ){
  
 	
 	
-	/*
-	 * Uma boa ordem para os passos dessa rotina nos aplicativos  
-	 * é: Step1=WindowClass, Step2=Window e Step3=Message.
-	 */
+	
+	 // Uma boa ordem para os passos dessa rotina nos aplicativos  
+	 // é: Step1=WindowClass, Step2=Window e Step3=Message.
 	
 	//@todo: Criar esse tipo de classe.
 	//       Provavelmente deve coincidir com a estrutura presente
@@ -627,7 +626,10 @@ int main ( int argc, char *argv[] ){
 	//struct window_class_d *wc; 
 	
 	
+	//
 	// A janela principal do aplicativo.
+	//
+	
 	struct window_d *hWindow;    
 
 	//JANELA CRIADA NA ÁREA DE CLIENTE DA JANELA PRINCIPAL.
@@ -686,12 +688,14 @@ int main ( int argc, char *argv[] ){
 	// Se não há argumentos.
 	if (argc < 1)
 	{
+		die ("No args");
+		
 		//printf("No args !\n");
-		//#Test.
-        //fprintf( stderr,"Starting Shell with no arguments...\n");	 	
-		die("No args");
+		//#Test.	
+        // fprintf ( stderr,"Starting Shell with no arguments...\n");	 	
 
 		goto noArgs; 
+		
 	}else{
 
          if (argc < 2)
@@ -705,8 +709,8 @@ int main ( int argc, char *argv[] ){
 		//#todo: (possibilidades)
 		//As flags poderia começar com f. Ex: fInteractive, fLoginShell,
 		
-	    if ( strncmp ( (char *) argv[0], "-interactive", 12 ) == 0 ){
-			
+	    if ( strncmp ( (char *) argv[0], "--interactive", 13 ) == 0 )
+		{	
 			interactive = 1;
             
             //printf("Initializing an interactive shell ...\n");
@@ -721,8 +725,8 @@ int main ( int argc, char *argv[] ){
 		//	goto dosh2;
 		//}			
 		
-	    if ( strncmp ( (char *) argv[1], "-login", 6 ) == 0 ){
-			
+	    if ( strncmp ( (char *) argv[1], "--login", 7 ) == 0 )
+		{	
 			login_shell = 1;
 			
 			//printf("Initializing login ...\n");
@@ -1538,7 +1542,7 @@ shellProcedure( struct window_d *window,
 				//O MENU APPLICATION É O CONTEXT MENU.
 				//
 				case VK_APPS:
-				    MessageBox ( 1, "Gramado Core Shell:", "VK_APPS Context Menu" );
+				    MessageBox ( 1, "gdeterm", "VK_APPS Context Menu" );
 					break;
 			}		
 		    break;
@@ -1550,14 +1554,13 @@ shellProcedure( struct window_d *window,
 			{
 				// Null.
 				case 0:
-				    MessageBox( 1, "Shell test", "Testing MSG_COMMAND.NULL." );
+				    MessageBox ( 1, "gdeterm", "Testing MSG_COMMAND.NULL." );
 				    break;
 				
 				// About.
 				// Abre uma janela e oferece informações sobre o aplicativo.
 				case CMD_ABOUT:
-				    // Test.
-				    MessageBox( 1, "Shell test", "Testing MSG_COMMAND.CMD_ABOUT." );
+				    MessageBox ( 1, "gdeterm", "Testing MSG_COMMAND.CMD_ABOUT." );
 				    break;
 				
 				//clicaram no botão
@@ -7158,6 +7161,7 @@ void shellSocketTest()
 	//
 	// output
 	//
+	
 	unsigned long tmp;
 	
 	tmp = iplong;
