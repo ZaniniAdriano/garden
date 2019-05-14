@@ -1,5 +1,5 @@
 /*
- * File: main.c - gdeshell
+ * File: main.c - gdeshell - bash 1.05 clone. (baseado no bash)
  *
  * #todo: a intenção é que isso seja apenas um shell e não um terminal virtual.
  * devendo essa aplicação rodar no terminal virtual quando chamada por ele, ou
@@ -169,17 +169,26 @@ char password[11];
 
 //#define DEFAULT_WINDOW_TITLE "Shell"
 	
+/* Non-zero means that this shell has already been run; i.e. you should
+   call shell_reinitialize () if you need to start afresh. */
+int shell_initialized = 0;
+
+/* The current maintainer of the shell.  You change this in the
+   Makefile. */
+#ifndef MAINTAINER
+#define MAINTAINER "deliberately-anonymous"
+#endif
+char *the_current_maintainer = MAINTAINER;
 
 #ifndef PPROMPT
-#define PPROMPT "shell\\$ "
+#define PPROMPT "bash\\$ "
 #endif
 char *primary_prompt = PPROMPT;
 
 #ifndef SPROMPT
-#define SPROMPT "shell> "
+#define SPROMPT "bash> "
 #endif
 char *secondary_prompt = SPROMPT;
-
 
 
 COMMAND *global_command = (COMMAND *) NULL;
@@ -195,8 +204,6 @@ char *current_user_name = (char *) NULL;
 char *current_host_name = (char *) NULL;
 
 
-
-
 /* Non-zero means that this shell is a login shell.
    Specifically:
    0 = not login shell.
@@ -204,14 +211,19 @@ char *current_host_name = (char *) NULL;
   -1 = login shell from "-login" flag.
   -2 = both from getty, and from flag.
  */
+
 //Se o shell vai ser usado para login.
 //Obs: Uma variável no kernel guardo o id do processo 
 //que fez login. 
+
 int login_shell = 0;
 
+
 /* Non-zero means this shell is running interactively. */
+
 //Se for diferente de zero então esse shell é interativo.
 //Se for zero ele pode apenas estar executando um script.
+
 int interactive = 0;
 
 
@@ -236,6 +248,11 @@ char **shell_environment;
 
 /* The number of commands executed so far. */
 int current_command_number = 1;
+
+
+/* The environment at the top-level REP loop.  We use this in the case of
+   error return. */
+//jmp_buf top_level, catch;
 
 
 /* Non-zero is the recursion depth for commands. */
@@ -280,6 +297,81 @@ int no_line_editing = 0;	/* Don't do fancy line editing. */
 int no_brace_expansion = 0;	/* Non-zero means no foo{a,b} -> fooa fooa. */
 
 
+//
+// ## Arguments support ##
+//
+
+
+/* Some long-winded argument names.  These are obviously new. */
+#define Int 1
+#define Charp 2
+
+struct {
+	
+    char *name;
+    int *value;
+    int type;
+	
+} long_args[] = {
+	
+    { "debug",             &debugging,           Int   },
+	{ "norc",              &no_rc,               Int   },
+    { "noprofile",         &no_profile,          Int   },
+    { "rcfile",            (int *) &bashrc_file, Charp },
+    { "version",           &do_version,          Int   },
+    { "quiet",             &quiet,               Int   },
+    { "login",             &make_login_shell,    Int   },
+	{ "nolineediting",     &no_line_editing,     Int   },
+    { "nobraceexpansion",  &no_brace_expansion,  Int   },	
+    { (char *) NULL,       (int *) 0x0,          0     }
+	
+};
+
+
+int shellStatus;
+int shellError;
+
+
+//... 
+
+/*
+//argument buffer
+char **argbuf;
+int argbuf_length;
+int argbuf_index;
+*/
+
+/*
+struct {
+	
+  char *word;
+  int token;
+  
+} token_word_alist[] = {
+  {"if", IF},
+  {"then", THEN},
+  {"else", ELSE},
+  {"elif", ELIF},
+  {"fi", FI},
+  {"case", CASE},
+  {"esac", ESAC},
+  {"for", FOR},
+  {"while", WHILE},
+  {"until", UNTIL},
+  {"do", DO},
+  {"done", DONE},
+  {"in", IN},
+  {"function", FUNCTION},
+  {"{", '{'},
+  {"}", '}'},
+  { (char *) NULL, 0 }
+};
+*/
+
+
+//
+// ===============================================================
+//
 
 //
 // ## timer ##
@@ -340,130 +432,13 @@ void updateObject ()
 	printf ("%c", (char) 'X');
 }
 
-
-/*
-struct {
-	
-  char *word;
-  int token;
-  
-} token_word_alist[] = {
-  {"if", IF},
-  {"then", THEN},
-  {"else", ELSE},
-  {"elif", ELIF},
-  {"fi", FI},
-  {"case", CASE},
-  {"esac", ESAC},
-  {"for", FOR},
-  {"while", WHILE},
-  {"until", UNTIL},
-  {"do", DO},
-  {"done", DONE},
-  {"in", IN},
-  {"function", FUNCTION},
-  {"{", '{'},
-  {"}", '}'},
-  { (char *) NULL, 0 }
-};
-*/
-
-
 //
-// ## Arguments support ##
+// ===============================================================
 //
 
-// ??
-//é semelhante à estrutura acima.
-/* Some long-winded argument names.  These are obviously new. */
-// Argumentos.
-
-#define Int 1
-#define Charp 2
-
-struct 
-{
-    char *name;
-    int *value;
-    int type;
-	
-} long_args[] = {
-	
-    { 
-        "debug", 
-        &debugging, 
-		Int 
-	},
-    
-	{ 
-	    "norc", 
-		&no_rc, 
-		Int 
-	},
-	
-    { 
-	    "noprofile", 
-		&no_profile, 
-		Int 
-	},
-	
-    { 
-	    "rcfile", 
-		(int *) &bashrc_file, 
-		Charp
-	},
-	
-    { 
-	    "version", 
-		&do_version, 
-		Int
-	},
-	
-    { 
-	    "quiet", 
-		&quiet, 
-		Int
-	},
-	
-    { 
-	    "login", 
-		&make_login_shell, 
-		Int
-	},
-    
-	{ 
-	    "nolineediting", 
-		&no_line_editing, 
-		Int
-	},
-	
-    { 
-	    "nobraceexpansion", 
-		&no_brace_expansion, 
-		Int
-	},
-	
-    { 
-	    (char *) NULL, 
-		(int *) 0x0, 
-		0 
-	}
-};
 
 
 
-int shellStatus;
-int shellError;
-
-
-//... 
-
-/*
-//argument buffer
-char **argbuf;
-int argbuf_length;
-int argbuf_index;
-*/
 
 
 //
@@ -597,14 +572,415 @@ void quit ( int status ){
  
 int main ( int argc, char *argv[] ){
 	
-	//int arg_index = 1;
+    int i, arg_index = 1;
+	
+	//extern int yydebug;
 	
     FILE *default_input = stdin;
-    char *local_pending_command = (char *) NULL;	
+    
+	char *local_pending_command = (char *) NULL;	
+	
+	 //extern int last_command_exit_value;
+	 int locally_skip_execution = 0, top_level_arg_index;
+	 //extern char *base_pathname ();
+	
+//#ifdef JOB_CONTROL
+  //extern int job_control;
+//#endif	
+	
+	
+    /* Wait forever if we are debugging a login shell. */
+    //  while (debugging_login_shell);	
+	
+	
+    /* If this shell has already been run, then reinitialize it to a
+     vanilla state. */
+    
+	if (shell_initialized)
+    {
+        //shell_reinitialize ();
+		
+        //if ( setjmp (top_level) )
+	        //exit (2);
+    }	
+	
+    /* Here's a hack.  If the name of this shell is "sh", then don't do
+    any startup files; just try to be more like /bin/sh. */
+   //{
+       //char *tshell_name = base_pathname (argv[0]);
+
+       //if (*tshell_name == '-')
+           //tshell_name++;
+
+       //if (strcmp (tshell_name, "sh") == 0)
+           //act_like_sh++;
+   //}	
+	
+	
+	//yydebug = 0;
+	
+	
+    //shell_environment = env;
+    //shell_name = argv[0];
+	
+    //if (*shell_name == '-')
+    //{
+    //  shell_name++;
+    //  login_shell++;
+    //}
+	
+	
+#ifdef JOB_CONTROL
+    if (act_like_sh)
+        job_control = 0;
+#endif
+	
+	//dollar_vars[0] = savestring (argv[0]);
+	
+	
+	/* Parse argument flags from the input line. */
+	
+    /* Find full word arguments first. */
+    while ( (arg_index != argc) && *(argv[arg_index]) == '-' )
+    {
+        for ( i=0; long_args[i].name; i++ )
+	    {
+	        if ( strcmp( &(argv[arg_index][1]), long_args[i].name) == 0 )
+	        {
+	            if ( long_args[i].type == Int )
+		            *(long_args[i].value) = 1;
+	                else
+		            {
+		                if ( !argv[++arg_index] )
+		                {
+		                    //report_error ("%s: Flag `%s' expected an argument",
+				            //    shell_name, long_args[i].name);
+							
+		                    printf ("%s: Flag `%s' expected an argument",
+				                shell_name, long_args[i].name );
+		                    
+							exit (1);
+		                }
+		                else
+		                    *long_args[i].value = (int) argv[arg_index];
+		           }
+				
+	               goto next_arg;
+	      }
+	    }
+		
+        break;			/* No such argument.  Maybe flag arg. */
+        
+		next_arg:
+            arg_index++;
+    };	
+	
+	
+	//??
+    /* If user supplied the "-login" flag, then set and invert LOGIN_SHELL. */
+    if (make_login_shell)
+        login_shell = -++login_shell;	
+	
+	
+    /* All done with full word args; do standard shell arg parsing.*/
+    while ( arg_index != argc  && 
+		    argv[arg_index]    && 
+		    (*(argv[arg_index]) == '-' || (*argv[arg_index] == '+')) )
+    {
+		
+      /* There are flag arguments, so parse them. */
+      
+	  int arg_character;
+      int on_or_off = ( *argv[arg_index] );
+      int  i = 1;
+
+        while ( arg_character = (argv[arg_index])[i++] )
+	    {
+	        switch (arg_character)
+	        {
+	            case 'c':
+	                /* The next arg is a command to execute, and the following args
+		            are $1 .. $n respectively. */
+	                local_pending_command = argv[++arg_index];
+	                if (!local_pending_command)
+		            {
+		                //report_error ("`%cc' requires an argument", on_or_off);
+		                printf ("`%cc' requires an argument", on_or_off);
+		                exit (1);
+		            }
+
+	                arg_index++;
+	                goto after_flags;
+					break;
+
+	            default:
+					printf ("Nothing ...\n");
+	                //if (change_flag_char (arg_character, on_or_off) == FLAG_ERROR)
+		            //{
+		                //report_error ("%c%c: bad option", on_or_off, arg_character);
+		                //printf ("%c%c: bad option", on_or_off, arg_character);
+		                //exit (1);
+		            //}
+
+	        }
+	    }
+		
+        arg_index++;
+    };	
+	
+	
+after_flags:		
+	
+	printf ("Nothing ...\n");
+	
+	
+
+    /* First, let the outside world know about our interactive status. */  
+	/*
+	if ( forced_interactive ||
+         ( !local_pending_command && arg_index == argc && isatty (fileno (stdin)) && isatty (fileno (stdout)))  )
+        interactive = 1;
+        else
+        {
+            interactive = 0;
+#ifdef JOB_CONTROL
+            job_control = 0;
+#endif
+        };	
+	*/
+	
+	
+	
+	
+	  // #importante
+	  // Essa é a inicialização do bash 1.05.
+	  // No futuro usaremos essa, mas por enquanto temos nossa própria.
+	  /* From here on in, the shell must be a normal functioning shell.
+         Variables from the environment are expected to be set, etc. */
+     //shell_initialize ();
+	
+	
+	//
+	// emac stuff - line editing.
+	//
+	
+	/*
+    if (interactive)
+    {
+        char *emacs = (char *) getenv ("EMACS");
+        
+		if ( emacs && ( strcmp( emacs, "t") == 0) )
+	        no_line_editing = 1;
+    }	
+	*/
+	
+    top_level_arg_index = arg_index;
+	
+	
+    if ( !quiet && do_version )
+        show_shell_version ();	
+	
+	
+	//
+	// setjmp - (abort support)
+	//
+	
+    /* Give this shell a place to longjmp to before executing the
+       startup files.  This allows users to press C-c to abort the
+       lengthy startup. */
+	
+	/*
+    if ( setjmp (top_level) )
+    {
+        if (!interactive)
+	        exit (2);
+        else
+	        locally_skip_execution++;
+    }
+    */
+	
+    arg_index = top_level_arg_index;	
+
+	
+    /* Execute the start-up scripts. */
+
+	/*
+    if (!interactive)
+    {
+        makunbound ("PS1");
+        makunbound ("PS2");
+    }
+	*/
+
+	/*
+    if (!locally_skip_execution)
+    {
+        if (login_shell)
+	        maybe_execute_file ("/etc/profile");
+
+        if (login_shell && !no_profile)
+	    {
+	        // If we are doing the .bash_profile, then don't do the .bashrc. 
+	        no_rc++;
+
+	        if (act_like_sh)
+	            maybe_execute_file ("~/.profile");
+	        else
+	        {
+	            if (maybe_execute_file ("~/.bash_profile") == 0)
+		            if (maybe_execute_file ("~/.bash_login") == 0)
+		                maybe_execute_file ("~/.profile");
+	        }
+
+	        // I turn on the restrictions afterwards because it is explictly
+	        // stated in the POSIX spec that PATH cannot be set in a restricted
+	        // shell, except in .profile. 
+			
+	        if (*++(argv[0]) == 'r')
+	        {
+	            set_var_read_only ("PATH");
+	            restricted++;
+	        }
+	    }	
+	
+        // Execute ~/.bashrc for all shells except direct script shells,
+	    //and shells that are doing -c "command". 
+
+        if ( arg_index == argc && !no_rc && !act_like_sh &&
+	         (!local_pending_command || shell_level < 2) )
+	      maybe_execute_file (bashrc_file);
+
+        ///Try a TMB suggestion.  If running a script, then execute the
+	    //file mentioned in the ENV variable. 
+		
+        if (!interactive)
+	    {
+	      char *env_file = (char *) getenv ("ENV");
+	      
+		  if (env_file && *env_file)
+	          maybe_execute_file (env_file);
+	    }
+
+        if (local_pending_command)
+	    {
+	      with_input_from_string (local_pending_command, "-c");
+	      goto read_and_execute;
+	    }
+    }	
+	*/
+	
+	
+	
+    /* Do the things that should be done only for interactive shells. */
+    /*
+	if (interactive)
+    {
+        // Set up for checking for presence of mail. 
+#ifdef SYSV
+        // Under SYSV, we can only tell if you have mail if the
+	    //modification date has changed.  So remember the current
+	    //modification dates. 
+        remember_mail_dates ();
+#else
+        // Under 4.x, you have mail if there is something in your inbox.
+	    //I set the remembered mail dates to 1900.  
+        reset_mail_files ();
+#endif // SYSV 
+
+        // If this was a login shell, then assume that /bin/login has already
+	    //taken care of informing the user that they have new mail.  Otherwise,
+	    //we want to check right away. 
+	  
+        if (login_shell == 1)
+	    {
+#ifndef SYSV
+	        remember_mail_dates ();
+#endif  // SYSV
+	    }
+
+        reset_mail_timer ();
+
+        // Initialize the interactive history stuff.
+        if (!shell_initialized)
+	    {
+	        char *hf = get_string_value ("HISTFILE");
+	        
+			if (hf)
+	            read_history (hf);
+	    }
+    };
+	*/
+	
+	
+	
+  /* Get possible input filename. */
+	/*
+get_input_filename:
+    
+	if (arg_index != argc)
+    {
+        int fd;
+
+        free (dollar_vars[0]);
+        
+		dollar_vars[0] = savestring (argv[arg_index]);
+
+        fd = open (argv[arg_index++], O_RDONLY);
+        
+		if (fd < 0)
+	    {
+	        file_error (dollar_vars[0]);
+	        exit (1);
+	    }else{
+			
+	       default_input = fdopen (fd, "r");
+	       
+			if (!default_input)
+	        {
+	            file_error (dollar_vars[0]);
+	            exit (1);
+	        }
+	   }
+
+       if (!interactive || (!isatty (fd)))
+	   {
+	      extern int history_expansion;
+	      
+		  history_expansion = interactive = 0;
+#ifdef JOB_CONTROL
+	      set_job_control (0);
+#endif
+	   }else{
+	       dup2 (fd, 0);
+	       close (fd);
+	       fclose (default_input);
+	   }
+    }
+	
+    //Bind remaining args to $1 ... $n 
+    {
+        WORD_LIST *args = (WORD_LIST *) NULL;
+        while (arg_index != argc)
+            args = make_word_list (make_word (argv[arg_index++]), args);
+            args = (WORD_LIST *)reverse_list (args);
+            remember_args (args, 1);
+            dispose_words (args);
+    }
+
+    if (interactive && !no_line_editing)
+        with_input_from_stdin ();
+        else
+            with_input_from_stream (default_input, dollar_vars[0]);
+	*/
+	
+	
+	
 	
 	//char **internal;
 	char *filename;
-	register int i;
+
+
+	
 	//
 	// Obs: Esse não é um programa que roda em modo terminal,
 	// ele na verdade cria um terminal dentro de uma janela filha.
@@ -1061,9 +1437,8 @@ noArgs:
 			terminal_rect.top,
 		    terminal_rect.width, 
 			terminal_rect.height );
-        while (1){
-			asm ("pause");
-		}			
+		
+        while (1){ asm ("pause"); }			
 	}
 	
 	
@@ -1282,14 +1657,31 @@ noArgs:
 		
 	unsigned long message_buffer[5];	
 		
-Mainloop:
-    
+	
+read_and_execute:
+    // Nothing.
+	shell_initialized = 1;
+	
+	// #importante 
+	// #todo
+	/* Read commands until exit condition. */
+    //reader_loop ();
+	
+	// #importante
+	// A função acima é um loop
+	// Esse aqui é outro loop.
+	// #todo: No futuro só teremos o loop no estilo bash, que é a função acima.
+	
 	/* Nesse teste vamos enviar um ponteiro de array, pegarmos os quatro 
 	   elementos da mensagem e depois zerar o buffer */
 	
+Mainloop:
+	
 	while (_running)
 	{
-		//#obs: O retorno será 1 se tiver mensagem e 0 se não tiver.
+		// #obs: 
+		// O retorno será 1 se tiver mensagem e 0 se não tiver.
+		
 		enterCriticalSection(); 
 		system_call ( 111,
 		    (unsigned long) &message_buffer[0],
@@ -1350,7 +1742,11 @@ skip_input:
 
     shellExecuteThisScript ( argv[3] );
 
+	
+	//
 	// Exit process.
+	//
+	
 end:
 
     // Desabilitando o cursor de texto.
@@ -1359,12 +1755,132 @@ end:
 	
     system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
 
+	
+    /* Do trap[0] if defined. */
+    //run_exit_trap ();	
+	
+	//
+	//    ## History ##
+	//
+	
+    /* Save the history of executed commands. */
+    /*
+	if (interactive)
+    {
+        char *hf = get_string_value ("HISTFILE");
+        
+		if (hf)
+	        write_history (hf);
+    }	
+	*/
+	
+	
+	
 #ifdef SHELL_VERBOSE		
     printf("SHELL.BIN: exiting code '0' ...\n");
 #endif 
 	
-	return (int) 0;
-};
+	//
+	// ## Exit ##
+	//
+	
+	// Sair do shell.
+    /* Always return the exit status of the last command to our parent. */
+	//exit (last_command_exit_value);	
+	
+	// Retornar para o crt0.
+	return 0;
+}
+
+
+/*
+void reader_loop ();
+void reader_loop ()
+{
+    extern int indirection_level;
+    
+	int our_indirection_level;
+    
+	COMMAND *current_command = (COMMAND *) NULL;
+
+    our_indirection_level = ++indirection_level;
+
+    while (!EOF_Reached)
+    {
+        sighandler sigint_sighandler ();
+        
+		int code = setjmp (top_level);
+
+        signal (SIGINT, sigint_sighandler);
+
+        if (code != NOT_JUMPED)
+ 	    {
+	        indirection_level = our_indirection_level;
+
+	        switch (code)
+	        {
+	            //Some kind of throw to top_level has occured. 
+	            case FORCE_EOF:
+	            case EXITPROG:
+	                current_command = (COMMAND *) NULL;
+	                EOF_Reached = EOF;
+	                goto exec_done;
+
+	            case DISCARD:
+	                //Obstack free command elements, etc. 
+	                break;
+					
+	            default:
+	                programming_error ("Bad jump %d", code);
+	        }
+	   }
+
+      executing = 0;
+		
+      dispose_used_env_vars ();
+
+      if (read_command () == 0)
+	  {
+	      if (global_command) 
+		  {
+	          current_command = global_command;
+
+	          current_command_number++;
+
+	          //POSIX spec: "-n  The shell reads commands but does
+	          //not execute them; this can be used to check for shell
+	          //script syntax errors.  The shell ignores the -n option
+	          //for interactive shells. " 
+
+	          if (interactive || !read_but_dont_execute)
+	          {
+		          executing = 1;
+		          execute_command (current_command);
+	          }
+
+	         exec_done:
+	         
+			  if (current_command)
+	             dispose_command (current_command);
+	             QUIT;
+	      }
+		  
+	  }else{
+		  
+	      // Parse error, maybe discard rest of stream if not interactive. 
+	      if (!interactive)
+	          EOF_Reached = EOF;
+	  };
+		
+      if (just_one_command)
+	      EOF_Reached = EOF;
+    
+	}; //while
+	
+    indirection_level--;
+}
+*/
+
 
 
 /*

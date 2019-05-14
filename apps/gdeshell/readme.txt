@@ -1,4 +1,10 @@
 
+bash clone:
+    Isso é apenas um shell.
+	Ele deve rodar nos limites da tela do terminal virtual.
+	Isso não deve criar janelas.
+
+
   shell log:
 
    #todo: Incluir o suporte a lexer e parser, semelhante ao que acontece com os compiladores.
