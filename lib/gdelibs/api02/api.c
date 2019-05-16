@@ -2258,7 +2258,6 @@ gde_save_file ( char *file_name,
 	
 	unsigned long message_buffer[12];
 	
-	//enterCriticalSection();
 	message_buffer[0] = (unsigned long) file_name;
 	message_buffer[1] = (unsigned long) file_size;
 	message_buffer[2] = (unsigned long) size_in_bytes;
@@ -2273,20 +2272,22 @@ gde_save_file ( char *file_name,
 	//message_buffer[11] = (unsigned long) x;
 		
 	
-	enterCriticalSection();
+	enterCriticalSection ();
 		
 	Ret = (int) system_call ( SYSTEMCALL_WRITE_FILE,
 	                (unsigned long) &message_buffer[0],     
                     (unsigned long) &message_buffer[0],  
                     (unsigned long) &message_buffer[0] );        
 								
-	exitCriticalSection(); 
+	exitCriticalSection (); 
 
     return (int) Ret;		
 }
 
 
-//Operação down em um semáforo indicado no argumento.
+// apiDown:
+// Operação down em um semáforo indicado no argumento.
+
 void apiDown (struct semaphore_d *s){
 	
 	int Status = 1;    //fail.
@@ -2316,19 +2317,20 @@ tryAgain:
     //0 = deu certo, entrada liberada na sessão crítica.
     //1 = algo deu errado espere tentando novamente.
     
-	//Podemos entrar na região crítica.
-	if(Status == 0){
+	// Podemos entrar na região crítica.
+	
+	if (Status == 0)
+	{
 		return;
 	};
 	
-	//Devemos esperar, monitorando a flag ou bloquando a thread.
-	if(Status = 1)
+	// Devemos esperar, monitorando a flag ou bloquando a thread.
+	
+	if (Status == 1)
 	{
-		//
 		// Opções:
 		// + Bloqueamos a thread e quando ela acordar tentaremos novamente.
 		// + Fazemos um loop monitorando a flag.
-		//
 		
 		//Opção 1.
 		//Exemplo: apiBlockThread(...)
@@ -2338,11 +2340,14 @@ tryAgain:
 	};
 	
 fail:
+	
 	goto tryAgain;
-};
+}
 
 
-//Operação up em um semáforo indicado no argumento.
+// apiUp:
+// Operação up em um semáforo indicado no argumento.
+
 void apiUp (struct semaphore_d *s){
 	
 	int Status = 1; //fail.
@@ -2354,12 +2359,8 @@ void apiUp (struct semaphore_d *s){
         //@todo: Chamar rotina que bloqueia a thread.
 		
 		printf ("apiUp: *fail");
-		while (1){
-		    
-            asm ("pause");			
-		}
-        
-		//return;		
+		
+		while (1){ asm ("pause"); }
 	};
 
     //0 = deu certo, podemos asir da sessão crítica.
@@ -2371,12 +2372,13 @@ tryAgain:
 						(unsigned long) s, (unsigned long) s );	
 
 	//Ok , podemos sair sa sessão crítica.
-	if (Status == 0){
+	if (Status == 0)
+	{
 		return;
 	};
 
 	//Deu errado a nossa tentativa d sair da sessão crítica.
-	if (Status = 1)
+	if (Status == 1)
 	{
 		//
 		// Opções:
@@ -2392,8 +2394,9 @@ tryAgain:
 	};	
 
 fail:
+	
 	goto tryAgain;
-};
+}
 
 
 //P (Proberen) testar.
@@ -2412,12 +2415,14 @@ void enterCriticalSection (){
 		};
 		//Nothing.
 	};
+	
     //Nothing
+	
 done:
     //Muda para zero para que ninguém entre.
     system_call ( SYSTEMCALL_CLOSE_KERNELSEMAPHORE, 0, 0, 0 );	
 	return;
-};
+}
 
 
 //V (Verhogen)incrementar.
@@ -2425,7 +2430,7 @@ void exitCriticalSection (){
 	
 	//Hora de sair. Mudo para 1 para que outro possa entrar.
     system_call ( SYSTEMCALL_OPEN_KERNELSEMAPHORE, 0, 0, 0 );
-};
+}
 
 
 //??
@@ -2487,9 +2492,9 @@ apiDefDialog ( struct window_d *window,
 unsigned long apiGetSystemMetrics (int index){
 	
     return (unsigned long) system_call ( SYSTEMCALL_GETSYSTEMMETRICS, 
-	                                     (unsigned long) index, 
-										 (unsigned long) index, 
-										 (unsigned long) index );
+	                           (unsigned long) index, 
+							   (unsigned long) index, 
+							   (unsigned long) index );
 }
 
 
@@ -2585,8 +2590,10 @@ gramadocore_init_execve ( const char *filename,
 
 
 /*
+ *******************************
  * apiDialog:
- *     Diálogo de yes ou no. */
+ *     Diálogo de yes ou no. 
+ */
 
 int apiDialog ( const char *string ){
 	
@@ -2787,8 +2794,8 @@ apiDisplayBMP ( char *address,
 	// Draw !
 	//
 	
-	left = x;    //
-	top  = y; 
+	left = x;    
+	top = y; 
 	
 	
 	//bottom = top + height;
@@ -2999,11 +3006,14 @@ apiDisplayBMP ( char *address,
 	
 fail:	
     //printf("fail");	
-done:	
+	
+done:
+	
 	//Debug
 	//printf("w={%d} h={%d}\n", bi->bmpWidth, bi->bmpHeight );
-	return (int) 0;
-};
+	
+	return 0;
+}
 
 
 

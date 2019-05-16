@@ -59,20 +59,25 @@ unsigned long stdioGetCursorY();
 static size_t stdio_strlen (const char *s);
 
 
-//atoi. # talvez isso possa ir para o topo do 
-//arquivo para servir mais funções.
+// stdio_atoi:
+// Talvez isso possa ir para o topo do 
+// arquivo para servir mais funções.
+
 int stdio_atoi (char *s){
 	
     int rv=0; 
     char sign = 0;
 
-    /* skip till we find either a digit or '+' or '-' */
+    // Skip till we find either a digit or '+' or '-'.
+    
     while (*s) 
 	{
 	    if (*s <= '9' && *s >= '0')
 		    break;
+        
 	    if (*s == '-' || *s == '+') 
 		    break;
+        
 	    s++;
     }; 	  
 
@@ -93,13 +98,13 @@ int stdio_atoi (char *s){
         else return (rv);
      
     //     return (sign ? -rv : rv);
-};
+}
 
 
-
-//rotina interna de support.
-//isso deve ir para bibliotecas depois.
-//não tem protótipo ainda.
+// stdio_fntos:
+// rotina interna de support.
+// isso deve ir para bibliotecas depois.
+// não tem protótipo ainda.
 // Credits: Luiz Felipe
 
 void stdio_fntos (char *name){
@@ -161,7 +166,7 @@ void stdio_fntos (char *name){
         *name++ = ext[i];
 
     *name = '\0';
-};
+}
 
 
 /*
@@ -194,7 +199,8 @@ void *stdio_system_call ( unsigned long ax,
  ************************************************
  * fclose:
  *     Close a file.
- *     If work, return 0. */
+ *     If work, return 0. 
+ */
 
 int fclose (FILE *stream){
  
@@ -235,12 +241,17 @@ FILE *fopen ( const char *filename, const char *mode ){
 
 
 /*
+ *****************************************
  * scroll:
  *     Scroll the screen in (text mode).
  *     @todo: Mudar para tmScroll(void);
  *     @todo: Criar gmScroll(void) talvez;
  *     @todo: Essa rotina precisa ser revisada e aprimorada.
+ *
+ *     #todo: Talvez deva levar em conta o modo de operação.
+ *            Se estamos ou full screen ou não.
  */
+
 void scroll (void){
 	
 	//Início da tela.
@@ -248,21 +259,26 @@ void scroll (void){
 	
 	//Início da segunda linha.
     unsigned short *p2 = (unsigned short *) (SCREEN_START + 2 * SCREEN_WIDTH);
-    unsigned short i,j;
+    unsigned short i, j;
 	
-	//linhas.
-	//usa o valor default se passar dos limites.
-	if( g_rows == 0 || g_rows >= SCREEN_MAX_HEIGHT ){
+	// Linhas.
+	// Usa o valor default se passar dos limites.
+    
+	if ( g_rows == 0 || g_rows >= SCREEN_MAX_HEIGHT )
+    {
 		g_rows = SCREEN_HEIGHT;
 	};
 	
-	//24 vezes.
-    for( i=0; i < g_rows -1; i++ )
+	// 24 vezes.
+    
+    for ( i=0; i < g_rows -1; i++ )
 	{
 	    //80 vezes.
 		
 		//Se a variável nao foi inicializada, usar valor default.
-		if(g_columns == 0 || g_columns >= SCREEN_MAX_WIDTH){ 
+        
+		if (g_columns == 0 || g_columns >= SCREEN_MAX_WIDTH)
+        { 
 		    g_columns = SCREEN_WIDTH;
 		};
 		
@@ -275,16 +291,16 @@ void scroll (void){
 		//    };
 		//};
 		
-		//modo gráfico.
-	    if(g_using_gui == 1)	
+		// modo gráfico.
+        
+	    if (g_using_gui == 1)	
 		{	
-		    for( j=0; j < g_columns; j++ )
+		    for ( j=0; j < g_columns; j++ )
 			{
                 //*p1++ = *p2++;
 		        //@todo:
 			};
 		};
-		
 	};
 	
 	
@@ -292,27 +308,18 @@ void scroll (void){
 	// Limpando a última linha.
 	//
 	
-	//80 vezes.
-    
-	//modo texto
-	//if(g_using_gui == 0){
-	//    for( i=0; i < g_columns; i++ ){ *p1++ = 0x07*256 + ' '; };
-	//}
 	
 	//modo gráfico.
-	if(g_using_gui == 1)
+	if (g_using_gui == 1)
 	{
-	    for( i=0; i < g_columns; i++ )
+	    for ( i=0; i < g_columns; i++ )
 		{ 
 	        //*p1++ = 0x07*256 + ' ';
 			//@todo:	
 		};    
 	};
 		
-    
-//done:
-	return;
-};
+}
 
 
 /*
@@ -323,18 +330,20 @@ void scroll (void){
 int puts ( const char *str ){
 	
 	//provisório ...
+    
 	return (int) printf ("%s",str);
-};
+}
 
 
-//#todo
-size_t fread(void *ptr, size_t size, size_t n, FILE *fp)
+// #todo
+size_t fread (void *ptr, size_t size, size_t n, FILE *fp)
 {
     return -1;
 }
 
 
-size_t fwrite(const void *ptr, size_t size, size_t n, FILE *fp)
+// #todo
+size_t fwrite (const void *ptr, size_t size, size_t n, FILE *fp)
 {
 	return -1;
 }
@@ -352,6 +361,7 @@ size_t fwrite(const void *ptr, size_t size, size_t n, FILE *fp)
  * prints:
  *
  */
+
 static int prints ( char **out, const char *string, int width, int pad ){
 	
     register int pc = 0, padchar = ' ';
@@ -393,7 +403,7 @@ static int prints ( char **out, const char *string, int width, int pad ){
 	};
 
 	return pc;
-};
+}
 
 
 /*
@@ -401,6 +411,7 @@ static int prints ( char **out, const char *string, int width, int pad ){
  * printi:
  *     used by printf.
  */
+
 static int printi ( char **out, 
                     int i, 
 					int b, 
@@ -453,11 +464,10 @@ static int printi ( char **out,
 		};
 	};
 	
-    //Nothing.
-//done:
+    // Done.
 
 	return pc + prints(out, s, width, pad);
-};
+}
 
 
 /*
@@ -465,6 +475,7 @@ static int printi ( char **out,
  * print:
  *     Used by printf.
  */
+
 static int print ( char **out, int *varg ){
 	
 	register int width, pad;
@@ -556,8 +567,7 @@ static int print ( char **out, int *varg ){
 	    **out = '\0';
 	
 	return (int) pc;
-};
-
+}
 
 
 /* 
@@ -572,20 +582,21 @@ static int print ( char **out, int *varg ){
  * a printf do kernel.
  */
  
-//padrão não tradicional, mas funciona. 
-//int printf ( const char *format, ... ){	
+// Padrão não tradicional, mas funciona. 
+
 int printf3 ( const char *format, ... ){	
     
 	register int *varg = (int *)(&format);
 	
 	return (int) print ( 0, varg );
-};
+}
 
 
 //
 //=============================================================
 //
-//usada na printf2
+
+// usada na printf2
 void printf_atoi (int value, char* valuestring){
     
   int min_flag;
@@ -600,28 +611,35 @@ void printf_atoi (int value, char* valuestring){
 
   p = valuestring;
 
-  do
-  {
+  do {
+      
     *p++ = (char)(value % 10) + '0';
     value /= 10;
+      
   } while (value);
 
+    
   if (min_flag != 0)
   {
     ++*valuestring;
   }
+    
   *p-- = '\0';
 
-  while (p > valuestring)
-  {
-    swap = *valuestring;
-    *valuestring++ = *p;
-    *p-- = swap;
-  }
+    
+    while (p > valuestring)
+    {
+        swap = *valuestring;
+        
+        *valuestring++ = *p;
+        
+        *p-- = swap;
+    }
 }
 
+
 //usada na printf2
-void printf_i2hex(uint32_t val, char* dest, int len)
+void printf_i2hex (uint32_t val, char* dest, int len)
 {
 	char* cp;
 	char x;
@@ -638,18 +656,18 @@ void printf_i2hex(uint32_t val, char* dest, int len)
 		*--cp = x + ((x > 9) ? 'A' - 10 : '0');
 	}
 	
-    dest[len+1]='\0';
+    dest[len+1] = '\0';
 }
 
 
 
-//#test 
-//tentando implementar a printf do nelson cole.
-//padrão tradicional, incompleta, não funciona ainda,
-//estamo implementando
+// #test 
+// tentando implementar a printf do nelson cole.
+// padrão tradicional, incompleta, não funciona ainda,
+// estamo implementando
 
-int printf2 ( const char *format, ...)
-{
+int printf2 ( const char *format, ... ){
+    
     char *ap;
 	va_start (ap,format);
 	
@@ -726,7 +744,7 @@ int printf2 ( const char *format, ...)
     };
 	
     return 0;
-};
+}
 
 
 
@@ -753,7 +771,7 @@ int sprintf ( char *out, const char *format, ... ){
     register int *varg = (int *)(&format);
 	
 	return (int) print( &out, varg );
-};
+}
 
 
 static void printchar ( char **str, int c ){
@@ -764,8 +782,8 @@ static void printchar ( char **str, int c ){
 		
 		++(*str);
 	
-	}else (void) putchar(c);
-};
+	} else (void) putchar (c);
+}
 
 
 /*
@@ -803,7 +821,7 @@ int putchar (int ch){
 		(unsigned long) ch );
 	
 	return (int) ch;    
-};
+}
 
 
 /*
@@ -821,6 +839,7 @@ void outbyte (int c){
     static char prev = 0;
         
 	// spaces.	
+    
     if( c <  ' ' && 
 	    c != '\r' && 
 		c != '\n' && 
@@ -944,7 +963,7 @@ void outbyte (int c){
 
 	//Atualisa o prev.
     prev = c;     	
-};
+}
 
 
 /*
@@ -967,12 +986,11 @@ void _outbyte ( int c ){
 	//o que queremos é usar uma variável.
 	
 	//#bugbug
-	//essa funç~ao n~ao 'e usada ... NAO funciona.
+	//essa funçao nao 'e usada ... NAO funciona.
 	//printf usa outra coisa (65).
 	
-	//stdio_system_call ( 7, 8*g_cursor_x,  8*g_cursor_y, (unsigned long) c ); 
 	gramado_system_call ( 7, 8*g_cursor_x,  8*g_cursor_y, (unsigned long) c ); 
-};
+}
 
 
 /*
@@ -983,6 +1001,7 @@ void _outbyte ( int c ){
  *     Deveríamos considerar o posicionamento dentro do arquivo.
  *     Dentro da stream.
  */
+
 unsigned long input ( unsigned long ch ){
 	
 	//save cursor position.
@@ -1068,8 +1087,7 @@ unsigned long input ( unsigned long ch ){
 		default:
 		    prompt[prompt_pos] = c;
 		    prompt_pos++;
-			break;
-			
+			break;	
 	};
 	
 //input_more:	
@@ -1077,7 +1095,7 @@ unsigned long input ( unsigned long ch ){
 
 input_done:	
     return VK_RETURN;	
-};
+}
 
 
 /*
@@ -1142,7 +1160,6 @@ int input_file_buffer_size(void)
 
 int getchar (void){
 	
-	//return (int) stdio_system_call ( 137, 0, 0, 0 ); 
 	return (int) gramado_system_call ( 137, 0, 0, 0 ); 
 }
 
@@ -1153,6 +1170,7 @@ int getchar (void){
  *     Inicializa stdio para usar o fluxo padrão.
  *     O retorno deve ser (int) e falhar caso dê algo errado.
  */
+
 void stdioInitialize (){
 	
 	//register int i;
@@ -1168,6 +1186,10 @@ void stdioInitialize (){
 	stdin = (FILE *) &buffer0[0];	
 	stdout = (FILE *) &buffer1[0];	
 	stderr = (FILE *) &buffer2[0];
+    
+    
+    // #bugbug
+    //  Em ring 3 não temos acesso aos elementos da estrutura.
 
     // A biblioteca tem 3 pequenos buffers,
 	// que serão usados como base para os stream.
@@ -1230,22 +1252,18 @@ void stdioInitialize (){
     stderr->_ptr = stderr->_base;	
     stderr->_bufsiz = BUFSIZ; 		
 	stderr->_cnt = stderr->_bufsiz;			
-};
+}
 
 
 /* 
  ***********************************
  * fflush: 
- * Salva o buffer no arquivo associado a ele.
- * e limpa o buffer. 
+ *     Salva o buffer no arquivo associado a ele e limpa o buffer. 
  * Se for NULL então faz isso para todas stream abertas.
  * retorna 0 se funcionar e retorna EOF se falhar.
  */
 
 int fflush ( FILE *stream ){
-	
-    //return (int) stdio_system_call ( 233, (unsigned long) stream, 
-	//				 (unsigned long) stream, (unsigned long) stream ); 
 	
     return (int) gramado_system_call ( 233, (unsigned long) stream, 
 					 (unsigned long) stream, (unsigned long) stream ); 
@@ -1259,9 +1277,6 @@ int fflush ( FILE *stream ){
 
 int fprintf ( FILE *stream, const char *format, ... ){
 	
-    //return (int) stdio_system_call ( 234, (unsigned long) stream, 
-	//				 (unsigned long) format, (unsigned long) format ); 
-	
     return (int) gramado_system_call ( 234, (unsigned long) stream, 
 					 (unsigned long) format, (unsigned long) format ); 
 }
@@ -1271,10 +1286,9 @@ int fprintf ( FILE *stream, const char *format, ... ){
  ********************************
  * fputs:      
  */
+
 int fputs ( const char *str, FILE *stream ){
 	
-    //return (int) stdio_system_call ( 235, (unsigned long) str, 
-	//				 (unsigned long) stream, (unsigned long) stream ); 
     return (int) gramado_system_call ( 235, (unsigned long) str, 
 					 (unsigned long) stream, (unsigned long) stream ); 
 }
@@ -1285,7 +1299,7 @@ int fputs ( const char *str, FILE *stream ){
  * gets:
  *
  * obs: 
- * gets() devolve um ponteiro para string
+ *     gets() devolve um ponteiro para string
  */
  
 char *gets (char *s){
@@ -1338,9 +1352,11 @@ char *gets (char *s){
 		asm ("pause");
     };
 	
-done:	
+done:
+    
     //s[t] = (char) '\0';
-	return (char *) p;
+	
+    return (char *) p;
 }
 
 
@@ -1355,15 +1371,15 @@ int ungetc ( int c, FILE *stream ){
 	//precisamos chamr a system call.	
 		
     return (int) -1;	
-};
+}
 
 
-long ftell (FILE *stream)
-{
+long ftell (FILE *stream){
+    
 	//#bugbug
 	//precisamos chamr a system call.		
     return (long) -1;	
-};
+}
 
 
 int fileno ( FILE *stream ){
@@ -1371,9 +1387,8 @@ int fileno ( FILE *stream ){
 	//#bugbug
 	//precisamos chamr a system call.		
 
-
 	return (int) -1;  //fd
-};
+}
 
 
 /*
@@ -1385,8 +1400,6 @@ int fileno ( FILE *stream ){
 
 int fgetc ( FILE *stream ){
     
-    //return (int) stdio_system_call ( 136, (unsigned long) stream,  
-	//				 (unsigned long) stream,  (unsigned long) stream );
     return (int) gramado_system_call ( 136, (unsigned long) stream,  
 					 (unsigned long) stream,  (unsigned long) stream );
 }
@@ -1396,11 +1409,9 @@ int fgetc ( FILE *stream ){
  *********************************
  * feof:
  */
+
 int feof ( FILE *stream ){
     
-    //return (int) stdio_system_call ( 193, (unsigned long) stream,  
-	//				(unsigned long) stream,  (unsigned long) stream );
-	
     return (int) gramado_system_call ( 193, (unsigned long) stream,  
 					(unsigned long) stream,  (unsigned long) stream );
 }
@@ -1409,13 +1420,10 @@ int feof ( FILE *stream ){
 /*
  *********************************
  * ferror:
- *
  */
+
 int ferror ( FILE *stream ){
     
-    //return (int) stdio_system_call ( 194, (unsigned long) stream,  
-	//				(unsigned long) stream,  (unsigned long) stream );    
-	
     return (int) gramado_system_call ( 194, (unsigned long) stream,  
 					(unsigned long) stream,  (unsigned long) stream );    
 }
@@ -1427,11 +1435,9 @@ int ferror ( FILE *stream ){
  *     offset argument is the position that you want to seek to,
  *     and whence is what that offset is relative to.
  */
+
 int fseek ( FILE *stream, long offset, int whence ){
     
-     //return (int) stdio_system_call ( 195, (unsigned long) stream, 
-	//					(unsigned long) offset,  (unsigned long) whence ); 
-	
      return (int) gramado_system_call ( 195, (unsigned long) stream, 
 						(unsigned long) offset,  (unsigned long) whence ); 
 }
@@ -1444,8 +1450,6 @@ int fseek ( FILE *stream, long offset, int whence ){
 
 int fputc ( int ch, FILE *stream ){
     
-     //return (int) stdio_system_call ( 196, (unsigned long) ch,  
-	 //				 (unsigned long) stream,  (unsigned long) stream );    
      return (int) gramado_system_call ( 196, (unsigned long) ch,  
 					 (unsigned long) stream,  (unsigned long) stream );    
 }
@@ -1457,12 +1461,13 @@ int fputc ( int ch, FILE *stream ){
  *     estamos falando do posicionamento do cursor dentro da janela
  *     e não dentro do terminal.
  */
+
+//34 - set cursor.
+
 void stdioSetCursor ( unsigned long x, unsigned long y ){
-	
-	//34 - set cursor.
-    //stdio_system_call ( 34, x, y, 0 );	
+    
     gramado_system_call ( 34, x, y, 0 );	
-};
+}
 
 
 /*
@@ -1470,12 +1475,12 @@ void stdioSetCursor ( unsigned long x, unsigned long y ){
  *     Get cursor x. 
  *     estamos falando do posicionamento do cursor dentro da janela
  *     e não dentro do terminal.
- */  
+ */ 
+
 unsigned long stdioGetCursorX (){
-	
-    //return (unsigned long) stdio_system_call ( 240, 0, 0, 0 );
+    
     return (unsigned long) gramado_system_call ( 240, 0, 0, 0 );
-};
+}
 
 
 /*
@@ -1484,17 +1489,16 @@ unsigned long stdioGetCursorX (){
  *     estamos falando do posicionamento do cursor dentro da janela
  *     e não dentro do terminal. 
  */
+
 unsigned long stdioGetCursorY (){
-	
-    //return (unsigned long) stdio_system_call ( 241, 0, 0, 0 );
+    
     return (unsigned long) gramado_system_call ( 241, 0, 0, 0 );
-};
+}
 
 
 //======================================================================
 // scanf support (start)
 //======================================================================
-
 
 
 int scanf ( const char *fmt, ... ){
@@ -1616,9 +1620,10 @@ int scanf ( const char *fmt, ... ){
 				
         };//switch
 	};
-   // va_end(ap);
+    
+   // va_end (ap);
    
-   return (int) 0;
+   return 0;
 }
 //======================================================================
 // scanf support (end)
@@ -1644,7 +1649,9 @@ int sscanf ( const char *str, const char *format, ... ){
 	va_list args;
 	
 	va_start(args, format);
-	for ( ; *format != '\0'; format++) {
+    
+	for ( ; *format != '\0'; format++){
+        
 		if (*format == '%' && format[1] == 'd') {
 			int positive;
 			int value;
@@ -1672,12 +1679,11 @@ int sscanf ( const char *str, const char *format, ... ){
 		} else
 			break;
 	}
-	va_end(args);
-	return str - start;
+    
+	va_end (args);
+	
+    return str - start;
 }
-
-
-
 
 
 //=============================================================
@@ -2316,13 +2322,11 @@ int vfprintf ( FILE *stream, const char *format, stdio_va_list argptr ){
 };  
 
 
-/*
- #bsd
-*/
+/* #bsd style */
 
-int vprintf(const char *fmt, va_list ap)
-{
-	return vfprintf(stdout, fmt, ap);
+int vprintf (const char *fmt, va_list ap){
+    
+	return vfprintf (stdout, fmt, ap);
 }
 
 
@@ -2341,8 +2345,7 @@ int stdout_printf (const char *format, ...){
 
 
 //printf que escreve no stderr. 
-int stderr_printf (const char *format, ...)
-{
+int stderr_printf (const char *format, ... ){
     va_list arg;
     int done;
 
@@ -2351,13 +2354,13 @@ int stderr_printf (const char *format, ...)
     va_end (arg);
 
     return done;
-};
+}
 
  
 void perror (const char *str){
 	
     stderr_printf (str);	
-};
+}
  
  
 //#test 
@@ -2371,6 +2374,8 @@ void rewind ( FILE * stream ){
     //apota par o início do arquivo.
 	//#bugbug: isso vai sobrescrever
 	//as coisas que ainda estão no arquivo;
+    
+    // #bugbug: ring3 não tem acesso aos elementos dessa estrtutura.
 	
 	stdin->_ptr = stdin->_base;
     stdin->_bufsiz = BUFSIZ; 		
@@ -2391,6 +2396,7 @@ int snprintf ( char *str, size_t count, const char *fmt, ... ){
 	//ret = vsnprintf(str, count, fmt, ap);
 	
 	va_end(ap);
+    
 	return ret;
 }
 

@@ -1,5 +1,6 @@
 /*
  * File: main.c - gdeshell - bash 1.05 clone. (baseado no bash)
+ * #todo Para esse aplicativo vou usar o prompt: [username@hostname] $
  *
  * #todo: a intenção é que isso seja apenas um shell e não um terminal virtual.
  * devendo essa aplicação rodar no terminal virtual quando chamada por ele, ou
