@@ -308,24 +308,24 @@ int no_brace_expansion = 0;	/* Non-zero means no foo{a,b} -> fooa fooa. */
 #define Charp 2
 
 struct {
-	
+
     char *name;
     int *value;
     int type;
-	
+
 } long_args[] = {
-	
+
     { "debug",             &debugging,           Int   },
-	{ "norc",              &no_rc,               Int   },
+    { "norc",              &no_rc,               Int   },
     { "noprofile",         &no_profile,          Int   },
     { "rcfile",            (int *) &bashrc_file, Charp },
     { "version",           &do_version,          Int   },
     { "quiet",             &quiet,               Int   },
     { "login",             &make_login_shell,    Int   },
-	{ "nolineediting",     &no_line_editing,     Int   },
-    { "nobraceexpansion",  &no_brace_expansion,  Int   },	
+    { "nolineediting",     &no_line_editing,     Int   },
+    { "nobraceexpansion",  &no_brace_expansion,  Int   },
     { (char *) NULL,       (int *) 0x0,          0     }
-	
+
 };
 
 
@@ -641,12 +641,13 @@ int main ( int argc, char *argv[] ){
 	
 	/* Parse argument flags from the input line. */
 	
-    /* Find full word arguments first. */
+    // Find full word arguments first. 
+	
     while ( (arg_index != argc) && *(argv[arg_index]) == '-' )
     {
         for ( i=0; long_args[i].name; i++ )
 	    {
-	        if ( strcmp( &(argv[arg_index][1]), long_args[i].name) == 0 )
+	        if ( strcmp( &(argv[arg_index][1]), long_args[i].name ) == 0 )
 	        {
 	            if ( long_args[i].type == Int )
 		            *(long_args[i].value) = 1;
@@ -667,7 +668,8 @@ int main ( int argc, char *argv[] ){
 		           }
 				
 	               goto next_arg;
-	      }
+	        }
+			//Nothing.
 	    }
 		
         break;			/* No such argument.  Maybe flag arg. */
@@ -1553,51 +1555,47 @@ noArgs:
 	// @todo: Apenas registrar o procedimento dessa janela na sua estrutura no kernel..
     // 
 	
-	
-	//printf("HOLAMBRA KERNEL SHELL\n");	
-    //printf("#debug breakpoint");
-    //while(1){} 		
-	
-	
+
+	//printf("HOLAMBRA KERNEL SHELL\n");
+	//printf("#debug breakpoint");
+	//while(1){}
+
+
 	//===========================
-	
-	
+
+
 	// Init Shell:
 	//     Inicializa variáveis, buffers e estruturas. Atualiza a tela.
-	
-	enterCriticalSection();
+	// #BUGBUG
+	// Estamos passando um ponteiro que é uma variável local.
 
-    //#BUGBUG
-    //Estamos passando um ponteiro que é uma variável local.	
+    enterCriticalSection ();
 
-	Status = (int) shellInit (hWindow); 
-	
-	if ( Status != 0 ){
-		die ("SHELL.BIN: app_main: shellInit fail");
-	};
-	exitCriticalSection();     		
-	
-	//printf("HOLAMBRA KERNEL SHELL\n");	
-    //printf("#debug breakpoint");
-    //while(1){} 			
+    Status = (int) shellInit (hWindow); 
 
-	
-	//
-	//#importante:
-	//Agora é a hora de pegar mensagens de input de teclado.
-	//Mas se o shell não for interativo, então não pegaremos 
-	//mensagens de input de teclado.
-	//
-	
-	if ( interactive != 1 ){
-		
+    if ( Status != 0 )
+    {
+        die ("gdeshell: main: shellInit fail");
+    };
+
+    exitCriticalSection (); 
+
+
+	// #importante:
+	// Agora é a hora de pegar mensagens de input de teclado.
+	// Mas se o shell não for interativo, então não pegaremos 
+	// mensagens de input de teclado.
+
+
+    if ( interactive != 1 ){
+
 		//#debug
         printf("shell is not interactive\n");
-		
-		goto skip_input;
-	};
-	
-	
+
+        goto skip_input;
+    };
+
+
 	//@todo: Isso é um teste.
 	//system("reboot");
 	
@@ -7303,12 +7301,14 @@ int is_sh1 ( char *cmd ){
 
 
 /* 
-Give version information about this shell. 
-*/
+ * Give version information about this shell. 
+ */
+
 void show_shell_version (){
+	
     printf ("%s, version %s.%s \n", 
 	    shell_name, dist_version, build_version );
-};
+}
 
 
 //testando a rotina de salvar um arquivo.
