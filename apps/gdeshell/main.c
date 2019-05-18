@@ -1,6 +1,8 @@
 /*
  * File: main.c - gdeshell - bash 1.05 clone. (baseado no bash)
  * #todo Para esse aplicativo vou usar o prompt: [username@hostname] $
+ * #todo: precisamos deletar a parte referente ao terminal e outros... deve ficar apenas 
+ * a parte de shell.
  *
  * #todo: a intenção é que isso seja apenas um shell e não um terminal virtual.
  * devendo essa aplicação rodar no terminal virtual quando chamada por ele, ou
@@ -199,11 +201,12 @@ COMMAND *global_command = (COMMAND *) NULL;
 int interrupt_state = 0;
 
 /* The current user's name. */
-char *current_user_name = (char *) NULL;
+char *current_user_name = (char *) "username";
+//char *current_user_name = (char *) NULL;
 
 /* The current host's name. */
-char *current_host_name = (char *) NULL;
-
+char *current_host_name = (char *) "hostname";
+//char *current_host_name = (char *) NULL;
 
 /* Non-zero means that this shell is a login shell.
    Specifically:
@@ -5333,21 +5336,21 @@ void shellThread (){
 		asm ( "pause" );
 		asm ( "pause" );
     }	
-};
+}
 
 
 //help message
 void shellHelp (){
 	
     printf (help_banner);	
-};
+}
 
 
 //drawing a tree
 void shellTree (){
 	
     printf (tree_banner);	
-};
+}
 
 
 /*
@@ -5355,15 +5358,17 @@ void shellTree (){
  * shellPrompt:
  *     Inicializa o prompt.
  *     Na inicialização de stdio, 
- * prompt foi definido como stdin->_base.
- *
+ *    prompt foi definido como stdin->_base.
  */
+
 void shellPrompt (){
 	
 	int i;
 	
-	//Linpando o buffer de entrada.
-	for ( i=0; i<PROMPT_MAX_DEFAULT; i++ ){
+	// Linpando o buffer de entrada.
+	
+	for ( i=0; i<PROMPT_MAX_DEFAULT; i++ )
+	{
 		prompt[i] = (char) '\0';
 	}
 	
@@ -5372,10 +5377,17 @@ void shellPrompt (){
     prompt_status = 0;
 	prompt_max = PROMPT_MAX_DEFAULT;  
 
-    printf("\n");
-    printf("[%s]", current_workingdiretory_string );	
-	printf("%s", SHELL_PROMPT );
-};
+	//old
+    //printf ("\n");
+    //printf ("[%s]", current_workingdiretory_string );	
+	//printf ("%s ", SHELL_PROMPT );
+	
+    printf ("\n");
+    printf ("[%s", current_user_name );
+	printf ("@%s]", current_host_name );
+	printf ("%s ", SHELL_PROMPT );	
+	
+}
 
 
 /*
