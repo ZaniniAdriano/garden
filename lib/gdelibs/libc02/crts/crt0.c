@@ -71,74 +71,74 @@ int crt0 (){
 	//while(1){ asm ("pause"); }
 	
 #endif
-	
 
     // Criando o ambiente.
 	// Transferindo os ponteiros do vetor para o ambiente.
 
-	tokenList[0] = strtok ( &shared_memory[0], LSH_TOK_DELIM );
-	
- 	// Salva a primeira palavra digitada.
-	token = (char *) tokenList[0];
- 
-	index = 0;                                  
+    tokenList[0] = strtok ( &shared_memory[0], LSH_TOK_DELIM );
+
+    // Salva a primeira palavra digitada.
+    token = (char *) tokenList[0];
+
+    index = 0; 
+
     while ( token != NULL )
-	{
+    {
         // Coloca na lista.
         // Salva a primeira palavra digitada.
-		tokenList[index] = token;
+        tokenList[index] = token;
 
-		//#debug
+        //#debug
         //printf("shellCompare: %s \n", tokenList[i] );
-		
-		token = strtok ( NULL, LSH_TOK_DELIM );
-		
-		// Incrementa o índice da lista
+
+        token = strtok ( NULL, LSH_TOK_DELIM );
+
+        // Incrementa o índice da lista
         index++;
-		
-		// Salvando a contagem.
-		token_count = index;
+
+        // Salvando a contagem.
+        token_count = index;
     }; 
 
-	//Finalizando a lista.
-    tokenList[index] = NULL;	
-	
-	
+    //Finalizando a lista.
+    tokenList[index] = NULL;
 
 #ifdef TEDITOR_VERBOSE	
 
 	// #debug 	
-	// Mostra a quantidade de argumentos. 	
-	
+	// Mostra a quantidade de argumentos. 
+
 	printf("\n");
 	printf("token_count={%d}\n", token_count );
-	
-	//Mostra os primeiros argumentos.
-	for ( index=0; index < token_count; index++ )
-	{
-		token = (char *) tokenList[index];
-	    if ( token == NULL )
-		{
-			printf ("crt0: for fail!\n")
-			goto hang;
-		}
-	    printf ("# argv{%d}={%s} #\n", index, tokenList[index] );		
-	};
-#endif	
-	
+
+    //Mostra os primeiros argumentos.
+    for ( index=0; index < token_count; index++ )
+    {
+        token = (char *) tokenList[index];
+        if ( token == NULL )
+        {
+            printf ("crt0: for fail!\n")
+            goto hang;
+        }
+
+        printf ("# argv{%d}={%s} #\n", index, tokenList[index] );
+    };
+
+#endif
+
 	// Inicializa a biblioteca.
-	
+
 	libcInitRT ();
-	stdioInitialize ();	
-	
-	
-#ifdef TEDITOR_VERBOSE		
-    //Inicializando o editor propriamente dito.	
+	stdioInitialize ();
+
+
+#ifdef TEDITOR_VERBOSE
+    //Inicializando o editor propriamente dito.
 	printf("Calling main ... \n"); 
-#endif	
+#endif
 
     retval = (int) main ( token_count, tokenList );
-	
+
 	switch (retval)
 	{
 		case 0:
@@ -152,21 +152,21 @@ int crt0 (){
 			break;
 			
 		//...
-		
-	    default:
-		    printf ("crt0: main returned default\n");
+
+        default:
+            printf ("crt0: main returned default\n");
             exit (-1);
-			break; 		
-	};
-		
-	//
+            break; 
+    };
+
+    //
     // No return!
     //
-	
+
     printf ("*HANG\n");
-	exit (-1);
-	
-	while (1) { asm ("pause"); };
+    exit (-1);
+
+    while (1) { asm ("pause"); };
 }
 
 
