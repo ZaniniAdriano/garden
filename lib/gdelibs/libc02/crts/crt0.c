@@ -58,7 +58,7 @@ int crt0 (){
 #ifdef TEDITOR_VERBOSE	
 	
 	printf ("\n");
-	printf ("crt0: Initiali\ing ...\n");
+	printf ("crt0: Initializing ...\n");
 	//printf("\n");
 	//printf(".\n");
 	printf ("..\n");
