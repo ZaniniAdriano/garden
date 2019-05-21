@@ -57,21 +57,18 @@ int crt0 (){
 	
 #ifdef TEDITOR_VERBOSE	
 	
-	printf("\n");
-	printf("crt0:\n");
-	printf("Initializing teditor.bin ...\n\n");	
+	printf ("\n");
+	printf ("crt0: Initiali\ing ...\n");
 	//printf("\n");
 	//printf(".\n");
-	printf("..\n");
-	printf("# MESSAGE={%s} #\n", shared_memory );
-	printf("..\n");
+	printf ("..\n");
+	printf ("# MESSAGE={%s} #\n", shared_memory );
+	printf ("..\n");
 	//printf(".\n");
 	//printf("\n");
 	
 	//#debug
-	//while(1){
-	//	asm ("pause");
-	//}
+	//while(1){ asm ("pause"); }
 	
 #endif
 	
