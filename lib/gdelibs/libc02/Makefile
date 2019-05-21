@@ -55,6 +55,9 @@ main.o:
 
 all-c:
 
+#/crts
+	gcc  -c  crts/crt0.c    $(CFLAGS) -I. -I include/ -o crt0.o
+	
 #/ctype
 	gcc  -c  ctype/ctype.c    $(CFLAGS) -I. -I include/ -o ctype.o
 	
