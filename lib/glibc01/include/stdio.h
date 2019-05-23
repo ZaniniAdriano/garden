@@ -20,6 +20,7 @@
 #ifndef _STDIO_H
 #define _STDIO_H
 
+
 /* file modes */
 #define O_RDWR		0x1
 #define O_RDONLY	0x2
@@ -52,7 +53,7 @@ unsigned char getch ();
 unsigned char getkey ();
 void gotoxy (int x, int y);
 void setcolor (int t, int f);
-int sprintf (char *buffer, const char *fmt, ...);
+int sprintf ( char *buffer, const char *fmt, ... );
 void beep (unsigned freq);
 int open (const char *pathname, int flags);
 int close (int fd);

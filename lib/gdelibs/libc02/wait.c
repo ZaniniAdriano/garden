@@ -19,6 +19,7 @@
  
  
 /*
+ *********************************
  * wait:
  *
  */
@@ -29,17 +30,15 @@ pid_t wait ( int *status ){
 	// Criar o identificador da system call 43
     //SYSTEMCALL_WAIT4PID 
 	
-    pid_t pid;
-
-again:
-
 	// #importante
 	// >>se o retorno indicar que já havia um processo filho no estado zombie 
 	// e retornou seu pid, então apenas retornamos o pid para o aplicativo que chamou wait.	
 	// >>se o retorno indicar que não há um processo filho terminado
 	// então devemos esperar até que algum processo filho termine.
-
-	//#todo
+	
+    pid_t pid;
+	
+again:
 
 	pid = (pid_t) gramado_system_call ( 83, (unsigned long) status , 0, 0 );	
 
@@ -67,7 +66,9 @@ again:
     return (pid_t) pid;
 
     goto again;
-
+	
+//done:
+	
     return (pid_t) pid;
 }
 

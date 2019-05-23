@@ -88,5 +88,6 @@ void _dma_xfer(uchar DMA_channel, unsigned char page, unsigned int offset, unsig
     outportb(MaskReg[DMA_channel], DMA_channel);
 
     /* Re-enable interrupts before we leave. */
-    asm("sti");
+    asm ("sti");
 }
+

@@ -63,10 +63,10 @@ void puts (const char *text){
 	//O tipo é 'size_t'.
 	int l = puts_strlen (text);
 	
-	for (i=0; i < l; i++){
-		
+	for (i=0; i < l; i++)
+	{	
 		putch ( (char) text[i] );
-	}
+	};
 }
 
 

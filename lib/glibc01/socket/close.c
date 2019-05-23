@@ -21,12 +21,15 @@
 #include <sys/socket.h>
 
 
-int close (int fd)
-{
+int close (int fd){
+	
+	/*
 	asm volatile (
 		"movl $17, %%eax;"
 	     	"movl %0, %%ebx;"
 	     	"int $0x80;" :: "g" (fd) : "%eax", "%ebx");
+			
+	*/
 
 	return 1;
 }

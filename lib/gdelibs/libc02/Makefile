@@ -96,6 +96,9 @@ all-c:
 #...	
 
  
+#tests 
+	gcc  -c  tests/test1.c   $(CFLAGS) -I. -I include/ -o test1.o --save-temps
+ 
 # test
 # entry point para a biblioteca compartilhada. .so
 

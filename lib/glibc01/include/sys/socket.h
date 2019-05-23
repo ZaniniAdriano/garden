@@ -16,8 +16,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 #ifndef _SOCKET_H
 #define _SOCKET_H
+
 
 /* Supported address families. */
 
@@ -188,37 +190,51 @@
 #define 	INADDR_ANY   (unsigned long)0x00000000 // Any IP address.
 #define 	INADDR_BROADCAST   (unsigned long)0xffffffff // Broadcast IP address.
 
+
 typedef unsigned socklen_t;
 
+
 /* Device structure */
+
 typedef struct socket_context {
-  struct socket_context *next, *prev;
+	
+    struct socket_context *next, *prev;
 	unsigned fd;
 	int family;
 	int type;
 	int protocol;
+	
 } socket_t;
 
-struct sockaddr
-{
+
+
+struct sockaddr {
+	
 	unsigned short sa_family;
 	char sa_data[14];
 };
 
-typedef struct
-{
+
+typedef struct {
+	
 	int sin_family;
 	int sin_port;
 	char *sin_addr;
+	
 } sockaddr_in;
 
-typedef struct
-{
+
+typedef struct {
+	
 	char *h_addr;
 	unsigned h_length;
+	
 } hostent;
 
+
+
 /* externs */
+
 extern int htons (int port);
 extern hostent *gethostbyname (char *hostname);
 extern int socket (int family, int type, int protocol);
@@ -231,3 +247,5 @@ extern int accept (int fd, sockaddr_in *addr, socklen_t *addrlen);
 extern int close (int fd);
 
 #endif
+
+

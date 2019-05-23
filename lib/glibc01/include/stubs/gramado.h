@@ -1,5 +1,5 @@
 
-//gramado system calls.
+// gramado system calls.
 
 
 #ifndef __GRAMADO_CALL
@@ -7,8 +7,8 @@
 
 void *gramado_system_call ( unsigned long ax, 
                             unsigned long bx, 
-				            unsigned long cx, 
-				            unsigned long dx );
+                            unsigned long cx, 
+                            unsigned long dx );
 
 #endif
 

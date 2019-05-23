@@ -21,8 +21,9 @@
 #include <sys/socket.h>
 
 
-int recv (int fd, char *msg, size_t size, int flags)
-{
+int recv (int fd, char *msg, size_t size, int flags){
+	
+	/*
 	asm volatile (
 		"movl $16, %%eax;"
 	     	"movl %0, %%ecx;"
@@ -30,10 +31,12 @@ int recv (int fd, char *msg, size_t size, int flags)
 	     	"movl %2, %%edx;"
 	     	"int $0x80;" :: "g" (fd), "b" (msg), "g" (size) : "%eax", "%ecx", "%edx", "memory");
 
-	/* get return value */
+	//get return value 
 	int *memptr = (int *) 0x9000;
 	int *ret = memptr;
 
 	return (int) *ret;
+	*/
+	return -1;
 }
 

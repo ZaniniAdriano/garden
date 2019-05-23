@@ -44,8 +44,7 @@ The socket has the indicated type, which specifies the communication
 int socket ( int family, int type, int protocol ){
 	
 	/*
-	asm volatile (
-		"movl $12, %%eax;"
+	asm volatile ( "movl $12, %%eax;"
 	     	"movl %0, %%ebx;"
 	     	"movl %1, %%ecx;"
 	     	"movl %2, %%edx;"

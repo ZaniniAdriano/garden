@@ -16,11 +16,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-void enable(void)
-{
-	__asm__ __volatile__("sti"
-		:
-		:
-		);
+// ring 0 only.
+void enable (void){
+	
+    __asm__  __volatile__ ("sti" : : );
 }
+

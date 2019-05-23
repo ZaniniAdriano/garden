@@ -21,8 +21,9 @@
 #include <sys/socket.h>
 
 
-int accept (int fd, sockaddr_in *addr, socklen_t *addrlen)
-{
+int accept (int fd, sockaddr_in *addr, socklen_t *addrlen){
+	
+	/*
 	asm volatile (
 		"movl $32, %%eax;"
 	     	"movl %0, %%ecx;"
@@ -30,10 +31,12 @@ int accept (int fd, sockaddr_in *addr, socklen_t *addrlen)
 	     	"movl %2, %%edx;"
 	     	"int $0x80;" :: "g" (fd), "b" (addr), "g" (addrlen) : "%eax", "%ecx", "%edx", "memory");
 
-	/* get return value */
+	//get return value 
 	int *memptr = (int *) 0x9000;
 	int *ret = memptr;
 
 	return (int) *ret;
+	*/
+	return -1;
 }
 

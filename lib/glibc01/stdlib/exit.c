@@ -17,8 +17,8 @@
  */
 
 
-void exit ()
-{
+void exit (){
+	
 	asm volatile ("movl $1, %%eax;"
 	     "int $0x80;" ::: "%eax");
 } 

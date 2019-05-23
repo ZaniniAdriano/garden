@@ -22,8 +22,8 @@
 
 
 //int connect (int fd, const char *host, int port)
-int connect (int fd, sockaddr_in *addr, socklen_t len) 
-{
+int connect (int fd, sockaddr_in *addr, socklen_t len){
+	
 	/*
 	asm volatile (
 		"movl $13, %%eax;"

@@ -21,8 +21,9 @@
 #include <sys/socket.h>
 
 
-int bind (int fd, sockaddr_in *addr, socklen_t len)
-{
+int bind (int fd, sockaddr_in *addr, socklen_t len){
+	
+	/*
 	asm volatile (
 		"movl $30, %%eax;"
 	     	"movl %0, %%ecx;"
@@ -30,10 +31,12 @@ int bind (int fd, sockaddr_in *addr, socklen_t len)
 	     	"movl %2, %%edx;"
 	     	"int $0x80;" :: "g" (fd), "b" (addr), "g" ((unsigned) len) : "%eax", "%ecx", "%edx", "memory");
 
-	/* get return value */
+	//get return value 
 	int *memptr = (int *) 0x9000;
 	int *ret = memptr;
 
 	return (int) *ret;
+	*/
+		return -1;
 }
 

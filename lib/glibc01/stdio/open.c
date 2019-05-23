@@ -19,8 +19,8 @@
 //system calls.
 #include <stubs/gramado.h> 
 
-int open (const char *pathname, int flags)
-{
+int open (const char *pathname, int flags){
+	
 	/*
 	asm volatile (
 		"movl $18, %%eax;"
@@ -38,7 +38,11 @@ int open (const char *pathname, int flags)
 	//return (int) gramado_system_call ( 16, (unsigned long) pathname, (unsigned long) flags, (unsigned long) mode );
 	
 	//vamos improvisar por enquanto.
-	return (int) gramado_system_call ( 16, (unsigned long) pathname, (unsigned long) flags, (unsigned long) 0 );	
+	return (int) gramado_system_call ( 16, (unsigned long) pathname, 
+				     (unsigned long) flags, (unsigned long) 0 );	
 }
+
+
+
 
 

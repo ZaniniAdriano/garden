@@ -16,6 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 //http://man7.org/linux/man-pages/man3/psignal.3.html
 //http://man7.org/linux/man-pages/man2/signal.2.html
 //http://man7.org/linux/man-pages/man2/sigaction.2.html
@@ -29,11 +30,10 @@
 sighandler_t signal ( int signum, sighandler_t handler ){
 	
 	/*
-	asm volatile (
-		"movl $27, %%eax;"
-	     	"movl %0, %%ebx;"
-		"movl %1, %%ecx;"
-	     	"int $0x80;" :: "g" (signum), "g" (handler) : "%eax", "%ebx", "%ecx");
+	asm volatile ( " movl $27, %%eax; "
+	               " movl %0, %%ebx;  "
+		           " movl %1, %%ecx;  "
+	               " int $0x80;       " :: "g" (signum), "g" (handler) : "%eax", "%ebx", "%ecx" );
 
 	return handler;
 	*/

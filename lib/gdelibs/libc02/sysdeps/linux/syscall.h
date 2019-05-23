@@ -125,4 +125,15 @@
 #define SYS_swapoff		115
 
 
+//
+// #testes
+//
+
+#define SYS_xxxtest0	220
+#define SYS_xxxtest1	221
+#define SYS_xxxtest2	222
+#define SYS_xxxtest3	223
+//...
+
+
 #endif	/* syscall.h */

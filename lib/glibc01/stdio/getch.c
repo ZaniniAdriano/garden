@@ -17,8 +17,8 @@
  */
 
 
-unsigned char getch ()
-{
+unsigned char getch (){
+	
 	asm volatile ("movl $2, %%eax;"
 	     "int $0x80;" ::: "%eax");
 

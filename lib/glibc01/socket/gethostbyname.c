@@ -22,8 +22,8 @@
 #include <sys/socket.h>
 
 
-hostent *gethostbyname (char *hostname)
-{
+hostent *gethostbyname (char *hostname){
+	
 	unsigned l = strlen (hostname);
 
 	hostent *host = (hostent *) malloc (sizeof (hostent));

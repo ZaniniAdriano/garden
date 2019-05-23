@@ -19,8 +19,7 @@
 //system calls.
 #include <stubs/gramado.h> 
 
-void gotoxy (int x, int y)
-{
+void gotoxy (int x, int y){
 	
 /*	
 	asm volatile (
@@ -30,6 +29,6 @@ void gotoxy (int x, int y)
 	     	"int $0x80;" :: "g" (x), "g" (y) : "%eax", "%ebx", "%ecx");
 */
 	
-	//set cursor.
+	// set cursor.
 	gramado_system_call ( 34, (unsigned long) x, (unsigned long) y, 0 );
 } 

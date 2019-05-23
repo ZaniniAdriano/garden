@@ -21,18 +21,21 @@
 #include <sys/socket.h>
 
 
-int listen (int fd, int backlog)
-{
+int listen (int fd, int backlog){
+	
+	/*
 	asm volatile (
 		"movl $31, %%eax;"
 	     	"movl %0, %%ebx;"
 	     	"movl %1, %%ecx;"
 	     	"int $0x80;" :: "g" (fd), "g" (backlog) : "%eax", "%ebx", "%ecx");
 
-	/* get return value */
+	//get return value 
 	int *memptr = (int *) 0x9000;
 	int *ret = memptr;
 
 	return (int) *ret;
+	*/
+	return -1;
 }
 

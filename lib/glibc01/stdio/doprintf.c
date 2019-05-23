@@ -91,21 +91,23 @@ Revised May 12, 2000
  *    Essa função é chamada por outras
  */
 
-int do_printf(const char *fmt, va_list args, fnptr_t fn, void *ptr)
-{
+int do_printf ( const char *fmt, va_list args, fnptr_t fn, void *ptr ){
+	
 	unsigned state, flags, radix, actual_wd, count, given_wd;
 	unsigned char *where, buf[PR_BUFLEN];
 	long num;
 
 	state = flags = count = given_wd = 0;
-/* begin scanning format specifier list */
-	for(; *fmt; fmt++)
+	
+    /* begin scanning format specifier list */
+	
+	for (; *fmt; fmt++)
 	{
-		switch(state)
+		switch (state)
 		{
 /* STATE 0: AWAITING % */
 		case 0:
-			if(*fmt != '%')	/* not %... */
+			if (*fmt != '%')	/* not %... */
 			{
 				fn(*fmt, &ptr);	/* ...just echo it */
 				count++;
@@ -117,14 +119,14 @@ int do_printf(const char *fmt, va_list args, fnptr_t fn, void *ptr)
 			/* FALL THROUGH */
 /* STATE 1: AWAITING FLAGS (%-0) */
 		case 1:
-			if(*fmt == '%')	/* %% */
+			if (*fmt == '%')	/* %% */
 			{
 				fn(*fmt, &ptr);
 				count++;
 				state = flags = given_wd = 0;
 				break;
 			}
-			if(*fmt == '-')
+			if (*fmt == '-')
 			{
 				if(flags & PR_LJ)/* %-- is illegal */
 					state = flags = given_wd = 0;
@@ -135,7 +137,7 @@ int do_printf(const char *fmt, va_list args, fnptr_t fn, void *ptr)
 /* not a flag char: advance state to check if it's field width */
 			state++;
 /* check now for '%0...' */
-			if(*fmt == '0')
+			if (*fmt == '0')
 			{
 				flags |= PR_LZ;
 				fmt++;
@@ -143,7 +145,7 @@ int do_printf(const char *fmt, va_list args, fnptr_t fn, void *ptr)
 			/* FALL THROUGH */
 /* STATE 2: AWAITING (NUMERIC) FIELD WIDTH */
 		case 2:
-			if(*fmt >= '0' && *fmt <= '9')
+			if (*fmt >= '0' && *fmt <= '9')
 			{
 				given_wd = 10 * given_wd +
 					(*fmt - '0');
@@ -154,19 +156,19 @@ int do_printf(const char *fmt, va_list args, fnptr_t fn, void *ptr)
 			/* FALL THROUGH */
 /* STATE 3: AWAITING MODIFIER CHARS (FNlh) */
 		case 3:
-			if(*fmt == 'F')
+			if (*fmt == 'F')
 			{
 				flags |= PR_FP;
 				break;
 			}
-			if(*fmt == 'N')
+			if (*fmt == 'N')
 				break;
-			if(*fmt == 'l')
+			if (*fmt == 'l')
 			{
 				flags |= PR_32;
 				break;
 			}
-			if(*fmt == 'h')
+			if (*fmt == 'h')
 			{
 				flags |= PR_16;
 				break;
@@ -178,7 +180,7 @@ int do_printf(const char *fmt, va_list args, fnptr_t fn, void *ptr)
 		case 4:
 			where = buf + PR_BUFLEN - 1;
 			*where = '\0';
-			switch(*fmt)
+			switch (*fmt)
 			{
 			case 'X':
 				flags |= PR_CA;
@@ -199,12 +201,12 @@ int do_printf(const char *fmt, va_list args, fnptr_t fn, void *ptr)
 			case 'o':
 				radix = 8;
 /* load the value to be printed. l=long=32 bits: */
-DO_NUM:				if(flags & PR_32)
+DO_NUM:				if (flags & PR_32)
 					num = va_arg(args, unsigned long);
 /* h=short=16 bits (signed or unsigned) */
-				else if(flags & PR_16)
+				else if (flags & PR_16)
 				{
-					if(flags & PR_SG)
+					if (flags & PR_SG)
 						num = va_arg(args, short);
 					else
 						num = va_arg(args, unsigned short);
@@ -218,9 +220,9 @@ DO_NUM:				if(flags & PR_32)
 						num = va_arg(args, unsigned int);
 				}
 /* take care of sign */
-				if(flags & PR_SG)
+				if (flags & PR_SG)
 				{
-					if(num < 0)
+					if (num < 0)
 					{
 						flags |= PR_WS;
 						num = -num;
@@ -228,8 +230,7 @@ DO_NUM:				if(flags & PR_32)
 				}
 /* convert binary to octal/decimal/hex ASCII
 OK, I found my mistake. The math here is _always_ unsigned */
-				do
-				{
+				do{
 					unsigned long temp;
 
 					temp = (unsigned long)num % radix;
@@ -241,8 +242,7 @@ OK, I found my mistake. The math here is _always_ unsigned */
 					else
 						*where = temp - 10 + 'a';
 					num = (unsigned long)num / radix;
-				}
-				while(num != 0);
+				} while (num != 0);
 				goto EMIT;
 			case 'c':
 /* disallow pad-left-with-zeroes for %c */
@@ -257,20 +257,19 @@ OK, I found my mistake. The math here is _always_ unsigned */
 				flags &= ~PR_LZ;
 				where = va_arg(args, unsigned char *);
 EMIT:
-				actual_wd = strlen(where);
-				if(flags & PR_WS)
+				actual_wd = strlen (where);
+				if (flags & PR_WS)
 					actual_wd++;
 /* if we pad left with ZEROES, do the sign now */
-				if((flags & (PR_WS | PR_LZ)) ==
-					(PR_WS | PR_LZ))
+				if ( (flags & (PR_WS | PR_LZ)) == (PR_WS | PR_LZ) )
 				{
 					fn('-', &ptr);
 					count++;
 				}
 /* pad on left with spaces or zeroes (for right justify) */
-EMIT2:				if((flags & PR_LJ) == 0)
+EMIT2:				if ((flags & PR_LJ) == 0)
 				{
-					while(given_wd > actual_wd)
+					while (given_wd > actual_wd)
 					{
 						fn(flags & PR_LZ ? '0' :
 							' ', &ptr);
@@ -279,13 +278,13 @@ EMIT2:				if((flags & PR_LJ) == 0)
 					}
 				}
 /* if we pad left with SPACES, do the sign now */
-				if((flags & (PR_WS | PR_LZ)) == PR_WS)
+				if ((flags & (PR_WS | PR_LZ)) == PR_WS)
 				{
 					fn('-', &ptr);
 					count++;
 				}
 /* emit string/char/converted number */
-				while(*where != '\0')
+				while (*where != '\0')
 				{
 					fn(*where++, &ptr);
 					count++;
@@ -308,6 +307,7 @@ EMIT2:				if((flags & PR_LJ) == 0)
 			break;
 		}
 	}
+	
 	return count;
 }
 
@@ -317,8 +317,9 @@ EMIT2:				if((flags & PR_LJ) == 0)
 SPRINTF
 #importante: Essa função é o 'EMIT'
 *****************************************************************************/
-int vsprintf_help(unsigned c, void **ptr)
-{
+
+int vsprintf_help ( unsigned c, void **ptr ){
+	
 	char *dst;
 
 	dst = *ptr;
@@ -327,42 +328,48 @@ int vsprintf_help(unsigned c, void **ptr)
 	
 	*ptr = dst;
 		
-	return 0 ;
+	return 0;
 }
 
 
 /*****************************************************************************
 *****************************************************************************/
-int vsprintf (char *buffer, const char *fmt, va_list args)
-{
+
+int vsprintf (char *buffer, const char *fmt, va_list args){
+	
 	int ret_val;
 	
 	//#importante
 	// A função vprintf_help é o EMIT.	
 
-	ret_val = do_printf(fmt, args, vsprintf_help, (void *)buffer);
+	ret_val = do_printf ( fmt, args, vsprintf_help, (void *) buffer );
+	
 	buffer[ret_val] = '\0';
+	
 	return ret_val;
 }
+
 #if 0 /* testing */
 /*****************************************************************************
 *****************************************************************************/
-int sprintf(char *buffer, const char *fmt, ...)
-{
+int sprintf (char *buffer, const char *fmt, ...){
+	
 	va_list args;
 	int ret_val;
 
 	va_start(args, fmt);
-	ret_val = vsprintf(buffer, fmt, args);
+	ret_val = vsprintf ( buffer, fmt, args );
 	va_end(args);
+	
 	return ret_val;
 }
+
 /*****************************************************************************
 PRINTF
 You must write your own putchar()
 *****************************************************************************/
-int vprintf_help(unsigned c, void **ptr)
-{
+int vprintf_help (unsigned c, void **ptr){
+	
 	//putchar(c);
 	putch((char)c);
 	return 0 ;
@@ -385,23 +392,30 @@ int printf(const char *fmt, ...)
 	int ret_val;
 
 	va_start(args, fmt);
-	ret_val = vprintf(fmt, args);
+	ret_val = vprintf ( fmt, args );
 	va_end(args);
+	
 	return ret_val;
 }
+
 /*****************************************************************************
 *****************************************************************************/
-int main(void)
-{
+
+int main (void){
+	
 	char buf[64];
 
-	sprintf(buf, "%u score and %i years ago...\n", 4, -7);
-	puts(buf);
+	sprintf ( buf, "%u score and %i years ago...\n", 4, -7 );
+	puts (buf);
 
-	sprintf(buf, "-1L == 0x%lX == octal %lo\n", -1L, -1L);
-	puts(buf);
+	sprintf ( buf, "-1L == 0x%lX == octal %lo\n", -1L, -1L );
+	puts (buf);
 
-	printf("<%-08s> and <%08s> justified strings\n", "left", "right");
+	printf ("<%-08s> and <%08s> justified strings\n", "left", "right");
 	return 0;
 }
+
 #endif
+
+
+

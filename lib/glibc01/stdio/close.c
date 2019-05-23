@@ -39,6 +39,10 @@ int close (int fd){
 	
 	*/
 		
-    return (int) gramado_system_call ( 17, (unsigned long) fd, (unsigned long) fd, (unsigned long) fd );
+    return (int) gramado_system_call ( 17, (unsigned long) fd, 
+				     (unsigned long) fd, (unsigned long) fd );
 }
+
+
+
  
