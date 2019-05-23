@@ -78,30 +78,24 @@ typedef struct fd_set {
 # 8 "tests/test1.c" 2
 
 
-# 1 "include/stubs/syscalls_1.h" 1
+
+# 1 "include/stubs/syscalls_2.h" 1
 
 
 
-
-void *syscalls_1_system_call ( unsigned long ax,
-                               unsigned long bx,
-                               unsigned long cx,
-                               unsigned long dx )
-{
-    int Ret = 0;
-
-
-
-    asm volatile ( " int %1 \n"
-                 : "=a"(Ret)
-                 : "i"(0x80), "a"(ax), "b"(bx), "c"(cx), "d"(dx) );
-
-    return (void *) Ret;
-}
-# 11 "tests/test1.c" 2
-
+# 1 "include/errno.h" 1
+# 18 "include/errno.h"
+# 1 "include/_mingw.h" 1
+# 19 "include/errno.h" 2
+# 75 "include/errno.h"
+extern int errno;
+# 5 "include/stubs/syscalls_2.h" 2
+# 12 "tests/test1.c" 2
 
 void test1(){}
 
 
-int xxxtest0(void) { return (int) syscalls_1_system_call ( (unsigned long) 220, 0, 0, 0 ); };
+int xxxtest0(void) { long __res; __asm__ volatile ("int %1 \n" : "=a" (__res) : "i" (0x80), "a"(220), "b"(0), "c"(0), "d"(0) ); do { if ((unsigned long)(__res) >= (unsigned long)(-125)) { errno = -(__res); __res = -1; } return (int) (__res); } while (0); };
+int xxxtest1(int argxxx1) { long __res; __asm__ volatile ("int %1 \n" : "=a" (__res) : "i" (0x80), "a"(221), "b"(argxxx1), "c"(0), "d"(0) ); do { if ((unsigned long)(__res) >= (unsigned long)(-125)) { errno = -(__res); __res = -1; } return (int) (__res); } while (0); };
+int xxxtest2(int argxxx1, int argxxx2) { long __res; __asm__ volatile ("int %1 \n" : "=a" (__res) : "i" (0x80), "a"(222), "b"(argxxx1), "c"(argxxx2), "d"(0) ); do { if ((unsigned long)(__res) >= (unsigned long)(-125)) { errno = -(__res); __res = -1; } return (int) (__res); } while (0); };
+int xxxtest3(int argxxx1, int argxxx2, int argxxx3) { long __res; __asm__ volatile ("int %1 \n" : "=a" (__res) : "i" (0x80), "a"(223), "b"(argxxx1), "c"(argxxx2), "d"(argxxx3) ); do { if ((unsigned long)(__res) >= (unsigned long)(-125)) { errno = -(__res); __res = -1; } return (int) (__res); } while (0); };
