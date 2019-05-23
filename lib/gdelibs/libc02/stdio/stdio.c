@@ -303,11 +303,7 @@ void scroll (void){
 		};
 	};
 	
-	
-	//
 	// Limpando a última linha.
-	//
-	
 	
 	//modo gráfico.
 	if (g_using_gui == 1)
@@ -318,7 +314,6 @@ void scroll (void){
 			//@todo:	
 		};    
 	};
-		
 }
 
 
@@ -335,16 +330,24 @@ int puts ( const char *str ){
 }
 
 
-// #todo
-size_t fread (void *ptr, size_t size, size_t n, FILE *fp)
-{
+/*
+ * fread:
+ *
+ */
+
+size_t fread (void *ptr, size_t size, size_t n, FILE *fp){
+	
     return -1;
 }
 
 
-// #todo
-size_t fwrite (const void *ptr, size_t size, size_t n, FILE *fp)
-{
+/*
+ * fwrite:
+ *
+ */
+
+size_t fwrite (const void *ptr, size_t size, size_t n, FILE *fp){
+	
 	return -1;
 }
 
@@ -1188,7 +1191,7 @@ void stdioInitialize (){
 	stderr = (FILE *) &buffer2[0];
     
     
-    // #bugbug
+    // >>>> #bugbug
     //  Em ring 3 não temos acesso aos elementos da estrutura.
 
     // A biblioteca tem 3 pequenos buffers,
@@ -1298,7 +1301,6 @@ int fputs ( const char *str, FILE *stream ){
  *********************************
  * gets:
  *
- * obs: 
  *     gets() devolve um ponteiro para string
  */
  
@@ -1504,7 +1506,7 @@ unsigned long stdioGetCursorY (){
 int scanf ( const char *fmt, ... ){
 	
     va_list ap;
-	va_start(ap, fmt);
+	va_start (ap, fmt);
 	
     int d;
     char *s;
@@ -1536,7 +1538,7 @@ int scanf ( const char *fmt, ... ){
 			return (0); //erro
 		
 		// pulando os espaços
-		if ( isspace(c) ) 
+		if ( isspace (c) ) 
 		{
 			while ( size > 0 && isspace(*fmt) )
 			{
@@ -1558,9 +1560,9 @@ int scanf ( const char *fmt, ... ){
 				//usaremos esse ponteiro para colocar uma string digitada.
 				if ( (void *) s != NULL )
 				{
-				    gets(s);					
+				    gets (s);					
 				}else{
-				    printf("scanf s null pointer\n");	
+				    printf ("scanf: s null pointer\n");	
 				}
 				
 				//testar ...
@@ -1576,13 +1578,13 @@ int scanf ( const char *fmt, ... ){
 				if( (void *) i != NULL )
 				{
 				    //pego uma string de caracteres, que são números digitados.
-					gets(tmp);
+					gets (tmp);
 					
 					//converte essa string em dígito
 					i[0] = (int) stdio_atoi (tmp);                     
 					
 				}else{
-				    printf("scanf s null pointer\n");	
+				    printf ("scanf: s null pointer\n");	
 				}
 				
 				//testar ...
@@ -1594,13 +1596,13 @@ int scanf ( const char *fmt, ... ){
             
 			/* char */
 			case 'c':    
-                t = va_arg(ap, char *);
+                t = va_arg (ap, char *);
 				if ( (void *) t != NULL )
 				{
 				
                     while (1)
                     {
-			            ch = (int) getchar();
+			            ch = (int) getchar ();
 						
 						if ( ch != -1 )
 						{
@@ -1611,7 +1613,7 @@ int scanf ( const char *fmt, ... ){
 					};	
 					
 				}else{
-					printf("scanf c null pointer\n");
+					printf ("scanf: c null pointer\n");
 				}; 				 
                 break;
 				
@@ -1621,7 +1623,7 @@ int scanf ( const char *fmt, ... ){
         };//switch
 	};
     
-   // va_end (ap);
+   //va_end (ap);
    
    return 0;
 }
@@ -1650,9 +1652,10 @@ int sscanf ( const char *str, const char *format, ... ){
 	
 	va_start(args, format);
     
-	for ( ; *format != '\0'; format++){
+	for ( ; *format != '\0'; format++ ){
         
-		if (*format == '%' && format[1] == 'd') {
+		if ( *format == '%' && format[1] == 'd' ){
+			
 			int positive;
 			int value;
 			int *valp;
@@ -2242,7 +2245,7 @@ static void xxxputchar ( int c, void *arg ){
 	
 	//printf("%c",c);
 	putchar ( (int) c );
-};
+}
 
 
 /*
@@ -2269,7 +2272,7 @@ int printf ( const char *fmt, ... ){
 	kvprintf ( fmt, xxxputchar, NULL, 10, ap );
 	
 	//#todo.
-	va_end(ap);
+	va_end (ap);
 	
 	// #todo
 	//return 0;
@@ -2315,11 +2318,11 @@ int vfprintf ( FILE *stream, const char *format, stdio_va_list argptr ){
 		//atualiza o ponteiro atual.
 		stream->_ptr = stream->_ptr + size;
         
-		return (int) 0;		
+		return 0;		
 	};
  
 	return (int) (-1);	
-};  
+} 
 
 
 /* #bsd style */
@@ -2389,13 +2392,13 @@ int snprintf ( char *str, size_t count, const char *fmt, ... ){
 	size_t ret;
 	va_list ap;
     
-	va_start(ap, fmt);
+	va_start (ap, fmt);
 	
 	//#todo 
 	//Isso parece fácil
 	//ret = vsnprintf(str, count, fmt, ap);
 	
-	va_end(ap);
+	va_end (ap);
     
 	return ret;
 }

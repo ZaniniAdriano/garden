@@ -1,7 +1,7 @@
 /*
  * File: unistd.c
  *
- * Unix standard.
+ *     Unix standard.
  * 
  * History:
  *     2019 - Created by Fred Nora.
@@ -25,6 +25,7 @@
 #define	UNISTD_SYSTEMCALL_EXIT     70
 #define	UNISTD_SYSTEMCALL_GETPID   85
 #define	UNISTD_SYSTEMCALL_GETPPID  81
+//...
 
 
 //
@@ -105,6 +106,7 @@ execve ( const char *filename,
 
 
 /*
+ *************************************
  * exit:
  *     Torna zombie a thread atual.
  *     Mas o propósito é terminar sair do 
@@ -115,6 +117,7 @@ execve ( const char *filename,
  * de stderr na tela.
  * ?? Essa função também pertence à unistd
  */
+
 void exit (int status){
 	
 	//#importante:
@@ -129,15 +132,16 @@ void exit (int status){
 	    (unsigned long) status, (unsigned long) status );
     
 	
-	//Nothing.
-//wait_forever:
+	// Wait forever.
 	
-    while (1){
-		
-		asm ("pause");
-	};	
+    while (1){ asm ("pause"); };	
 }
 
+
+/*
+ * fork:
+ *     #todo
+ */
 
 /* Ainda estamos testando isso. A rotina no kernel está 
 clonando o a estrutura do processo mas ainda há outras coisas pra 
@@ -155,175 +159,318 @@ int fork (){
 }
 
 
+/*
+ * setuid:
+ *
+ */
+
 // SVr4,  POSIX.1-2001.   
 // Not quite	compatible with	the 4.4BSD call, which
-// sets all	of the real, saved, and	effective user IDs.	   
-int setuid ( uid_t uid )
-{	
+// sets all	of the real, saved, and	effective user IDs.	  
+
+int setuid ( uid_t uid ){
+	
 	//#todo: ainda não temos a suystem call.
-	return -1;
+	//SYSTEMCALL_SETCURRENTUSERID
+	return (uid_t) gramado_system_call ( 151, 0, 0, 0 );
 }
 
 
-pid_t getpid(void){
+uid_t getuid (void){
+	return (uid_t) gramado_system_call ( 152, 0, 0, 0 );	
+}
+
+
+uid_t geteuid (void){
+	
+	return -1;
+	//return (uid_t) gramado_system_call ( ?, 0, 0, 0 );
+} 
+
+
+
+
+/*
+ * getpid:
+ *
+ */
+
+pid_t getpid (void){
 	
 	//return (pid_t) unistd_system_call( UNISTD_SYSTEMCALL_GETPID, 0, 0, 0);
-	return (pid_t) gramado_system_call( UNISTD_SYSTEMCALL_GETPID, 0, 0, 0);
+	return (pid_t) gramado_system_call ( UNISTD_SYSTEMCALL_GETPID, 0, 0, 0 );
 }
 
 
-pid_t getppid(void){
+/*
+ * getppid:
+ *
+ */
+
+pid_t getppid (void){
 	
 	//return (pid_t) unistd_system_call( UNISTD_SYSTEMCALL_GETPPID, 0, 0, 0);
-	return (pid_t) gramado_system_call( UNISTD_SYSTEMCALL_GETPPID, 0, 0, 0);
+	return (pid_t) gramado_system_call ( UNISTD_SYSTEMCALL_GETPPID, 0, 0, 0 );
 }
 
 
-gid_t getgid(void)
-{	
-	//#todo: ainda não temos a suystem call.
-	return -1;
+/*
+ * getgid:
+ *
+ */
+
+gid_t getgid (void){
+	
+	//SYSTEMCALL_GETCURRENTGROUPID
+	return (gid_t) gramado_system_call ( 154, 0, 0, 0 );
 }
 
 
-int dup(int oldfd)
-{
-	return -1; //#todo
-}
+/*
+ * dup:
+ *
+ */
 
-
-int dup2(int oldfd, int newfd)
-{
-	return -1; //#todo
-}
-
-
-int dup3(int oldfd, int newfd, int flags)
-{
-	return -1; //#todo
-}
-
-
-int fcntl (int fd, int cmd, ... /* arg */ )
-{
+int dup (int oldfd){
+	
 	return -1; //#todo
 }
 
 
-// nice - change process priority
-int nice(int inc)
-{
-	return -1; //#todo
-};
+/*
+ * dup2:
+ *
+ */
 
-
-
-int pause(void)
-{
-	return -1; //#todo
-};
-
-
-int mkdir(const char *pathname, mode_t mode)
-{
-	return -1; //#todo
-};
-
-
-int rmdir(const char *pathname)
-{
-	return -1; //#todo
-};	
-
-
-int link(const char *oldpath, const char *newpath)
-{
-	return -1; //#todo
-};	
-
-
-
-int mlock(const void *addr, size_t len)
-{
+int dup2 (int oldfd, int newfd){
+	
 	return -1; //#todo
 }
 
 
-int munlock(const void *addr, size_t len)
-{
+/*
+ * dup3:
+ *
+ */
+
+int dup3 (int oldfd, int newfd, int flags){
+	
 	return -1; //#todo
 }
 
 
-int mlockall( int flags)
-{
+/*
+ * fcntl:
+ *
+ */
+
+int fcntl ( int fd, int cmd, ... ){
+	
 	return -1; //#todo
 }
 
 
-int munlockall(void)
-{
+/*
+ * nice:
+ *     Change process priority.
+ */
+
+int nice (int inc){
+	
+	return -1;    //#todo
+}
+
+
+/*
+ * pause:
+ *
+ */
+
+int pause (void){
+	
 	return -1; //#todo
 }
 
 
-long sysconf(int name)
-{
+/*
+ * mkdir:
+ *
+ */
+
+int mkdir (const char *pathname, mode_t mode){
+	
 	return -1; //#todo
 }
 
 
-int fsync(int fd)
-{
+/*
+ * rmdir:
+ *
+ */
+
+int rmdir (const char *pathname){
+	
+	return -1; //#todo
+}	
+
+
+/*
+ * link:
+ *
+ */
+
+int link (const char *oldpath, const char *newpath){
+	
+	return -1; //#todo
+}
+
+/*
+ * mlock:
+ *
+ */
+
+int mlock (const void *addr, size_t len){
+	
 	return -1; //#todo
 }
 
 
-int fdatasync(int fd)
-{
+/*
+ * munlock:
+ *
+ */
+
+int munlock (const void *addr, size_t len){
+	
 	return -1; //#todo
 }
 
 
-long fpathconf(int fd, int name)
-{
+/*
+ * mlockall:
+ *
+ */
+
+int mlockall (int flags){
+	
 	return -1; //#todo
 }
 
 
-long pathconf(char *path, int name)
-{
+/*
+ * munlockall:
+ *
+ */
+
+int munlockall (void){
+	
 	return -1; //#todo
 }
 
 
-int ioctl ( int d, int request, ... )
-{
+/*
+ * sysconf:
+ *
+ */
+
+long sysconf (int name){
+	
 	return -1; //#todo
 }
 
+
+/*
+ * fsync:
+ *
+ */
+
+int fsync (int fd){
+	
+	return -1;    //#todo
+}
+
+
+/*
+ * fdatasync:
+ *
+ */
+
+int fdatasync (int fd){
+	
+	return -1; //#todo
+}
+
+
+/*
+ * fpathconf:
+ *
+ */
+
+long fpathconf (int fd, int name){
+	
+	return -1; //#todo
+}
+
+
+/*
+ * pathconf:
+ *
+ */
+
+long pathconf (char *path, int name){
+	
+	return -1; //#todo
+}
+
+
+/*
+ * ioctl:
+ *
+ */
+
+int ioctl ( int d, int request, ... ){
+	
+	return -1; //#todo
+}
+
+
+/*
+ * open:
+ *
+ */
 
 int open (const char *pathname, int flags, mode_t mode){
 
-    return (int) gramado_system_call ( 16, (unsigned long) pathname, (unsigned long) flags, (unsigned long) mode );
+    return (int) gramado_system_call ( 16, (unsigned long) pathname, 
+				     (unsigned long) flags, (unsigned long) mode );
 }
 
 
-//SVr4, 4.3BSD, POSIX.1-2001.
-int close (int fd)
-{
-    return (int) gramado_system_call ( 17, (unsigned long) fd, (unsigned long) fd, (unsigned long) fd );
+/*
+ * close:
+ *    SVr4, 4.3BSD, POSIX.1-2001.
+ */
+
+int close (int fd){
+	
+    return (int) gramado_system_call ( 17, (unsigned long) fd, 
+				     (unsigned long) fd, (unsigned long) fd );
 }
 
 
-int pipe ( int pipefd[2] )
-{
-    return (int) gramado_system_call ( 247, (unsigned long) pipefd, (unsigned long) pipefd, (unsigned long) pipefd );	
+/*
+ * pipe:
+ *
+ */
+
+int pipe ( int pipefd[2] ){
+	
+    return (int) gramado_system_call ( 247, (unsigned long) pipefd, 
+				    (unsigned long) pipefd, (unsigned long) pipefd );	
 }
 
 
-
-
-
-
+//
+// End.
+//
 

@@ -1,10 +1,14 @@
 /*
- * File: unistd.h - standard symbolic constants and types
- * 2018
+ * File: unistd.h
+ *
+ *     standard symbolic constants and types
+ *     2018 - Created by Fred Nora.
  */
  
+
 #ifndef _UNISTD_H
 #define _UNISTD_H 
+
 
 #include <sys/types.h>
 
@@ -62,19 +66,20 @@
  
 /* MINIX 3 */ 
 /* The following relate to configurable system variables. POSIX Table 4-2. */
-#define _SC_ARG_MAX	   1
-#define _SC_CHILD_MAX	   2
-#define _SC_CLOCKS_PER_SEC 3
-#define _SC_CLK_TCK	   3
-#define _SC_NGROUPS_MAX	   4
-#define _SC_OPEN_MAX	   5
-#define _SC_JOB_CONTROL	   6
-#define _SC_SAVED_IDS	   7
-#define _SC_VERSION	   8
-#define _SC_STREAM_MAX	   9
-#define _SC_TZNAME_MAX    10
-#define _SC_PAGESIZE	  11
-#define _SC_PAGE_SIZE	  _SC_PAGESIZE
+#define _SC_ARG_MAX	        1
+#define _SC_CHILD_MAX	    2
+#define _SC_CLOCKS_PER_SEC  3
+#define _SC_CLK_TCK	        3
+#define _SC_NGROUPS_MAX	    4
+#define _SC_OPEN_MAX	    5
+#define _SC_JOB_CONTROL	    6
+#define _SC_SAVED_IDS	    7
+#define _SC_VERSION	        8
+#define _SC_STREAM_MAX	    9
+#define _SC_TZNAME_MAX     10
+#define _SC_PAGESIZE	   11
+#define _SC_PAGE_SIZE	   _SC_PAGESIZE
+
 
 /* MINIX 3 */ 
 /* The following relate to configurable pathname variables. POSIX Table 5-2. */
@@ -112,68 +117,75 @@ typedef int gid_t;
 
 
 
-//#todo:
-//tem um monte de função pra fazer aqui.
+// #todo:
+// Tem um monte de função pra fazer aqui.
 
-int execve ( const char *filename, 
-             const char *argv[], 
-             const char *envp[] );  
-void exit(int status);			 		 
-int fork();
+int 
+execve ( const char *filename, 
+         const char *argv[], 
+         const char *envp[] );
+
+
+
+void exit (int status);
+
+
+int fork ();
 
 
 int setuid ( uid_t uid );
 
+uid_t getuid (void);
+uid_t geteuid (void); 
+
 // POSIX.1-2001, 4.3BSD, SVr4.
-pid_t getpid(void);
-pid_t getppid(void);
+pid_t getpid (void);
+pid_t getppid (void);
 
-gid_t getgid(void);
+gid_t getgid (void);
 
 
-int dup(int oldfd);
-int dup2(int oldfd, int newfd);
-int dup3(int oldfd, int newfd, int flags);
+int dup (int oldfd);
+int dup2 (int oldfd, int newfd);
+int dup3 (int oldfd, int newfd, int flags);
 
 // nice - change process priority
-int nice(int inc);
+int nice (int inc);
 
-int pause(void);
+int pause (void);
 
 
 //SVr4, BSD, POSIX.1-2001.
-int mkdir(const char *pathname, mode_t mode);
+int mkdir (const char *pathname, mode_t mode);
 
 //rmdir - delete a	directory
 // SVr4, 4.3BSD, POSIX.1-2001.
-int rmdir(const char *pathname);
+int rmdir (const char *pathname);
 
 //link - make a new name for a file
 // SVr4, 4.3BSD, POSIX.1-2001 (but see NOTES).
-int link(const char *oldpath, const char *newpath);
+int link (const char *oldpath, const char *newpath);
 
 
 //sysconf - get configuration information at run time
 //  POSIX.1-2001.
-long sysconf(int name);
+long sysconf (int name);
 
 // fsync,  fdatasync  -  synchronize  a  file's in-core state with storage device
 //4.3BSD, POSIX.1-2001.
-int fsync(int fd);
-int fdatasync(int fd);
+int fsync (int fd);
+int fdatasync (int fd);
 
 //fpathconf, pathconf - get configuration values for files
 //POSIX.1-2001.
-long fpathconf(int fd, int name);
-long pathconf(char *path, int name);
+long fpathconf (int fd, int name);
+long pathconf (char *path, int name);
 
 //SVr4, 4.3BSD, POSIX.1-2001.
 int close (int fd);
 
 //POSIX.1-2001, POSIX.1-2008.
 int pipe ( int pipefd[2] );
-
-
 
 
 

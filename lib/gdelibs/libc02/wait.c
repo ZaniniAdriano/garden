@@ -1,10 +1,7 @@
 /*
  * File: wait.c
- *
+ *     wait, wait3, wait4, waitpid -- wait for process termination 
  */
-
-// wait, wait3, wait4, waitpid -- wait for process termination 
-
 
 
 #include <sys/types.h>   //for pid_t
@@ -16,8 +13,8 @@
 #include <stubs/gramado.h>  
 
 
-//#teste de compilação
-//deletar
+// #teste de compilação
+// deletar
 //#include <version.h>
  
  
@@ -28,26 +25,27 @@
 
 pid_t wait ( int *status ){
 	
-	//#todo: Criar o identificador da system call 43
+	// #todo: 
+	// Criar o identificador da system call 43
     //SYSTEMCALL_WAIT4PID 
 	
-	pid_t pid;
-	
+    pid_t pid;
+
 again:
 
-	//#importante
-	//>>se o retorno indicar que já havia um processo filho no estado zombie 
-	//e retornou seu pid, então apenas retornamos o pid para o aplicativo que chamou wait.	
-	//>>se o retorno indicar que não há um processo filho terminado
-	//então devemos esperar até que algum processo filho termine.
-	
+	// #importante
+	// >>se o retorno indicar que já havia um processo filho no estado zombie 
+	// e retornou seu pid, então apenas retornamos o pid para o aplicativo que chamou wait.	
+	// >>se o retorno indicar que não há um processo filho terminado
+	// então devemos esperar até que algum processo filho termine.
+
 	//#todo
-	
+
 	pid = (pid_t) gramado_system_call ( 83, (unsigned long) status , 0, 0 );	
-	
-	if ( pid > 0 )
-	{
-	    return (pid_t) pid;
+
+    if ( pid > 0 )
+    {
+        return (pid_t) pid;
     }
 	
 	//
@@ -66,13 +64,18 @@ again:
 	//estamos retornando para não entrarmos no loop,
 	//depois que criarmos a rotina sleep, deletaremos esse retorno.
 	
-	return (pid_t) pid;
-	
-	goto again;
-	
+    return (pid_t) pid;
+
+    goto again;
+
     return (pid_t) pid;
 }
 
+
+/*
+ * waitpid:
+ *
+ */
 
 //acho que isso é o retorno.??sei lá.
 //< -1	meaning wait for any child process whose process group ID is equal to the absolute value of pid.

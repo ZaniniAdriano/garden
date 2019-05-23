@@ -6367,44 +6367,52 @@ void shellTaskList (){
 
 void shellShowPID (){
 	
-	printf("Current PID %d\n", 
-	    (int) system_call ( SYSTEMCALL_GETPID, 0, 0, 0) );
-};
+	// printf("Current PID %d\n", 
+	//     (int) system_call ( SYSTEMCALL_GETPID, 0, 0, 0) );
+	
+	printf (" ~ Current PID %d\n", (int) getpid () );	
+}
 
 
 void shellShowPPID (){
 	
-	printf("Current PID %d\n", 
-	    (int) system_call( SYSTEMCALL_GETPPID, 0, 0, 0) );
-};
+	//printf ("Current PPID %d\n", 
+	//    (int) system_call( SYSTEMCALL_GETPPID, 0, 0, 0) );
+	
+	printf (" ~ Current PPID %d\n", (int) getppid () );
+}
 
 
 void shellShowUID (){
 	
-	printf("Current UID %d\n", 
-	    (int) system_call( SYSTEMCALL_GETCURRENTUSERID, 0, 0, 0) );
-};
+	//printf (" ~ Current UID %d\n", 
+	//    (int) system_call ( SYSTEMCALL_GETCURRENTUSERID, 0, 0, 0) );
+	
+	printf (" ~ Current UID %d\n", (int) getuid () );
+}
 
 
 void shellShowGID (){
 	
-	printf("Current GID %d\n", 
-	    (int) system_call( SYSTEMCALL_GETCURRENTGROUPID, 0, 0, 0) );
-};
+	//printf("Current GID %d\n", 
+	//    (int) system_call( SYSTEMCALL_GETCURRENTGROUPID, 0, 0, 0) );
+	
+	printf (" ~ Current GID %d\n", (int) getgid () );
+}
 
 
 void shellShowUserSessionID (){
 	
 	printf("Current user session %d\n", 
 	    (int) system_call( SYSTEMCALL_GETCURRENTUSERSESSION, 0, 0, 0) );
-};
+}
 
 
 void shellShowWindowStationID (){
 	
 	printf("Current window station %d\n", 
 	    (int) system_call( SYSTEMCALL_GETCURRENTWINDOWSTATION, 0, 0, 0) );
-};
+}
 
 
 void shellShowDesktopID (){
