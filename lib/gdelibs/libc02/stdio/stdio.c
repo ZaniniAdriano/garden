@@ -799,31 +799,31 @@ static void printchar ( char **str, int c ){
  *     em seguida efetua um refresh do char para mostra-lo na tela.
  *     #bugbug: Não precisamos desse retorno. Pode ser void ? libc?
  */
- 
-int putchar (int ch){
-    
-	// Opções:
+
 	// +Chamar a função 'putchar' oferecida pelo kernel 
 	// e utilizar o cursor gerenciado pelo kernel.
-	// +chamar a função 'outbyte' com cursor gerenciado em user mode.
-	
-	// *importante:
 	// Queremos que o kernel gerencie as mensagens de digitação,
 	// então devemos usar a opção que permite o kernel usar seu próprio cursor.
+	// Estamos deixando o kernel gerenciar as mensagens de digitação 
+	// usando seu próprio cursor.
+
+int putchar (int ch){
+
+	// 65 - kgws terminal put char.
+	// Esse é um serviço oferecido pelo kgws para imprimir caracteres
+	// na tela de um terminal. Lembrando que a libc não imprime, apenas
+	// coloca os caracteres dentro dos arquivos.
 	
-    
-	//#atenção
-	//Estamos deixando o kernel gerenciar as mensagens de digitação 
-	//usando seu próprio cursor.
-    //put char.
+	// #bugbug
+	// Então nesse momento a libc deveria apenas fazer isso. Colocar
+	// o char dentro do arquivo.
+	// A aplicativo terminal virtual em ring3 deverá imprimir
+	// as coisas na tela usando os recursos do servidor kgws ou outro.
 	
-	//stdio_system_call ( 65, (unsigned long) ch, (unsigned long) ch, 
-	//	(unsigned long) ch );
-	
-	gramado_system_call ( 65, (unsigned long) ch, (unsigned long) ch, 
-		(unsigned long) ch );
-	
-	return (int) ch;    
+    gramado_system_call ( 65, (unsigned long) ch, (unsigned long) ch, 
+        (unsigned long) ch );
+
+    return (int) ch;
 }
 
 
