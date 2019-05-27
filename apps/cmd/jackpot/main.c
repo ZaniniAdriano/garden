@@ -32,41 +32,42 @@ int jackpot_main ();
 
 
 /*
- * app_main:
- *     Entry point. */
+ * main:
+ *     Entry point. 
+ */
 
-void main (){
+// ??
+// Qual janela tem o foco de entrada ?
+// A disciplina de linha precisa disso para encontrar
+// a thread que receberá mensagem.
 	
+int main ( int argc, char *argv[] ){
+
 	int code = 0;
 	
-	printf("\n");
-	printf("####################################################\n");
-	  puts("################## JackPot #########################\n");
-	printf("####################################################\n");
-	printf("\n");	
+	printf ("\n");
+	printf ("####################################################\n");
+	  puts ("################## JackPot #########################\n");
+	printf ("####################################################\n");
+	printf ("\n");	
 	
-	// # call main #
 	
 	code = (int) jackpot_main ();
-    
-	printf("*HANG\n");
 	
-	switch (code) {
+	switch (code) 
+	{
 	    
         case 0:
-		    exit (code);
+            exit (0);
             break;	
 
-        //...			
+		default:	
+		    exit (code);
+			break;	
 	};
 	
-	// *hang
-	
-	while (1){
-		
-	    asm ("pause");	
-	};
-};	
+	return -1;
+}
 
 
 void Start (){
@@ -80,15 +81,19 @@ void Start (){
 
 	// The user has to select a difficutly level.
 	
-    printf("Start: \n");
-    printf("Select difficulty mode:\n"); 
-    printf("1 : Easy (0-15)\n");
-    printf("2 : Medium (0-30)\n");
-    printf("3 : Difficult (0-50)\n");
-    printf("or type another key to quit.\n\n");
+    printf ("Start: \n");
+    printf ("Select difficulty mode:\n"); 
+    printf ("1 : Easy (0-15)\n");
+    printf ("2 : Medium (0-30)\n");
+    printf ("3 : Difficult (0-50)\n");
+    printf ("or type another key to quit.\n\n");
     
 	c = 30;
-
+	
+	
+	// #importante
+	// O input funcionou chamando com execve através do gdeshell.
+    // pois execve prepara o input para o novo programa que vai rodar.	
 
 	// read the user's choice.
 	
@@ -102,14 +107,16 @@ void Start (){
 		    //asm ("pause");				
 		};
 			
-	    if ( c != -1 ){
-			
+	    if ( c != -1 )
+		{	
 	        printf ("%c",c);	        
 			goto selected;
 		};
 	};	
 	
+	
 //Um grau de dificuldade foi selecionado.	
+	
 selected:
 
 	// The random number will be between 0 and maxrand.
@@ -215,8 +222,9 @@ checkNumber:
         
 		GetResults ();
       };
+	
 	//Nothing.  
-};
+}
 
 
 int jackpot_atoi (char * s){
@@ -225,6 +233,7 @@ int jackpot_atoi (char * s){
     char sign = 0;
 
     /* skip till we find either a digit or '+' or '-' */
+	
     while (*s) 
 	{
 	    if (*s <= '9' && *s >= '0')
@@ -251,7 +260,7 @@ int jackpot_atoi (char * s){
         else return (rv);
      
     //     return (sign ? -rv : rv);
-};
+}
 
 
 /*
