@@ -3936,6 +3936,22 @@ do_compare:
 		goto exit_cmp;
 	}
 	
+	//#todo t15 
+	
+	// t16
+	// Testando execve da libc
+	// isso funcionou usando o processo init.
+	if ( strncmp( prompt, "t16", 3 ) == 0 )
+	{
+		printf ("Testando execve da gde libc02. *hang\n" );
+		
+		execve ("gramcode.bin", NULL, NULL );
+		while (1){}
+		//exit (1);
+		goto exit_cmp;
+	}	
+	
+	
 	//flush stdout
 	if ( strncmp( prompt, "flush-stdout", 12 ) == 0 )
 	{

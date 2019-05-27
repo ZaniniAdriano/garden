@@ -118,20 +118,19 @@ void help_builtins (int arg){
 	{
 		//all
 		case 1:
-		    printf("Show all help topics\n");
-			shellHelp();
+		    printf ("Show all help topics\n");
+			shellHelp ();
 		    break;
 		//min
 		case 2:
-		    printf("cls, help, exit..\n");
+		    printf ("cls, help, exit..\n");
 			break;
 		
 		default:
 			shellHelp ();
 			break;
-			
 	};
-};
+}
 
 
 void pwd_builtins (){

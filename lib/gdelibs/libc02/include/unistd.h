@@ -120,10 +120,9 @@ typedef int gid_t;
 // #todo:
 // Tem um monte de função pra fazer aqui.
 
-int 
-execve ( const char *filename, 
-         const char *argv[], 
-         const char *envp[] );
+//padrao.
+//int execve ( const char *path, char *const argv[], char *const envp[] );  
+int execve ( const char *filename, char *argv[], char *envp[] );  
 
 
 

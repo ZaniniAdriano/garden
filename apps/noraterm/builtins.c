@@ -122,6 +122,8 @@ int getgid_builtins (){
 
 void help_builtins (int arg){
 	
+	printf ("noraterm:\n");
+	
 	//desabilita o cursor
 	system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);		
 	
