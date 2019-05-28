@@ -1,7 +1,4 @@
-# terminal para o gde
-
-#history:
-#2019 - Created by Fred Nora and Luciano Gonçalez.
+# gdeterm
 
 #todo:
 #fazer um makefile pra compilar o shell
@@ -13,7 +10,7 @@ VERSION = 0
 PATCHLEVEL = 0
 SUBLEVEL = 0
 EXTRAVERSION =
-#NAME = shell  
+#NAME =   
 
 #todo:
 #We need to simplify these flags
@@ -38,11 +35,15 @@ CFLAGS = -m32 \
 
 
 
-LIBC    = ../../lib/gdelibs/libc01/include/
-LIBCOBJ = ../../lib/gdelibs/libc01/obj
+#LIBC    = ../../lib/gdelibs/libc01/include/
+#LIBCOBJ = ../../lib/gdelibs/libc01/obj
+#API01   = ../../lib/gdelibs/api01/include/
+#APIOBJ  = ../../lib/gdelibs/api01/obj
 
-API01   = ../../lib/gdelibs/api01/include/
-APIOBJ  = ../../lib/gdelibs/api01/obj
+LIBC    = ../../lib/gdelibs/libc02/include/
+LIBCOBJ = ../../lib/gdelibs/libc02/obj
+API02   = ../../lib/gdelibs/api02/include/
+APIOBJ  = ../../lib/gdelibs/api02/obj
 
 
 
@@ -76,15 +77,15 @@ all: crt0.o main.o all-c shell-link finalize clean
 #	nasm  head.s  -felf -o head.o
 
 crt0.o:
-	gcc  -c  crt0.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o crt0.o
+	gcc  -c  crt0.c  $(CFLAGS) -I $(LIBC) -I $(API02) -o crt0.o
 
 main.o:
-	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o main.o
+	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API02) -o main.o
 
 all-c:
-	gcc  -c  termui.c   -I $(LIBC) -I $(API01)  $(CFLAGS) -o termui.o
-	gcc  -c  builtins.c  -I $(LIBC) -I $(API01)  $(CFLAGS) -o builtins.o
-	gcc  -c  desktop.c   -I $(LIBC) -I $(API01)  $(CFLAGS) -o desktop.o
+	gcc  -c  termui.c   -I $(LIBC) -I $(API02)  $(CFLAGS) -o termui.o
+	gcc  -c  builtins.c  -I $(LIBC) -I $(API02)  $(CFLAGS) -o builtins.o
+	gcc  -c  desktop.c   -I $(LIBC) -I $(API02)  $(CFLAGS) -o desktop.o
 	
 #	gcc  -c  parser.c    -I ../../../lib/libc01/include/ -I ../../../lib/api01/include/ $(CFLAGS) -o parser.o
 #	gcc  -c  lexer.c     -I ../../../lib/libc01/include/ -I ../../../lib/api01/include/ $(CFLAGS) -o lexer.o

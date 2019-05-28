@@ -3940,13 +3940,17 @@ doexec_first_command:
 	// Passamos anteriormente a linha de comandos via memória compartilhada,
 	// agora então precisamos passar somente o nome do arquivo.	
 
-    Execve_Ret = (int) shell_gramado_core_init_execve ( 
-                           (const char *) tokenList[0], 
-                           (const char *) 0,
-                           (const char *) 0);
-
 	// Ok, funcionou e o arquivo foi carregado,
 	// mas demora para receber tempo de processamento.
+	
+    //Execve_Ret = (int) shell_gramado_core_init_execve ( 
+    //                       (const char *) tokenList[0], 
+    //                       (const char *) 0,
+    //                       (const char *) 0);
+	
+    Execve_Ret = (int) execve ( (const char *) tokenList[0], 
+                           (const char *) 0,
+                           (const char *) 0);
 
 	if ( Execve_Ret == 0 )
 	{

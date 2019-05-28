@@ -3573,7 +3573,9 @@ do_compare:
 	
     // reboot
     // @todo: Isso será um aplicativo. reboot.bin
+	// obs: testando comando reboot.bin
 	
+	/*
     if ( strncmp( prompt, "REBOOT", 6 ) == 0 || 
 	     strncmp( prompt, "reboot", 6 ) == 0 )
 	{
@@ -3591,6 +3593,7 @@ do_compare:
 
 		goto exit_cmp;
     };
+	*/
 
 	
 	// rename - reneme directory or file.

@@ -1,6 +1,5 @@
 
-# Compiling Gramado Core Shell.
-# Shell/GWS
+# Compiling Noraterm
 # 
 # history:
 #     2019 - Created by Fred Nora and Luciano Gonçalez.
