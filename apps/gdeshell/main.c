@@ -3303,17 +3303,59 @@ do_compare:
 	// Apenas obtendo o retorno na rotina de clonagem.
 	if ( strncmp ( prompt, "fork", 4 ) == 0 )
 	{
-		printf("fork: Tentando clonar o processo atual ...\n");
+		
+		printf ("gdeshell: Tentando clonar o processo atual ...\n");
 		
 		int pidFORK = (int) fork ();
+		
+		if ( pidFORK > 0 )
+		{
+		    printf ("gdeshell: estamos no pai\n");
+			pidFORK = 1/0;
+			while (1){}
+		}
+		
+		if ( pidFORK == 0 )
+		{
+		    printf ("gdeshell: estamos no filho\n");
+			pidFORK = 1/0;
+			//#bugbug: o caregamento do arquivo ainda não está usando
+			//o diretório de páginas do processo e sim o diretório do páginas
+			//do kernel.
+			//execve ("jackpot.bin", NULL, NULL );
+			//wait (NULL);
+			while (1){}
+		}
+
+		
+		if ( pidFORK < 0 )
+		{
+		    printf ("gdeshell: falhou\n");
+			while (1){}
+		}
+				
+		
+		//#TODO
+		//se aqui estivermos rodando o filho, devemos analizar
+		//porque ela trava olhando o registrador.
+		
+		//execve ("jackpot.bin", NULL, NULL );
+		//exit (0);
+		//while (1){}
+		
+		//shellShowKernelInfo ();
+
+		//printf ("gdeshell: retornamos do fork");
+		//printf ("gdeshell: *hang");
+		//while (1){}
 
  		//Mostra o ID do processo clone.
-		printf("Clone PID={%d}\n", pidFORK );
+		//printf("Clone PID={%d}\n", pidFORK );
 		
 		//mostra o id do processo atual.
-		shellShowPID ();
+		//shellShowPID ();
 		
-		printf("fork: done\n");
+		//printf("gdeshell: done\n");
         
 		goto exit_cmp;
 	};		
