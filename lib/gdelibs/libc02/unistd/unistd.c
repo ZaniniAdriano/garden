@@ -276,6 +276,7 @@ void exit (int status){
 
 /*
  * fork:
+ *     fork() stub.
  *     #todo
  */
 
@@ -284,15 +285,71 @@ clonando o a estrutura do processo mas ainda há outras coisas pra
 fazer como memória, diretório e a troca correta de diretório de 
 páginas dutante o taskswitch */
 
- 
+
+//pid_t fork (){
+	
 int fork (){
 	
-    //return (int) unistd_system_call ( UNISTD_SYSTEMCALL_FORK, (unsigned long) 0, 
+    int ret;
+
+    //ret = (int) gramado_system_call ( UNISTD_SYSTEMCALL_FORK, (unsigned long) 0, 
 	//				(unsigned long) 0, (unsigned long) 0 ); 
 	
-    return (int) gramado_system_call ( UNISTD_SYSTEMCALL_FORK, (unsigned long) 0, 
-					(unsigned long) 0, (unsigned long) 0 ); 
+	ret = fast_fork (0,0,0,0);
+	
+	if ( ret == -1 )
+	{
+		//#todo: configurar o errno.
+		return ret;
+	}
+	
+	if (ret == 0)
+	{
+		// We're the child in this part.
+		return 0;
+	}
+	
+    // Estamos no pai. Vamos retornar o PID do filho.
+	return ret;
 }
+
+
+// chamando uma interrupção só para o fast fork
+int 
+fast_fork ( unsigned long ax, 
+            unsigned long bx, 
+            unsigned long cx, 
+            unsigned long dx )
+{
+	
+    int Ret = 0;
+
+    //System interrupt.
+
+    asm volatile ( " int %1 \n"
+                 : "=a"(Ret)	
+                 : "i"(133), "a"(ax), "b"(bx), "c"(cx), "d"(dx) );
+
+    //return (void *) Ret; 	
+	
+
+	
+	if ( Ret == -1 )
+	{
+		//#todo: configurar o errno.
+		return Ret;
+	}
+	
+	if (Ret == 0)
+	{
+		// We're the child in this part.
+		return 0;
+	}
+	
+    // Estamos no pai. Vamos retornar o PID do filho.
+	return Ret;
+}
+
 
 
 /*

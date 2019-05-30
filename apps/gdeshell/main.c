@@ -3308,9 +3308,11 @@ do_compare:
 		
 		int pidFORK = (int) fork ();
 		
+		printf ("gdeshell: fast_fork retornou\n");
+		
 		if ( pidFORK > 0 )
 		{
-		    printf ("gdeshell: estamos no pai\n");
+		    printf ("gdeshell: estamos no PAI\n");
 			goto exit_cmp; //volta ao prompt
 			//pidFORK = 1/0;
 			//while (1){}
@@ -3318,9 +3320,11 @@ do_compare:
 		
 		if ( pidFORK == 0 )
 		{
-		    printf ("gdeshell: estamos no filho, DIV BY ZERO fault\n");
-			//goto exit_cmp; //volta ao prompt
-			pidFORK = 1/0;  //mostra registradores.
+		    printf ("gdeshell: estamos no FILHO\n");
+			printf ("PID=%d", getpid());
+			execve ("jackpot.bin", NULL, NULL );
+			goto exit_cmp; //volta ao prompt
+			//pidFORK = 1/0;  //mostra registradores.
 			//#bugbug: o caregamento do arquivo ainda não está usando
 			//o diretório de páginas do processo e sim o diretório do páginas
 			//do kernel.
@@ -3333,7 +3337,8 @@ do_compare:
 		if ( pidFORK < 0 )
 		{
 		    printf ("gdeshell: falhou\n");
-			while (1){}
+			pidFORK = 1/0;  //mostra registradores.
+			//while (1){}
 		}
 				
 		

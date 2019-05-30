@@ -130,6 +130,11 @@ void exit (int status);
 
 
 int fork ();
+int 
+fast_fork ( unsigned long ax, 
+            unsigned long bx, 
+            unsigned long cx, 
+            unsigned long dx );
 
 
 int setuid ( uid_t uid );
