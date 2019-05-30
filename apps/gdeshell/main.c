@@ -3311,20 +3311,22 @@ do_compare:
 		if ( pidFORK > 0 )
 		{
 		    printf ("gdeshell: estamos no pai\n");
-			pidFORK = 1/0;
-			while (1){}
+			goto exit_cmp; //volta ao prompt
+			//pidFORK = 1/0;
+			//while (1){}
 		}
 		
 		if ( pidFORK == 0 )
 		{
-		    printf ("gdeshell: estamos no filho\n");
-			pidFORK = 1/0;
+		    printf ("gdeshell: estamos no filho, DIV BY ZERO fault\n");
+			//goto exit_cmp; //volta ao prompt
+			pidFORK = 1/0;  //mostra registradores.
 			//#bugbug: o caregamento do arquivo ainda não está usando
 			//o diretório de páginas do processo e sim o diretório do páginas
 			//do kernel.
 			//execve ("jackpot.bin", NULL, NULL );
 			//wait (NULL);
-			while (1){}
+			//while (1){}
 		}
 
 		
