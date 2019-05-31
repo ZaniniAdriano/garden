@@ -129,8 +129,11 @@ int execve ( const char *filename, char *argv[], char *envp[] );
 void exit (int status);
 
 
-int fork ();
-int 
+pid_t fork (void);
+
+pid_t sys_fork (void);
+	
+pid_t 
 fast_fork ( unsigned long ax, 
             unsigned long bx, 
             unsigned long cx, 

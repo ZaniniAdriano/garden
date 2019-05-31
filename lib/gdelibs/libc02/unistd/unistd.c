@@ -275,32 +275,23 @@ void exit (int status){
 
 
 /*
+ **************
  * fork:
  *     fork() stub.
  *     #todo
  */
 
-/* Ainda estamos testando isso. A rotina no kernel está 
-clonando o a estrutura do processo mas ainda há outras coisas pra 
-fazer como memória, diretório e a troca correta de diretório de 
-páginas dutante o taskswitch */
-
-
-//pid_t fork (){
+pid_t fork (void){
 	
-int fork (){
-	
-    int ret;
+    pid_t ret;
 
-    //ret = (int) gramado_system_call ( UNISTD_SYSTEMCALL_FORK, (unsigned long) 0, 
-	//				(unsigned long) 0, (unsigned long) 0 ); 
-	
-	ret = fast_fork (0,0,0,0);
+	// chamando uma interrupção só para o fast fork
+	ret = (pid_t) fast_fork (0,0,0,0);
 	
 	if ( ret == -1 )
 	{
 		//#todo: configurar o errno.
-		return ret;
+		return (pid_t) ret;
 	}
 	
 	if (ret == 0)
@@ -310,44 +301,52 @@ int fork (){
 	}
 	
     // Estamos no pai. Vamos retornar o PID do filho.
-	return ret;
+	return (pid_t) ret;
 }
 
 
-// chamando uma interrupção só para o fast fork
-int 
-fast_fork ( unsigned long ax, 
-            unsigned long bx, 
-            unsigned long cx, 
-            unsigned long dx )
-{
+// usando a chamada padrão do sistema.
+pid_t sys_fork (void){
 	
-    int Ret = 0;
+    pid_t ret;
 
-    //System interrupt.
-
-    asm volatile ( " int %1 \n"
-                 : "=a"(Ret)	
-                 : "i"(133), "a"(ax), "b"(bx), "c"(cx), "d"(dx) );
-
-    //return (void *) Ret; 	
+    ret = (int) gramado_system_call ( UNISTD_SYSTEMCALL_FORK, (unsigned long) 0, 
+					(unsigned long) 0, (unsigned long) 0 ); 
 	
-
-	
-	if ( Ret == -1 )
+	if ( ret == -1 )
 	{
 		//#todo: configurar o errno.
-		return Ret;
+		return (pid_t) ret;
 	}
 	
-	if (Ret == 0)
+	if (ret == 0)
 	{
 		// We're the child in this part.
 		return 0;
 	}
 	
     // Estamos no pai. Vamos retornar o PID do filho.
-	return Ret;
+	return (pid_t) ret;
+}
+
+
+
+
+// chamando uma interrupção só para o fast fork
+pid_t 
+fast_fork ( unsigned long ax, 
+            unsigned long bx, 
+            unsigned long cx, 
+            unsigned long dx )
+{
+	
+    pid_t Ret = 0;
+	
+    asm volatile ( " int %1 \n"
+                 : "=a"(Ret)	
+                 : "i"(133), "a"(ax), "b"(bx), "c"(cx), "d"(dx) );
+	
+	return (pid_t) Ret;
 }
 
 

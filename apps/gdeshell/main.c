@@ -3299,47 +3299,43 @@ do_compare:
 		goto exit_cmp;
     };
 	
-    // fork - Testando a função fork.
-	// Apenas obtendo o retorno na rotina de clonagem.
+    // fork
+	// Retorna no filho e chamamos execve.
+	
 	if ( strncmp ( prompt, "fork", 4 ) == 0 )
-	{
-		
+	{	
 		printf ("gdeshell: Tentando clonar o processo atual ...\n");
 		
 		int pidFORK = (int) fork ();
+
+		// Erro.
+		if ( pidFORK < 0 )
+		{
+		    printf ("gdeshell: falhou\n");
+            exit (1);
+		}
 		
-		printf ("gdeshell: fast_fork retornou\n");
-		
+		// Pai.
 		if ( pidFORK > 0 )
 		{
 		    printf ("gdeshell: estamos no PAI\n");
-			goto exit_cmp; //volta ao prompt
-			//pidFORK = 1/0;
-			//while (1){}
+			goto exit_cmp; 
 		}
 		
+		// Filho.
 		if ( pidFORK == 0 )
 		{
 		    printf ("gdeshell: estamos no FILHO\n");
 			printf ("PID=%d", getpid());
-			execve ("jackpot.bin", NULL, NULL );
-			goto exit_cmp; //volta ao prompt
-			//pidFORK = 1/0;  //mostra registradores.
-			//#bugbug: o caregamento do arquivo ainda não está usando
-			//o diretório de páginas do processo e sim o diretório do páginas
-			//do kernel.
+			
 			//execve ("jackpot.bin", NULL, NULL );
-			//wait (NULL);
-			//while (1){}
+			execve ("gramcode.bin", NULL, NULL );
+			//execve ("jackpot.bin", NULL, NULL );
+			
+			printf ("gdeshell: execve falhou.\n");
+			exit (1);
 		}
 
-		
-		if ( pidFORK < 0 )
-		{
-		    printf ("gdeshell: falhou\n");
-			pidFORK = 1/0;  //mostra registradores.
-			//while (1){}
-		}
 				
 		
 		//#TODO
