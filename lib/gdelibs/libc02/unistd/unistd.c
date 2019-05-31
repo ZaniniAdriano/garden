@@ -425,7 +425,7 @@ gid_t getgid (void){
 
 int dup (int oldfd){
 	
-	return -1; //#todo
+    return (int) gramado_system_call ( (unsigned long) oldfd, 0, 0, 0 );
 }
 
 
@@ -436,7 +436,8 @@ int dup (int oldfd){
 
 int dup2 (int oldfd, int newfd){
 	
-	return -1; //#todo
+    return (int) gramado_system_call ( (unsigned long) oldfd, 
+				    (unsigned long) newfd, 0, 0 );
 }
 
 
@@ -447,7 +448,8 @@ int dup2 (int oldfd, int newfd){
 
 int dup3 (int oldfd, int newfd, int flags){
 	
-	return -1; //#todo
+    return (int) gramado_system_call ( (unsigned long) oldfd, 
+				    (unsigned long) newfd, (unsigned long) flags, 0 );
 }
 
 
