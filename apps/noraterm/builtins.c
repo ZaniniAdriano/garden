@@ -74,8 +74,8 @@ void exec_builtins (){
 
 void exit_builtins (){
 	
-    //printf("~exit\n");
-	printf ("Exiting shell process..\n");
+	printf ("noraterm: Exiting ...\n");
+	
 	exit (0);	
 }
 

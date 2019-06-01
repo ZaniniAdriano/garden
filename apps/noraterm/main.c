@@ -1213,19 +1213,11 @@ noArgs:
 	
 	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );
 	
-    //Mensagem ...
-	//printf("Starting SHELL.BIN in Holambra Kernel ...\n");	
-	
-    //printf("#debug breakpoint");
-    //while(1){} 	
-	
-	
-	//printf("HOLAMBRA KERNEL SHELL\n");	
-   // printf("#debug breakpoint");
-   // while(1){} 		
+
 	
 	//#bugbug
 	//janela usada para input de textos ...
+	
 	//o input de texto pode vir de várias fontes.
 	//api_set_window_with_text_input(hWindow);
 	
@@ -2925,7 +2917,7 @@ do_compare:
 	// exit - Exit the application.
     if ( strncmp( prompt, "exit", 4 ) == 0 )
 	{
-		exit_builtins();
+		exit_builtins ();
 		ShellFlag = SHELLFLAG_EXIT;
 		goto exit_cmp;
     };
@@ -3677,6 +3669,16 @@ do_compare:
 
         goto exit_cmp;
 	}
+	
+	if ( strncmp( prompt, "t19", 3 ) == 0 )
+	{		
+        fprintf ( stdout, "noraterm: testing stdout \n");
+        fprintf ( stderr, "noraterm: testing stderr \n");	
+		fflush (stdout);
+		fflush (stderr);
+        goto exit_cmp;		
+	}
+   
 
 
 	// setup-x

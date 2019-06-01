@@ -17,8 +17,10 @@
  *     2015~2018 - Revision. 
  */
 
-#include <limits.h> //testando no printf do nelson
+
+#include <limits.h>
 //#include <string.h>
+
 
 #include <stdio.h>
 #include <types.h> 
@@ -1175,26 +1177,54 @@ int getchar (void){
  */
 
 void stdioInitialize (){
-	
+
 	//register int i;
 	int i;
-	
+
 	// Buffers para as estruturas.
 	unsigned char buffer0[BUFSIZ];
 	unsigned char buffer1[BUFSIZ];
 	unsigned char buffer2[BUFSIZ];
 	
 	
-	// Alocando espaço para as estruturas.
-	stdin = (FILE *) &buffer0[0];	
-	stdout = (FILE *) &buffer1[0];	
-	stderr = (FILE *) &buffer2[0];
-    
-    
-    // >>>> #bugbug
-    //  Em ring 3 não temos acesso aos elementos da estrutura.
+	// # fluxo padrão.
+	// Aqui temos os ponteiros em ring3. Mas precisamos
+	// configurar os ponteiros que estão na estrutura do processo em ring0.
 
-    // A biblioteca tem 3 pequenos buffers,
+    // #importante
+    // Esses arquivos em ring3 devem ser tratados como buffers.
+	// fflush deve copiar o conteúdo desses arquivos
+	// para os arquivos do fluxo padrão que são gerenciados pela
+	// estrutura do processo.
+
+	// Alocando espaço para as estruturas.
+	stdin = (FILE *) &buffer0[0];
+	stdout = (FILE *) &buffer1[0];
+	stderr = (FILE *) &buffer2[0];
+	
+	
+	// #importante
+	// #teste:
+	// vamos chamar uma systemcall que coloca na
+	// estrutura do processo atual esses ponteiros
+	// para o fluxo padrão.
+	
+	int status = 0;
+    status =  (int) gramado_system_call ( 700, 
+					(unsigned long) stdin, 
+					(unsigned long) stdout, 
+					(unsigned long) stderr ); 
+
+	
+	//#todo
+	//if (status != 0)
+    //{
+	//}
+	
+	// >>>> #bugbug
+	//  Em ring 3 não temos acesso aos elementos da estrutura.
+
+	// A biblioteca tem 3 pequenos buffers,
 	// que serão usados como base para os stream.
 	// ?? Podemos almentar esses buffers ?? @todo: testar.
 
@@ -1267,6 +1297,12 @@ void stdioInitialize (){
  */
 
 int fflush ( FILE *stream ){
+	
+	// #importante
+	// Devemos copiar o conteúdo que está nesse arquivo em ring3
+	// para o arquivo que está em ring 0.
+	// O arquivo em ring0 é o arquivo gerenciado pela estrutura do
+	// processo.
 	
     return (int) gramado_system_call ( 233, (unsigned long) stream, 
 					 (unsigned long) stream, (unsigned long) stream ); 
