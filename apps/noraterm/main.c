@@ -133,6 +133,12 @@ struct command cmd_table[] = {
 //#define MIN(x,y) ((x < y) ? x : y)
 
 
+// _init_app 
+// 1 = tente inicializar o programa que vai rodar no terminal
+// 0 = Inicialine o shell interno para gerenciamento do terminal.
+
+int _init_app = 1;
+//int _init_app = 0;
 
 //
 // ======== ## Shell Flag ## ========
@@ -510,7 +516,7 @@ int feedterminalDialog( struct window_d *window,
 
 
 // Procedimento de janela principal do aplicativo.
-void *shellProcedure ( struct window_d *window, 
+void *noratermProcedure ( struct window_d *window, 
                        int msg, 
 				       unsigned long long1, 
 				       unsigned long long2 );
@@ -548,941 +554,27 @@ static inline void rep_nop (void){
  
  
  
-/*
- ********************************************************
- * main: 
- *     Main function.
- *
- * @todo:
- *    +Checar argumentos.
- *    +Criar a janela do TERMINAL. (Ok).
- *    +Enviar mensagem de texto para ele. (Ok).
- *    +Configurar procedimento de janela.
- *    +Definir a janela que é área do cliente.
- *    +Carregar um arquivo na área de cliente.
- *    +Testar outros recursos do Kernel.
- *    +Testar as chamadas para pegar informções sobre o processo.
- *    +...
- *
- *  
- *  ## O SHELL É UM APLICATIVO DO TIPO JANELA, DEVE TER UM MAIN 
- *     DO TIPO JANELA ##
- *
- * Obs: Esses argumentos podem ser um padrão.
- */
- 
-int main ( int argc, char *argv[] ){
-	
-	//int arg_index = 1;
-	
-    FILE *default_input = stdin;
-    char *local_pending_command = (char *) NULL;	
-	
-	//char **internal;
-	char *filename;
-	register int i;
-	
-	//
-	// Obs: Esse não é um programa que roda em modo terminal,
-	// ele na verdade cria um terminal dentro de uma janela filha.
-	// isso pode servir para esse programa interpretar linguagem 
-	// basic por exemplo.
-	// os programas em modo terminal não criarão janelas e rodarão nas 
-	// janelas de terminal cridas para eles pelo kernel.
-	//
-	
-	//#debug
-	//deixe o kernel usar essa janela para teste.
-	//Obs: Não criaremos a janela principal desse programa 
-	//para evitarmos erros com printf.
- 
-	
-	
-	/*
-	 * Uma boa ordem para os passos dessa rotina nos aplicativos  
-	 * é: Step1=WindowClass, Step2=Window e Step3=Message.
-	 */
-	
-	//@todo: Criar esse tipo de classe.
-	//       Provavelmente deve coincidir com a estrutura presente
-    //nas rotinas de gerenciamento de janela que estão em kernel mode.	
-	//struct window_class_d *wc; 
-	
-	
-	// A janela principal do aplicativo.
-	struct window_d *hWindow;    
 
-	//JANELA CRIADA NA ÁREA DE CLIENTE DA JANELA PRINCIPAL.
-    struct window_d *hWindow2;       
-	
-	//struct message_d *m;
-
-	
-	int Status = 0;
-	//char *s;    //String	
-	
-	
-	
-	// #debug
-	
-	//printf ("SHELL.BIN is alive");
-	//while (1){ asm ("pause"); }
-	
-	
-	
-	
-    /* Wait forever if we are debugging a login shell. */
-    //while(debugging_login_shell);	
-
-	
-    //if(shell_initialized)
-    //{
-        //reinitialize();
-    //};
-	
-	
-    //shell_environment = env;
-    //shell_name = argv[0];
-	
-	//
-	// ## ARGS ##
-	//
-	
-	//
-	// ## Command Switch ##
-	//
-	
-	//Ok isso funcionou.
-	//Argumentos passados com sucesso do crt0 para o main.
-	
-	//printf("argc={%d}\n",argc);	
-	//if ( argc >= 2 )
-	//{
-	//    printf("arg[0]={%s}\n",argv[0]);
-	//    printf("arg[1]={%s}\n",argv[1]);
-	//}
-	
-	//
-	// Filtra a quantidade de argumentos.
-	//
-	
-	//goto noArgs; 
-	
-	//Não usar verbose nessa fase de tratar os argumentos
-	//pois a janela ainda não foi inicializada.
-	//argv[0] = Tipo de shell: interativo ou não
-	//argv[1] = Tipo de uso: login ... outros ?? 
-	
-	
-	// Se não há argumentos.
-	if (argc < 1)
-	{
-		//printf("No args !\n");
-		//#Test.
-        //fprintf( stderr,"Starting Shell with no arguments...\n");	 	
-		
-		die ("SHELL.BIN: No args");
-		
-		goto noArgs; 
-		
-	}else{
-		
-		
-		// #importante
-		// Precisamos de 9 argumentos.
-		// Ver os argumentos no crt0.c
-		
-		// #importante
-		// Não podemos comparar com um ponteiro nulo, se não é PF.
-		
-		if (argc < 2)
-		{
-		    printf ("main: argc=%d we need 2 or more \n", argc );
-			return 1;
-		}
-		
-		// 0
-		// Nome passado viar argumento.
-		shell_name = (char *) argv[0];
-        printf ("Shell Name = { %s }\n", shell_name );		
-		
-		// 1
-		// -f
-        // Se o shell foi iniciado com um arquivo de script para ser executado.
-		// Então o arg[1] cpontém o nome do arquivo.
-        if ( strncmp ( (char *) argv[1], "-f", 2 ) == 0 )
-        {
-			script_shell = 1;
-			//interactive = 0;
-		    //goto dosh2;
-		};			
-		
-		
-		// 2
-		// Script name.
-		//script_name = (char *) argv[2];
-        //printf ("Script Name = { %s }\n", script_name );			
-		
-		
-		// 3
-		// --interactive
-	    if ( strncmp ( (char *) argv[3], "--interactive", 13 ) == 0 )
-		{	
-			interactive = 1;
-			
-            printf ("Initializing an interactive shell ...\n");
-            //printf ("arg[0]={%s}\n",argv[0]);			
-        };
-		
-		// 4
-		// --login
-	    if ( strncmp ( (char *) argv[4], "--login", 7 ) == 0 )
-		{	
-			login_shell = 1;
-			
-			//printf("Initializing login ...\n");
-            //printf("arg[1]={%s}\n",argv[1]);    
-        };			
-
-		
-        // 5
-		// --headless
-		// Aqui o shell não criará janelas, apenas inicializará o gws.
-		
-		if ( strncmp ( (char *) argv[5], "--headless", 10 ) == 0 )
-		{	
-			headless = 1;	
-		};
-		
-        // 6
-		// --taskbar
-		
-		if ( strncmp ( (char *) argv[6], "--taskbar", 9 ) == 0 )
-		{	
-			taskbar = 1;	
-		};
-		
-		if ( strncmp ( (char *) argv[6], "--notaskbar", 11 ) == 0 )
-		{	
-			taskbar = 0;	
-		};		
-
-		// 7
-		// Shell funcionando no modo servidor.
-		if ( strncmp ( (char *) argv[7], "--gws", 5 ) == 0 )
-		{	
-			//gws_shell = 1;	
-		};
-
-		// 8
-		// Shell funcionando no modo desktop.
-		
-		if ( strncmp ( (char *) argv[8], "--desktop", 9 ) == 0 )
-		{	
-			desktop = 1;	
-		};
-		
-		if ( strncmp ( (char *) argv[8], "--nodesktop", 11 ) == 0 )
-		{	
-			desktop = 0;	
-		};		
-		
-		
-
-        //...		
-	};
-	
-	//Nothing.
-	
-	
-	// #debug
-	//printf ("#debug: Breakpoint");
-	//while (1){}
-	
-	
-noArgs:		
-	
-	
-	//...
-	
-	//@todo:
-	//Podemos começar pegando o id do processo atual e 
-	//melhorando a prioridade.
-	
-	
-	// get current dir
-	//pegamos o diretório atual.
-	
-	//get user dir
-	//pegamos o diretório do usuário /root/user/(name)
-	
-	//set current dir
-	//setamos para que o diretório do usuário seja o diretório atual.
-	
-	
-	// Isso configura alguns padrões do aplicativo.
-	// Os argumentos tratados abaixo podem modificar esses padrões
-	// Ex: Um argumento de entrada pode solicitar a troca de cor de fonte.
-	
-	shellShell (); 	
-	
-	
-	//
-	// # Desktop mode #
-	//		
-	
-	// #test
-	// No modo desktop, criaremos a barra de tarefas e não criaremos a janela do shell.
-	// Esse modo pode ter seu proprio loop de mensagens e procedimento de janela.
-	// O modo desktop criá sua barra de tarefas.
-	
-	int desktopReturn = -1;
-	
-	if ( desktop == 1 )
-	{
-		//#importante
-		//main pode fechar o shell depois de ter usado o modo desktop.
-		
-	    desktopReturn = shellStartDesktopMode ();
-		
-		//printf ("Exiting shell ...\n");
-		//exit (0);
-		
-		printf ("Initializing desktop mode loop ...\n");
-		goto Mainloop;
-		
-		//while(1){}
-	
-	
-	//#importante
-	//se não estamos no modo shell.	
-	
-	}else{
-	
-	    //  # taskbar #
-        if ( taskbar == 1 )
-	    {
-		    mainwindow_used = 0;
-		
-            terminalCreateTaskBar ();	
-		
-	        // # Main window #		
-	    }else{
-		
-		    mainwindow_used = 1;
-		
-			//termui.c
-	        enterCriticalSection ();    
-            hWindow = (struct window_d *) terminalCreateMainWindow (1);
-	        exitCriticalSection ();
-		
-		    shell_info.main_window = ( struct window_d * ) hWindow;			
-	    };	
-		
-		
-	    // # Headless #
-	    //nesse modo não teremos janela alguma
-	
-	    if (headless == 1)
-	    {
-	        //#todo;
-     	}
-		
-		//...
-	};
-	
-	
-	
-		
-	//
-	// @todo: Usar essa rotina para fazer testes de modo gráfico.
-	//	
-	
-	//Debug:
-	//while(1){};
-	
-	// @todo: 
-	//     Set priority.
-	//     Set Window Station, Desktop ...
-	//     ...
-	//
-	// @todo:
-	//     Quando essa janela é criada ainda estamos no ambiente de Logon,
-	// dentro do desktop de Logon. Não há problema nisso por enquanto,
-	// pois poderemos utilizar os recursos do shell antes de habilitarmos
-	// todos os recursos o ambiente do usuário. Porém será necessário, 
-	// no futuro, executarmos o Shell no desktop do ambiente do usuário.
-	//
-	// @todo: 
-	//     Precisamos de um ponteiro com a área de memória que representa
-	// a área de trabalho do Shell.
-	//     Precisamos de um ponteiro com a área de cliente da janela do Shell.
-	//
-    // @todo: 
-	//     Buffers. Buffers pra linha e buffer pra arquivo.	
-	//
-	// @todo: 
-	//     Essa janela aparece centralizada e pequena, evidenciando que os 
-	// argumentos não foram passados corretamente, então o gerente de recursos 
-	// gráficos usou dimensões default. Provavelmente o Kernel não os 
-	// recepciona devidamente ainda.
-	// ...
-	
-	
-	//
-    // Create Window.
-	//
-	
-	//Debug:
-	//printf("\n\n Starting Shell Version ");
-	//printf(SHELL_VERSION);
-	//refresh_screen();	
-	
-	//Debug:
-	//while(1){}
-	
-	
-	//
-	// Step 2. Creating a window frame.
-	//
-		
-	
-    // Não é necessário passar todos os argumentos de uma vez só.
-	// Podemos realizar 3 ou 4 chamadas para construírmos a janela.
-	// Essa rotina tem 12 argumentos mas ela poderá realizar 3 chamadas
-	// ao sistema para passar todos os argumentos.
-	
-	
-	// *Importante:
-	//      A janela do shell será uma aba dentro da janela do navegador,
-	// essa janela do navegador é gerenciada pelo kernel, mas não passa de uma moldura 
-	// com abas.
-	// >> o kernel ja sabe que o processo tem uma aba, então quando o processo 
-	//tenta criar uma janela, a sua janela será criada dentro de sua aba.
-	
-	//General purpose appplication  -  {} Developer version
-	
-	//@todo:
-	//Criar essas funções na API.
-	//unsigned long ScreenWidth = (unsigned long) APIGetScreenWidth();
-	//unsigned long ScreenHeight = (unsigned long) APIGetScreenheight();
-	
-	
-	//
-	// Configurando o retângulo que deve ser usado pelo terminal.
-	//
-	
-	//#bugbug 
-	// esses valores são usados para construir a janela principal.
-	// o que desejamos são os valores do retângulo da área de cliente 
-	// da janela principal.
-	
-	//terminal_rect.left = wpWindowLeft;
-	//terminal_rect.top = wpWindowTop;
-	//terminal_rect.width = wsWindowWidth;
-	//terminal_rect.height = wsWindowHeight;
-	
-	//#debug
-	//printf("terminal_rect: 1\n");	
-    //printf("l={%d} t={%d} w={%d} h={%d}\n", 
-	//    terminal_rect.left, terminal_rect.top,
-	//	terminal_rect.width, terminal_rect.height );
-	//while(1){}
-	
-	
-	
-	// # ??
-	// Pegando a janela principal para usarmos como janela mãe.
-	
-	/*
-	
-	struct window_d *pW;
-
-	pW = (struct window_d *) apiGetWSScreenWindow ();
-	
-	if ( (void *) pW == NULL )
-	{
-	    printf("Screen Window fail\n ");
-	    
-		while (1){
-			asm ("pause");
-			//exit (1);
-		}
-	}
-	*/
-    
-    //
-    // #todo: Pegar o desktop atual.
-    //
-    
-    
-	//
-	// Criando a janela WT_OVERLAPPED.
-	// 
-	
-	// Com base nas informações obtidas no sistema.
-	// verde 0x83FCFF
-	// preto COLOR_BLACK
-						
-    //para flat os dois poem ser a mesma cor.
-    //não completamente preto.	
-	//apiBeginPaint ();
-	
-	//hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, "SHELL",
-	//                    wpWindowLeft, wpWindowTop, 
-	//				    wsWindowWidth, wsWindowHeight,    
-    //                    pW, 0, 0x35475F, xCOLOR_GRAY1 ); //pW, 0, xCOLOR_GRAY3, xCOLOR_GRAY1 ); //#35475F	
-
-	//hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, "SHELL",
-	//                    10, 10, 200, 200,    
-    //                    pW, 0, 0x35475F, xCOLOR_GRAY1 ); 	
-	
-	//hWindow = (void *) APICreateWindow ( 1, 1, 1, "XXX",     
-    //                            10, 10, 200, 200,
-    //                            0, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
-
-
-	//if ( (void *) hWindow == NULL )
-	//{
-	//	printf ("FAIL!");
-	//	while(1){}
-	//	
-	//	die ("shell.bin: hWindow fail");
-	//}
-	
-	
-    //printf("#debug breakpoint");	
-	//while(1){} 
-	
-	/*
-	 Imprimindo o ponteiro para a estrutura da janela criada 
-	 Estamos testando se o retorno está funcionando nesse caso.
-	 */
-	/* isso funcionou
-	printf("Testing handle {%x}\n",hWindow);
-	
-	printf("Testing resize window\n");
-	APIresize_window( hWindow, 640, 480);
-	*/
- 
-	
-	//apiEndPaint();
-	
-	//hWindow = shellCreatemainWindow ();
-	
-	//printf("OK FUNCIONOU");
-	//while(1){}
-	
-	//
-	// Funcionou setar o foco, e a mensagem foi para a janela certa.
-	//
-	
-    // Registrar.
-	// Configurar como ativa.
-    // Setar foco.
-	// *IMPORTANTE: 
-	// É FUNDAMENTAL SETAR O FOCO, POIS O KERNEL DEPENDE DELE
-	// PARA RETORNAR A MENSAGEM DA JANELA COM O FOCO DE ENTRADA.
-	// Nesse momento o kernel configura as margens para o cursor 
-	// dentro da janela.
-	// @todo: O kernel deve reiniciar as variáveis de cursor 
-	// dentro da janela também, pois cada janela tem uma configuração 
-	// diferente de cursor.
-	//
-	// ?? Show Window !!
-	// Precisamos mostrar a janela e não repintar 
-	// a tela toda.
-	
-    //APIRegisterWindow (hWindow);
-    //APISetActiveWindow (hWindow);	
-    //APISetFocus (hWindow);
-	
-	//#test
-	//vamos mostrar a janela do shell antes de criarmos a janela 
-	//da área de cliente
-	//apiShowWindow (hWindow);
-	
-	//#test 
-	//Criando um timer.
-	
-	//printf("shmain: Creating timer\n");
-					
-		//janela, 100 ms, tipo 2= intermitente.
-	//system_call ( 222, (unsigned long) hWindow, 100, 2);		
-
-	
-
-    //printf("#debug breakpoint");
-    //while(1){} 	
-	
-	//#importante
-	//VAMOS EFETUAR ESSE REFRESH DEPOIS DE CRIARMOS OUTRA JANELA.
-	//refresh_screen ();
-	
-	
-
-	// #importante:
-	// +pegamos o retângulo referente à area de cliente da janela registrada. 
-	// +atualizamos as variáveis que precisam dessa informação. 
-	// reposicionamos o cursor.
-	// reabilitamos a piscagem de cursor.
-	
- 
-	
-	//===============================
-	
-    //
-	// ## Janela para texto ##
-	//
-	
-
-	// #obs
-	// shellShell() inicializou todas as globais.
-	
-	
-    if ( mainwindow_used == 1 ){
-	    terminal_rect.left = wpWindowLeft;
-	    terminal_rect.top = wpWindowTop +36;
-	    terminal_rect.width = wsWindowWidth;
-	    terminal_rect.height = wsWindowHeight -36;	
-	}else{	
-	    terminal_rect.left = wpWindowLeft;
-	    terminal_rect.top = wpWindowTop;
-	    terminal_rect.width = wsWindowWidth;
-	    terminal_rect.height = wsWindowHeight;
-	};
-	
-    //#debug
-    //printf ("terminal_rect: l={%d} t={%d} w={%d} h={%d}\n", 
-	//    terminal_rect.left, terminal_rect.top,
-	//	  terminal_rect.width, terminal_rect.height );	
-    //while (1){ asm ("pause"); }	
-	
-
-	//
-	// ## Se der problema no tamanho da área de cliente ##
-	//
-	
-	/*
-	if ( terminal_rect.left < wpWindowLeft ||
-         terminal_rect.top < wpWindowTop ||	
-	     terminal_rect.width > wsWindowWidth ||
-		 terminal_rect.height > wsWindowHeight )
-	{
-        //#debug
-		printf("## fail ## \n");
-	    printf("terminal_rect: 2\n");	
-        printf("l={%d} t={%d} w={%d} h={%d}\n", 
-	        terminal_rect.left, 
-			terminal_rect.top,
-		    terminal_rect.width, 
-			terminal_rect.height );
-		
-        while (1){ asm ("pause"); }			
-	}	
-     */ 
- 	
-    //apiBeginPaint();	
-	hWindow2 = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "SHELL-CLIENT",
-	                        terminal_rect.left, terminal_rect.top, 
-					        terminal_rect.width, terminal_rect.height,    
-                            0, 0, COLOR_TERMINAL2, COLOR_TERMINAL2);	   
-
-	//apiEndPaint();
-	
-	if ( (void *) hWindow2 == NULL )
-	{	
-		die ("shell.bin: hWindow2 fail");
-	}	
-	
-    APIRegisterWindow (hWindow2);
-    //APISetActiveWindow (hWindow2);	
-    APISetFocus (hWindow2);	 
-	
-	apiShowWindow (hWindow2);
-
-	
-	//===========================================================
-
-	
-	//
-	// Habilitando o cursor piscante de textos.
-	//
-	
-	shellSetCursor ( (terminal_rect.left / 8) , ( terminal_rect.top/8) );	
-	
-	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );
-	
-
-	
-	//#bugbug
-	//janela usada para input de textos ...
-	
-	//o input de texto pode vir de várias fontes.
-	//api_set_window_with_text_input(hWindow);
-	
-	//
-	// ++ terminal ++
-	//
-	
-	// #importante
-	// Definindo a janela como sendo uma janela de terminal.
-	// Isso faz com que as digitações tenham acesso ao procedimento de janela de terminal 
-	// para essa janela e não apenas ao procedimento de janela do sistema.
-	// # provavelmente isso marca os limites para a impressão de caractere em modo terminal 
-
-	system_call ( SYSTEMCALL_SETTERMINALWINDOW, (unsigned long) hWindow2, 
-		(unsigned long) hWindow2, (unsigned long) hWindow2 );
-		
-	
-	//
-	// ## saving ##
-	//
-				 
-	//salva ponteiro da janela do terminal.  
-	shell_info.terminal_window = ( struct window_d * ) hWindow2;		
-	
-	//
-	// @todo: Apenas registrar o procedimento dessa janela na sua estrutura no kernel..
-    // 			
-	
-	//===========================
-	
-	
-	//
-	// ======== ## Shell init ## ========
-	//	
-	
-	// #importante
-	// Para inicializarmos o shell precisamos de uma janela válida
-	// onde as mensagens irão aparecer.
-	
-	
-	// Init Shell:
-	//     Inicializa variáveis, buffers e estruturas. Atualiza a tela.
-    //#BUGBUG
-    //Estamos passando um ponteiro que é uma variável local.	
-	
-	enterCriticalSection();
-	Status = (int) shellInit (hWindow2); 
-	
-	if ( Status != 0 ){
-		die ("SHELL.BIN: app_main: shellInit fail");
-	};
-	exitCriticalSection();     		
-	
-
-    //printf("#debug breakpoint");
-    //while(1){} 			
-
-	
-
-	//#importante:
-	//Agora é a hora de pegar mensagens de input de teclado.
-	//Mas se o shell não for interativo, então não pegaremos 
-	//mensagens de input de teclado.
-	
-	if ( interactive != 1 ){
-		
-		//#debug
-        printf("shell is not interactive\n");
-		
-		goto skip_input;
-	};
-	
-	
-	//@todo: Isso é um teste.
-	//system("reboot");
-	
-	//
-	// Podemos tentar criar um processo.
-	//
-
-    //
-	// Get message.
-	//
-
-	/*
-	 * @todo: 
-	 *     Entrar num loop, solicitando ao kernel possiveis mensagens
-	 * deixadas no buffer de mensagens do PCB do processo shell.
-	 * Obs: O kernel coloca na fila de mensagens do processo, mensagens
-	 * provenientes não apenas do teclado, mas também de outras fontes.
-	 * Então dessa forma, pode-se enviar mensagens de um processo para outro.
-	 * *IMPORTANTE:Cabe a cada processo pegar as mensagens deixadas no buffer de mensagens 
-	 * em seu PCB, atravez de uma chamada ao kernel.
-	 */
-    
-   
-	//
-	// Por fim: Testar cursor e terminar.
-	//
-
-	//@todo: 0,0 não está na área de cliente.
-	
- 
-	
-	//
-	// **** Mensagens  ****
-	//
-	
-	//printf("Tentando pegar mensagem enviada para o procedimento de janela.");
-	//refresh_screen();
-	
-	//isso é um teste pegar um valor por vez não é a melhor opção.
-	
-	//struct window_d *msg_Window;
-	int msg_Message;
-	void *msg_Long1;
-	void *msg_Long2;
-	
-	//struct shell_message_d *msg;
-	
-
-	// Get Message: 
-	// Systemcall get message
-	// Enviamos um ponteiro de estrutura de janela para que o Kernel possa 
-	// pegar a mensagem que esta dentro da estrutura. Essa estrtura fica 
-	// protegida no Kernel.
-		
-	// #bugbug: ??
-	// Na verdade essa rotina está pegando a mensagem na janela 
-	// com o foco de entrada. Esse argumento foi passado mas não foi usado.
-		
-	unsigned long message_buffer[32];	
-	
-	//vamos testar se a mensagem esta no range padrao de servidores
-	//9000 ~  9999
-	int msgtest;
-	
-	
-	//
-	// ======== ## main loop ## ========
-	//
-		
-Mainloop:
-    
-	/* Nesse teste vamos enviar um ponteiro de array, pegarmos os quatro 
-	   elementos da mensagem e depois zerar o buffer */
-	
-	while (running)
-	{
-		//#obs: O retorno será 1 se tiver mensagem e 0 se não tiver.
-		enterCriticalSection(); 
-		system_call ( 111,
-		    (unsigned long) &message_buffer[0],
-			(unsigned long) &message_buffer[0],
-			(unsigned long) &message_buffer[0] );
-		exitCriticalSection(); 
-			
-		//if ( message_buffer[1] != 0 )
-        //{
-            //printf(".");			
-		//}	
-		
-		if ( message_buffer[1] != 0 )
-		{
-			// se estamos no modo desktop,
-			//usaremos o procedimento do desktop;
- 
-			
-	        //Vamos testar se a mensagem esta no range padrao de servidores
-	        //9000 ~  9999
-			if ( message_buffer[1] >= 9000 && message_buffer[1] <= 9999  )
-			{
-				//Passamos o endereço do buffer contendo os argumentos.
-                serverDialog ((unsigned long) &message_buffer[0] );
-			
-			}else if ( desktop == 1) {
-				
-	            desktopProcedure ( (struct window_d *) message_buffer[0], 
-		            (int) message_buffer[1], 
-		            (unsigned long) message_buffer[2], 
-		            (unsigned long) message_buffer[3] );				
-				
-			}else{
-				
-	            shellProcedure ( (struct window_d *) message_buffer[0], 
-		            (int) message_buffer[1], 
-		            (unsigned long) message_buffer[2], 
-		            (unsigned long) message_buffer[3] );
-			};
-			
-			message_buffer[0] = 0;  //window
-            message_buffer[1] = 0;  //msg
-            message_buffer[3] = 0;  //long1
-            message_buffer[4] = 0;	//long2
-        };				
-	};
-	
-	//
-	// Entramos aqui se running for igual a 0.
-	//
-	
-	switch (ShellFlag)
-	{
-	    // Sai do shell.
-		case SHELLFLAG_EXIT:
-		    goto end;
-			break;
-
-		//@todo:
-        //opções ...
-		
-		// Sai do shell.	
-        default:
-            goto end;
-			break;		
-	};
-
-	
-	//
-	// Pulamos a parte que pega mensgens de input de teclado 
-	// porque esse shell não está configurado como interativo.
-	//
-	
-//	
-// # RunScript #	
-//
-
-skip_input:	
-
-    shellExecuteThisScript ( argv[3] );
-
-	// Exit process.
-end:
-
-    // Desabilitando o cursor de texto.
-    // Quando outro aplicativo precisar ele clica em uma janela, 
-	// ela ganha o foco e habilita o cursor piscante.	
-	
-    system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
-
-#ifdef SHELL_VERBOSE		
-    printf("SHELL.BIN: exiting code '0' ...\n");
-#endif 
-	
-	return (int) 0;
-};
 
 
 /*
  ***********************************************
- * shellProcedure:
+ * noratermProcedure:
  *     Procedimento de janela.
  *     LOCAL
  */
 
-void *shellProcedure ( struct window_d *window, 
+void *noratermProcedure ( struct window_d *window, 
                        int msg, 
-				       unsigned long long1, 
-				       unsigned long long2 )
+                       unsigned long long1, 
+                       unsigned long long2 )
 {
-	unsigned long input_ret;
-    unsigned long compare_return;	
-    int q;	
-	
-	
+
+    unsigned long input_ret;
+    unsigned long compare_return;
+    int q;
+
+
 	//#importante
 	//Temos um ponteiro para o nosso buffer de argumentos
 	//para as mensagens atendidas pelo servidor. 
@@ -1492,12 +584,12 @@ void *shellProcedure ( struct window_d *window,
 	//if( msg == COMMAND_INITIALIZE_SHELL ){
 		//...
 	//}
-	
+
     switch (msg)
     {
 		//Faz algumas inicializações de posicionamento e dimensões.
-        //case MSG_INITDIALOG:
-        //    break;
+		//case MSG_INITDIALOG:
+		//    break;
 
 		//Torna a janela visível.
         //case MSG_SHOWWINDOW:
@@ -5449,14 +4541,15 @@ shellSendMessage ( struct window_d *window,
 				   unsigned long long1, 
 				   unsigned long long2 )
 {
-	return (unsigned long) shellProcedure ( window, msg, long1, long2 );
+	return (unsigned long) noratermProcedure ( window, msg, long1, long2 );
 }
 
 
-//copia bytes	
-void shell_memcpy_bytes( unsigned char *Dest, 
-                         unsigned char *Source,
-                         unsigned long Length )
+// Copia bytes.	
+void 
+shell_memcpy_bytes ( unsigned char *Dest, 
+                     unsigned char *Source,
+                     unsigned long Length )
 {
     while (Length--)
         *Dest++ = *Source++;
@@ -7207,16 +6300,1002 @@ void shellPipeTest (){
 	//pipe()
 	//system_call ( 247, (unsigned long) piprfd, (unsigned long) 0, (unsigned long) 0 );
 
-    if (pipe(pipefd) == -1) {
-        
+    if ( pipe(pipefd) == -1 ) 
+	{    
 		printf ("fail\n");
 		//perror("pipe");
                //exit (EXIT_FAILURE);
     }
 	
-	printf ("Pipes: ( %d %d )\n", pipefd[0], pipefd[1] );	
+	printf ("shellPipeTest: Pipes ( %d %d )\n", pipefd[0], pipefd[1] );	
 }
 
+
+/*
+ ********************************************************
+ * main: 
+ *     Main function.
+ *
+ * @todo:
+ *    +Checar argumentos.
+ *    +Criar a janela do TERMINAL. (Ok).
+ *    +Enviar mensagem de texto para ele. (Ok).
+ *    +Configurar procedimento de janela.
+ *    +Definir a janela que é área do cliente.
+ *    +Carregar um arquivo na área de cliente.
+ *    +Testar outros recursos do Kernel.
+ *    +Testar as chamadas para pegar informções sobre o processo.
+ *    +...
+ *
+ *  
+ *  ## O SHELL É UM APLICATIVO DO TIPO JANELA, DEVE TER UM MAIN 
+ *     DO TIPO JANELA ##
+ *
+ * Obs: Esses argumentos podem ser um padrão.
+ */
+ 
+int main ( int argc, char *argv[] ){
+	
+	//int arg_index = 1;
+	
+    FILE *default_input = stdin;
+    char *local_pending_command = (char *) NULL;	
+	
+	//char **internal;
+	char *filename;
+	register int i;
+	
+	//
+	// Obs: Esse não é um programa que roda em modo terminal,
+	// ele na verdade cria um terminal dentro de uma janela filha.
+	// isso pode servir para esse programa interpretar linguagem 
+	// basic por exemplo.
+	// os programas em modo terminal não criarão janelas e rodarão nas 
+	// janelas de terminal cridas para eles pelo kernel.
+	//
+	
+	//#debug
+	//deixe o kernel usar essa janela para teste.
+	//Obs: Não criaremos a janela principal desse programa 
+	//para evitarmos erros com printf.
+ 
+	
+	
+	/*
+	 * Uma boa ordem para os passos dessa rotina nos aplicativos  
+	 * é: Step1=WindowClass, Step2=Window e Step3=Message.
+	 */
+	
+	//@todo: Criar esse tipo de classe.
+	//       Provavelmente deve coincidir com a estrutura presente
+    //nas rotinas de gerenciamento de janela que estão em kernel mode.	
+	//struct window_class_d *wc; 
+	
+	
+	// A janela principal do aplicativo.
+	struct window_d *hWindow;    
+
+	//JANELA CRIADA NA ÁREA DE CLIENTE DA JANELA PRINCIPAL.
+    struct window_d *hWindow2;       
+	
+	//struct message_d *m;
+
+	
+	int Status = 0;
+	//char *s;    //String	
+	
+	
+	
+	// #debug
+	
+	//printf ("SHELL.BIN is alive");
+	//while (1){ asm ("pause"); }
+	
+	
+	
+	
+    /* Wait forever if we are debugging a login shell. */
+    //while(debugging_login_shell);	
+
+	
+    //if(shell_initialized)
+    //{
+        //reinitialize();
+    //};
+	
+	
+    //shell_environment = env;
+    //shell_name = argv[0];
+	
+	//
+	// ## ARGS ##
+	//
+	
+	//
+	// ## Command Switch ##
+	//
+	
+	//Ok isso funcionou.
+	//Argumentos passados com sucesso do crt0 para o main.
+	
+	//printf("argc={%d}\n",argc);	
+	//if ( argc >= 2 )
+	//{
+	//    printf("arg[0]={%s}\n",argv[0]);
+	//    printf("arg[1]={%s}\n",argv[1]);
+	//}
+	
+	//
+	// Filtra a quantidade de argumentos.
+	//
+	
+	//goto noArgs; 
+	
+	//Não usar verbose nessa fase de tratar os argumentos
+	//pois a janela ainda não foi inicializada.
+	//argv[0] = Tipo de shell: interativo ou não
+	//argv[1] = Tipo de uso: login ... outros ?? 
+	
+	
+	// Se não há argumentos.
+	if (argc < 1)
+	{
+		//printf("No args !\n");
+		//#Test.
+        //fprintf( stderr,"Starting Shell with no arguments...\n");	 	
+		
+		die ("SHELL.BIN: No args");
+		
+		goto noArgs; 
+		
+	}else{
+		
+		
+		// #importante
+		// Precisamos de 9 argumentos.
+		// Ver os argumentos no crt0.c
+		
+		// #importante
+		// Não podemos comparar com um ponteiro nulo, se não é PF.
+		
+		if (argc < 2)
+		{
+		    printf ("main: argc=%d we need 2 or more \n", argc );
+			return 1;
+		}
+		
+		// 0
+		// Nome passado viar argumento.
+		shell_name = (char *) argv[0];
+        printf ("Shell Name = { %s }\n", shell_name );		
+		
+		// 1
+		// -f
+        // Se o shell foi iniciado com um arquivo de script para ser executado.
+		// Então o arg[1] cpontém o nome do arquivo.
+        if ( strncmp ( (char *) argv[1], "-f", 2 ) == 0 )
+        {
+			script_shell = 1;
+			//interactive = 0;
+		    //goto dosh2;
+		};			
+		
+		
+		// 2
+		// Script name.
+		//script_name = (char *) argv[2];
+        //printf ("Script Name = { %s }\n", script_name );			
+		
+		
+		// 3
+		// --interactive
+	    if ( strncmp ( (char *) argv[3], "--interactive", 13 ) == 0 )
+		{	
+			interactive = 1;
+			
+            printf ("Initializing an interactive shell ...\n");
+            //printf ("arg[0]={%s}\n",argv[0]);			
+        };
+		
+		// 4
+		// --login
+	    if ( strncmp ( (char *) argv[4], "--login", 7 ) == 0 )
+		{	
+			login_shell = 1;
+			
+			//printf("Initializing login ...\n");
+            //printf("arg[1]={%s}\n",argv[1]);    
+        };			
+
+		
+        // 5
+		// --headless
+		// Aqui o shell não criará janelas, apenas inicializará o gws.
+		
+		if ( strncmp ( (char *) argv[5], "--headless", 10 ) == 0 )
+		{	
+			headless = 1;	
+		};
+		
+        // 6
+		// --taskbar
+		
+		if ( strncmp ( (char *) argv[6], "--taskbar", 9 ) == 0 )
+		{	
+			taskbar = 1;	
+		};
+		
+		if ( strncmp ( (char *) argv[6], "--notaskbar", 11 ) == 0 )
+		{	
+			taskbar = 0;	
+		};		
+
+		// 7
+		// Shell funcionando no modo servidor.
+		if ( strncmp ( (char *) argv[7], "--gws", 5 ) == 0 )
+		{	
+			//gws_shell = 1;	
+		};
+
+		// 8
+		// Shell funcionando no modo desktop.
+		
+		if ( strncmp ( (char *) argv[8], "--desktop", 9 ) == 0 )
+		{	
+			desktop = 1;	
+		};
+		
+		if ( strncmp ( (char *) argv[8], "--nodesktop", 11 ) == 0 )
+		{	
+			desktop = 0;	
+		};		
+		
+		
+
+        //...		
+	};
+	
+	//Nothing.
+	
+	
+	// #debug
+	//printf ("#debug: Breakpoint");
+	//while (1){}
+	
+	
+noArgs:		
+	
+	
+	//...
+	
+	//@todo:
+	//Podemos começar pegando o id do processo atual e 
+	//melhorando a prioridade.
+	
+	
+	// get current dir
+	//pegamos o diretório atual.
+	
+	//get user dir
+	//pegamos o diretório do usuário /root/user/(name)
+	
+	//set current dir
+	//setamos para que o diretório do usuário seja o diretório atual.
+	
+	
+	// Isso configura alguns padrões do aplicativo.
+	// Os argumentos tratados abaixo podem modificar esses padrões
+	// Ex: Um argumento de entrada pode solicitar a troca de cor de fonte.
+	
+	shellShell (); 	
+	
+	
+	//
+	// # Desktop mode #
+	//		
+	
+	// #test
+	// No modo desktop, criaremos a barra de tarefas e não criaremos a janela do shell.
+	// Esse modo pode ter seu proprio loop de mensagens e procedimento de janela.
+	// O modo desktop criá sua barra de tarefas.
+	
+	int desktopReturn = -1;
+	
+	if ( desktop == 1 )
+	{
+		//#importante
+		//main pode fechar o shell depois de ter usado o modo desktop.
+		
+	    desktopReturn = shellStartDesktopMode ();
+		
+		//printf ("Exiting shell ...\n");
+		//exit (0);
+		
+		printf ("Initializing desktop mode loop ...\n");
+		goto Mainloop;
+		
+		//while(1){}
+	
+	
+	//#importante
+	//se não estamos no modo shell.	
+	
+	}else{
+	
+	    //  # taskbar #
+        if ( taskbar == 1 )
+	    {
+		    mainwindow_used = 0;
+		
+            terminalCreateTaskBar ();	
+		
+	        // # Main window #		
+	    }else{
+		
+		    mainwindow_used = 1;
+		
+			//termui.c
+	        enterCriticalSection ();    
+            hWindow = (struct window_d *) terminalCreateMainWindow (1);
+	        exitCriticalSection ();
+		
+		    shell_info.main_window = ( struct window_d * ) hWindow;			
+	    };	
+		
+		
+	    // # Headless #
+	    //nesse modo não teremos janela alguma
+	
+	    if (headless == 1)
+	    {
+	        //#todo;
+     	}
+		
+		//...
+	};
+	
+	
+	
+		
+	//
+	// @todo: Usar essa rotina para fazer testes de modo gráfico.
+	//	
+	
+	//Debug:
+	//while(1){};
+	
+	// @todo: 
+	//     Set priority.
+	//     Set Window Station, Desktop ...
+	//     ...
+	//
+	// @todo:
+	//     Quando essa janela é criada ainda estamos no ambiente de Logon,
+	// dentro do desktop de Logon. Não há problema nisso por enquanto,
+	// pois poderemos utilizar os recursos do shell antes de habilitarmos
+	// todos os recursos o ambiente do usuário. Porém será necessário, 
+	// no futuro, executarmos o Shell no desktop do ambiente do usuário.
+	//
+	// @todo: 
+	//     Precisamos de um ponteiro com a área de memória que representa
+	// a área de trabalho do Shell.
+	//     Precisamos de um ponteiro com a área de cliente da janela do Shell.
+	//
+    // @todo: 
+	//     Buffers. Buffers pra linha e buffer pra arquivo.	
+	//
+	// @todo: 
+	//     Essa janela aparece centralizada e pequena, evidenciando que os 
+	// argumentos não foram passados corretamente, então o gerente de recursos 
+	// gráficos usou dimensões default. Provavelmente o Kernel não os 
+	// recepciona devidamente ainda.
+	// ...
+	
+	
+	//
+    // Create Window.
+	//
+	
+	//Debug:
+	//printf("\n\n Starting Shell Version ");
+	//printf(SHELL_VERSION);
+	//refresh_screen();	
+	
+	//Debug:
+	//while(1){}
+	
+	
+	//
+	// Step 2. Creating a window frame.
+	//
+		
+	
+    // Não é necessário passar todos os argumentos de uma vez só.
+	// Podemos realizar 3 ou 4 chamadas para construírmos a janela.
+	// Essa rotina tem 12 argumentos mas ela poderá realizar 3 chamadas
+	// ao sistema para passar todos os argumentos.
+	
+	
+	// *Importante:
+	//      A janela do shell será uma aba dentro da janela do navegador,
+	// essa janela do navegador é gerenciada pelo kernel, mas não passa de uma moldura 
+	// com abas.
+	// >> o kernel ja sabe que o processo tem uma aba, então quando o processo 
+	//tenta criar uma janela, a sua janela será criada dentro de sua aba.
+	
+	//General purpose appplication  -  {} Developer version
+	
+	//@todo:
+	//Criar essas funções na API.
+	//unsigned long ScreenWidth = (unsigned long) APIGetScreenWidth();
+	//unsigned long ScreenHeight = (unsigned long) APIGetScreenheight();
+	
+	
+	//
+	// Configurando o retângulo que deve ser usado pelo terminal.
+	//
+	
+	//#bugbug 
+	// esses valores são usados para construir a janela principal.
+	// o que desejamos são os valores do retângulo da área de cliente 
+	// da janela principal.
+	
+	//terminal_rect.left = wpWindowLeft;
+	//terminal_rect.top = wpWindowTop;
+	//terminal_rect.width = wsWindowWidth;
+	//terminal_rect.height = wsWindowHeight;
+	
+	//#debug
+	//printf("terminal_rect: 1\n");	
+    //printf("l={%d} t={%d} w={%d} h={%d}\n", 
+	//    terminal_rect.left, terminal_rect.top,
+	//	terminal_rect.width, terminal_rect.height );
+	//while(1){}
+	
+	
+	
+	// # ??
+	// Pegando a janela principal para usarmos como janela mãe.
+	
+	/*
+	
+	struct window_d *pW;
+
+	pW = (struct window_d *) apiGetWSScreenWindow ();
+	
+	if ( (void *) pW == NULL )
+	{
+	    printf("Screen Window fail\n ");
+	    
+		while (1){
+			asm ("pause");
+			//exit (1);
+		}
+	}
+	*/
+    
+    //
+    // #todo: Pegar o desktop atual.
+    //
+    
+    
+	//
+	// Criando a janela WT_OVERLAPPED.
+	// 
+	
+	// Com base nas informações obtidas no sistema.
+	// verde 0x83FCFF
+	// preto COLOR_BLACK
+						
+    //para flat os dois poem ser a mesma cor.
+    //não completamente preto.	
+	//apiBeginPaint ();
+	
+	//hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, "SHELL",
+	//                    wpWindowLeft, wpWindowTop, 
+	//				    wsWindowWidth, wsWindowHeight,    
+    //                    pW, 0, 0x35475F, xCOLOR_GRAY1 ); //pW, 0, xCOLOR_GRAY3, xCOLOR_GRAY1 ); //#35475F	
+
+	//hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, "SHELL",
+	//                    10, 10, 200, 200,    
+    //                    pW, 0, 0x35475F, xCOLOR_GRAY1 ); 	
+	
+	//hWindow = (void *) APICreateWindow ( 1, 1, 1, "XXX",     
+    //                            10, 10, 200, 200,
+    //                            0, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
+
+
+	//if ( (void *) hWindow == NULL )
+	//{
+	//	printf ("FAIL!");
+	//	while(1){}
+	//	
+	//	die ("shell.bin: hWindow fail");
+	//}
+	
+	
+    //printf("#debug breakpoint");	
+	//while(1){} 
+	
+	/*
+	 Imprimindo o ponteiro para a estrutura da janela criada 
+	 Estamos testando se o retorno está funcionando nesse caso.
+	 */
+	/* isso funcionou
+	printf("Testing handle {%x}\n",hWindow);
+	
+	printf("Testing resize window\n");
+	APIresize_window( hWindow, 640, 480);
+	*/
+ 
+	
+	//apiEndPaint();
+	
+	//hWindow = shellCreatemainWindow ();
+	
+	//printf("OK FUNCIONOU");
+	//while(1){}
+	
+	//
+	// Funcionou setar o foco, e a mensagem foi para a janela certa.
+	//
+	
+    // Registrar.
+	// Configurar como ativa.
+    // Setar foco.
+	// *IMPORTANTE: 
+	// É FUNDAMENTAL SETAR O FOCO, POIS O KERNEL DEPENDE DELE
+	// PARA RETORNAR A MENSAGEM DA JANELA COM O FOCO DE ENTRADA.
+	// Nesse momento o kernel configura as margens para o cursor 
+	// dentro da janela.
+	// @todo: O kernel deve reiniciar as variáveis de cursor 
+	// dentro da janela também, pois cada janela tem uma configuração 
+	// diferente de cursor.
+	//
+	// ?? Show Window !!
+	// Precisamos mostrar a janela e não repintar 
+	// a tela toda.
+	
+    //APIRegisterWindow (hWindow);
+    //APISetActiveWindow (hWindow);	
+    //APISetFocus (hWindow);
+	
+	//#test
+	//vamos mostrar a janela do shell antes de criarmos a janela 
+	//da área de cliente
+	//apiShowWindow (hWindow);
+	
+	//#test 
+	//Criando um timer.
+	
+	//printf("shmain: Creating timer\n");
+					
+		//janela, 100 ms, tipo 2= intermitente.
+	//system_call ( 222, (unsigned long) hWindow, 100, 2);		
+
+	
+
+    //printf("#debug breakpoint");
+    //while(1){} 	
+	
+	//#importante
+	//VAMOS EFETUAR ESSE REFRESH DEPOIS DE CRIARMOS OUTRA JANELA.
+	//refresh_screen ();
+	
+	
+
+	// #importante:
+	// +pegamos o retângulo referente à area de cliente da janela registrada. 
+	// +atualizamos as variáveis que precisam dessa informação. 
+	// reposicionamos o cursor.
+	// reabilitamos a piscagem de cursor.
+	
+ 
+	
+	//===============================
+	
+    //
+	// ## Janela para texto ##
+	//
+	
+
+	// #obs
+	// shellShell() inicializou todas as globais.
+	
+	
+    if ( mainwindow_used == 1 ){
+	    terminal_rect.left = wpWindowLeft;
+	    terminal_rect.top = wpWindowTop +36;
+	    terminal_rect.width = wsWindowWidth;
+	    terminal_rect.height = wsWindowHeight -36;	
+	}else{	
+	    terminal_rect.left = wpWindowLeft;
+	    terminal_rect.top = wpWindowTop;
+	    terminal_rect.width = wsWindowWidth;
+	    terminal_rect.height = wsWindowHeight;
+	};
+	
+    //#debug
+    //printf ("terminal_rect: l={%d} t={%d} w={%d} h={%d}\n", 
+	//    terminal_rect.left, terminal_rect.top,
+	//	  terminal_rect.width, terminal_rect.height );	
+    //while (1){ asm ("pause"); }	
+	
+
+	//
+	// ## Se der problema no tamanho da área de cliente ##
+	//
+	
+	/*
+	if ( terminal_rect.left < wpWindowLeft ||
+         terminal_rect.top < wpWindowTop ||	
+	     terminal_rect.width > wsWindowWidth ||
+		 terminal_rect.height > wsWindowHeight )
+	{
+        //#debug
+		printf("## fail ## \n");
+	    printf("terminal_rect: 2\n");	
+        printf("l={%d} t={%d} w={%d} h={%d}\n", 
+	        terminal_rect.left, 
+			terminal_rect.top,
+		    terminal_rect.width, 
+			terminal_rect.height );
+		
+        while (1){ asm ("pause"); }			
+	}	
+     */ 
+ 	
+	
+	//
+	// Draw window.
+	//
+	
+	
+    //apiBeginPaint();	
+	hWindow2 = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "TERMINAL-CLIENT",
+	                        terminal_rect.left, terminal_rect.top, 
+					        terminal_rect.width, terminal_rect.height,    
+                            0, 0, COLOR_TERMINAL2, COLOR_TERMINAL2);	   
+	
+	if ( (void *) hWindow2 == NULL )
+	{	
+		die ("NORATERM: hWindow2 \n");
+	}	
+	//apiEndPaint();
+	
+	
+    APIRegisterWindow (hWindow2);
+	
+    //APISetActiveWindow (hWindow2);	
+    
+	APISetFocus (hWindow2);	 
+	
+	apiShowWindow (hWindow2);
+
+	
+	//
+	// ===========================================================
+    //
+	
+	// #obs
+	// Aqui, tentaremos inicializar o aplicativo indicado pelo argumento
+	// ele deve ser um aplicativo que rode em terminal.
+	// Caso não tenha um aplicativo indicado no argumento então
+	// chamaremos o shell padrão.
+	// Caso o shell padrão falhe então entraremos no shell interno 
+	// que pertence ao terminal noraterm.
+	// O procedimento de janela é o 'noratermProcedure' e serve para
+	// o shell interno e para o terminal. Esse shell interno pode
+	// ser usado para gerenciar o terminal;
+	
+	// _init_app 
+	// 1 = tente inicializar o programa que vai rodar no terminal
+	// 0 = Inicialine o shell interno para gerenciamento do terminal.
+	
+	if ( _init_app == 1 )
+	{
+		printf ("noraterm: Tentando executar um aplicativo\n");
+		
+		int pidFORK = (int) fork ();
+
+		// Erro.
+		if ( pidFORK < 0 )
+		{
+		    printf ("noraterm: fork falhou\n");
+            goto do_run_internal_shell;
+		}
+		
+		// Pai.
+		if ( pidFORK > 0 )
+		{
+		    printf ("noraterm: estamos no PAI\n");
+			goto do_run_internal_shell;
+		}
+		
+		// Filho.
+		if ( pidFORK == 0 )
+		{
+			// #todo
+			// Aqui tentaremos rodar um aplicativo passado por argumento em main,
+			// caso não for possível, então chamaremos gdeshell
+			
+			//#importante
+			//A intenção pe que gdeshell rode na área de cliente do noraterm
+			
+		    printf ("noraterm: estamos no FILHO\n");
+			printf ("PID=%d", getpid());
+			
+			execve ("gdeshell.bin", NULL, NULL );
+			
+			printf ("noraterm: execve falhou.\n");
+			goto do_run_internal_shell;
+		}	
+	}
+	
+	
+	//
+	// Internal shell
+	//
+	
+do_run_internal_shell:	
+ 	
+	//
+	// ===========================================================
+    //
+	
+	//
+	// Cursor
+	//
+	
+	
+	shellSetCursor ( (terminal_rect.left / 8) , ( terminal_rect.top/8) );	
+	
+	// Habilitando o cursor piscante de textos.
+	
+	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );
+	
+	
+	
+    //
+	// Terminal window.
+	//
+	
+	//#bugbug
+	//janela usada para input de textos ...
+	
+	//o input de texto pode vir de várias fontes.
+	//api_set_window_with_text_input(hWindow);
+	
+	//
+	// ++ terminal ++
+	//
+	
+	// #importante
+	// Definindo a janela como sendo uma janela de terminal.
+	// Isso faz com que as digitações tenham acesso ao procedimento de janela de terminal 
+	// para essa janela e não apenas ao procedimento de janela do sistema.
+	// # provavelmente isso marca os limites para a impressão de caractere em modo terminal 
+
+    system_call ( SYSTEMCALL_SETTERMINALWINDOW, 
+        (unsigned long) hWindow2, 
+		(unsigned long) hWindow2, 
+		(unsigned long) hWindow2 );
+	
+	
+	// Salva ponteiro da janela do terminal.  
+	
+	shell_info.terminal_window = ( struct window_d * ) hWindow2;		
+	
+	
+	// #todo: 
+	// Apenas registrar o procedimento dessa janela na sua estrutura no kernel..
+     			
+	
+	//===========================
+	
+	
+	//
+	// ======== ## Shell init ## ========
+	//	
+	
+	// #importante
+	// Para inicializarmos o shell precisamos de uma janela válida
+	// onde as mensagens irão aparecer.
+	
+	
+	// Init Shell:
+	//     Inicializa variáveis, buffers e estruturas. Atualiza a tela.
+    //#BUGBUG
+    //Estamos passando um ponteiro que é uma variável local.	
+	
+	enterCriticalSection();
+	Status = (int) shellInit (hWindow2); 
+	
+	if ( Status != 0 ){
+		die ("SHELL.BIN: app_main: shellInit fail");
+	};
+	exitCriticalSection();     		
+	
+
+    //printf("#debug breakpoint");
+    //while(1){} 			
+
+	
+
+	// #importante:
+	// Agora é a hora de pegar mensagens de input de teclado.
+	// Mas se o shell não for interativo, então não pegaremos 
+	// mensagens de input de teclado.
+	
+	// #obs
+	// Noraterm é um terminal, mas estamos lidando com
+	// rotinas de seu shell interno.
+	
+	if ( interactive != 1 ){
+		
+		//#debug
+        printf ("shell is not interactive\n");
+		
+		goto skip_input;
+	};
+	
+	
+	//@todo: Isso é um teste.
+	//system("reboot");
+	
+	//
+	// Podemos tentar criar um processo.
+	//
+
+    //
+	// Get message.
+	//
+
+	/*
+	 * @todo: 
+	 *     Entrar num loop, solicitando ao kernel possiveis mensagens
+	 * deixadas no buffer de mensagens do PCB do processo shell.
+	 * Obs: O kernel coloca na fila de mensagens do processo, mensagens
+	 * provenientes não apenas do teclado, mas também de outras fontes.
+	 * Então dessa forma, pode-se enviar mensagens de um processo para outro.
+	 * *IMPORTANTE:Cabe a cada processo pegar as mensagens deixadas no buffer de mensagens 
+	 * em seu PCB, atravez de uma chamada ao kernel.
+	 */
+    
+   
+	//
+	// Por fim: Testar cursor e terminar.
+	//
+
+	//@todo: 0,0 não está na área de cliente.
+	
+ 
+	
+	//
+	// **** Mensagens  ****
+	//
+	
+	//printf("Tentando pegar mensagem enviada para o procedimento de janela.");
+	//refresh_screen();
+	
+	//isso é um teste pegar um valor por vez não é a melhor opção.
+	
+	//struct window_d *msg_Window;
+	int msg_Message;
+	void *msg_Long1;
+	void *msg_Long2;
+	
+	//struct shell_message_d *msg;
+	
+
+	// Get Message: 
+	// Systemcall get message
+	// Enviamos um ponteiro de estrutura de janela para que o Kernel possa 
+	// pegar a mensagem que esta dentro da estrutura. Essa estrtura fica 
+	// protegida no Kernel.
+		
+	// #bugbug: ??
+	// Na verdade essa rotina está pegando a mensagem na janela 
+	// com o foco de entrada. Esse argumento foi passado mas não foi usado.
+		
+	unsigned long message_buffer[32];	
+	
+	//vamos testar se a mensagem esta no range padrao de servidores
+	//9000 ~  9999
+	int msgtest;
+	
+	
+	//
+	// ======== ## main loop ## ========
+	//
+		
+Mainloop:
+    
+	/* Nesse teste vamos enviar um ponteiro de array, pegarmos os quatro 
+	   elementos da mensagem e depois zerar o buffer */
+	
+	while (running)
+	{
+		//#obs: O retorno será 1 se tiver mensagem e 0 se não tiver.
+		enterCriticalSection(); 
+		system_call ( 111,
+		    (unsigned long) &message_buffer[0],
+			(unsigned long) &message_buffer[0],
+			(unsigned long) &message_buffer[0] );
+		exitCriticalSection(); 
+			
+		// Se temos mensagem.
+		
+		if ( message_buffer[1] != 0 )
+		{
+			// Chamaremos o procedimento de janelas do aplicativo.
+			
+	        noratermProcedure ( (struct window_d *) message_buffer[0], 
+		        (int) message_buffer[1], 
+		        (unsigned long) message_buffer[2], 
+		        (unsigned long) message_buffer[3] );
+			
+			message_buffer[0] = 0;  //window
+            message_buffer[1] = 0;  //msg
+            message_buffer[3] = 0;  //long1
+            message_buffer[4] = 0;	//long2
+        };				
+	};
+	
+	//
+	// Entramos aqui se running for igual a 0.
+	//
+	
+	switch (ShellFlag)
+	{
+	    // Sai do shell.
+		case SHELLFLAG_EXIT:
+		    goto end;
+			break;
+
+		//@todo:
+        //opções ...
+		
+		// Sai do shell.	
+        default:
+            goto end;
+			break;		
+	};
+
+	
+	//
+	// Pulamos a parte que pega mensgens de input de teclado 
+	// porque esse shell não está configurado como interativo.
+	//
+	
+//	
+// # RunScript #	
+//
+
+skip_input:	
+
+    shellExecuteThisScript ( argv[3] );
+
+	// Exit process.
+end:
+
+    // Desabilitando o cursor de texto.
+    // Quando outro aplicativo precisar ele clica em uma janela, 
+	// ela ganha o foco e habilita o cursor piscante.	
+	
+    system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
+
+#ifdef SHELL_VERBOSE		
+    printf("SHELL.BIN: exiting code '0' ...\n");
+#endif 
+	
+	return 0;
+}
+
+
+//
+// End.
+//
 
 
 

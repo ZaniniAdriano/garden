@@ -1148,6 +1148,14 @@ noArgs:
 	// Os argumentos tratados abaixo podem modificar esses padrões
 	// Ex: Um argumento de entrada pode solicitar a troca de cor de fonte.
 	
+	
+	//
+	// #todo
+	// #importante
+	// Temos que usar as configurações do terminal que o gdeshell está rodando.
+	// Então não podemos simplesmente criar uma janela do tamanho que quisermos.
+	//
+	
 	shellShell (); 	
 	
 	//Apenas inicialize. Continuaremos com o procedimento 
