@@ -1209,17 +1209,27 @@ void stdioInitialize (){
 	// estrutura do processo atual esses ponteiros
 	// para o fluxo padrão.
 	
+	
 	int status = 0;
-    status =  (int) gramado_system_call ( 700, 
+    
+	/*
+	status =  (int) gramado_system_call ( 700, 
 					(unsigned long) stdin, 
 					(unsigned long) stdout, 
 					(unsigned long) stderr ); 
-
+    */
 	
+	/* Initialize the Process Standard Streams */
+	
+	status = stdio_initialize_standard_streams ();
+	
+	/*
 	//#todo
-	//if (status != 0)
-    //{
-	//}
+	if (status != 0)
+    {
+	}
+	*/
+	
 	
 	// >>>> #bugbug
 	//  Em ring 3 não temos acesso aos elementos da estrutura.
@@ -2439,6 +2449,14 @@ int snprintf ( char *str, size_t count, const char *fmt, ... ){
 	return ret;
 }
 
+// inicializa o fluxo padrão para o processo.
+int stdio_initialize_standard_streams (void){
+
+    return (int) gramado_system_call ( 700, 
+					(unsigned long) stdin, 
+					(unsigned long) stdout, 
+					(unsigned long) stderr ); 
+}
 
 //
 // End.

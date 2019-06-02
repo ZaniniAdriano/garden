@@ -483,12 +483,14 @@ int vprintf (const char *fmt, va_list ap);
 //ainda não foi testada
 int fscanf (FILE *stream, const char *format, ... );
 
+// inicializa o fluxo padrão para o processo.
+int stdio_initialize_standard_streams (void);
 
 /*Inicialização da biblioteca*/
-void stdioInitialize();
+void stdioInitialize ();
 
 
-#endif //__STDIO_H__
+#endif    //__STDIO_H__
 
 //
 // End.
