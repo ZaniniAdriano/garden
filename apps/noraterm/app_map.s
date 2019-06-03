@@ -578,7 +578,7 @@ Linker script and memory map
 .iplt           0x000000000040d000        0x0
  .iplt          0x000000000040d000        0x0 crt0.o
 
-.rodata         0x000000000040d000     0x69c4
+.rodata         0x000000000040d000     0x69cc
  .rodata        0x000000000040d000      0x875 crt0.o
  *fill*         0x000000000040d875        0xb 
  .rodata        0x000000000040d880     0x1f36 main.o
@@ -607,57 +607,57 @@ Linker script and memory map
  *fill*         0x0000000000412665       0x1b 
  .rodata        0x0000000000412680      0x7f5 terminal.o
  *fill*         0x0000000000412e75        0xb 
- .rodata        0x0000000000412e80      0xb44 termui.o
+ .rodata        0x0000000000412e80      0xb4c termui.o
 
-.eh_frame       0x00000000004139c4     0x32a4
- .eh_frame      0x00000000004139c4       0x34 crt0.o
- .eh_frame      0x00000000004139f8      0xa68 main.o
+.eh_frame       0x00000000004139cc     0x32a4
+ .eh_frame      0x00000000004139cc       0x34 crt0.o
+ .eh_frame      0x0000000000413a00      0xa68 main.o
                                         0xa80 (size before relaxing)
- .eh_frame      0x0000000000414460       0x24 stubs.o
+ .eh_frame      0x0000000000414468       0x24 stubs.o
                                          0x3c (size before relaxing)
- .eh_frame      0x0000000000414484      0x710 stdio.o
+ .eh_frame      0x000000000041448c      0x710 stdio.o
                                         0x728 (size before relaxing)
- .eh_frame      0x0000000000414b94      0x400 stdlib.o
+ .eh_frame      0x0000000000414b9c      0x400 stdlib.o
                                         0x418 (size before relaxing)
- .eh_frame      0x0000000000414f94      0x320 string.o
+ .eh_frame      0x0000000000414f9c      0x320 string.o
                                         0x338 (size before relaxing)
- .eh_frame      0x00000000004152b4       0xa0 conio.o
+ .eh_frame      0x00000000004152bc       0xa0 conio.o
                                          0xb8 (size before relaxing)
- .eh_frame      0x0000000000415354       0xa0 socket.o
+ .eh_frame      0x000000000041535c       0xa0 socket.o
                                          0xb8 (size before relaxing)
- .eh_frame      0x00000000004153f4       0x40 signal.o
+ .eh_frame      0x00000000004153fc       0x40 signal.o
                                          0x58 (size before relaxing)
- .eh_frame      0x0000000000415434      0x420 unistd.o
+ .eh_frame      0x000000000041543c      0x420 unistd.o
                                         0x438 (size before relaxing)
- .eh_frame      0x0000000000415854      0xc2c api.o
+ .eh_frame      0x000000000041585c      0xc2c api.o
                                         0xc44 (size before relaxing)
- .eh_frame      0x0000000000416480      0x1e0 builtins.o
+ .eh_frame      0x0000000000416488      0x1e0 builtins.o
                                         0x1f8 (size before relaxing)
- .eh_frame      0x0000000000416660       0x60 desktop.o
+ .eh_frame      0x0000000000416668       0x60 desktop.o
                                          0x78 (size before relaxing)
- .eh_frame      0x00000000004166c0       0x20 login.o
+ .eh_frame      0x00000000004166c8       0x20 login.o
                                          0x38 (size before relaxing)
- .eh_frame      0x00000000004166e0       0x48 tests.o
+ .eh_frame      0x00000000004166e8       0x48 tests.o
                                          0x60 (size before relaxing)
- .eh_frame      0x0000000000416728       0x20 pixel.o
+ .eh_frame      0x0000000000416730       0x20 pixel.o
                                          0x38 (size before relaxing)
- .eh_frame      0x0000000000416748       0x20 line.o
+ .eh_frame      0x0000000000416750       0x20 line.o
                                          0x38 (size before relaxing)
- .eh_frame      0x0000000000416768       0x20 rect.o
+ .eh_frame      0x0000000000416770       0x20 rect.o
                                          0x38 (size before relaxing)
- .eh_frame      0x0000000000416788       0xe0 char.o
+ .eh_frame      0x0000000000416790       0xe0 char.o
                                          0xf8 (size before relaxing)
- .eh_frame      0x0000000000416868       0x60 gws.o
+ .eh_frame      0x0000000000416870       0x60 gws.o
                                          0x78 (size before relaxing)
- .eh_frame      0x00000000004168c8      0x240 terminal.o
+ .eh_frame      0x00000000004168d0      0x240 terminal.o
                                         0x258 (size before relaxing)
- .eh_frame      0x0000000000416b08      0x160 termui.o
+ .eh_frame      0x0000000000416b10      0x160 termui.o
                                         0x178 (size before relaxing)
 
-.rel.dyn        0x0000000000416c68        0x0
- .rel.got       0x0000000000416c68        0x0 crt0.o
- .rel.iplt      0x0000000000416c68        0x0 crt0.o
- .rel.text      0x0000000000416c68        0x0 crt0.o
+.rel.dyn        0x0000000000416c70        0x0
+ .rel.got       0x0000000000416c70        0x0 crt0.o
+ .rel.iplt      0x0000000000416c70        0x0 crt0.o
+ .rel.text      0x0000000000416c70        0x0 crt0.o
 
 .data           0x0000000000416c80     0x5380
                 0x0000000000416c80                data = .

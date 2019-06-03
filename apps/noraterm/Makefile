@@ -127,7 +127,7 @@ all-c:
 	
 
 shell-link:
-	ld -m elf_i386 -T link.ld -o NORATERM.BIN $(myObjects) -Map shell_map.s
+	ld -m elf_i386 -T link.ld -o NORATERM.BIN $(myObjects) -Map app_map.s
 
 
 finalize:

@@ -6971,6 +6971,39 @@ noArgs:
 	APISetFocus (hWindow2);	 
 	
 	apiShowWindow (hWindow2);
+	
+	
+    //
+	// Terminal window.
+	//
+	
+	//#bugbug
+	//janela usada para input de textos ...
+	
+	//o input de texto pode vir de várias fontes.
+	//api_set_window_with_text_input(hWindow);
+	
+	//
+	// ++ terminal ++
+	//
+	
+	// #importante
+	// Definindo a janela como sendo uma janela de terminal.
+	// Isso faz com que as digitações tenham acesso ao procedimento de janela de terminal 
+	// para essa janela e não apenas ao procedimento de janela do sistema.
+	// # provavelmente isso marca os limites para a impressão de caractere em modo terminal 
+
+    system_call ( SYSTEMCALL_SETTERMINALWINDOW, 
+        (unsigned long) hWindow2, 
+		(unsigned long) hWindow2, 
+		(unsigned long) hWindow2 );
+	
+	
+	// Salva ponteiro da janela do terminal.  
+	
+	shell_info.terminal_window = ( struct window_d * ) hWindow2;		
+	
+	
 
 	
 	//
@@ -7054,42 +7087,6 @@ do_run_internal_shell:
 	
 	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );
 	
-	
-	
-    //
-	// Terminal window.
-	//
-	
-	//#bugbug
-	//janela usada para input de textos ...
-	
-	//o input de texto pode vir de várias fontes.
-	//api_set_window_with_text_input(hWindow);
-	
-	//
-	// ++ terminal ++
-	//
-	
-	// #importante
-	// Definindo a janela como sendo uma janela de terminal.
-	// Isso faz com que as digitações tenham acesso ao procedimento de janela de terminal 
-	// para essa janela e não apenas ao procedimento de janela do sistema.
-	// # provavelmente isso marca os limites para a impressão de caractere em modo terminal 
-
-    system_call ( SYSTEMCALL_SETTERMINALWINDOW, 
-        (unsigned long) hWindow2, 
-		(unsigned long) hWindow2, 
-		(unsigned long) hWindow2 );
-	
-	
-	// Salva ponteiro da janela do terminal.  
-	
-	shell_info.terminal_window = ( struct window_d * ) hWindow2;		
-	
-	
-	// #todo: 
-	// Apenas registrar o procedimento dessa janela na sua estrutura no kernel..
-     			
 	
 	//===========================
 	

@@ -539,7 +539,7 @@ struct window_d *terminalCreateMainWindow ( int status ){
 	//char colors:
 	//fg=COLOR_TERMINALTEXT, bg=COLOR_TERMINAL2 
 	
-	w = (void *) APICreateWindow ( WT_OVERLAPPED, 1, VIEW_NORMAL, "Noraterm",     
+	w = (void *) APICreateWindow ( WT_OVERLAPPED, 1, VIEW_NORMAL, "noraterm-main",     
                      left, top, width, height,    
                      0, 0, COLOR_TERMINALTEXT, COLOR_TERMINAL2  );
 	

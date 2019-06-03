@@ -572,10 +572,18 @@ struct window_d *shellCreateMainWindow ( int status ){
 	
 	struct window_d *w;
 
-	w = (void *) APICreateWindow ( 1, 1, 1, "shell-main",     
+	
+	//simples
+	//w = (void *) APICreateWindow ( 1, 1, 1, "gdeterm-main",     
+    //                 left, top, width, height,    
+    //                 0, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
+	
+	//overlapped
+	w = (void *) APICreateWindow ( WT_OVERLAPPED, 1, VIEW_NORMAL, "gdeterm-main",     
                      left, top, width, height,    
-                     0, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
-								
+                     0, 0, COLOR_TERMINALTEXT, COLOR_TERMINAL2  );	
+	
+	
 	if ( (void *) w == NULL )
 	{	
 		printf ("shellCreateTaskBar: taskbar Window fail \n");
