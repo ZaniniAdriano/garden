@@ -78,14 +78,13 @@ unsigned long wpWindowTop;
 struct teditor_line
 {
     char CHARS[80];
-    char ATTRIBUTES[80];	
+    char ATTRIBUTES[80];  //Isso poderia ser unsigned long.	
 	
-	//início e fim da string dentro da linha.
-	//o resto é espaço.
+	// Início e fim da string dentro da linha. O resto é espaço.
 	int left;
 	int right;
 	
-	//posição do cursor dentro da linha.
+	//Posição do cursor dentro da linha.
 	int pos;
 };
 
@@ -94,10 +93,17 @@ struct teditor_line
 //ESSA É A PARTE DO TEXTO QUE PODERÁ SER MANIPULADA,
 //O RESTO DO TEXTO DEVERÁ FICAR ESPERANDO NO BUFFER.
 //#IMPORTANTE: 25 DESSAS 32 LINHAS SERÃO VISÍVEIS.
+
 struct teditor_line LINES[32]; 
 
-//precisamos colocar os caracteres aqui na hora de salvar o arquivo.
-//80 chars * 32 lines.
+
+//
+// RAW TEXT
+//
+
+// Precisamos colocar os caracteres aqui na hora de salvar o arquivo.
+// 80 chars * 32 lines.
+
 char RAW_TEXT[80*32+1];
 
 
@@ -106,6 +112,7 @@ char RAW_TEXT[80*32+1];
 //Linhas visíveis.
 //número da linha
 //isso será atualizado na hora do scroll.
+
 int textTopRow;  //Top nem sempre será '0'.
 int textBottomRow;
 

@@ -27,11 +27,8 @@
 
 
 
- 
-
-
-//static int running = 1;
-int running = 1;
+//static int _running = 1;
+int _running = 1;
 
 //static char *dest_argv[] = { "-sujo0","-sujo1","-sujo2",NULL };
 //static unsigned char *dest_envp[] = { "-sujo", NULL };
@@ -55,7 +52,7 @@ void gramcodeLinesInsertChar ( int line_number, int at, int c );
 
 
 unsigned long 
-teditorProcedure ( struct window_d *window, 
+gramtextProcedure ( struct window_d *window, 
                    int msg, 
 				   unsigned long long1, 
 				   unsigned long long2 );
@@ -214,32 +211,38 @@ int editor_save_file (){
 					
 	//if (Ret == 0)
 	
-	printf("done\n");	
+	printf ("done\n");	
 	
 	return (int) Ret;
-};
+}
 
+
+/*
+ * gramtextProcedure:
+ *     Procedimento de janela do editor.
+ */
 
 unsigned long 
-teditorProcedure( struct window_d *window, 
-                int msg, 
-				unsigned long long1, 
-				unsigned long long2 )
+gramtextProcedure ( struct window_d *window, 
+                    int msg, 
+                    unsigned long long1, 
+                    unsigned long long2 )
 {
-	unsigned long input_ret;
-    unsigned long compare_return;	
-    int q;	
 	
-	int key_state = -1;
-	
+    unsigned long input_ret;
+    unsigned long compare_return;
+    int q;
+
+    int key_state = -1;
+
     switch (msg)
     {
 		//Faz algumas inicializações de posicionamento e dimensões.
-        //case MSG_INITDIALOG:
-        //    break;
+		//case MSG_INITDIALOG:
+		//    break;
 
 		//Torna a janela visível.
-        //case MSG_SHOWWINDOW:
+		//case MSG_SHOWWINDOW:
 		//    break; 
 		 
 		case MSG_KEYDOWN:
@@ -247,19 +250,15 @@ teditorProcedure( struct window_d *window,
             {
 				// Null key.
 				case 0:
-				break;
+				    break;
 				
+				//#todo: Insert new line;	
 				case VK_RETURN:
-				    
-					//#test
-					printf("\r");
-					printf("\n");
-					
+					printf ("\r\n");
                     break; 
 
-				//#test	
                 case VK_TAB:					
-					printf("\t");
+					printf ("\t");
 				    break;
 
 				//#todo	
@@ -278,6 +277,8 @@ teditorProcedure( struct window_d *window,
 				
 				//teclas de digitação.
 				default:
+					
+					// Control + s ?
 				    if ( long1 == 's' )
 					{
 					    //#todo
@@ -294,8 +295,12 @@ teditorProcedure( struct window_d *window,
 							break;
 						}
 					}
-				    teditorInsertNextChar ( (char) long1 );  
-				    break;
+					
+					// #importante:
+					// Insert char.
+					teditorInsertNextChar ( (char) long1 );  
+				    
+					break;
 			};
 			break;
 			
@@ -336,23 +341,23 @@ teditorProcedure( struct window_d *window,
 	};
 	
 	return 0;
-};
+}
 
 
 /*
+ *********************************
  * teditorTeditor:
  *     Contrutor e inicialização.
  */
+
 void teditorTeditor (){
 	
 	int i=0;
 	int j=0;
 	
-	//
-	// ## Inicializando as estruturas de linha ##
-	//
+	// Inicializando as estruturas de linha.
+	// Inicializamos com espaços.
 	
-	//inicializamos com espaços.
 	for ( i=0; i<32; i++ )
 	{
 		for ( j=0; j<80; j++ )
@@ -363,43 +368,48 @@ void teditorTeditor (){
 		
 		LINES[i].left = 0;
 		LINES[i].right = 0;
+		
 		LINES[i].pos = 0;
 	};	
 	
 	
-	//inicializa as metricas do sistema.	
-    //inicializa os limites da janela.
-	//inicia o tamanho da janela.
-	//inicializar a posição da janela.
+	// Inicializa as métricas do sistema.	
+    // Inicializa os limites da janela.
+	// Inicia o tamanho da janela.
+	// Inicializar a posição da janela.
 	
-    shellInitSystemMetrics();
-    shellInitWindowLimits();
-    shellInitWindowSizes();
-    shellInitWindowPosition();
-	
-};
+    shellInitSystemMetrics ();
+    shellInitWindowLimits ();
+    shellInitWindowSizes ();
+    shellInitWindowPosition ();
+}
 
 
+
+// Get system metrics.
+// Pegaremos todas as metricas de uma vez só,
+// se uma falhar, então pegaremos tudo novamente.
 
 void shellInitSystemMetrics (){
 	
-	//pegaremos todas as metricas de uma vez só,
-	//se uma falhar, então pegaremos tudo novamente.
-	
 	// Tamanho da tela.	
-	smScreenWidth =  apiGetSystemMetrics(1);
-    smScreenHeight = apiGetSystemMetrics(2); 
+	smScreenWidth = apiGetSystemMetrics (1);
+    smScreenHeight = apiGetSystemMetrics (2); 
 	
-	smCursorWidth =  apiGetSystemMetrics(3);
-	smCursorHeight = apiGetSystemMetrics(4);
+	// Cursor.
+	smCursorWidth = apiGetSystemMetrics (3);
+	smCursorHeight = apiGetSystemMetrics (4);
 	
-	smMousePointerWidth =  apiGetSystemMetrics(5);
-	smMousePointerHeight = apiGetSystemMetrics(6);
+	// Pointer.
+	smMousePointerWidth = apiGetSystemMetrics (5);
+	smMousePointerHeight = apiGetSystemMetrics (6);
 	
-	smCharWidth =  apiGetSystemMetrics(7);
-	smCharHeight = apiGetSystemMetrics(8);	
+	// Char.
+	smCharWidth = apiGetSystemMetrics (7);
+	smCharHeight = apiGetSystemMetrics (8);	
+	
 	//...
-}; 
+} 
 
 
 void shellInitWindowLimits (){
@@ -460,7 +470,7 @@ void shellInitWindowSizes (){
 	{
 	    wsWindowHeight = wlMinWindowHeight;	
 	}
-};
+}
 
 
 void shellInitWindowPosition (){
@@ -471,7 +481,7 @@ void shellInitWindowPosition (){
 	
 	//wpWindowLeft = (unsigned long) ( (smScreenWidth - wsWindowWidth)/2 );
 	//wpWindowTop = (unsigned long) ( (smScreenHeight - wsWindowHeight)/2 );  	
-};
+}
 
 
 
@@ -484,25 +494,30 @@ void shellInitWindowPosition (){
 
 void teditorInsertNextChar (char c){
 	
-
-    //isso funcionou.
 	char buff[2];
+	
 	buff[0] = (char) c;
 	buff[1] = (char) '\0';
-	//buff[2] = (char) '\0';
-	//const char *current_char = (const char *) &buff[0];
-	strcat ( RAW_TEXT, (const char *) &buff[0] );
-
-    //sprintf ( RAW_TEXT, "%c", (char) c );
 	
-	//cursor da linha
+	
+	// Coloca no buffer de arquivo cru.
+	
+	strcat ( RAW_TEXT, (const char *) &buff[0] );
+	
+	
+	// #importante:
+	// Coloca na linha e coluna certas.
 	
 	LINES[textCurrentRow].CHARS[textCurrentCol] = (char) c;
 	
-	//refresh
-	teditorRefreshCurrentChar();
+	// ??
+	// refresh
+	teditorRefreshCurrentChar ();
 	
-	//update
+	//
+	// Update cursor.
+	//
+	
 	textCurrentCol++;
 	
 	if (textCurrentCol >= 80 )
@@ -514,17 +529,22 @@ void teditorInsertNextChar (char c){
 		if ( textCurrentRow >= 25 )
 		{
 			//teditorScroll ();
-			printf(" *SCROLL");
-			while(1){ asm("pause"); }
+			printf (" *SCROLL");
+			while (1){ asm ("pause"); }
 		}
 	};
 	
-	LINES[textCurrentRow].pos = textCurrentCol;
+    // Posição do último caractere incluído na linha.
 	LINES[textCurrentRow].right = textCurrentCol;
-};
+	
+	// Posição do cursor dentro da linha.
+	// É onde o dado deve entrar.
+	LINES[textCurrentRow].pos = textCurrentCol;
+}
 
 
-
+// Insere um char em uma posição de alguma linha, mas não atualiza
+// posições de cursor.
 void gramcodeLinesInsertChar ( int line_number, int at, int c ){
 	
 	LINES[line_number].CHARS[at] = (char) c;
@@ -535,12 +555,13 @@ void gramcodeLinesInsertChar ( int line_number, int at, int c ){
 
 void teditorRefreshCurrentChar (){
 	
-	printf ("%c", LINES[textCurrentRow].CHARS[textCurrentCol] );
-};
+	printf ( "%c", LINES[textCurrentRow].CHARS[textCurrentCol] );
+}
 
 
 
 /*
+ *********************************
  * main: 
  */
  
@@ -557,16 +578,14 @@ int main ( int argc, char *argv[] ){
 	
 	
 #ifdef TEDITOR_VERBOSE			
-	printf("\n");
-	printf("Initializing Text Editor:\n");
-	printf("mainTextEditor: # argv0={%s} # \n", argv[0] );	
-	printf("mainTextEditor: # argv1={%s} # \n", argv[1] );
+	printf ("\n");
+	printf ("Initializing gramtext ...\n");
+	printf ("# argv0={%s} # \n", argv[0] );	
+	printf ("# argv1={%s} # \n", argv[1] );
 #endif	
 
-    //#debug
-    //while(1){
-	//	asm ("pause");
-	//}
+    // #debug
+    // while(1){ asm ("pause"); }
 	
 	//
 	// ## vamos repetir o que dá certo ...
@@ -591,6 +610,7 @@ int main ( int argc, char *argv[] ){
 	
 	//#importante
 	//inicializa as variáveis antes de pintar.
+	
     teditorTeditor ();	
 	
 
@@ -614,10 +634,10 @@ int main ( int argc, char *argv[] ){
 		apiEndPaint();
 		goto fail;
 	}
+	
     apiEndPaint();
 	
     APIRegisterWindow (hWindow);
-	
 	
 	//set active efetua um redraw ...
 	//isso parece ser redundante na inicialização do 
@@ -667,12 +687,6 @@ int main ( int argc, char *argv[] ){
 	
 	
 //file:
-
-//#ifdef TEDITOR_VERBOSE		
-	//printf("\n");
-	printf("\n");
-    printf("Loading file ...\n");
-//#endif	
 	
 	// Page fault:    
 	// Pegando o argumento 1, porque o argumento 0 é o nome do editor.
@@ -687,21 +701,17 @@ int main ( int argc, char *argv[] ){
 	
 	
 //#ifdef TEDITOR_VERBOSE		
-	//printf("\n");
-	printf("\n");
-    printf("Loading file fopen ...\n");
+	//printf ("\n");
+    printf ("Loading file. fopen ...\n");
 //#endif	
 
-
-	
-	// ## Carregando arquivo. ##
-
+	// Carregando arquivo. 
 	
 	fp = fopen ( (char *) argv[1], "rb" );	
 	
-	if ( fp == NULL )
+	if (fp == NULL)
     {
-        printf("fopen fail start typing ...\n");
+        printf ("fopen fail, start typing ...\n");
 				
         goto startTyping;
 		
@@ -724,31 +734,38 @@ int main ( int argc, char *argv[] ){
 		//file_buffer = fp->_base;
 		
 		int ch_test;
-	    printf("Testing fgetc ... \n\n");
-		while(1)
+		
+//#ifdef TEDITOR_VERBOSE
+	    //printf ("Testing fgetc ... \n\n");
+//#endif 		
+		
+		while (1)
 		{
-			//#bugbug: page fault quando chamamos fgetc.
+			// #bugbug: 
+			// Page fault quando chamamos fgetc.
+			
 			//printf("1");
 			ch_test = (int) fgetc (fp);
 			//ch_test = (int) getc (f1); 
 			
-			if( ch_test == EOF )
+			if (ch_test == EOF)
 			{
-				printf("\n\n");
-				printf("EOF reached :)\n\n");
+				printf ("\n");
+				printf ("EOF reached :)\n");
+				
 				goto out;
 				
 			}else{
+				
+				// #importante
+				// Imprimir na tela os caracteres obtidos no arquivo.
+				
 				//printf("2");
-			    printf("%c", ch_test);	
+			    printf ("%c", ch_test);	
 			};
-		};	
+		};
 		
 out:
-		
-		
-		
-		
 		
 //#ifdef TEDITOR_VERBOSE	        
 		//printf("...\n");
@@ -756,32 +773,24 @@ out:
         printf(".\n");		
 //#endif
 
+		
 startTyping:
-
-    //É aqui que fica o arquivo que vamos salvar.
+		
+    // É aqui que fica o arquivo que vamos salvar.
+		
     //file_buffer = &RAW_TEXT[0];
 
-#ifdef TEDITOR_VERBOSE	
-		printf("\n");
-		printf("Typing a text ...\n");
-#endif
-
-
-//#importante:
-//Esse loop deve ser um loop de mensagens 
-//e não de chars. Quem tem loop de chars 
-//é message box.
-//Pois o aplicativo deve receber mensagens 
-//sobre eventos de input de teclado e mouse,
-//assim como os controles.
-
-
+//#ifdef TEDITOR_VERBOSE	
+//		printf ("\n");
+//		printf ("Typing a text ...\n");
+//#endif
 
 	//
 	// Habilitando o cursor de textos.
 	//
 	
-	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );	
+	system_call ( 244, 
+	    (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );	
 
 	
 		//saiu.
@@ -789,23 +798,31 @@ startTyping:
         printf(".\n");		
         printf(".\n");
 
-	};
+	}; //fim do else.
+	
 	
 	unsigned long message_buffer[5];	
 	
-Mainloop:		    
 	//
-    // #importante:
-    // Nessa hora podemos usar esse loop para pegarmos mensagens 
-    // e enviarmos para o procedimento de janela do editor de texto.
-    // Para assim tratarmos mensagens de mouse, para clicarmos e 
-    // botões para salvarmos o arquivo. 
-    // Devemos copiar a forma que foi feita o shell.
-    //   
+	// main loop
+	//
 
-    
 	
-	while (running)
+// #importante:
+// Esse loop deve ser um loop de mensagens e não de chars. Pois o aplicativo 
+// deve receber mensagens sobre eventos de input de teclado e mouse,
+// assim como os controles.	
+// Nessa hora vamos usar esse loop para pegarmos mensagens 
+// e enviarmos para o procedimento de janela do editor de texto.
+// Para assim tratarmos mensagens de mouse, para clicarmos e 
+// botões para salvarmos o arquivo. 
+	
+	
+Mainloop:		
+	
+
+   
+	while (_running)
 	{
 		enterCriticalSection(); 
 		system_call ( 111,
@@ -814,9 +831,9 @@ Mainloop:
 			(unsigned long)&message_buffer[0] );
 		exitCriticalSection(); 
 			
-		if (	message_buffer[1] != 0 )
+		if ( message_buffer[1] != 0 )
 		{
-	        teditorProcedure ( (struct window_d *) message_buffer[0], 
+	        gramtextProcedure ( (struct window_d *) message_buffer[0], 
 		        (int) message_buffer[1], 
 		        (unsigned long) message_buffer[2], 
 		        (unsigned long) message_buffer[3] );
@@ -828,26 +845,27 @@ Mainloop:
         };				
 	};	
 	
+	
+	//
+	// fail.
+	//
+	
 fail:	
-    printf("fail\n");
+    printf ("fail\n");
 	
 done:
 	
-    running = 0;
-    
-	printf("Exiting editor ...\n");
-    printf("done\n");
-	
-	//while (1){
-	//	asm("pause");
-	//	exit(0);
-	//};
+	printf ("Exiting editor ...\n");
+    printf ("done\n");
+
+    _running = 0;
 	
 	return 0;
 }
 
-
-
+//
+// End.
+//
 
 
 
