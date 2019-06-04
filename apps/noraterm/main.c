@@ -800,8 +800,15 @@ void *noratermProcedure ( struct window_d *window,
 				//pois estamos pegando chars no arquivo de saída da libc.	
 				// >> a libc escreve nos arquivos e o terminal escreve na tela.
 				case TERMINALCOMMAND_PRINTCHAR:
+					 //apiDrawText ( NULL, 0, 0, COLOR_RED, 
+				     //    "MSG_TERMINALCOMMAND: TERMINALCOMMAND_PRINTCHAR:" );
+					
 					 apiDrawText ( NULL, 0, 0, COLOR_RED, 
-				         "MSG_TERMINALCOMMAND: TERMINALCOMMAND_PRINTCHAR:" );
+				         "====(top)=============" );
+					
+					 apiDrawText ( NULL, 0, 25*8, COLOR_RED, 
+				         "====(bottom)=============" );	
+					
 					refresh_screen ();
 					break;
 					
@@ -4004,8 +4011,11 @@ int shellInit ( struct window_d *window ){
 	
 done:
 		
-	if (interactive == 1)
-	    loginCheckPassword ();
+	//#suspenso
+	//supendemos isso porque fopen está falhando na máquina real.
+	
+	//if (interactive == 1)
+	    //loginCheckPassword ();
 
 
 	// @todo:
@@ -7400,16 +7410,17 @@ skip_input:
     shellExecuteThisScript ( argv[3] );
 
 	// Exit process.
+	
 end:
 
     // Desabilitando o cursor de texto.
     // Quando outro aplicativo precisar ele clica em uma janela, 
 	// ela ganha o foco e habilita o cursor piscante.	
 	
-    system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
+    system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );
 
 #ifdef SHELL_VERBOSE		
-    printf("SHELL.BIN: exiting code '0' ...\n");
+    printf ("noraterm: exiting code '0' ...\n");
 #endif 
 	
 	return 0;

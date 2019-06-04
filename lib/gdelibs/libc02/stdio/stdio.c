@@ -1158,19 +1158,24 @@ int input_file_buffer_size(void)
 /*
  *************************************
  * getchar:
- *
- * getchar:
- * pegando diretamente do kernel e não do arquivo.
- * me parece que o tradicional é pegar do arquivo,
- * mas isso acontece em outras situações.
- * @todo:
- * Podemos pegar esse char e colocá-lo stdin 
- * slave (local) de input. 
+ *       O kernel pega no stdin que é a fila do teclado.
+ *       Isso funciona.
  */
 
 int getchar (void){
 	
-	return (int) gramado_system_call ( 137, 0, 0, 0 ); 
+	int Ret = 0;
+	
+Loop:
+	
+	Ret = (int) gramado_system_call ( 137, 0, 0, 0 ); 
+	
+	if (Ret > 0)
+	{
+	    return (int) Ret;    
+	}
+	
+	goto Loop;
 }
 
 

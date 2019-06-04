@@ -8,67 +8,89 @@ char xxxpassword[11];
 extern int login_status;
 
 
+
+/*
+ * loginCheckPassword:
+ *
+ */
+
+// #importante
+// O terminal precisa desse mecanismo de ler arquivos usando a libc
+// então vamos valorizar essa rotina.
+// Somente um shell interativo tem login.
+
 int loginCheckPassword (){
 	
 	// #importante
-	// >>>> suspenso <<<
-	// problemas no input de char ,,,
+	// Suspenso, problemas no input de char,
+	//return -1;
 	
-	return -1;
+
+	int i;
 	
-    //buffer para o arquivo todo.
+    // Buffer para o arquivo todo.
+	
 	char buffer[512];	
 	
 	char buffer_username[32];	
 	char buffer_password[32];	
+		
+	//
+	// File.
+	//
+		
+    FILE *user_stream;
 	
 	
-	int i;
+	printf ("\n");
+	printf ("==== Login ==== \n");
+	printf ("\n");	
 	
-	// Somente um shell interativo tem login.
+	// #bugbug
+	// fopen está falhando na máquina real.
+	// bem na hora de pegar o tamanho do arquivo.
 	
-		
-		
-		//file 
-		
-		FILE *user_stream;
-		
-		user_stream = (FILE *) fopen ("user.txt","w+");
-		
-		//#todo check.
-		if ( (void *) user_stream == NULL )
-		{
-		    printf ("Couldn't open the file\n");
-		}
-		
-		// Testing welcome message.
-	    //printf("\n");
-	    printf("\n Welcome to Gramado shell! \n");
-	    //printf("\n");
+    user_stream = (FILE *) fopen ("user.txt","w+");
 	
-		//#obs
-		//gets is on (stdio.c)
+    if ( (void *) user_stream == NULL )
+    {
+        printf ("loginCheckPassword: Couldn't open the file\n");
+    }
+		
+	// Testing welcome message.
+	printf("\n");
+	printf ("Welcome to Noraterm Shell! \n\n");
+	//printf("\n");
+	
+	
+//get_username:	
+	//#obs
+	//gets is on (stdio.c)
         		
-		//
-		//  ## username  ##
-		//
+	//
+	//  ## username  ##
+	//
 		
-	    printf("\n username: ");
-	    gets(xxxusername);
+	printf ("\n username: ");
+	gets (xxxusername);
 		
- 
-		//
+
+//get_password:
+	    //
 		//  ## password ##
 	    //
 		
-		printf("\n password: ");
-	    gets(xxxpassword);
+    printf ("\n password: ");
+	gets (xxxpassword);
 		
-		printf("\n");
+
+	
 	
 //#ifdef SHELL_VERBOSE		
-	    printf("username={%s} password={%s} \n", xxxusername, xxxpassword );
-		//printf("\n");
+    //#debug
+	printf ("\n");        	
+    printf ("username={%s} password={%s} \n\n", xxxusername, xxxpassword );
+	//printf("\n");
 //#endif
 		
 		//===================================
@@ -80,42 +102,55 @@ int loginCheckPassword (){
 		
 		//char *c = (char *) &user_stream->_base[0];		
 		
-		char *c;
-		int ch;
-		i = 0;
+    char *c;
+    
+	int ch;
+	
+	i = 0;
 		
-		//Pega todo o arquivo e coloca no buffer[].
-        while (1)
-		{
+	//
+	// Loop
+	//
+	
+	// Pega todo o arquivo e coloca no buffer[].
+    
+    while (1)
+    {
 			//#bugbug: page fault quando chamamos fgetc.
 			//printf("1");
 			//ch_test = (int) fgetc (f1);
 			//ch_test = (int) getc (f1); 
 			
-			ch = (int) fgetc (user_stream);
+        ch = (int) fgetc (user_stream);
 			
-			if ( ch == EOF )
-			{
-				printf("\n\n");
-				printf("EOF reached :)\n\n");
+        if ( ch == EOF )
+        {
+				printf ("\n\n");
+				printf ("EOF reached :)\n\n");
 				//goto exit_cmp;
 				goto out;
 				
-			}else{
+		}else{
 				//printf("2");
-			    printf("%c", ch );
+			    printf ("%c", ch );
 				
 				//salva.
 				buffer[i] = (char) ch;
 				i++;
-			};
-		};		
-		
+		};
+	};		
+	
+	//
+	// Out.
+	//
+	
 out:	
-		//in'icio do buffer.
-		c = &buffer[0];
+		// Início do buffer.
 		
-		while ( *c && *c != 'P' ){			
+	    c = &buffer[0];
+		
+		while ( *c && *c != 'P' )
+		{			
 			c++;
 		};
 		

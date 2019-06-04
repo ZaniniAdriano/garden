@@ -60,8 +60,12 @@ void *teditorProcedure ( struct window_d *window,
 				         unsigned long long2 );
 				   
 
+
+
 /*
- * main: */
+ ****************************
+ * main: 
+ */
  
 int main ( int argc, char *argv[] ){
 	
@@ -242,8 +246,9 @@ int main ( int argc, char *argv[] ){
 		//file_buffer = fp->_base;
 		
 		int ch_test;
-	    printf("Testing fgetc ... \n\n");
-		while(1)
+	    printf ("Testing fgetc ... \n\n");
+		
+		while (1)
 		{
 			//#bugbug: page fault quando chamamos fgetc.
 			//printf("1");
