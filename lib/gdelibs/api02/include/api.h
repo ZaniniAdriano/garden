@@ -1996,6 +1996,18 @@ static unsigned long vga_256colors_palette[256] = {
 #define MSG_DEVELOPER 52
 //...
 
+
+//UM TIMER SE ESGOTOU,
+#define MSG_TIMER 53   
+
+//
+//  terminal commands
+//
+
+#define MSG_TERMINALCOMMAND      100
+#define TERMINALCOMMAND_PRINTCHAR 1000
+//#define TERMINALCOMMAND_PRINT??? 1001
+//...
  
  
 // # Window Type #

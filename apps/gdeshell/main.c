@@ -4010,10 +4010,27 @@ do_compare:
 	}	
 	
 	
+	//t17 - create process
+	void *P;
+	if ( strncmp( prompt, "t17", 3 ) == 0 )	
+	{
+		printf ("Creating processes ...\n");	
+	
+	    P = (void *) apiCreateProcess ( 0x400000, PRIORITY_HIGH, "PROCESS-TEST-1" );
+		
+	    if ( (void *) P == NULL )
+		{
+			printf ("Fail creating process\n");
+		};
+		
+		goto exit_cmp;
+	}
+
+	
 	//flush stdout
 	if ( strncmp( prompt, "flush-stdout", 12 ) == 0 )
 	{
-		fflush(stdout);
+		fflush (stdout);
 		goto exit_cmp;
 	}
 

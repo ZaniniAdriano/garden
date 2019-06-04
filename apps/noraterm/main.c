@@ -74,8 +74,18 @@
 */ 
 
 
-
+// #importante:
+// #todo
+// SetTerminalPID()
+// SetTerminalTID()
  
+
+//#todo:
+//ScrollScreen() e ScrollEntireScreen()
+//ScrollRegion
+//Abort() // se o terminal receber uma mensagem enquanto está criando
+//as coisas do terminal, então ele pode abortar a criação de liberar os recursos.
+
 #include "shell.h" 
 
 
@@ -137,8 +147,8 @@ struct command cmd_table[] = {
 // 1 = tente inicializar o programa que vai rodar no terminal
 // 0 = Inicialine o shell interno para gerenciamento do terminal.
 
-int _init_app = 1;
-//int _init_app = 0;
+//int _init_app = 1;
+int _init_app = 0;   // >>> usado para debug.
 
 //
 // ======== ## Shell Flag ## ========
@@ -506,6 +516,46 @@ void updateVisibleArea ( int direction );
 void clearLine ( int line_number );
 
 
+int
+__SendMessageToProcess ( int pid, 
+                          struct window_d *window, 
+                          int message,
+                          unsigned long long1,
+                          unsigned long long2 );
+
+
+
+
+
+
+
+
+int
+__SendMessageToProcess ( int pid, 
+                          struct window_d *window, 
+                          int message,
+                          unsigned long long1,
+                          unsigned long long2 )
+{
+	unsigned long message_buffer[5];
+
+	
+    if (pid<0)
+		return -1;
+	
+	message_buffer[0] = (unsigned long) window;
+	message_buffer[1] = (unsigned long) message;
+	message_buffer[2] = (unsigned long) long1;
+	message_buffer[3] = (unsigned long) long2;
+	//...
+
+	return (int) system_call ( 112 , (unsigned long) &message_buffer[0], 
+	                 (unsigned long) pid, (unsigned long) pid );
+}
+
+
+
+
 
 //diálogo para alimentar o terminal usado pelos aplicativos.				
 int feedterminalDialog( struct window_d *window, 
@@ -740,6 +790,26 @@ void *noratermProcedure ( struct window_d *window,
 			}		
 		    break;
 		
+		//TERMINAL COMMUNICATION
+		case MSG_TERMINALCOMMAND:
+			switch (long1)
+			{
+				// #importante
+				// NÃO PODEMOS USAR A LIBC.
+				//Devemos usar os recursos do servido gráfico
+				//pois estamos pegando chars no arquivo de saída da libc.	
+				// >> a libc escreve nos arquivos e o terminal escreve na tela.
+				case TERMINALCOMMAND_PRINTCHAR:
+					 apiDrawText ( NULL, 0, 0, COLOR_RED, 
+				         "MSG_TERMINALCOMMAND: TERMINALCOMMAND_PRINTCHAR:" );
+					refresh_screen ();
+					break;
+					
+				//case
+					//break;
+					
+			}
+			break;
 
         // Commands.		
 		case MSG_COMMAND:
@@ -2752,10 +2822,15 @@ do_compare:
 		//get pid
         PID = (int) system_call ( SYSTEMCALL_GETPID, 0, 0, 0 );
 
-		//Enviando uma mensagem para um processo.
-        //obs: essa rotina existe nas libs do projeto gramado.
+		//Enviando uma mensagem para um processo.		
+		__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 
+		    TERMINALCOMMAND_PRINTCHAR, TERMINALCOMMAND_PRINTCHAR );		
+        
+		//obs: essa rotina existe nas libs do projeto gramado.
 		//apiSendMessageToProcess ( PID, NULL, MSG_COMMAND, CMD_ABOUT, CMD_ABOUT );
 
+		//__SendMessageToProcess ( PID, NULL, MSG_COMMAND, CMD_ABOUT, CMD_ABOUT );
+		
        	printf ("t18: done\n");
         exitCriticalSection ();
 
@@ -3265,10 +3340,26 @@ done:
 }
 
 
-void shellInitSystemMetrics ()
-{
-	//pegaremos todas as metricas de uma vez só,
-	//se uma falhar, então pegaremos tudo novamente.
+
+
+
+/*
+ * shellInitSystemMetrics:
+ *     mudar para noratermInitSystemMetrics
+ */
+
+// #importante
+// Já na inicialização solicita as infomações que os sistema pode nos dar.
+// ?? Pegaremos todas as metricas de uma vez só,
+// se uma falhar, então pegaremos tudo novamente.
+
+// #importante
+// #todo: Criar uma função que mostre todas as informações obtidas
+// #todo: Criar uma função que mostre todas as informações configuradas
+// Mostre as informações depois de criar uma tela.
+
+void shellInitSystemMetrics (){
+	
 	
 	// Tamanho da tela.	
 	smScreenWidth = apiGetSystemMetrics(1);
@@ -3279,14 +3370,49 @@ void shellInitSystemMetrics ()
 	smMousePointerHeight = apiGetSystemMetrics(6);
 	smCharWidth = apiGetSystemMetrics(7);
 	smCharHeight = apiGetSystemMetrics(8);	
+	
+	
+	//#importante
+	//#todo: pegar mais.
+	
 	//...
+	
+	//#todo: temos que criar essa variável.
+	//InitSystemMetricsStatus = 1;
 } 
 
-void shellInitWindowLimits(){
+
+/*
+ * shellInitWindowLimits:
+ *     #todo: mudar para noratermInitWindowLimits
+ *    #importante
+ */
+
+//#todo:
+//ordem: fullscreeen sizes, font sizes, mínimos e máximos.
+
+void shellInitWindowLimits (){
+	
+	// #todo
+	// Tem variáveis aqui que não podem ser '0'.
+	
+	//#todo: temos que criar essa variável.
+	/*
+	if (InitSystemMetricsStatus == 0)
+	{
+	    shellInitSystemMetrics ();
+	}
+	*/
 	
     //
     // ## Window limits ##
     //
+	
+	// problemas; 
+	//if ( smScreenWidth == 0 || smScreenHeight )
+	//{
+	//	 printf ...
+	//}
 
     //full screen support
     wlFullScreenLeft = 0;

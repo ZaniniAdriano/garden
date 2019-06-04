@@ -35,6 +35,11 @@
 #include <stubs/gramado.h> 
 
 
+/*
+//#define getchar()         getc(stdin)
+//#define putchar(_c)       putc((_c),stdout)
+*/
+
 
 // Testando define.
 
