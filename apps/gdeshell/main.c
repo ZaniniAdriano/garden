@@ -3320,6 +3320,8 @@ do_compare:
 		if ( pidFORK < 0 )
 		{
 		    printf ("gdeshell: falhou\n");
+			printf ("getpid=%d ", getpid());
+			printf ("pidFORK=%d \n", pidFORK);
             exit (1);
 		}
 		
@@ -3327,6 +3329,10 @@ do_compare:
 		if ( pidFORK > 0 )
 		{
 		    printf ("gdeshell: estamos no PAI\n");
+			printf ("getpid=%d ", getpid());
+			printf ("pidFORK=%d \n", pidFORK);
+			printf ("gdeshell: saindo do PAI\n");
+			exit (0);
 			goto exit_cmp; 
 		}
 		
@@ -3334,15 +3340,19 @@ do_compare:
 		if ( pidFORK == 0 )
 		{
 		    printf ("gdeshell: estamos no FILHO\n");
-			printf ("PID=%d", getpid());
+			printf ("getpid=%d ", getpid());
+			printf ("pidFORK=%d \n", pidFORK);
 			
 			//execve ("jackpot.bin", NULL, NULL );
-			execve ("gramcode.bin", NULL, NULL );
+			//execve ("gramcode.bin", NULL, NULL );
 			//execve ("jackpot.bin", NULL, NULL );
+			execve ("noraterm.bin", NULL, NULL );
 			
 			printf ("gdeshell: execve falhou.\n");
 			exit (1);
 		}
+		
+
 
 				
 		
@@ -4025,7 +4035,17 @@ do_compare:
 		
 		goto exit_cmp;
 	}
+	
+	
+	
+	
+		if ( strncmp ( prompt, "t900", 4 ) == 0 )
+		{
+			system_call ( 900, (unsigned long) "gramcode.bin", 0, 0 );
+			//system_call ( 900, (unsigned long) "noraterm.bin", 0, 0 );
+		}	
 
+	
 	
 	//flush stdout
 	if ( strncmp( prompt, "flush-stdout", 12 ) == 0 )
