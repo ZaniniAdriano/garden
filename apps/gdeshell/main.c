@@ -4039,11 +4039,30 @@ do_compare:
 	
 	
 	
-		if ( strncmp ( prompt, "t900", 4 ) == 0 )
-		{
-			system_call ( 900, (unsigned long) "gramcode.bin", 0, 0 );
-			//system_call ( 900, (unsigned long) "noraterm.bin", 0, 0 );
-		}	
+    // t900
+    //clona e executa o filho dado o nome do filho.
+    if ( strncmp ( prompt, "t900", 4 ) == 0 )
+    {
+	    system_call ( 900, (unsigned long) "gramcode.bin", 0, 0 );
+		//system_call ( 900, (unsigned long) "noraterm.bin", 0, 0 );
+		goto exit_cmp;
+    }	
+
+    // t901
+    //clona um processo, retorna par ao pai e inicializa o processo
+    //filho do seu entrypoint. (#test)	
+	int t901_ret;
+    if ( strncmp ( prompt, "t901", 4 ) == 0 )
+    {
+	    t901_ret = (int) system_call ( 901, 0, 0, 0 );
+		printf ("t901: t901_ret = %d \n", t901_ret);
+		
+		//if (t901_ret < 0)
+		//if (t901_ret == 0)
+		//if (t901_ret > 0)
+		
+		goto exit_cmp;
+    }	
 
 	
 	
