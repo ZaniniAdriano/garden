@@ -321,6 +321,83 @@ int prompt_status;
 
 //...
 
+
+
+/*minix3/bsd style*/
+/*
+#define	__sfeof(p)	(((p)->_flags & __SEOF) != 0)
+#define	__sferror(p)	(((p)->_flags & __SERR) != 0)
+#define	__sclearerr(p)	((void)((p)->_flags &= ~(__SERR|__SEOF)))
+#define	__sfileno(p)	\
+    ((p)->_file == -1 ? -1 : (int)(unsigned short)(p)->_file)
+
+#if !defined(__lint__) && !defined(__cplusplus)
+#if !defined(_REENTRANT) && !defined(_PTHREADS)
+#define	feof(p)		__sfeof(p)
+#define	ferror(p)	__sferror(p)
+#define	clearerr(p)	__sclearerr(p)
+
+#define	getc(fp)	__sgetc(fp)
+#define putc(x, fp)	__sputc(x, fp)
+
+#define	getchar()	getc(stdin)
+#define	putchar(x)	putc(x, stdout)
+*/
+
+/*
+//#define getchar()         getc(stdin)
+//#define putchar(_c)       putc((_c),stdout)
+*/
+
+
+/*linux klibc style.*/
+//#define getc(f) fgetc(f)
+
+
+/*glib style; isso pode ser usado no kernel*/
+/* Optimizing.  */
+/*
+#ifdef	__OPTIMIZE__
+#define	feof(stream)	((stream)->__eof != 0)
+#define	ferror(stream)	((stream)->__error != 0)
+#endif 
+*/
+	
+
+/*glibc style*/
+/* The C standard explicitly says this can
+   re-evaluate its arguments, so it does.  */
+/*
+#define	__putc(c, stream)						      \
+  ((stream)->__bufp < (stream)->__put_limit ?				      \
+   (int) (unsigned char) (*(stream)->__bufp++ = (unsigned char) (c)) :	      \
+   __flshfp ((stream), (unsigned char) (c)))
+*/
+
+
+// versão para humanos entenderem.
+//enquanto for menor que o limite coloca o char, caso contrário
+//__flshfp ???
+/*
+zzz __putc (c, stream)
+{
+  ( (stream)->__bufp < (stream)->__put_limit 
+  ? (int) (unsigned char) (*(stream)->__bufp++ = (unsigned char) (c) ) 
+  :	__flshfp ((stream), (unsigned char) (c)))
+  
+}
+*/
+
+
+/*glibc style*/
+/* The C standard explicitly says this can be a macro,
+   so we always do the optimization for it.  */
+//#define	putc(c, stream)	__putc ((c), (stream))
+
+
+
+
+
 //===========================================
 // ## Protótipos do padrão C. ##
 //===========================================

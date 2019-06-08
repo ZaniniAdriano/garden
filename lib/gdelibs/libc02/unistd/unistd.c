@@ -84,6 +84,13 @@ void *unistd_system_call ( unsigned long ax,
 */
 
 
+/* linux klibc style*/
+/*
+int execv(const char *path, char * const * argv)
+{
+  return execve(path, argv, environ);
+}
+*/
  
 //padrão libc.
 //int execve ( const char *path, char *const argv[], char *const envp[] );  

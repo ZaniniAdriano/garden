@@ -366,7 +366,18 @@ size_t strlcpy(char *dst, const char *src, size_t size)
 */
 
 
+/*linux klibc style*/
 /*
+char *strcat (char *dst, const char *src)
+{
+  strcpy ( strchr ( dst, '\0' ), src );
+  return dst;
+}
+*/
+
+
+/*
+ *************************
  * strcat:
  *     Acrescenta uma string ao fim de outra. 
  */

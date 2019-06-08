@@ -35,9 +35,12 @@
 #include <stubs/gramado.h> 
 
 
+
+
 /*
-//#define getchar()         getc(stdin)
-//#define putchar(_c)       putc((_c),stdout)
+int putchar(int c) {
+  return fputc(c,stdout);
+}
 */
 
 
@@ -53,6 +56,8 @@
 #define VK_BACK	       0x0E  
 #define VK_TAB         0x0F 
 //PRINT_BUF_LEN
+
+
 
 
 //internas.
@@ -201,6 +206,16 @@ void *stdio_system_call ( unsigned long ax,
 				          unsigned long dx );
 */
 
+
+
+/*linux klibc style*/
+/*
+static __inline__ int fclose(FILE *__f)
+{
+  extern int close(int);
+  return close(fileno(__f));
+}
+*/
 						 
 /*
  ************************************************
@@ -245,6 +260,14 @@ FILE *fopen ( const char *filename, const char *mode ){
 					 (unsigned long) mode, (unsigned long) mode ); 
 }
 
+
+/*linux klibc style*/
+/*
+int creat(const char *pathname, mode_t mode)
+{
+  return open(pathname, O_CREAT|O_WRONLY|O_TRUNC, mode);
+}
+*/
 
 
 /*
@@ -324,6 +347,93 @@ void scroll (void){
 }
 
 
+/*musl style*/
+/*
+size_t __stdio_read(FILE *f, unsigned char *buf, size_t len)
+{
+	return __syscall_read(f->fd, buf, len);
+}
+*/
+
+/*musl style*/
+/*
+size_t __stdio_write(FILE *f, const unsigned char *buf, size_t len)
+{
+	const unsigned char *stop = buf+len;
+	ssize_t cnt = 1;
+	for (; buf<stop && (cnt=__syscall_write(f->fd, buf, len))>0; buf+=cnt);
+	return len-(stop-buf);
+}
+*/
+
+
+/* Write the string in S and a newline to stdout.  */
+/*glibc style.*/
+//int DEFUN( puts, (s), CONST char *s)
+/*
+int puts ( const char *str )
+{
+	// Coloca uma string no stdout.
+    return ( fputs ( s, stdout ) || putchar ('\n') == EOF ? EOF : 0 );
+}
+*/
+
+
+/*musl style*/
+/*
+int puts(const char *s)
+{
+	return -(fputs(s, stdout) < 0 || putchar('\n') < 0);
+}
+*/
+
+
+/*linux klibc style*/
+/*
+int puts(const char *s)
+{
+  if ( fputs ( s, stdout ) < 0 )
+    return -1;
+
+  return _fwrite ("\n", 1, stdout);
+}
+*/
+
+
+/*uClib style*/
+/*
+int puts(const char *str)
+{
+	int n;
+
+   // Let next fputc handle EOF or error. 
+	n = fputs (str, stdout);	
+	
+	// Don't use putc since we want to
+	// fflush stdout if it is line buffered.
+	
+	if (fputc('\n', stdout) == EOF) 
+	{  
+		return EOF;				 
+	}
+	
+	return n + 1;
+}
+*/
+	
+
+/*
+int puts(const char *str)
+{
+    int err = fputs(str, stdout);
+    if (err >= 0)
+        err = fputc('\n', stdout);
+    return err;
+}
+*/
+
+
+	
 /*
  ***********************
  * puts:
@@ -337,7 +447,54 @@ int puts ( const char *str ){
 }
 
 
+
+
+
+
+/*linux klibc style*/
 /*
+size_t _fread(void *buf, size_t count, FILE *f)
+{
+  size_t bytes = 0;
+  ssize_t rv;
+  char *p = buf;
+
+  while ( count ) 
+  {
+    rv = read(fileno(f), p, count);
+	  
+    if ( rv == -1 ) {
+		
+      if ( errno == EINTR )
+	continue;
+      else
+	break;
+		
+    } else if ( rv == 0 ) {
+      break;
+    }
+
+    p += rv;
+    bytes += rv;
+    count -= rv;
+  }
+
+  return bytes;
+}
+*/
+
+
+/*linux klibc style*/
+/*
+size_t fread(void *ptr, size_t size, size_t nmemb, FILE *f)
+{
+  return _fread(ptr, size*nmemb, f)/size;
+}
+*/
+
+
+/*
+ ************************
  * fread:
  *
  */
@@ -797,6 +954,28 @@ static void printchar ( char **str, int c ){
 
 
 /*
+int putchar(int c)
+{
+	return fputc(c, stdout);
+}
+*/
+
+/*
+int putchar(int c)
+{
+	return putc(c, stdout);
+}
+*/
+	
+/*glibc style*/
+/*
+int putchar (int __c)
+{
+  return __putc (__c, stdout);
+}
+*/
+
+/*
  **********
  * putchar:
  *     Put a char in the screen.
@@ -1154,6 +1333,24 @@ int input_file_buffer_size(void)
 */
 
 
+/*glibc style;*/
+/* Read a character from stdin.  */
+/*
+//int DEFUN_VOID(getchar)
+int getchar (void)
+{
+  return __getc(stdin);
+}
+*/
+
+
+/*
+int getchar(void)
+{
+	return getc(stdin);
+}
+*/
+
 
 /*
  *************************************
@@ -1308,6 +1505,30 @@ void stdioInitialize (){
 }
 
 
+/*
+int __fflush_stdin(void) 
+{
+  return fflush(stdin);
+}
+*/
+
+
+/*
+int __fflush_stdout(void) 
+{
+  return fflush(stdout);
+}
+*/
+
+/*
+int __fflush_stderr(void) 
+{
+  return fflush(stderr);
+}
+*/
+	
+ 
+
 /* 
  ***********************************
  * fflush: 
@@ -1329,6 +1550,23 @@ int fflush ( FILE *stream ){
 }
 
 
+
+
+
+/*
+int fprintf(FILE *fp, const char *fmt, ...)
+{
+    va_list ap;
+    int err;
+
+    va_start(ap, fmt);
+    err = vfprintf(fp, fmt, ap);
+    va_end(ap);
+    return err;
+}
+*/
+
+
 /*
  ********************************
  * fprintf:     
@@ -1342,6 +1580,31 @@ int fprintf ( FILE *stream, const char *format, ... ){
 
 
 /*
+int fputs (const char *s, FILE *stream) 
+{
+  return fwrite ( s, strlen(s), 1, stream );
+}
+*/
+
+
+/*uClib style*/
+/*
+int fputs(const char *str, FILE *fp)
+{
+	int n;
+
+	n = strlen(str);
+
+	_uClibc_fwrite((const unsigned char *)str, n, fp);
+	if (fp->mode & __MODE_ERR) {
+		n = EOF;
+	}
+	return n;
+}
+*/
+	
+
+/*
  ********************************
  * fputs:      
  */
@@ -1351,6 +1614,59 @@ int fputs ( const char *str, FILE *stream ){
     return (int) gramado_system_call ( 235, (unsigned long) str, 
 					 (unsigned long) stream, (unsigned long) stream ); 
 }
+
+
+
+/*uClib style*/
+	/* 
+	 * Strictly speaking, this implementation is incorrect as the number
+	 * of chars gets can read should be unlimited.  However, I can't
+	 * imagine anyone wanting to gets() into a buffer bigger than INT_MAX.
+	 *
+	 * Besides, this function is inherently unsafe and shouldn't be used.
+	 */
+/* This is an UNSAFE function! */
+/*
+char *gets(char *str) 
+{
+	return fgets(str, INT_MAX, stdin);
+}
+*/
+
+/*uClib style*/
+/*
+char *fgets(char *s, int count, FILE *fp)
+{
+	int ch;
+	char *p;
+	
+	p = s;
+	
+	//Guard against count arg == INT_MIN. 
+	while (count-- > 1) 
+	{		
+		ch = getc (fp);
+		
+		if (ch == EOF) 
+		{
+			break;
+		}
+		
+		*p++ = ch;
+		
+		if (ch == '\n') { break; }
+	}
+	
+	if ( ferror(fp) || (s == p) ) 
+	{
+		return 0;
+	}
+	
+	*p = 0;
+	
+	return s;
+}
+*/
 
 
 /*
@@ -1418,6 +1734,23 @@ done:
 }
 
 
+
+/*dietlibc style*/
+/*
+int ungetc(int c, FILE *stream) 
+{
+  if (stream->ungotten || c<0 || c>255)
+    return EOF;
+	
+  stream->ungotten=1;
+  stream->ungetbuf=(unsigned char)c;
+  stream->flags&=~(ERRORINDICATOR|EOFINDICATOR);
+	
+  return c;
+}
+*/
+
+
 /*
  *********************************
  * ungetc:
@@ -1432,6 +1765,16 @@ int ungetc ( int c, FILE *stream ){
 }
 
 
+
+/*linux - klibc style*/
+/*
+static __inline__ off_t ftell(FILE *__f)
+{
+  extern off_t lseek(int, off_t, int);
+  return lseek(fileno(__f), 0, SEEK_CUR);
+}
+*/
+
 long ftell (FILE *stream){
     
 	//#bugbug
@@ -1439,15 +1782,41 @@ long ftell (FILE *stream){
     return (long) -1;	
 }
 
+/*
+int fileno(FILE *fp)
+{
+	return fp->fd;
+}
+*/
 
 int fileno ( FILE *stream ){
 	
 	//#bugbug
-	//precisamos chamr a system call.		
+	//precisamos chamar a system call.		
 
 	return (int) -1;  //fd
 }
 
+
+
+
+/*linux klibc style.*/
+/*
+int fgetc(FILE *f)
+{
+  unsigned char ch;
+  return ( _fread (&ch, 1, f) == 1) ? (int) ch : EOF;
+}
+*/
+
+
+/*uClibb style*/
+/*
+int getc(FILE *stream)
+{
+    return (((stream)->bufpos >= (stream)->bufread)?  fgetc(stream) : (*(stream)->bufpos++));
+}
+*/
 
 /*
  *********************************
@@ -1463,6 +1832,16 @@ int fgetc ( FILE *stream ){
 }
 
 
+
+
+/*
+int feof(FILE *fp)
+{
+  	return fp->mode & __MODE_EOF;
+}
+*/
+
+
 /*
  *********************************
  * feof:
@@ -1476,6 +1855,20 @@ int feof ( FILE *stream ){
 
 
 /*
+void clearerr(FILE *fp)
+{
+	fp->mode &= ~(__MODE_EOF | __MODE_ERR);
+}
+*/
+
+/*
+int ferror(FILE *fp)
+{
+	return fp->mode & __MODE_ERR;
+}
+*/
+
+/*
  *********************************
  * ferror:
  */
@@ -1487,6 +1880,17 @@ int ferror ( FILE *stream ){
 }
 
 
+
+/*linux - klibc style*/
+/*
+static __inline__ int fseek(FILE *__f, off_t __o, int __w)
+{
+  extern off_t lseek(int, off_t, int);
+  return (lseek(fileno(__f), __o, __w) == (off_t)-1) ? -1 : 0;
+}
+*/
+	
+	
 /*
  **************************************
  * fseek:
@@ -1501,6 +1905,29 @@ int fseek ( FILE *stream, long offset, int whence ){
 }
 
 
+
+
+
+/*uClib style*/
+/*
+int putc(int c, FILE *stream)
+{
+    return(((stream)->bufpos >= (stream)->bufwrite)?  fputc((c), (stream)) : (unsigned char) (*(stream)->bufpos++ = (c)) );
+}
+*/
+
+
+
+/*linux klibc style*/
+/*
+int fputc(int c, FILE *f)
+{
+  unsigned char ch = c;
+  return _fwrite(&ch, 1, f) == 1 ? ch : EOF;
+}
+*/
+
+
 /*
  *****************************************
  * fputc:
@@ -1511,6 +1938,23 @@ int fputc ( int ch, FILE *stream ){
      return (int) gramado_system_call ( 196, (unsigned long) ch,  
 					 (unsigned long) stream,  (unsigned long) stream );    
 }
+
+
+/*glibc style*/
+/* Write the character C to STREAM.  */
+/*
+//int DEFUN(fputc, (c, stream), int c AND FILE *stream)
+int fputc ( int ch, FILE *stream )	
+{
+  if (!__validfp(stream) || !stream->__mode.__write)
+    {
+      errno = EINVAL;
+      return EOF;
+    }
+
+  return __putc(c, stream);
+}
+*/
 
 
 /*
@@ -2340,6 +2784,24 @@ int printf ( const char *fmt, ... ){
 
 
 
+/*glibc style*/
+/* Optimizing.  */
+/*
+#ifdef	__OPTIMIZE__
+extern __inline int vprintf (const char *__fmt, __gnuc_va_list __arg)
+{
+  return vfprintf (stdout, __fmt, __arg);
+}
+#endif 
+*/
+
+
+
+/*
+ **********************
+ * vfprintf:
+ */
+
 int vfprintf ( FILE *stream, const char *format, stdio_va_list argptr ){
  	
 	//#suspenso.
@@ -2467,6 +2929,29 @@ int stdio_initialize_standard_streams (void){
 					(unsigned long) stdout, 
 					(unsigned long) stderr ); 
 }
+
+
+
+
+
+/*linux klibc style*/
+/*
+//  char **environ é global.
+char *getenv(const char *name)
+{
+  char **p, *q;
+  int len = strlen(name);
+
+  for ( p = environ ; (q = *p) ; p++ ) {
+    if ( !strncmp(name, q, len) && q[len] == '=' ) {
+      return q+(len+1);
+    }
+  }
+
+  return NULL;
+}
+*/
+
 
 //
 // End.
