@@ -51,6 +51,24 @@
 
 
 
+/*
+obs:
+In canonical input processing mode, terminal input is processed in lines terminated by 
+newline ('\n'), EOF, or EOL characters. No input can be read until an entire line has 
+been typed by the user, and the read function (see section Input and Output Primitives) 
+returns at most a single line of input, no matter how many bytes are requested. 
+
+In noncanonical input processing mode, characters are not grouped into lines, and 
+ERASE and KILL processing is not performed. The granularity with which bytes are read 
+in noncanonical input mode is controlled by the MIN and TIME settings. See section Noncanonical Input. 
+
+Most programs use canonical input mode, because this gives the user a way to edit input line by line. 
+The usual reason to use noncanonical mode is when the program accepts single-character commands
+or provides its own editing facilities. 
+*/
+
+
+
 /* Minimum sizes required by the POSIX P1003.1 standard (Table 2-3). */
 
 #define _POSIX_ARG_MAX    4096	/* exec() may have 4K worth of args */
@@ -71,6 +89,31 @@
    traversed in the resolution of a pathname
    in the absence of a loop. */
 #define _POSIX_SYMLOOP_MAX   8	
+
+/*bsd style*/
+/*
+#define	_POSIX2_BC_BASE_MAX		99
+#define	_POSIX2_BC_DIM_MAX		2048
+#define	_POSIX2_BC_SCALE_MAX		99
+#define	_POSIX2_BC_STRING_MAX		1000
+#define	_POSIX2_COLL_WEIGHTS_MAX	2
+#define	_POSIX2_EQUIV_CLASS_MAX		2
+#define	_POSIX2_EXPR_NEST_MAX		32
+#define	_POSIX2_LINE_MAX		2048
+#define	_POSIX2_RE_DUP_MAX		255
+*/
+
+/*bsd style*/
+/*
+#define PASS_MAX	128
+#define NL_ARGMAX	9
+#define NL_LANGMAX	14
+#define NL_MSGMAX	32767
+#define NL_NMAX		1
+#define NL_SETMAX	255
+#define NL_TEXTMAX	255
+*/
+
 
 
 //

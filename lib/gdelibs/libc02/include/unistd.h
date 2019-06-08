@@ -195,6 +195,14 @@ int close (int fd);
 int pipe ( int pipefd[2] );
 
 
+/*
+//http://kirste.userpage.fu-berlin.de/chemnet/use/info/libc/libc_12.html
+//This function returns 1 if filedes is a file descriptor associated with an open terminal device, and 0 otherwise. 
+int isatty (int filedes);
+char * ttyname (int filedes);
+*/
+
+
 
 #endif /* _UNISTD_H */
 

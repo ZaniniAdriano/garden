@@ -1,3 +1,17 @@
+//provavelmente suporte ao gerenciamento de terminais.
+//http://man7.org/linux/man-pages/man3/termios.3.html
+//http://kirste.userpage.fu-berlin.de/chemnet/use/info/libc/libc_12.html
+
+//#obs:
+//coisas pra fazer com terminal:
+//turn off input echoing
+//set serial line characteristics such as line speed and flow control
+// change which characters are used for end-of-file,
+//command-line editing,
+//sending signals (ou MSG_)
+// control functions.
+
+
 
 #ifndef _TERMIOS_H
 #define _TERMIOS_H
@@ -8,6 +22,41 @@
 
 /* size of cc_c array, some extra space for extensions. */
 //#define NCCS		   20
+
+
+
+/*
+tcflag_t c_iflag
+    A bit mask specifying flags for input modes; 
+tcflag_t c_oflag
+    A bit mask specifying flags for output modes; 
+tcflag_t c_cflag
+    A bit mask specifying flags for control modes;  
+tcflag_t c_lflag
+    A bit mask specifying flags for local modes; 
+cc_t c_cc[NCCS]
+    An array specifying which characters are associated with various control functions; 
+*/
+
+/*
+
+Data Type: tcflag_t
+    This is an unsigned integer type used to represent the various bit masks for terminal flags. 
+
+Data Type: cc_t
+    This is an unsigned integer type used to represent characters associated with various terminal control functions. 
+
+Macro: int NCCS
+    The value of this macro is the number of elements in the c_cc array. 
+*/
+
+/*
+tcflag_t c_iflag;      // input modes 
+tcflag_t c_oflag;      // output modes 
+tcflag_t c_cflag;      // control modes 
+tcflag_t c_lflag;      // local modes 
+cc_t     c_cc[NCCS];   // special characters 
+*/
 
 
 /* Primary terminal control structure. POSIX Table 7-1. */
@@ -119,6 +168,42 @@ struct termios {
 #define TCOON              2	/* restart suspended output */
 #define TCIOFF             3	/* transmit a STOP character on the line */
 #define TCION              4	/* transmit a START character on the line */
+
+
+
+
+//https://linux.die.net/man/3/tcgetattr
+
+/*
+int tcgetattr(int fd, struct termios *termios_p);
+
+int tcsetattr(int fd, int optional_actions,
+              const struct termios *termios_p);
+
+int tcsendbreak(int fd, int duration);
+
+int tcdrain(int fd);
+
+int tcflush(int fd, int queue_selector);
+
+int tcflow(int fd, int action);
+
+void cfmakeraw(struct termios *termios_p);
+
+speed_t cfgetispeed(const struct termios *termios_p);
+
+speed_t cfgetospeed(const struct termios *termios_p);
+
+int cfsetispeed(struct termios *termios_p, speed_t speed);
+
+int cfsetospeed(struct termios *termios_p, speed_t speed);
+
+int cfsetspeed(struct termios *termios_p, speed_t speed);
+*/
+
+
+
+
 
 
 #endif /* _TERMIOS_H */
