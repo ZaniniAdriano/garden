@@ -42,6 +42,9 @@ LIBCOBJ = ../../lib/gdelibs/libc02/obj
 
 API01   = ../../lib/gdelibs/api01/include/
 APIOBJ  = ../../lib/gdelibs/api01/obj
+#API01   = ../../lib/gdelibs/api02/include/
+#APIOBJ  = ../../lib/gdelibs/api02/obj
+
 
 
 

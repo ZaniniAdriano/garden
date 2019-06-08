@@ -794,6 +794,20 @@ void *noratermProcedure ( struct window_d *window,
 		case MSG_TERMINALCOMMAND:
 			switch (long1)
 			{
+				// Isso indica que o terminal tem chars na stream da tty,
+				// então ele deve pegar e exibir.	
+				int x_ch;
+				case 2000:
+					printf ("MSG_TERMINALCOMMAND.2000 pode pegar >> \n");
+		            while (1)
+		            {
+		                //pega um char, mas não é o último que foi colocado, é o que ainda não foi pego.
+		                x_ch = (int) system_call ( 1002, 0, 0, 0 );
+		                if (x_ch == '\n'){ break;};
+			            printf (" %c ",x_ch);
+	                }					
+					break;
+					
 				// #importante
 				// NÃO PODEMOS USAR A LIBC.
 				//Devemos usar os recursos do servido gráfico
@@ -812,8 +826,7 @@ void *noratermProcedure ( struct window_d *window,
 					refresh_screen ();
 					break;
 					
-				//case
-					//break;
+					//...
 					
 			}
 			break;
@@ -2853,7 +2866,56 @@ do_compare:
         goto exit_cmp;		
 	}
    
-
+	//t20
+	// OpenTTY.
+	FILE *opentty_fp;
+	FILE *terminal_opentty_fp;
+	int x_ch;
+	//int o;
+	if ( strncmp ( prompt, "t20", 3 ) == 0 )	
+	{
+		printf("t20: \n");
+		//get tty stream
+		//o shell pega um stream para escrever.
+		opentty_fp = (FILE *) system_call ( 1000, getpid(), 0, 0 );
+		fprintf (opentty_fp, "test1 ...\n");
+		fprintf (opentty_fp, "test2 ...");   //sem \n
+		
+		//vamos avisar o terminal que ele pode pegar os chars na stream do tty
+		//apiSendMessageToProcess ??
+		__SendMessageToProcess ( getpid(), NULL, MSG_TERMINALCOMMAND, 2000, 2000 );
+	
+		
+		//get tty stream
+		//o terminal pegar um stream para ler.
+		//terminal_opentty_fp = (FILE *) system_call ( 1001, 0, 0, 0 );
+		 
+	    //x_ch = (int) fgetc (terminal_opentty_fp);	
+		
+		//while (1)
+		//{
+		    //pega um char, mas não é o último que foi colocado, é o que ainda não foi pego.
+		    //x_ch = (int) system_call ( 1002, 0, 0, 0 );
+		   // if (x_ch == '\n'){ break;};
+			
+			//printf (" CHAR:{%c} \n",x_ch);
+	    //}
+		goto exit_cmp;
+	}
+	
+	//se registra como terminal
+	if ( strncmp ( prompt, "t21", 3 ) == 0 )
+	{
+		printf("t21: registrando terminal e criando shell como processo filho\n");
+		system_call ( 1003, getpid(), 0, 0 );
+		
+		//clona e executa o filho dado o nome do filho.
+		//system_call ( 900, (unsigned long) "gdeshell.bin", 0, 0 );
+		//system_call ( 900, (unsigned long) "gramcode.bin", 0, 0 );
+		system_call ( 900, (unsigned long) "hello.bin", 0, 0 );
+		
+		goto exit_cmp;
+	}
 
 	// setup-x
 	// setup x server PID

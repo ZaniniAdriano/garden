@@ -60,6 +60,13 @@ void *teditorProcedure ( struct window_d *window,
 				         unsigned long long2 );
 				   
 
+int
+__SendMessageToProcess ( int pid, 
+                          struct window_d *window, 
+                          int message,
+                          unsigned long long1,
+                          unsigned long long2 );
+
 
 
 /*
@@ -77,6 +84,75 @@ int main ( int argc, char *argv[] ){
 	
 	
 	//#todo: analizar a contagem de argumentos.
+	
+	
+	
+	goto skip_test;
+	
+	//
+	//========  test =============
+	//	
+	//say hello.
+	FILE *opentty_fp;
+	FILE *terminal_opentty_fp;
+	int x_ch;
+	int terminal_PID;
+	#define MSG_TERMINALCOMMAND 100 //provisório
+	
+	//configurando um stream para o tty
+	printf ("gramcode: tentando configurar um stream para o tty\n");
+	system_call ( 1001, (unsigned long) stdout, 0, 0 );
+	
+	printf ("gramcode: tentando obter o ponteiro do arquivo\n");
+	opentty_fp = (FILE *) system_call ( 1000, getpid(), 0, 0 );
+	
+	if ( (void *)opentty_fp == NULL )
+	{
+		printf ("gramcode: arquivo falhou *hang\n");
+		while(1){}
+	}
+	
+	printf ("gramcode: escrever no arquivo\n");
+	
+		fprintf (opentty_fp, "#### HELLO from gramcode.bin ###\n");
+		fprintf (opentty_fp, "#### HELLO2 ###");   //sem \n
+	
+	printf ("gramcode: escrito\n");
+	
+	printf ("gramcode: pegando o PID do terminal\n");
+	
+	
+		//get terminal pid
+		//avisa o terminal que ele pode imprimir as mesangens pendentes que estao na stream
+		terminal_PID = (int) system_call ( 1004, 0, 0, 0 );
+	
+	printf ("gramcode: terminal_PID=%d\n");
+	
+	if (terminal_PID <= 0 )
+	{
+			printf ("gramcode: PID fail\n");
+		goto hangz;
+	}
+	
+	printf ("gramcode: enviando mensagem para o terminal\n");
+	
+		__SendMessageToProcess ( terminal_PID, 0, MSG_TERMINALCOMMAND, 2000, 2000 );
+	
+hangz:	
+	printf ("gramcode.bin: done *hang");
+	while(1){}
+	//
+	//=====================
+	//
+	
+	
+	
+	
+	
+skip_test:	
+	
+	
+	
 	
 	
 #ifdef TEDITOR_VERBOSE			
@@ -918,3 +994,40 @@ int saveCreateButton (){
 	//refresh_screen();
 	return 0;
 }
+
+//
+// ===============================================================
+//
+
+int
+__SendMessageToProcess ( int pid, 
+                          struct window_d *window, 
+                          int message,
+                          unsigned long long1,
+                          unsigned long long2 )
+{
+	unsigned long message_buffer[5];
+
+	
+    if (pid<0)
+		return -1;
+	
+	message_buffer[0] = (unsigned long) window;
+	message_buffer[1] = (unsigned long) message;
+	message_buffer[2] = (unsigned long) long1;
+	message_buffer[3] = (unsigned long) long2;
+	//...
+
+	return (int) system_call ( 112 , (unsigned long) &message_buffer[0], 
+	                 (unsigned long) pid, (unsigned long) pid );
+}
+//
+// ===============================================================
+//
+
+
+
+
+
+
+

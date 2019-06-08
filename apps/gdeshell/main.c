@@ -373,6 +373,48 @@ struct {
 */
 
 
+
+
+//
+// ===============================================================
+//
+
+int
+__SendMessageToProcess ( int pid, 
+                          struct window_d *window, 
+                          int message,
+                          unsigned long long1,
+                          unsigned long long2 );
+int
+__SendMessageToProcess ( int pid, 
+                          struct window_d *window, 
+                          int message,
+                          unsigned long long1,
+                          unsigned long long2 )
+{
+	unsigned long message_buffer[5];
+
+	
+    if (pid<0)
+		return -1;
+	
+	message_buffer[0] = (unsigned long) window;
+	message_buffer[1] = (unsigned long) message;
+	message_buffer[2] = (unsigned long) long1;
+	message_buffer[3] = (unsigned long) long2;
+	//...
+
+	return (int) system_call ( 112 , (unsigned long) &message_buffer[0], 
+	                 (unsigned long) pid, (unsigned long) pid );
+}
+//
+// ===============================================================
+//
+
+
+
+
+
 //
 // ===============================================================
 //
@@ -4036,9 +4078,45 @@ do_compare:
 		goto exit_cmp;
 	}
 	
+	// t18
+	// OpenTTY.
+	FILE *opentty_fp;
+	FILE *terminal_opentty_fp;
+	int x_ch;
+	int terminal_PID;
+	#define MSG_TERMINALCOMMAND 100 //provisório
+	if ( strncmp ( prompt, "t18", 3 ) == 0 )	
+	{
+		//get tty stream
+		//o shell pega um stream para escrever.
+		opentty_fp = (FILE *) system_call ( 1000, getpid(), 0, 0 );
+		fprintf (opentty_fp, "test1 ...\n");
+		fprintf (opentty_fp, "test2 ...");   //sem \n
+		
+		//get tty stream
+		//o terminal pegar um stream para ler.
+		//terminal_opentty_fp = (FILE *) system_call ( 1001, 0, 0, 0 );
+		 
+	    //x_ch = (int) fgetc (terminal_opentty_fp);	
+		
+		//while (1)
+		//{
+		    //pega um char, mas não é o último que foi colocado, é o que ainda não foi pego.
+		//    x_ch = (int) system_call ( 1002, 0, 0, 0 );
+		//    if (x_ch == '\n'){ break;};	
+		//	printf (" CHAR:{%c} \n",x_ch);
+	    //}
+		
+		//get terminal pid
+		//avisa o terminal que ele pode imprimir as mesangens pendentes que estao na stream
+		terminal_PID = (int) system_call ( 1004, 0, 0, 0 );
+		__SendMessageToProcess ( terminal_PID, NULL, MSG_TERMINALCOMMAND, 2000, 2000 );
+		
+		goto exit_cmp;
+	}
 	
-	
-	
+		
+		
     // t900
     //clona e executa o filho dado o nome do filho.
     if ( strncmp ( prompt, "t900", 4 ) == 0 )
@@ -4048,6 +4126,7 @@ do_compare:
 		goto exit_cmp;
     }	
 
+	
     // t901
     //clona um processo, retorna par ao pai e inicializa o processo
     //filho do seu entrypoint. (#test)	
@@ -4064,7 +4143,6 @@ do_compare:
 		goto exit_cmp;
     }	
 
-	
 	
 	//flush stdout
 	if ( strncmp( prompt, "flush-stdout", 12 ) == 0 )
