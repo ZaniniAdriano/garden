@@ -3167,6 +3167,50 @@ void apiShowWindow (struct window_d *window){
 }
 
 
+/* 
+ * apiStartTerminal:
+ *     
+ */
+
+// 'Clona' e executa o noraterm como processo filho. 
+// registra o terminal noraterm como terminal atual.
+// pega o pid do terminal atual
+// manda uma mensagem pedindo para o terminal dizer hello.
+ 
+int apiStartTerminal (void){
+
+	int PID;
+	
+	
+	// 'Clona' e executa o noraterm como processo filho. 
+	PID = (int) system_call ( 900, (unsigned long) "noraterm.bin", 0, 0 );
+	//PID = (int) system_call ( 901, (unsigned long) "noraterm.bin", 0, 0 );
+		
+	// Exibe o PID para debug.
+	//printf ("PID = %d \n", PID);
+
+    //registra o terminal como terminal atual.
+	system_call ( 1003, PID, 0, 0 ); 
+		
+	//invalida a variável.
+	PID = -1;
+		
+	//pega o pid do terminal atual
+	PID = (int) system_call ( 1004, 0, 0, 0 ); 
+		
+	if ( PID <= 0 )
+	{
+		printf ("PID fail. We can't send the message\n");
+	    return -1;
+	}
+		
+	//manda uma mensagem pedindo para o terminal dizer hello.
+	//__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 2001, 2001 );
+
+	return (int) PID;
+}
+
+
 //
 // End.
 //

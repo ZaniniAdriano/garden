@@ -40,10 +40,10 @@ CFLAGS = -m32 \
 LIBC    = ../../lib/gdelibs/libc02/include/
 LIBCOBJ = ../../lib/gdelibs/libc02/obj
 
-API01   = ../../lib/gdelibs/api01/include/
-APIOBJ  = ../../lib/gdelibs/api01/obj
-#API01   = ../../lib/gdelibs/api02/include/
-#APIOBJ  = ../../lib/gdelibs/api02/obj
+#API   = ../../lib/gdelibs/api01/include/
+#APIOBJ  = ../../lib/gdelibs/api01/obj
+API   = ../../lib/gdelibs/api02/include/
+APIOBJ  = ../../lib/gdelibs/api02/obj
 
 
 
@@ -79,15 +79,15 @@ all: crt0.o main.o all-c shell-link finalize clean
 #	nasm  head.s  -felf -o head.o
 
 crt0.o:
-	gcc  -c  crt0.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o crt0.o
+	gcc  -c  crt0.c  $(CFLAGS) -I $(LIBC) -I $(API) -o crt0.o
 
 main.o:
-	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o main.o
+	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API) -o main.o
 
 all-c:
-	gcc  -c  shellui.c   -I $(LIBC) -I $(API01)  $(CFLAGS) -o shellui.o
-	gcc  -c  builtins.c  -I $(LIBC) -I $(API01)  $(CFLAGS) -o builtins.o
-	gcc  -c  desktop.c   -I $(LIBC) -I $(API01)  $(CFLAGS) -o desktop.o
+	gcc  -c  shellui.c   -I $(LIBC) -I $(API)  $(CFLAGS) -o shellui.o
+	gcc  -c  builtins.c  -I $(LIBC) -I $(API)  $(CFLAGS) -o builtins.o
+	gcc  -c  desktop.c   -I $(LIBC) -I $(API)  $(CFLAGS) -o desktop.o
 	
 #	gcc  -c  parser.c    -I ../../../lib/libc01/include/ -I ../../../lib/api01/include/ $(CFLAGS) -o parser.o
 #	gcc  -c  lexer.c     -I ../../../lib/libc01/include/ -I ../../../lib/api01/include/ $(CFLAGS) -o lexer.o

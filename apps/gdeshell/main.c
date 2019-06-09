@@ -1595,7 +1595,12 @@ noArgs:
 	// Isso faz com que as digitações tenham acesso ao procedimento de janela de terminal 
 	// para essa janela e não apenas ao procedimento de janela do sistema.
 	// # provavelmente isso marca os limites para a impressão de caractere em modo terminal 
-
+	
+	//#importante
+	//nesse momento estamos configurando os limites do terminal gerenciado pelo kernel.
+    // >> logo abaixo vamos chamar uma instância do aplicativo terminal e configurar
+	//o aplicativo terminal com os mesmos limites.
+	
 	system_call ( SYSTEMCALL_SETTERMINALWINDOW, (unsigned long) hWindow, 
 		(unsigned long) hWindow, (unsigned long) hWindow );
 		
@@ -1603,16 +1608,49 @@ noArgs:
 	//salva ponteiro da janela principal e da janela do terminal. 
 	shell_info.main_window = ( struct window_d * ) hWindow;			 
 	shell_info.terminal_window = ( struct window_d * ) hWindow;		
+
+	
+	
+	
+	
+	
+	/*
+	//
+	// ===========================
+    //
+	
+	// #test
+	// Vamos executar uma instâncoa do noraterm e tentar configurá-lo.
+	// Esse teste funcionou.
+	
+	int __terminal___PID;
+	
+	__terminal___PID = (int) apiStartTerminal ();
+	
+	if ( __terminal___PID <= 0 )
+	{
+	    printf ("PID fail. We can't send the message\n");
+
+    }else{			
+			//#importante
+			//Aqui podemos configurar o terminal.
+			//pegar as características do terminal para configurar o app cliente.
+	    printf ("The terminal PID is %d \n", __terminal___PID );		
+		__SendMessageToProcess ( __terminal___PID, NULL, MSG_TERMINALCOMMAND, 2001, 2001 );		
+	};		
+	
+	printf ("gdeshell: *breakpoint");
+	while (1){}
 	
 	//
-	// @todo: Apenas registrar o procedimento dessa janela na sua estrutura no kernel..
-    // 
+	// ===========================
+    //
+	*/
+
 	
 
-	//printf("HOLAMBRA KERNEL SHELL\n");
-	//printf("#debug breakpoint");
-	//while(1){}
-
+	
+	
 
 	//===========================
 
@@ -4109,16 +4147,69 @@ do_compare:
 		
 		//get terminal pid
 		//avisa o terminal que ele pode imprimir as mesangens pendentes que estao na stream
-		terminal_PID = (int) system_call ( 1004, 0, 0, 0 );
+		
+		terminal_PID = (int) system_call ( 1004, 0, 0, 0 );		
 		__SendMessageToProcess ( terminal_PID, NULL, MSG_TERMINALCOMMAND, 2000, 2000 );
 		
 		goto exit_cmp;
 	}
 	
+	
+ 
+	
+	//t19
+	int xxx__PID;
+	if ( strncmp ( prompt, "t19", 3 ) == 0 )
+	{
+		xxx__PID = (int) system_call ( 900, (unsigned long) "noraterm.bin", 0, 0 );
+		//xxx__PID = (int) system_call ( 901, (unsigned long) "noraterm.bin", 0, 0 );
 		
+		printf ("t19:  xxx__PID = %d \n", xxx__PID);
+		//goto exit_cmp;
 		
+		//registra o terminal
+		system_call ( 1003, xxx__PID, 0, 0 ); 
+		
+		//invalida a variável.
+		xxx__PID = -1;
+		
+		//pega o pid do terminal atual
+		xxx__PID = (int) system_call ( 1004, 0, 0, 0 ); 
+		
+		if ( xxx__PID <= 0 )
+		{
+			printf ("PID fail. We can't send the message\n");
+		    goto exit_cmp;
+		}
+		
+		//manda uma mensagem pedindo para o terminal dizer hello.
+		__SendMessageToProcess ( xxx__PID, NULL, MSG_TERMINALCOMMAND, 2001, 2001 );
+		goto exit_cmp;
+	}
+	
+	//t20
+	int terminal___PID;
+	if ( strncmp ( prompt, "t20", 3 ) == 0 )
+	{
+		terminal___PID = (int) apiStartTerminal ();
+	    if ( terminal___PID <= 0 )
+	    {
+		    printf ("PID fail. We can't send the message\n");
+	        goto exit_cmp;
+	    }else{
+			
+			//#importante
+			//Aqui podemos configurar o terminal.
+			//pegar as características do terminal para configurar o app cliente.
+		    printf ("t20: The terminal PID is %d \n", terminal___PID );		
+		    __SendMessageToProcess ( terminal___PID, NULL, MSG_TERMINALCOMMAND, 2001, 2001 );		
+		}		
+		goto exit_cmp;
+	}
+	
+	
     // t900
-    //clona e executa o filho dado o nome do filho.
+    // clona e executa o filho dado o nome do filho.
     if ( strncmp ( prompt, "t900", 4 ) == 0 )
     {
 	    system_call ( 900, (unsigned long) "gramcode.bin", 0, 0 );
@@ -4128,7 +4219,7 @@ do_compare:
 
 	
     // t901
-    //clona um processo, retorna par ao pai e inicializa o processo
+    //clona um processo, retorna para o pai e inicializa o processo
     //filho do seu entrypoint. (#test)	
 	int t901_ret;
     if ( strncmp ( prompt, "t901", 4 ) == 0 )
@@ -4716,6 +4807,8 @@ void shellInitWindowPosition()
 	//wpWindowTop = (unsigned long) ( (smScreenHeight - wsWindowHeight)/2 );  	
 }
 
+
+
 /*
  ******************************************
  * shellShell:
@@ -4767,13 +4860,13 @@ void shellShell (){
 	shellInitSystemMetrics ();
 	
     //inicializa os limites da janela.
-	shellInitWindowLimits();
+	shellInitWindowLimits ();
 	
 	//inicia o tamanho da janela.
-	shellInitWindowSizes();
+	shellInitWindowSizes ();
 	
 	//inicializar a posição da janela.
-	shellInitWindowPosition();
+	shellInitWindowPosition ();
  
  
     //
@@ -4872,11 +4965,11 @@ void shellShell (){
 	//shellSetCursor( (shell_info.main_window->left/8) , (shell_info.main_window->top/8));	
 	
 	//shellPrompt();
-};
+}
 
 
 /*
- *************
+ ****************************
  * shellInit:
  *     Inicializa o Shell.  
  *
@@ -5314,9 +5407,8 @@ done:
 	//>>vamos tentar sem isso e confiarmos na função printf.
 	//apiShowWindow(window);
 	
-    return (int) 0;
-};
-
+    return 0;
+}
 
 
 int shellCheckPassword (){

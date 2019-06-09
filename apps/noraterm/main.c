@@ -808,6 +808,13 @@ void *noratermProcedure ( struct window_d *window,
 	                }					
 					break;
 					
+				//hello	
+				case 2001:
+					//printf ("MSG_TERMINALCOMMAND.2000 pode pegar >> \n");
+					apiDrawText ( NULL, 0, 0, COLOR_RED, 
+				         "HELLO FROM NORATERM" );
+					refresh_screen ();
+					break;
 				// #importante
 				// NÃO PODEMOS USAR A LIBC.
 				//Devemos usar os recursos do servido gráfico

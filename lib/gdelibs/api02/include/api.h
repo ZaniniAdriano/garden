@@ -3692,6 +3692,14 @@ struct timer_d *apiCreateTimer ( struct window_d *window,
 unsigned long apiGetSysTimeInfo ( int n );
 #define gde_get_sys_time_info apiGetSysTimeInfo
 
+
+// 'Clona' e executa o noraterm como processo filho. 
+// registra o terminal noraterm como terminal atual.
+// pega o pid do terminal atual
+// manda uma mensagem pedindo para o terminal dizer hello.
+
+int apiStartTerminal (void);
+
 //
 // End.
 //
