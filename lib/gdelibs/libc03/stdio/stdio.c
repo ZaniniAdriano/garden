@@ -1447,27 +1447,46 @@ void stdioInitialize (){
 
 	//stdin - Usando o buffer 'prompt[.]' como arquivo.
 	stdin->_base = &prompt[0];
-	stdin->_ptr = stdin->_base;
-	stdin->_bufsiz = PROMPT_MAX_DEFAULT; 
-	stdin->_cnt = stdin->_bufsiz;
+	
+	//stdin->_ptr = stdin->_base;
+	stdin->_p = stdin->_base;
+	
+	//stdin->_bufsiz = PROMPT_MAX_DEFAULT; 
+	stdin->_lbfsize = PROMPT_MAX_DEFAULT; 
+	
+	//stdin->_cnt = stdin->_bufsiz;
+	stdin->_cnt = stdin->_lbfsize;
+	
 	stdin->_file = 0;
 	stdin->_tmpfname = "stdin";
 	//...
 	
 	//stdout - Usando o buffer 'prompt_out[.]' como arquivo.
 	stdout->_base = &prompt_out[0];
-	stdout->_ptr = stdout->_base;
-	stdout->_bufsiz = PROMPT_MAX_DEFAULT; 
-	stdin->_cnt = stdout->_bufsiz;
+	
+	//stdout->_ptr = stdout->_base;
+	stdout->_p = stdout->_base;
+	
+	//stdout->_bufsiz = PROMPT_MAX_DEFAULT; 
+	stdout->_lbfsize = PROMPT_MAX_DEFAULT; 
+	
+	//stdin->_cnt = stdout->_bufsiz;
+	stdin->_cnt = stdout->_lbfsize;	
 	stdout->_file = 1;
 	stdout->_tmpfname = "stdout";
 	//...
 	
 	//stderr - Usando o buffer 'prompt_err[.]' como arquivo.
 	stderr->_base = &prompt_err[0];
-	stderr->_ptr = stderr->_base;
-	stderr->_bufsiz = PROMPT_MAX_DEFAULT; 
-	stdin->_cnt = stderr->_bufsiz;
+	
+	//stderr->_ptr = stderr->_base;
+	stderr->_p = stderr->_base;
+	
+	//stderr->_bufsiz = PROMPT_MAX_DEFAULT; 
+	stderr->_lbfsize = PROMPT_MAX_DEFAULT; 	
+	
+	//stdin->_cnt = stderr->_bufsiz;
+	stdin->_cnt = stderr->_lbfsize;	
 	stderr->_file = 2;
 	stderr->_tmpfname = "stderr";	
 	//...
@@ -1491,17 +1510,34 @@ void stdioInitialize (){
 	    stderr->_base[i] = (char) '\0';	
 	}			
 	
-    stdin->_ptr = stdin->_base;	
-    stdin->_bufsiz = BUFSIZ; 		
-	stdin->_cnt = stdin->_bufsiz;
+    //stdin->_ptr = stdin->_base;	
+    stdin->_p = stdin->_base;		
+    
+	//stdin->_bufsiz = BUFSIZ; 		
+    stdin->_lbfsize = BUFSIZ; 			
 	
-    stdout->_ptr = stdout->_base;	
-    stdout->_bufsiz = BUFSIZ; 		
-	stdout->_cnt = stdout->_bufsiz;
-
-    stderr->_ptr = stderr->_base;	
-    stderr->_bufsiz = BUFSIZ; 		
-	stderr->_cnt = stderr->_bufsiz;			
+	
+	//stdin->_cnt = stdin->_bufsiz;
+	stdin->_cnt = stdin->_lbfsize;
+	
+    //stdout->_ptr = stdout->_base;
+    stdout->_p = stdout->_base;		
+    
+	//stdout->_bufsiz = BUFSIZ; 
+	stdout->_lbfsize = BUFSIZ; 
+	
+	
+	//stdout->_cnt = stdout->_bufsiz;
+	stdout->_cnt = stdout->_lbfsize;
+	
+    //stderr->_ptr = stderr->_base;	
+    stderr->_p = stderr->_base;		
+    //stderr->_bufsiz = BUFSIZ; 		
+    stderr->_lbfsize = BUFSIZ; 		
+	
+	
+	//stderr->_cnt = stderr->_bufsiz;			
+	stderr->_cnt = stderr->_lbfsize;				
 }
 
 
@@ -2831,10 +2867,12 @@ int vfprintf ( FILE *stream, const char *format, stdio_va_list argptr ){
 		//#obs: isso provavelmente funcione, 
 		//mas vamos tentar o segundo método.
 		//sprintf ( stream->_ptr, format );
-		kvprintf ( format, NULL, stream->_ptr, 10, argptr );
+		//kvprintf ( format, NULL, stream->_ptr, 10, argptr );
+		kvprintf ( format, NULL, stream->_p, 10, argptr );
 		
 		//atualiza o ponteiro atual.
-		stream->_ptr = stream->_ptr + size;
+		//stream->_ptr = stream->_ptr + size;
+		stream->_p = stream->_p + size;
         
 		return 0;		
 	};
@@ -2898,9 +2936,14 @@ void rewind ( FILE * stream ){
     
     // #bugbug: ring3 não tem acesso aos elementos dessa estrtutura.
 	
-	stdin->_ptr = stdin->_base;
-    stdin->_bufsiz = BUFSIZ; 		
-	stdin->_cnt = stdin->_bufsiz;		
+	//stdin->_ptr = stdin->_base;
+	stdin->_p = stdin->_base;
+	
+    //stdin->_bufsiz = BUFSIZ; 		
+    stdin->_lbfsize = BUFSIZ; 			
+	
+	//stdin->_cnt = stdin->_bufsiz;		
+	stdin->_cnt = stdin->_lbfsize;			
 }
 
 

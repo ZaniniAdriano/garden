@@ -254,22 +254,29 @@ typedef	struct __sFILE {
 typedef struct _iobuf FILE; 
 struct _iobuf 
 {
-	//unsigned char *_p;	          // current position in (some) buffer 	
-	char *_ptr;      // Current position of file pointer (absolute address).
-	
-	int	_r;		                  // read space left for getc() 
-	int	_w;		                  // write space left for putc() 
-	
-	//short	_flags;		          // flags, below; this FILE is free if 0 	
-	int   _flag;     // Flags (see FileFlags). the state of the stream
-	
-	//short	_file;		          // fileno, if Unix descriptor, else -1 
-	int   _file;     // UNIX System file descriptor
+	// current position in (some) buffer
+	// Current position of file pointer (absolute address).
+	unsigned char *_p;	           	
 
-	struct	__sbuf _bf;	          // the buffer (at least 1 byte, if !NULL) 
+	// read space left for getc()
+	int	_r;
+	
+	// write space left for putc()
+	int	_w;		                   
+	
+	// flags, below; this FILE is free if 0 	
+	// Flags (see FileFlags). the state of the stream
+	short	_flags;		          
+	
+	// fileno, if Unix descriptor, else -1
+	// UNIX System file descriptor
+	short	_file;		          
+
+	// the buffer (at least 1 byte, if !NULL)
+	struct	__sbuf _bf;	           
 		
-	//int	_lbfsize;	              // 0 or -_bf._size, for inline putc 
-	int   _bufsiz;
+	int	_lbfsize;	              // 0 or -_bf._size, for inline putc 
+	//int   _bufsiz;
 	
 	
 	//operations 
@@ -306,8 +313,6 @@ struct _iobuf
 	int   _charbuf;   
 	char *_tmpfname;
 };
-
-
 
 FILE *stdin;
 FILE *stdout;
