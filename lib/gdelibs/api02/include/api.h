@@ -65,6 +65,7 @@
  *     Isso são interrupções.
  *     De 48 até 199.
  */
+
 //Kernel.
 #define	KERNEL      48
 #define	KERNEL48    48
@@ -1172,8 +1173,6 @@
 #define COLOR_KERNEL_BACKGROUND COLOR_BLUE   
 
 
-
-
 static unsigned long cga_16colors_palette[16] = {
 	
 	//Paleta do paint para 4bpp
@@ -1217,8 +1216,7 @@ static unsigned long vga_256colors_palette[256] = {
 0x00000000, 
 0x00000000, 
 0x00000000, 
-	
-	
+
 //blue	
 0x0000CC00, 
 0x0000CD00,	
@@ -1236,9 +1234,7 @@ static unsigned long vga_256colors_palette[256] = {
 0x0000DB00,
 0x0000DC00,
 0x0000DD00,	
-	
-	
-	
+
  //green
 0x00CC0000, 
 0x00CD0000,	
@@ -1257,26 +1253,23 @@ static unsigned long vga_256colors_palette[256] = {
 0x00DC0000,
 0x00DD0000,	
 
-
-
-0x00AAAA00, //cyan 
-0x00AAAA00, //cyan 
-0x00AAAA00, //cyan 
-0x00AAAA00, //cyan 	
-0x00AAAA00, //cyan 
-0x00AAAA00, //cyan 
-0x00AAAA00, //cyan 
-0x00AAAA00, //cyan 	
-0x00AAAA00, //cyan 
-0x00AAAA00, //cyan 
-0x00AAAA00, //cyan 
-0x00AAAA00, //cyan 	
-0x00AAAA00, //cyan 
-0x00AAAA00, //cyan 
-0x00AAAA00, //cyan 
-0x00AAAA00, //cyan 	
-
-
+//cyan	
+0x00AAAA00,  
+0x00AAAA00, 
+0x00AAAA00,  
+0x00AAAA00,  	
+0x00AAAA00,  
+0x00AAAA00,  
+0x00AAAA00,  
+0x00AAAA00,  	
+0x00AAAA00,  
+0x00AAAA00,  
+0x00AAAA00,  
+0x00AAAA00,  	
+0x00AAAA00,  
+0x00AAAA00,  
+0x00AAAA00,  
+0x00AAAA00,
 	
 //red	
 0xCC000000, 
@@ -1295,66 +1288,62 @@ static unsigned long vga_256colors_palette[256] = {
 0xDB000000,
 0xDC000000,
 0xDD000000,	
-	
-	
-	
-	
-	
-0xAA00AA00, //magenta
-0xAA00AA00, //magenta
-0xAA00AA00, //magenta
-0xAA00AA00, //magenta
-0xAA00AA00, //magenta
-0xAA00AA00, //magenta
-0xAA00AA00, //magenta
-0xAA00AA00, //magenta
-0xAA00AA00, //magenta
-0xAA00AA00, //magenta
-0xAA00AA00, //magenta
-0xAA00AA00, //magenta
-0xAA00AA00, //magenta
-0xAA00AA00, //magenta
-0xAA00AA00, //magenta
-0xAA00AA00, //magenta
 
+//magenta
+0xAA00AA00, 
+0xAA00AA00, 
+0xAA00AA00, 
+0xAA00AA00, 
+0xAA00AA00, 
+0xAA00AA00, 
+0xAA00AA00, 
+0xAA00AA00, 
+0xAA00AA00, 
+0xAA00AA00, 
+0xAA00AA00, 
+0xAA00AA00, 
+0xAA00AA00, 
+0xAA00AA00, 
+0xAA00AA00, 
+0xAA00AA00, 
 
-0xAA550000,  //brown
-0xAA550000,  //brown
-0xAA550000,  //brown
-0xAA550000,  //brown
-0xAA550000,  //brown
-0xAA550000,  //brown
-0xAA550000,  //brown
-0xAA550000,  //brown
-0xAA550000,  //brown
-0xAA550000,  //brown
-0xAA550000,  //brown
-0xAA550000,  //brown
-0xAA550000,  //brown
-0xAA550000,  //brown
-0xAA550000,  //brown
-0xAA550000,  //brown
+//brown
+0xAA550000,  
+0xAA550000,
+0xAA550000, 
+0xAA550000, 
+0xAA550000, 
+0xAA550000, 
+0xAA550000, 
+0xAA550000, 
+0xAA550000, 
+0xAA550000,  
+0xAA550000, 
+0xAA550000, 
+0xAA550000, 
+0xAA550000, 
+0xAA550000,  
+0xAA550000,
 
-
-0xAAAAAA00,  //light gray
-0xAAAAAA00,  //light gray
-0xAAAAAA00,  //light gray
-0xAAAAAA00,  //light gray
-0xAAAAAA00,  //light gray
-0xAAAAAA00,  //light gray
-0xAAAAAA00,  //light gray
-0xAAAAAA00,  //light gray
-0xAAAAAA00,  //light gray
-0xAAAAAA00,  //light gray
-0xAAAAAA00,  //light gray
-0xAAAAAA00,  //light gray
-0xAAAAAA00,  //light gray
-0xAAAAAA00,  //light gray
-0xAAAAAA00,  //light gray
-0xAAAAAA00,  //light gray
-
+//light gray
+0xAAAAAA00,  
+0xAAAAAA00,  
+0xAAAAAA00,  
+0xAAAAAA00,  
+0xAAAAAA00,  
+0xAAAAAA00,  
+0xAAAAAA00, 
+0xAAAAAA00, 
+0xAAAAAA00, 
+0xAAAAAA00, 
+0xAAAAAA00, 
+0xAAAAAA00, 
+0xAAAAAA00, 
+0xAAAAAA00, 
+0xAAAAAA00,
+0xAAAAAA00,  
 	
-	//gray
+//gray
 0x00000000, //#define xCOLOR_BLACK   //preto
 0x20202000, //#define xCOLOR_GRAY1   //cinza mais escuro
 0x40404000, //#define xCOLOR_GRAY2   //cinza
@@ -1371,9 +1360,7 @@ static unsigned long vga_256colors_palette[256] = {
 0xdddddd00,
 0xe0e0e000, //#define xCOLOR_GRAY7   //cinza mais clarinho
 0xffffff00, //#define xCOLOR_WHITE   //branco 	
-	
 
-	
 //light blue
 0x5555CB00, 
 0x5555CC00,
@@ -1391,8 +1378,7 @@ static unsigned long vga_256colors_palette[256] = {
 0x5555DB00,
 0x5555DC00,
 0x5555DD00,	
-	
-	
+
 //light green	
 0x55CB5500, 
 0x55CC5500,
@@ -1411,26 +1397,23 @@ static unsigned long vga_256colors_palette[256] = {
 0x55DC5500,
 0x55DD5500,	
 	
-	
-	
-		
-	0x55FFFF00, //light cyan
-	0x55FFFF00, //light cyan
-	0x55FFFF00, //light cyan
-	0x55FFFF00, //light cyan
-	0x55FFFF00, //light cyan
-	0x55FFFF00, //light cyan
-	0x55FFFF00, //light cyan
-	0x55FFFF00, //light cyan
-	0x55FFFF00, //light cyan
-	0x55FFFF00, //light cyan
-	0x55FFFF00, //light cyan
-	0x55FFFF00, //light cyan
-	0x55FFFF00, //light cyan
-	0x55FFFF00, //light cyan
-	0x55FFFF00, //light cyan
-	0x55FFFF00, //light cyan
-	
+//light cyan	
+0x55FFFF00, 
+0x55FFFF00, 
+0x55FFFF00, 
+0x55FFFF00,
+0x55FFFF00,
+0x55FFFF00, 
+0x55FFFF00,
+0x55FFFF00,
+0x55FFFF00, 
+0x55FFFF00, 
+0x55FFFF00,
+0x55FFFF00, 
+0x55FFFF00, 
+0x55FFFF00, 
+0x55FFFF00,
+0x55FFFF00, 	
 	
 //light red
 0xCB555500, 
@@ -1450,72 +1433,61 @@ static unsigned long vga_256colors_palette[256] = {
 0xDC555500,
 0xDD555500,	
 	
+//light magenta
+0xFF55FF00, 
+0xFF55FF00,
+0xFF55FF00, 
+0xFF55FF00,
+0xFF55FF00,
+0xFF55FF00,
+0xFF55FF00,
+0xFF55FF00,
+0xFF55FF00,
+0xFF55FF00,
+0xFF55FF00,
+0xFF55FF00,
+0xFF55FF00,
+0xFF55FF00,
+0xFF55FF00,
+0xFF55FF00,
+
+//yellow
+0xFFFF5500, 
+0xFFFF5500,
+0xFFFF5500,
+0xFFFF5500,
+0xFFFF5500,
+0xFFFF5500,
+0xFFFF5500,
+0xFFFF5500,
+0xFFFF5500,
+0xFFFF5500,
+0xFFFF5500,
+0xFFFF5500,
+0xFFFF5500,
+0xFFFF5500,
+0xFFFF5500,
+0xFFFF5500,
 	
+//white
+0xFFFFFF00, 
+0xFFFFFF00, 
+0xFFFFFF00, 
+0xFFFFFF00, 
+0xFFFFFF00, 
+0xFFFFFF00,
+0xFFFFFF00,
+0xFFFFFF00,
+0xFFFFFF00,
+0xFFFFFF00,
+0xFFFFFF00,
+0xFFFFFF00,
+0xFFFFFF00,
+0xFFFFFF00,
+0xFFFFFF00,
+0xFFFFFF00  
 	
-0xFF55FF00, //light magenta
-0xFF55FF00, //light magenta
-0xFF55FF00, //light magenta
-0xFF55FF00, //light magenta
-0xFF55FF00, //light magenta
-0xFF55FF00, //light magenta
-0xFF55FF00, //light magenta
-0xFF55FF00, //light magenta
-0xFF55FF00, //light magenta
-0xFF55FF00, //light magenta
-0xFF55FF00, //light magenta
-0xFF55FF00, //light magenta
-0xFF55FF00, //light magenta
-0xFF55FF00, //light magenta
-0xFF55FF00, //light magenta
-0xFF55FF00, //light magenta
-
-
-0xFFFF5500, //yellow
-0xFFFF5500, //yellow
-0xFFFF5500, //yellow
-0xFFFF5500, //yellow
-0xFFFF5500, //yellow
-0xFFFF5500, //yellow
-0xFFFF5500, //yellow
-0xFFFF5500, //yellow
-0xFFFF5500, //yellow
-0xFFFF5500, //yellow
-0xFFFF5500, //yellow
-0xFFFF5500, //yellow
-0xFFFF5500, //yellow
-0xFFFF5500, //yellow
-0xFFFF5500, //yellow
-0xFFFF5500, //yellow
-
-
-
-0xFFFFFF00, //white
-0xFFFFFF00, //white
-0xFFFFFF00, //white
-0xFFFFFF00, //white
-0xFFFFFF00, //white
-0xFFFFFF00, //white
-0xFFFFFF00, //white
-0xFFFFFF00, //white
-0xFFFFFF00, //white
-0xFFFFFF00, //white
-0xFFFFFF00, //white
-0xFFFFFF00, //white
-0xFFFFFF00, //white
-0xFFFFFF00, //white
-0xFFFFFF00, //white
-0xFFFFFF00 //white
-
 };
-
-
-
-
-
-
-
-
-
 
 
 //
@@ -1686,6 +1658,11 @@ static unsigned long vga_256colors_palette[256] = {
 //Suporte à diso.
 #define INIT_SECTOR 20    //??
 //...
+
+
+// #bugbug: 
+// Isso não faz parte da API de aplicativos.
+// Pode ir para a API de drivers.
 
 //
 // Floppy Disk Controller support.
@@ -2245,7 +2222,7 @@ client_area_info_t *ClientAreaInfo;
 
 
 //Cursor info.
-typedef struct cursor_info_d cursor_info_t; 
+typedef struct cursor_info_d cursor_info_t; //deletar essa linha.
 struct cursor_info_d 
 {    
     unsigned long x;
@@ -2255,7 +2232,8 @@ struct cursor_info_d
     unsigned long image_address;  //x.cur
 	//...
 };
-cursor_info_t *CursorInfo; 
+struct cursor_info_d *CursorInfo;
+//cursor_info_t *CursorInfo; 
 //
 
 
@@ -2263,7 +2241,7 @@ cursor_info_t *CursorInfo;
 // rectangle support.
 //
  
-typedef struct rect_d rect_t;
+typedef struct rect_d rect_t; //deletar essa linha.
 struct rect_d 
 {
     unsigned long x;
@@ -2271,8 +2249,9 @@ struct rect_d
     unsigned long cx;
     unsigned long cy;	
 };
-rect_t *rect;
-//
+struct rect_d *rect;
+//rect_t *rect;
+
 
 
 //
@@ -2295,6 +2274,12 @@ rect_t *rect;
  *     Oct 2016 - Revision.
  *     ...
  */
+
+// #todo
+// Temos que atualizar essa estrutura para ficar igual
+// a que está em ring0.
+// 
+
 typedef struct window_d window_t;
 
  
@@ -2769,8 +2754,8 @@ struct window_d
 	
 
 };
-
-window_t *CurrentWindow;
+struct window_d *CurrentWindow;
+//window_t *CurrentWindow;
 //window_t *Window;
 // As principais janelas usadas pelos utilitários
 // dos subsistemas em user mode podem ser definidas aqui.
@@ -2877,7 +2862,6 @@ struct bmp_infoheader_d
  *
  */
 
-//typedef struct timer_d timer_t; 
 struct timer_d 
 {
 	//Object.
@@ -2909,10 +2893,7 @@ struct timer_d
 	
 	int status;  //??
 	
- 
 
- 
-	
 	unsigned long flag; //f
 	unsigned long error; //e
 	
@@ -3231,8 +3212,8 @@ call_gui ( unsigned long int_number,
 void *gde_create_window ( unsigned long type,        //1-Tipo de janela, (popup,normal,...).
                           unsigned long status,      //2-Estado da janela, (ativa ou não).
                           unsigned long view,        //3-(min, max ...).
-                          char *windowname,          //4-Título.                          
-                          unsigned long x,           //5-Deslocamento em relação às margens do Desktop.                           
+                          char *windowname,          //4-Título.  
+                          unsigned long x,           //5-Deslocamento em relação às margens do Desktop. 
                           unsigned long y,           //6-Deslocamento em relação às margens do Desktop.
                           unsigned long width,       //7-Largura da janela.
                           unsigned long height,      //8-Altura da janela.
@@ -3241,11 +3222,12 @@ void *gde_create_window ( unsigned long type,        //1-Tipo de janela, (popup,
                           unsigned long clientcolor, //11- Cor da área de cliente.
                           unsigned long color );     //12-Color (bg) (para janela simples).
 
+
 //retrocompatibilidade com api01
 #define APICreateWindow gde_create_window 
 
-					   
-//Register Window.		
+
+//Register Window.
 int gde_register_window (struct window_d *window);
 #define APIRegisterWindow gde_register_window
 
@@ -3257,7 +3239,7 @@ int gde_close_window (struct window_d *window);
 
 
 //Set Focus.
-int gde_set_focus (struct window_d *window);	
+int gde_set_focus (struct window_d *window);
 #define APISetFocus gde_set_focus 
 
 
@@ -3505,13 +3487,14 @@ void *apiFOpen (const char *filename, const char *mode);
  *     Salva um arquivo no diretório raiz do volume de boot.
  */
 
+//size in sectors 
+
 int
 gde_save_file ( char *file_name, 
-              unsigned long file_size, //size in sectors 
-              unsigned long size_in_bytes,			
-              char *file_address,
-              char flag );  
-
+                unsigned long file_size, 
+                unsigned long size_in_bytes, 
+                char *file_address, 
+                char flag ); 
 #define apiSaveFile gde_save_file
 
 
@@ -3548,7 +3531,7 @@ void gde_end_paint ();
 #define apiEndPaint gde_end_paint
 
 
-void apiPutChar ( int c );
+void apiPutChar (int c);
 #define gde_putchar apiPutChar
 
 

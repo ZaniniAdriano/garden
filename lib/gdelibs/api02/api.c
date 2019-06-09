@@ -98,7 +98,7 @@ dbProcedure ( struct window_d *window,
 /*
  ***********************************************************************
  * system_call:  
- *    Interrupção de sistema, número 200, chama vários serviços do Kernel com 
+ *    Interrupção de sistema, número 0x80, chama vários serviços do Kernel com 
  * a mesma interrupção. Essa é a chamada mais simples.
  *
  * Argumentos:
@@ -107,27 +107,28 @@ dbProcedure ( struct window_d *window,
  *    ecx = arg3.
  *    edx = arg4.
  *
- * 2015 - Created.
- * 2016 - Revisão.
+ * 2015 - Created by Fred Nora.
+ * 2016 ~ 2019 - New functions.
  * ...
  */
 
 void *system_call ( unsigned long ax, 
                     unsigned long bx, 
-				    unsigned long cx, 
-				    unsigned long dx )
+                    unsigned long cx, 
+                    unsigned long dx )
 {
-    
+
 	//##BugBug: Aqui 0 retorno não pode ser inteiro.
 	//Temos que pegar unsigned long?? void*. ??
 	//unsigned long RET = 0;
-	
-	int RET = 0;
-	
-	asm volatile ("int %1 \n"
-	              : "=a"(RET)	
-		          : "i"(IA32_SYSCALL_VECTOR), "a"(ax), "b"(bx), "c"(cx), "d"(dx) );
-	return (void *) RET; 
+
+    int RET = 0;
+
+    asm volatile ("int %1 \n"
+                  : "=a"(RET)
+                  : "i"(IA32_SYSCALL_VECTOR), "a"(ax), "b"(bx), "c"(cx), "d"(dx) );
+
+    return (void *) RET;
 }
 
 
@@ -345,14 +346,17 @@ int apiSystem (const char *command){
 	
 // Fail. Palavra não reservada.	
 fail:
-    printf("apiSystem: FAIL\n");
+    printf ("apiSystem: FAIL\n");
     return (int) 1;
 
-//@todo: Esse exit como variavel local precisa mudar de nome	
-//       para não confundir com a função exit de sair do processo.
-//       uma opção é usar 'done:'. 
-exit:    
-    return (int) 0;
+// #todo: 
+// Esse exit como vari'avel local precisa mudar de nome	
+// para não confundir com a função exit de sair do processo.
+// uma opção é usar 'done:'. 
+	
+exit:
+	
+    return 0;
 }
 
 
@@ -659,7 +663,7 @@ int system15 ( unsigned long ax,
 /*
  **********************************************
  * refresh_buffer:
- *     int 200, serviços de 1 à 9.
+ *     int 0x80, serviços de 1 à 9.
  *     Refresh buffer.
  *     Atualiza um buffer dado seu número.  (rever) */
 
@@ -724,7 +728,7 @@ void refresh_buffer (unsigned long n){
 
 /*
  * print_string:
- *     int 200, serviço 10.
+ *     int 0x80, serviço 10.
  *     Print string no buffer.  (rever) */
 
 void print_string ( unsigned long x,  
@@ -737,37 +741,36 @@ void print_string ( unsigned long x,
 
 
 /*
+ **********************
  * vsync:
- *     Int 200, serviço 15.
- *     Sincroniza o retraço vertical do monitor.  (rever) */
+ *     Int 0x80, serviço 15.
+ *     Sincroniza o retraço vertical do monitor.  (rever) 
+ */
 
 int vsync (){
-	
-	//#todo
-	//return (int) system_call ( SYSTEMCALL_VSYNC, 0, 0, 0 );
-	
-	system_call ( SYSTEMCALL_VSYNC, 0, 0, 0 );
-    
-	return (int) 0;
+
+    return (int) system_call ( SYSTEMCALL_VSYNC, 0, 0, 0 );
 }
 
 
 /*
  * edit_box:
- *     Interrupção 200, serviço SYSTEMCALL_EDITBOX.  (rever) */
+ *     Interrupção 200, serviço SYSTEMCALL_EDITBOX.  (rever) 
+ */
 
-int edit_box ( unsigned long x,  
-               unsigned long y, 
-			   unsigned long height, 
-			   unsigned long width)
+int 
+edit_box ( unsigned long x,  
+           unsigned long y, 
+		   unsigned long height, 
+		   unsigned long width )
 {
 	//#todo:
 	//Agora o edit box é um tipo de janelas.
 	
-	//@todo: Altura e largura negligenciados.
-    system_call ( SYSTEMCALL_EDITBOX, x, y, 0 );
+	// #todo: 
+	// Altura e largura negligenciados.
 	
-	return (int) 0;
+    return (int) system_call ( SYSTEMCALL_EDITBOX, x, y, 0 );
 }
 
 
@@ -783,10 +786,8 @@ void *gde_system_procedure ( struct window_d *window,
 					         unsigned long long1,
 					         unsigned long long2 )
 {
-	
     unsigned long message_buffer[5];     	
-	
-	
+		
 	message_buffer[0] = (unsigned long) window; 
 	message_buffer[1] = (unsigned long) msg;
 	message_buffer[2] = (unsigned long) long1;
@@ -819,7 +820,8 @@ int SetNextWindowProcedure (unsigned long next_procedure){
  * set_cursor:
  *     Configura as posições do cursor.
  *     Interrupção 200, serviço SYSTEMCALL_SETCURSOR.  (rever)
- *     @todo: Criar o protótipo no header. */
+ *     @todo: Criar o protótipo no header. 
+ */
 
 int set_cursor (unsigned long x, unsigned long y){
 	
@@ -829,7 +831,8 @@ int set_cursor (unsigned long x, unsigned long y){
 
 /*
  * put_char:
- *     Put char.  (rever) */
+ *     Put char.  (rever) 
+ */
 
 void 
 put_char ( unsigned long x, 
@@ -842,7 +845,7 @@ put_char ( unsigned long x,
 
 
 /*
- *  :
+ *  gde_load_bitmap_16x16:
  *     Coloca um bitmap no buffer.
  *     interrupção 200, serviço SYSTEMCALL_LOAD_BITMAP_16x16, 
  *     pôe um bitmap no buffer.
@@ -868,10 +871,12 @@ gde_load_bitmap_16x16 ( unsigned long img_address,
 
 
 /*
+ **********************
  * apiShutDown:
  *     Desliga a máquina.
  *     Interrupção 200, serviço SYSTEMCALL_SHUTDOWN.
- *     Metodo? ACPI, APM ...  (rever) */
+ *     Metodo? ACPI, APM ...  (rever) 
+ */
 
 void apiShutDown (){
 	
@@ -892,7 +897,8 @@ void apiShutDown (){
 
 /*
  * apiInitBackground:
- *     Initialize default background configuration.  (rever) */
+ *     Initialize default background configuration.  (rever) 
+ */
 
 void apiInitBackground (){
 	
@@ -910,16 +916,6 @@ void apiInitBackground (){
  */
 
 int MessageBox ( int type, char *string1, char *string2 ){
-    
-    // Antes nós chamávamos o kernel, agora tentaremos 
-    // implantar na api.
-	
-	//system_call ( SYSTEMCALL_MESSAGE_BOX, (unsigned long) type, 
-	//	(unsigned long) string1, (unsigned long) string2 );
-	
-
-	//#debug
-	//printf ("Testing new Message Box type=%d \n", type);
 
     int Response = 0;	
     int running = 1;
@@ -929,11 +925,13 @@ int MessageBox ( int type, char *string1, char *string2 ){
 	struct window_d *bWnd;    //Button.	
 	
 	
-	//#todo: usar get system metrics
+	// #todo: 
+	// usar get system metrics
 	
 	// x and y
 	// @todo centralizado: metade | um terço.
 	// @todo: Pegar a métrica do dispositivo.
+	
 	unsigned long x  = (unsigned long) 10;       //deslocamento x
 	unsigned long y  = (unsigned long) 300;      //deslocamento y
     unsigned long cx = (unsigned long) (800/2);  //largura   
@@ -947,8 +945,12 @@ int MessageBox ( int type, char *string1, char *string2 ){
 	WindowClientAreaColor = xCOLOR_GRAY1; //COLOR_YELLOW;
 	WindowColor = COLOR_TERMINAL2; //COLOR_PINK;	
 	
-	//Obs: Por enquanto para todos os tipos de messagebox 
+	// Obs: 
+	// Por enquanto para todos os tipos de messagebox 
 	// estamos usando o mesmo tipo de janela.
+	
+	//if (type <0)
+		//return -1;
 	
 	switch (type)
 	{	
@@ -957,12 +959,13 @@ int MessageBox ( int type, char *string1, char *string2 ){
 	    case 1:
 		    Button = 1;
 			gde_begin_paint ();
-	        hWnd = (void*) gde_create_window (  WT_SIMPLE, 1, 1, string1, 
-			                x, y, cx, cy, NULL, 0, 
-							WindowClientAreaColor, WindowColor );
+	        hWnd = (void *) gde_create_window (  WT_SIMPLE, 1, 1, string1, 
+			                    x, y, cx, cy, 
+								NULL, 0, WindowClientAreaColor, WindowColor );
 			
 			if ( (void *) hWnd == NULL ){
-				printf("hWnd fail\n");
+				printf ("MessageBox: hWnd \n");
+				//return -1;
 			}else{
 			    gde_register_window (hWnd);
                 APISetActiveWindow (hWnd);	
@@ -982,6 +985,7 @@ int MessageBox ( int type, char *string1, char *string2 ){
 							WindowClientAreaColor, WindowColor ); 
 			if ( (void *) hWnd == NULL ){
 				printf("hWnd fail\n");
+				//return -1;
 			}else{
 			    gde_register_window (hWnd);
                 APISetActiveWindow (hWnd);	
@@ -1002,6 +1006,7 @@ int MessageBox ( int type, char *string1, char *string2 ){
 			
 			if ( (void *) hWnd == NULL ){
 				printf("hWnd fail\n");
+				//return -1;
 			}else{
 			    gde_register_window (hWnd);
                 APISetActiveWindow (hWnd);	
@@ -1022,6 +1027,7 @@ int MessageBox ( int type, char *string1, char *string2 ){
 			
 			if ( (void *) hWnd == NULL ){
 				printf("hWnd fail\n");
+				//return -1;
 			}else{
 			    gde_register_window (hWnd);
                 APISetActiveWindow (hWnd);	
@@ -1043,6 +1049,7 @@ int MessageBox ( int type, char *string1, char *string2 ){
 			if ( (void *) hWnd == NULL )
 			{
 				printf("hWnd fail\n");
+				//return -1;
 			}else{
 			    gde_register_window (hWnd);
                 APISetActiveWindow (hWnd);	
@@ -1070,8 +1077,8 @@ int MessageBox ( int type, char *string1, char *string2 ){
 
 	// button 1
 	messagebox_button1 = (void *) gde_create_window ( WT_BUTTON, 1, 1, "OK",     
-                                (cx/3), ((cy/4)*3), 80, 24,    
-                                hWnd, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
+                                      (cx/3), ((cy/4)*3), 80, 24,    
+                                      hWnd, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
 	
 	if ( (void *) messagebox_button1 == NULL )
 	{
@@ -1083,8 +1090,8 @@ int MessageBox ( int type, char *string1, char *string2 ){
 
 	// button 2
 	messagebox_button2 = (void *) gde_create_window ( WT_BUTTON, 1, 1, "CANCEL",     
-                                ((cx/3)*2), ((cy/4)*3), 80, 24,    
-                                hWnd, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
+                                      ((cx/3)*2), ((cy/4)*3), 80, 24,    
+                                      hWnd, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
 								
 	if ( (void *) messagebox_button2 == NULL )
 	{
@@ -1119,15 +1126,13 @@ Mainloop:
 	
 	while (running)
 	{
-		enterCriticalSection(); 
+		enterCriticalSection (); 
 		system_call ( 111, (unsigned long)&message_buffer[0],
-			(unsigned long)&message_buffer[0], 
-			(unsigned long)&message_buffer[0] );
-		exitCriticalSection(); 
+			(unsigned long)&message_buffer[0], (unsigned long)&message_buffer[0] );
+		exitCriticalSection (); 
 			
 		if ( message_buffer[1] != 0 )
 		{
-	        
 			Response = (int) mbProcedure ( (struct window_d *) message_buffer[0], 
 		                        (int) message_buffer[1], 
 		                        (unsigned long) message_buffer[2], 
@@ -1176,7 +1181,7 @@ mbProcedure ( struct window_d *window,
             {
                 case VK_ESCAPE:	
 				    printf ("scape\n");
-                    return (unsigned long) 101;				   
+                    return (unsigned long) 101;
 				    break;
 				   
                 default:
@@ -1186,7 +1191,7 @@ mbProcedure ( struct window_d *window,
             };
         break;
 	
-        case MSG_SYSKEYDOWN:                 
+        case MSG_SYSKEYDOWN: 
             switch(long1)	       
             {	
 				//Test.
@@ -1797,7 +1802,8 @@ void *gde_create_window ( unsigned long type,        //1, Tipo de janela (popup,
 /*
  *****************************
  * gde_register_window:
- *     Register Window. */
+ *     Register Window. 
+ */
 
 int gde_register_window (struct window_d *window){
 	
@@ -1818,7 +1824,8 @@ int gde_register_window (struct window_d *window){
 /*
  *****************************
  * gde_close_window:
- *     Close Window. */
+ *     Close Window. 
+ */
 
 int gde_close_window (struct window_d *window){
 	
@@ -1837,7 +1844,8 @@ int gde_close_window (struct window_d *window){
 
 /*
  * gde_set_focus:
- *     Set Focus. */
+ *     Set Focus. 
+ */
 
 int gde_set_focus (struct window_d *window){
 	
@@ -1854,12 +1862,13 @@ int gde_set_focus (struct window_d *window){
 	//APIredraw_window (window,1);
 		
     return 2;	
-};
+}
 
 
 /*
  * gde_get_focus:
- *     Get Focus. */
+ *     Get Focus. 
+ */
 
 int gde_get_focus (){
 	
@@ -1869,7 +1878,8 @@ int gde_get_focus (){
 
 /*
  * APIKillFocus:
- *     Kill Focus. */
+ *     Kill Focus. 
+ */
 
 int APIKillFocus (struct window_d *window){
 	
@@ -1892,7 +1902,8 @@ int APIKillFocus (struct window_d *window){
 /*
  * APISetActiveWindow:
  *     Set Active Window.
- * @todo: Esse retorno pode ser void. */
+ * @todo: Esse retorno pode ser void. 
+ */
 
 int APISetActiveWindow (struct window_d *window){
 	
@@ -1916,66 +1927,68 @@ int APISetActiveWindow (struct window_d *window){
  * APIGetActiveWindow:
  *     Get Active Window Id.
  */
+
 int APIGetActiveWindow (){
 	
     return (int) system_call ( SYSTEMCALL_GETACTIVEWINDOW, 0, 0, 0 );	
-};
+}
 
 
 /*
  * APIShowCurrentProcessInfo:
  *     Mostra informações sobre o processo atual.
  */
+
 void APIShowCurrentProcessInfo (){
 	
 	// @todo: Essa rotina devira apenas pegar os valores via system call
 	//        e imprimir os valores obtidos usando rotinas em user mode.
 	
 	system_call ( SYSTEMCALL_CURRENTPROCESSINFO, 0, 0, 0 );
-};
+}
 
-
-
-//*********
  
-void APIresize_window ( struct window_d *window, 
-                        unsigned long x, 
-						unsigned long y )
+void 
+APIresize_window ( struct window_d *window, 
+                   unsigned long x, 
+				   unsigned long y )
 {	
 	system_call ( SYSTEMCALL_RESIZEWINDOW, (unsigned long) window, x, y );
-};
+}
 
 
 /*
  * APIredraw_window:
  */
-void APIredraw_window( struct window_d *window, unsigned long flags ){
+
+void APIredraw_window ( struct window_d *window, unsigned long flags ){
 	
 	system_call ( SYSTEMCALL_REDRAWWINDOW, (unsigned long) window, 
 		(unsigned long) flags, (unsigned long) flags );
-};
+}
 
 
-void APIreplace_window ( struct window_d *window, 
-                         unsigned long x, 
-						 unsigned long y )
+void 
+APIreplace_window ( struct window_d *window, 
+                    unsigned long x, 
+					unsigned long y )
 {
 	system_call ( SYSTEMCALL_REPLACEWINDOW, (unsigned long) window, x, y );
-};
+}
 
 
 void APImaximize_window (struct window_d *window){
 	
 	system_call ( SYSTEMCALL_MAXIMIZEWINDOW, (unsigned long) window, 
 		(unsigned long) window, (unsigned long) window);
-};
+}
 
 
 void APIminimize_window (struct window_d *window){
 	
 	system_call ( SYSTEMCALL_MINIMIZEWINDOW, (unsigned long) window, 
 		(unsigned long) window, (unsigned long) window);	
-};
+}
 
 
 //Envia uma mensagem PAINT para o aplicativo atualizar a área de trabalho.
@@ -1983,54 +1996,54 @@ void APIupdate_window (struct window_d *window){
 	
 	system_call ( 113, (unsigned long) window, 
 		(unsigned long) window, (unsigned long) window);	
-};
+}
 
 
 void *APIget_foregroung_window (){
 	
 	system_call ( SYSTEMCALL_GETFOREGROUNDWINDOW, 0, 0, 0 );	
-};
+}
 
 
 void APIset_foregroung_window (struct window_d *window){
 	
 	system_call ( SYSTEMCALL_SETFOREGROUNDWINDOW, (unsigned long) window, 
 	    (unsigned long) window, (unsigned long) window );
-};
+}
 
 
 /*
- * exit:
+ ************************
+ * apiExit:
  *     Torna zombie a thread atual.
  *     Mas o propósito é terminar sair do 
  *     programa, terminando o processo e
  *     liberar os recursos que o processo estava usando.
  */
+
 void apiExit (int exit_code){
 	
     system_call ( SYSTEMCALL_EXIT, (unsigned long) exit_code, 
 		(unsigned long) exit_code, (unsigned long) exit_code );
     
-    while (1){
-		
-		asm ("pause");
-	};	
-};
+    while (1){ asm ("pause"); };	
+}
 
 
 /*
  * kill:
  *     @todo: Poderia ser o envio de um sinal para um processo dado deu PID.  
+ *     #bugbug: Essa rotina não pode existir aqui, ela pertence a libc. Deletar.
  */
 
 void kill (int exit_code){
-	
 	//#todo
 	//Não há uma chamada para isso ainda.
 }
 
 
 /*
+ ****************************
  * dead_thread_collector:
  *     Aciona o coletor de threads zumbis.
  *     Procura em todos os slots por threads no estado ZOMBIE e fecha elas.
@@ -2038,6 +2051,8 @@ void kill (int exit_code){
  * ficando à cargo do kernel apenas fazer a realocação dos recursos de destruição das
  * estruturas. 
  */
+
+// What a cool thing !
 
 void dead_thread_collector (){
 	
@@ -2047,6 +2062,7 @@ void dead_thread_collector (){
 
 
 /*
+ ****************************
  * api_strncmp:
  *     Compara duas strings.
  *     @todo: Isso deve ser oferecido peloa libC e não pela api. 
@@ -2055,6 +2071,9 @@ void dead_thread_collector (){
 int api_strncmp (char *s1, char *s2, int len){
 	
 	int n = len;
+	
+	//if ( len < 0 )
+		//return 3
 	
 	while (n > 0)
 	{	
@@ -2069,19 +2088,21 @@ int api_strncmp (char *s1, char *s2, int len){
 		*s2++;
 	};				
 			
-	if ( *s1 != '\0' || *s2 != '\0' ){
-		
+	if ( *s1 != '\0' || *s2 != '\0' )
+	{	
 	    return (int) 2;
-	};
+	}
 	
 	return 0;
 }
 
 
 /*
+ *************************************
  * refresh_screen:
  *     Refresh Screen.
- *     Passa o conteúdo do backbuffer para o lfb. */
+ *     Passa o conteúdo do backbuffer para o lfb. 
+ */
 
 void refresh_screen (){
 	
@@ -2092,7 +2113,8 @@ void refresh_screen (){
 /*
  * api_refresh_screen:
  *     Refresh the LFB.
- *     Move the content of BackBuffer to LFB. */
+ *     Move the content of BackBuffer to LFB. 
+ */
 
 void api_refresh_screen (){
 	
@@ -2102,7 +2124,8 @@ void api_refresh_screen (){
 
 /*
  * apiReboot:
- *     Reboot. */
+ *     Reboot. 
+ */
 
 void apiReboot (){
 	
@@ -2115,8 +2138,10 @@ void apiReboot (){
 
 
 /*
+ *******************************
  * apiSetCursor: 
- *     Set cursor. */
+ *     Set cursor. 
+ */
 
 void apiSetCursor ( unsigned long x, unsigned long y ){
 	
@@ -2128,41 +2153,45 @@ void apiSetCursor ( unsigned long x, unsigned long y ){
  * apiGetCursorX:
  *     Get cursor x. 
  */
+
 unsigned long apiGetCursorX (){
 	
     return (unsigned long) system_call ( SYSTEMCALL_GETCURSORX, 0, 0, 0 );
-};
+}
 
 
 /*
  * apiGetCursorY:
  *     Get cursor y.
  */
+
 unsigned long apiGetCursorY (){
 	
     return (unsigned long) system_call (SYSTEMCALL_GETCURSORY, 0, 0, 0 );
-};
+}
 
 
 /*
  * apiGetClientAreaRect:
  *     Get client area rect.
  */
+
 void *apiGetClientAreaRect (){
 	
     return (void *) system_call ( SYSTEMCALL_GETCLIENTAREARECT, 0, 0, 0 );	
-};
+}
 
 
 /*
  * apiSetClientAreaRect:
  *     Enviar uma estrutura de retângulo criada em user mode para o kernel.
  */
+
 void apiSetClientAreaRect (struct rect_d *r){
 	
     system_call ( SYSTEMCALL_SETCLIENTAREARECT, (unsigned long) r, 
 		(unsigned long) r, (unsigned long) r );
-};
+}
 
 
 /*
@@ -2171,17 +2200,19 @@ void apiSetClientAreaRect (struct rect_d *r){
  */
 
 void *gde_create_process ( unsigned long process_eip, 
-                        unsigned long process_priority, 
-						char *name )
+                           unsigned long process_priority, 
+						   char *name )
 {
     return (void *) system_call ( SYSTEMCALL_CREATEPROCESS, process_eip, 
 						process_priority, (unsigned long) name );		
-};
+}
 
 
 /*
  * gde_create_thread:
  *     Create a thread.
+ *     #todo: Precisamos uma função que envie mais argumentos.
+ *            Essa será uma rotina de baixo nível para pthreads.
  */
 
 void *gde_create_thread ( unsigned long init_eip, 
@@ -2196,8 +2227,7 @@ void *gde_create_thread ( unsigned long init_eip,
 /*
  ****************************************************************
  * apiStartThread:
- * coloca no estado standby para executar pela primeira vez
- * #BUGBUG: Não retornou. 
+ *     Coloca no estado standby para executar pela primeira vez
  */
 
 void apiStartThread (void *Thread){
@@ -2210,24 +2240,22 @@ void apiStartThread (void *Thread){
 /*
  * apiFOpen:
  *     Carrega na memória um arquivo.
- *     Usa um serviço do kernel para carregar um arquivo 
- * na memória.
- *     Obs: Devemos passar um endereço válido, previamente 
- * alocado. 
+ *     Usa um serviço do kernel para carregar um arquivo na memória.
+ *     Obs: Devemos passar um endereço válido, previamente alocado. 
  */
 
 void *apiFOpen (const char *filename, const char *mode){
 	
     void *Ret;	
 	
-	enterCriticalSection();
+	enterCriticalSection ();
 	
 	Ret = (void *) system_call ( SYSTEMCALL_READ_FILE, 
 	                (unsigned long) filename, (unsigned long) mode, 0 );
-					
-	exitCriticalSection();
-    
-	return (void *) Ret;								
+
+	exitCriticalSection ();
+ 
+	return (void *) Ret;
 }
 
 
@@ -2240,22 +2268,24 @@ void *apiFOpen (const char *filename, const char *mode){
  * o arquivo fossem gerenciadas pelo kernel. Mas não é o que estamos fazendo agora.
  */
  
+//file_size = size in sectors
+
 int
 gde_save_file ( char *file_name, 
-              unsigned long file_size,  //size in sectors 
-              unsigned long size_in_bytes,			
-              char *file_address,
-              char flag )  
+                unsigned long file_size,
+                unsigned long size_in_bytes,
+                char *file_address,
+                char flag )
 {
     int Ret;
-	
-	
-    // Enviando tudo via argumento.
+
+
+	// Enviando tudo via argumento.
 	// Esse método dá a possibilidade de enviarmos ainda 
 	// mais argumentos. 
 	// #importante: Isso está funcionado, Vamos fazer assim e 
 	// não do jeito antigo.
-	
+
 	unsigned long message_buffer[12];
 	
 	message_buffer[0] = (unsigned long) file_name;
@@ -2299,30 +2329,26 @@ void apiDown (struct semaphore_d *s){
         //@todo: Chamar rotina que bloqueia a thread.
 		
 		printf ("apiDown: *fail");
-		while (1){
-		    
-            asm ("pause");			
-		}
+		
+		while (1){ asm ("pause"); };
         
 		//return;	
 	};
 		
+	
 tryAgain:	
-
-	Status = (int) system_call( SYSTEMCALL_SEMAPHORE_DOWN, 
-	                            (unsigned long) s, 
-								(unsigned long) s, 
-								(unsigned long) s );
-
-    //0 = deu certo, entrada liberada na sessão crítica.
-    //1 = algo deu errado espere tentando novamente.
     
+	//0 = deu certo, entrada liberada na sessão crítica.
+    //1 = algo deu errado espere tentando novamente.
+	
+	Status = (int) system_call ( SYSTEMCALL_SEMAPHORE_DOWN, 
+	                   (unsigned long) s, (unsigned long) s, (unsigned long) s );
+
 	// Podemos entrar na região crítica.
 	
-	if (Status == 0)
-	{
+	if (Status == 0){
 		return;
-	};
+	}
 	
 	// Devemos esperar, monitorando a flag ou bloquando a thread.
 	
@@ -2339,8 +2365,8 @@ tryAgain:
 		goto tryAgain;
 	};
 	
-fail:
 	
+fail:
 	goto tryAgain;
 }
 
@@ -2350,7 +2376,7 @@ fail:
 
 void apiUp (struct semaphore_d *s){
 	
-	int Status = 1; //fail.
+	int Status = 1; 
 	
 	if ( (void *) s == NULL  )
 	{
@@ -2372,8 +2398,7 @@ tryAgain:
 						(unsigned long) s, (unsigned long) s );	
 
 	//Ok , podemos sair sa sessão crítica.
-	if (Status == 0)
-	{
+	if (Status == 0){
 		return;
 	};
 
@@ -2394,7 +2419,6 @@ tryAgain:
 	};	
 
 fail:
-	
 	goto tryAgain;
 }
 
@@ -2406,11 +2430,13 @@ void enterCriticalSection (){
 	
 	while (1)
 	{
-	    S = (int) system_call( SYSTEMCALL_GET_KERNELSEMAPHORE, 0, 0, 0);
+	    S = (int) system_call ( SYSTEMCALL_GET_KERNELSEMAPHORE, 0, 0, 0 );
 	    
 		//Se deixou de ser 0 então posso entrar.
 		//se ainda for 0, continuo no while.
-		if( S == 1 ){
+
+		if ( S == 1 )
+		{
 		    goto done;	
 		};
 		//Nothing.
@@ -2456,8 +2482,11 @@ void gde_end_paint (){
 
 
 /*
+ *******************************************
  * apiPutChar:
- *     Imprime um caractere usando o cursor do sistema. */
+ *     Imprime um caractere usando o cursor do sistema.
+ *     #todo; falar mais sobre isso.
+ */
 
 void apiPutChar (int c){
 	
@@ -2486,8 +2515,11 @@ apiDefDialog ( struct window_d *window,
 
 
 /*
+ **********************************
  * apiGetSystemMetrics:
- *     Obtem informações sobre dimensões e posicionamentos. */
+ *     Obtem informações sobre dimensões e posicionamentos. 
+ *     #importante
+ */
  
 unsigned long apiGetSystemMetrics (int index){
 	
@@ -2575,16 +2607,16 @@ void api_receive_message( struct api_receive_message_d *m )
  *     utiliza-se a mesma thread primária,
  * apenas renomeamos a thread.
  *
- * #importante: Por enquanto o shell tem uma dessa funcionando.
  */
  
+// #importante: 
+// Por enquanto o shell tem uma dessa funcionando.
+	 
 int 
 gramadocore_init_execve ( const char *filename, 
                           const char *argv[], 
                           const char *envp[] )
 {
-	
-	//@todo: Ainda não implementada.	
 	return (int) -1;
 }
 
@@ -2631,6 +2663,7 @@ int apiDialog ( const char *string ){
 		    };		   
 		};
 		
+		// ?? rever isso.
 		asm ("pause");
 	};
 	
@@ -3132,13 +3165,13 @@ apiDrawText ( struct window_d *window,
 struct window_d *apiGetWSScreenWindow (){
 	
     return (struct window_d *) system_call ( 146 , 0, 0, 0 );
-};
+}
 
 
 struct window_d *apiGetWSMainWindow (){
 	
     return (struct window_d *) system_call ( 147 , 0, 0, 0 );
-};
+}
 
 
 //create timer;
@@ -3176,11 +3209,12 @@ void apiShowWindow (struct window_d *window){
 // registra o terminal noraterm como terminal atual.
 // pega o pid do terminal atual
 // manda uma mensagem pedindo para o terminal dizer hello.
+
+// #obs: Isso funcionou.
  
 int apiStartTerminal (void){
 
 	int PID;
-	
 	
 	// 'Clona' e executa o noraterm como processo filho. 
 	PID = (int) system_call ( 900, (unsigned long) "noraterm.bin", 0, 0 );
