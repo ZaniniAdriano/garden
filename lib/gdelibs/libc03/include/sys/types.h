@@ -46,7 +46,7 @@ typedef	char *	caddr_t;		/* core address */
 typedef	long	daddr_t;		/* disk address */
 typedef	short	dev_t;			/* device number */
 typedef	u_long	ino_t;			/* inode number */
-typedef	long	off_t;			/* file offset (should be a quad) */
+//typedef	long	off_t;			/* file offset (should be a quad) */
 typedef	u_short	nlink_t;		/* link count */
 typedef	long	swblk_t;		/* swap offset */
 typedef	long	segsz_t;		/* segment size */
@@ -70,6 +70,11 @@ typedef	long *	qaddr_t;	/* should be typedef quad * qaddr_t; */
 #define	makedev(x,y)	((dev_t)(((x)<<8) | (y)))	/* create dev_t */
 #endif
 
+
+ /* file offset or size */
+//typedef	__int64_t	__off_t;
+typedef int __off_t;
+
 /*
 #include <machine/ansi.h>
 #if !defined(_ANSI_SOURCE) && !defined(_POSIX_SOURCE)
@@ -91,6 +96,11 @@ typedef	_TIME_T_	time_t;
 #undef	_TIME_T_
 #endif
 */
+
+#ifndef	_OFF_T_DEFINED_
+#define	_OFF_T_DEFINED_
+typedef	__off_t		off_t;
+#endif
 
 
 //Conflito. 

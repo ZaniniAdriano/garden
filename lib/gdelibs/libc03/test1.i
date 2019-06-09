@@ -18,7 +18,7 @@ typedef char * caddr_t;
 typedef long daddr_t;
 typedef short dev_t;
 typedef u_long ino_t;
-typedef long off_t;
+
 typedef u_short nlink_t;
 typedef long swblk_t;
 typedef long segsz_t;
@@ -36,7 +36,11 @@ typedef u_long fixpt_t;
 typedef struct _uquad { u_long val[2]; } u_quad;
 typedef struct _quad { long val[2]; } quad;
 typedef long * qaddr_t;
-# 104 "include/sys/types.h"
+# 76 "include/sys/types.h"
+typedef int __off_t;
+# 102 "include/sys/types.h"
+typedef __off_t off_t;
+# 114 "include/sys/types.h"
 typedef int ssize_t;
 
 
@@ -48,7 +52,7 @@ typedef long time_t;
 
 
 typedef long clock_t;
-# 125 "include/sys/types.h"
+# 135 "include/sys/types.h"
 typedef int uid_t;
 
 
@@ -61,7 +65,7 @@ typedef int pid_t;
 
 
 typedef int gid_t;
-# 153 "include/sys/types.h"
+# 163 "include/sys/types.h"
 typedef long fd_mask;
 
 

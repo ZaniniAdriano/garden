@@ -14,7 +14,9 @@
 
 #ifndef __STDIO_H__
 #define __STDIO_H__
- 
+
+#include <sys/types.h>
+#include <sys/cdefs.h>
 #include <stddef.h>
 #include <stdarg.h> 
 
@@ -166,6 +168,26 @@ typedef char *stdio_va_list;
 #endif
 
 
+
+/*      
+ * This is fairly grotesque, but pure ANSI code must not inspect the
+ * innards of an fpos_t anyway.  The library internally uses off_t,
+ * which we assume is exactly as big as eight chars.
+ */
+
+/*
+#if (!defined(_ANSI_SOURCE) && !defined(__STRICT_ANSI__)) || defined(_LIBC)
+typedef __off_t fpos_t;
+#else
+typedef struct __sfpos {
+	__off_t _pos;
+} fpos_t;
+#endif
+*/
+
+// Vamos usar esse por enquanto.
+typedef __off_t fpos_t;
+
 //#define	_FSTDIO			/* Define for new stdio with functions. */
 
 /*
@@ -275,24 +297,26 @@ struct _iobuf
 	// the buffer (at least 1 byte, if !NULL)
 	struct	__sbuf _bf;	           
 		
-	int	_lbfsize;	              // 0 or -_bf._size, for inline putc 
-	//int   _bufsiz;
-	
+	// 0 or -_bf._size, for inline putc 
+	int	_lbfsize;	             
 	
 	//operations 
+	//#todo: olhar __P em sys/cdefs.h
 	void	*_cookie;	                 // cookie passed to io functions 
-	//int	(*_close) __P((void *));
-	//int	(*_read)  __P((void *, char *, int));
-	//fpos_t	(*_seek)  __P((void *, fpos_t, int));
-	//int	(*_write) __P((void *, const char *, int));
+	int	(*_close) __P((void *));
+	int	(*_read)  __P((void *, char *, int));
+	fpos_t	(*_seek)  __P((void *, fpos_t, int));
+	int	(*_write) __P((void *, const char *, int));
 
 	
 	//file extension 
 	struct	__sbuf _ext;	
 	
 	// separate buffer for long sequences of ungetc() 
-	//unsigned char *_up;   	// saved _p when _p is doing ungetc data 
-	//int	_ur;		        // saved _r when _r is counting ungetc data 	
+	// saved _p when _p is doing ungetc data 
+	unsigned char *_up;
+	// saved _r when _r is counting ungetc data
+	int	_ur;		         	
 	
 	
 	// tricks to meet minimum requirements even when malloc() fails 
@@ -303,11 +327,14 @@ struct _iobuf
 	struct	__sbuf _lb;	// buffer for fgetln() 
 
 	//Unix stdio files get aligned to block boundaries on fseek() 
-	int	_blksize;	// stat.st_blksize (may be != _bf._size) 
-	//fpos_t	_offset;	// current lseek offset 	
+	int	_blksize;	    // stat.st_blksize (may be != _bf._size) 
+	fpos_t	_offset;	// current lseek offset 	
 	
 	
-	//old stuff
+	// old stuff
+	// isso pertence a estrutura no formato antigo
+	// e os elementos ainda estão presentes em várias rotinas.
+	//No futuro vamos deletar isso. (Talvez não.)
 	int   _cnt;      // number of available characters in buffer 
 	char *_base;     // Pointer to the base of the file. the buffer
 	int   _charbuf;   
