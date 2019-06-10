@@ -5,7 +5,7 @@
 
 
 
-
+void testScrollChar();
 
 void testsTimerUpdateObject ();
 

@@ -26,7 +26,7 @@ utf8countBytes (int c)
 
 /*
  ***************************************************
- * shellInsertNextChar:
+ * terminalInsertNextChar:
  *     Coloca um char na próxima posição do buffer.
  *     Memória de vídeo virtual, semelhante a vga.
  *     #todo: Esse buffer poderia ser um arquivo que o kernel
@@ -35,7 +35,7 @@ utf8countBytes (int c)
 
 // # terminal stuff
 
-void shellInsertNextChar (char c){
+void terminalInsertNextChar (char c){
 	
 	// #todo
 	// para alguns caracteres temos que efetuar o flush.
@@ -51,7 +51,7 @@ void shellInsertNextChar (char c){
 	// #todo
 	// Tem caracteres que não são imprimíveis.
 	
-	shellRefreshCurrentChar ();
+	terminalRefreshCurrentChar ();
 	
 	// Atualiza os deslocamanentos dentro do buffer.
 	
@@ -76,101 +76,25 @@ void shellInsertNextChar (char c){
 }
 
 
-
-
 // # terminal stuff
-void shellInsertNullTerminator (){
+void terminalInsertNullTerminator (){
 	
-	shellInsertNextChar ( (char) '\0' );	
-}
-
-// # terminal stuff
-void shellInsertLF (){
-	
-	shellInsertNextChar ( (char) '\n' );
+	terminalInsertNextChar ( (char) '\0' );	
 }
 
 
 // # terminal stuff
-void shellInsertCR (){
+void terminalInsertLF (){
+	
+	terminalInsertNextChar ( (char) '\n' );
+}
+
+
+// # terminal stuff
+void terminalInsertCR (){
     
-	shellInsertNextChar ( (char) '\r' );		
+	terminalInsertNextChar ( (char) '\r' );		
 }
-
-
-// # terminal stuff
-// usado para teste de scroll.
-// imprime varias vezes o char indicado.
-
-void testScrollChar ( int c ){
-	
-    int i;
-	
-    for ( i=0; i < (wlMaxColumns*26); i++ )
-	{
-	    //se chegamos no limite do screen_buffer
-		//...
-		shellInsertNextChar ((char) c);	
-	}		
-}
-
-
-
-/*
-//inserindo uma string em uma posição do buffer de saída.
-void shellInsertStringPos( unsigned long offset, char *string );
-void shellInsertStringPos( unsigned long offset, char *string )
-{
-    //@todo
-};
-*/
-
-
-/*
- preenche todo o buffer de saída com char ou atributo
-void shellFillOutputBuffer( char element, int element_type )
-{
-	
-}
-*/
-
-
-
-// # terminal stuff
-
- // Insere um caractere sentro do buffer.
-char 
-shellGetCharXY ( unsigned long x, 
-                 unsigned long y )
-{	
-	if ( x >= wlMaxColumns || y >= wlMaxRows )
-	{	
-		return;
-	}
-
-	return (char) LINES[y].CHARS[x];
-}
-
-
-
-
-
-// # terminal stuff
-// Insere um caractere sentro do buffer.
-void 
-shellInsertCharXY ( unsigned long x, 
-                    unsigned long y, 
-				    char c )
-{
-	if ( x >= wlMaxColumns || y >= wlMaxRows )
-	{	
-		return;
-	}
-
-	LINES[y].CHARS[x] = (char) c;
-	LINES[y].ATTRIBUTES[x] = 7;
-}
-
 
 
 // # terminal stuff
@@ -223,6 +147,62 @@ static void del (void){
 }
 
 
+/*
+//inserindo uma string em uma posição do buffer de saída.
+void shellInsertStringPos( unsigned long offset, char *string );
+void shellInsertStringPos( unsigned long offset, char *string )
+{
+    //@todo
+};
+*/
+
+
+/*
+ preenche todo o buffer de saída com char ou atributo
+void shellFillOutputBuffer( char element, int element_type )
+{
+	
+}
+*/
+
+
+
+// # terminal stuff
+// Insere um caractere sentro do buffer.
+
+char 
+terminalGetCharXY ( unsigned long x, 
+                    unsigned long y )
+{	
+	if ( x >= wlMaxColumns || y >= wlMaxRows )
+	{	
+		return;
+	}
+
+	return (char) LINES[y].CHARS[x];
+}
+
+
+// # terminal stuff
+// Insere um caractere sentro do buffer.
+
+void 
+terminalInsertCharXY ( unsigned long x, 
+                       unsigned long y, 
+				       char c )
+{
+	if ( x >= wlMaxColumns || y >= wlMaxRows )
+	{	
+		return;
+	}
+
+	LINES[y].CHARS[x] = (char) c;
+	LINES[y].ATTRIBUTES[x] = 7;
+}
+
+
+
+
 
 
 // # terminal stuff
@@ -243,34 +223,33 @@ static void restore_cur (void){
 
 
 //refresh do char que está na posição usada pelo input.
-void shellRefreshCurrentChar (){
+void terminalRefreshCurrentChar (){
 	
 	printf ("%c", LINES[textCurrentRow].CHARS[textCurrentCol] );
-};
+}
 
 
 // a intenção aqui é fazer o refresh de apenas uma linha do arquivo.
 //#todo podemos fazer o mesmo para um char apenas.
 
-void shellRefreshChar ( int line_number, int col_number ){
+void terminalRefreshChar ( int line_number, int col_number ){
 	
 	if ( col_number > wlMaxColumns || line_number > wlMaxRows )
 		return;
 	
-	shellSetCursor ( col_number, line_number );
+	terminalSetCursor ( col_number, line_number );
 
 	//Mostra um char do screen buffer.
-	printf( "%c", LINES[line_number].CHARS[col_number] );	
-};
+	printf ("%c", LINES[line_number].CHARS[col_number] );	
+}
 
 
 
 // a intenção aqui é fazer o refresh de apenas uma linha do arquivo.
 //#todo podemos fazer o mesmo para um char apenas.
 
-void shellRefreshLine ( int line_number ){
+void terminalRefreshLine ( int line_number ){
 	
-    
 	if ( line_number > wlMaxRows )
 		return;	
 	
@@ -280,7 +259,7 @@ void shellRefreshLine ( int line_number ){
 	
 #ifdef SHELL_VERBOSE		
 	//#debug
-	printf("shellRefreshScreen:\n");
+	printf ("shellRefreshScreen:\n");
 #endif 
 
 	//cursor apontando par ao início da janela.
@@ -289,7 +268,7 @@ void shellRefreshLine ( int line_number ){
 	//início da área de cliente.
 	//left será a coluna.
 	
-	shellSetCursor ( col, lin );
+	terminalSetCursor ( col, lin );
 		
 	//colunas.
 	for ( col=0; col < wlMaxColumns; col++ )
@@ -297,9 +276,7 @@ void shellRefreshLine ( int line_number ){
 	    //Mostra um char do screen buffer.
 		printf( "%c", LINES[lin].CHARS[col] );
 	};
-	
-};
-
+}
 
 
 /*
@@ -318,6 +295,7 @@ void shellRefreshLine ( int line_number ){
  * na hora de efetuar refresh precisamos considerar o atributo 
  * para sabermos a cor do caractere e de seu background.
  */
+
 void shellRefreshScreen (){
 
 	//desabilita o cursor
@@ -340,8 +318,7 @@ void shellRefreshScreen (){
 
 	//reabilita o cursor
 	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);	
-	
-};
+}
 
 
 /*
@@ -387,7 +364,7 @@ void shellClearScreen (){
     left = (terminal_rect.left/8);
     top = (terminal_rect.top/8);
 	
-    shellSetCursor ( left, top );
+    terminalSetCursor ( left, top );
 
 
 	// Copiamos o conteúdo do screenbuffer para 
@@ -400,7 +377,45 @@ void shellClearScreen (){
 	
 	//reabilita o cursor
 	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);	
-};
+}
+
+
+/*
+ **********************************************
+ * terminalSetCursor:
+ *     Configurando o cursor. (stdio.h).
+ *
+ * @todo: Aqui quando definimos os valores o cursor no shell 
+ * devemos considerar que a janela com o foco de entrada tambem tem um cursor...
+ * Temos que atualizar o cursor da janela com foco de entrada se quizermos 
+ * escrever corretamente dentro dela.
+ * e isso se faz através de uma chamada ao kernel.
+ */
+
+void terminalSetCursor ( unsigned long x, unsigned long y ){
+	
+    //
+	// Coisas do kernel.
+	//
+	
+	//setando o cursor usado pelo kernel base.	
+    apiSetCursor (x,y);
+	
+//Atualizando as variáveis globais usadas somente aqui no shell.
+//setGlobals:	
+	
+    g_cursor_x = (unsigned long) x;
+    g_cursor_y = (unsigned long) y;	
+	
+	//
+	// Coisas do screen buffer.
+	//
+    
+	move_to ( x, y);
+}
+
+
+
 
 
 

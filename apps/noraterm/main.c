@@ -696,8 +696,8 @@ void *noratermProcedure ( struct window_d *window,
 					//o cursor do ldisc no kernel precisa ser atualizado tambem.
 					//textCurrentCol--;
 					//apiSetCursor (textCurrentCol,textCurrentRow);
-					//shellSetCursor (textCurrentCol,textCurrentRow);
-					//shellInsertNextChar ( (char) ' ' ); 
+					//terminalSetCursor (textCurrentCol,textCurrentRow);
+					//terminalInsertNextChar ( (char) ' ' ); 
 					goto done;
                     break;					
                               
@@ -715,7 +715,7 @@ void *noratermProcedure ( struct window_d *window,
                     
 					// Coloca na memória de video virtual,
 					// Que é semelhante a vga, contendo char e atributo.
-					shellInsertNextChar ( (char) long1 );  
+					terminalInsertNextChar ( (char) long1 );  
 					
 					// #importante:   
 					// IMPRIMINDO.
@@ -3706,12 +3706,12 @@ void shellShell (){
     //#bugbug
 	//Nossa referência é a moldura e não a área de cliente.
 	//@todo:usar a área de cliente como referência
-	//shellSetCursor(0,0);
-    //shellSetCursor(0,4);
+	//terminalSetCursor(0,0);
+    //terminalSetCursor(0,4);
     
 	//@todo
 	//tentando posicionar o cursor dentro da janela
-	//shellSetCursor( (shell_info.main_window->left/8) , (shell_info.main_window->top/8));	
+	//terminalSetCursor( (shell_info.main_window->left/8) , (shell_info.main_window->top/8));	
 	
 	//shellPrompt();
 };
@@ -3790,7 +3790,7 @@ int shellInit ( struct window_d *window ){
 	
     //bugbug	
 	//cursor
-	//shellSetCursor(0,4);
+	//terminalSetCursor(0,4);
 	
 	//pointer
 	//shellPrompt();
@@ -4153,44 +4153,13 @@ int shellCheckPassword ()
 }
 
 
-/*
- * shellSetCursor:
- *     Configurando o cursor. (stdio.h).
- *
- * @todo: Aqui quando definimos os valores o cursor no shell 
- * devemos considerar que a janela com o foco de entrada tambem tem um cursor...
- * Temos que atualizar o cursor da janela com foco de entrada se quizermos 
- * escrever corretamente dentro dela.
- * e isso se faz através de uma chamada ao kernel.
- */
-void shellSetCursor ( unsigned long x, unsigned long y ){
-	
-    //
-	// Coisas do kernel.
-	//
-	
-	//setando o cursor usado pelo kernel base.	
-    apiSetCursor (x,y);
-	
-//Atualizando as variáveis globais usadas somente aqui no shell.
-//setGlobals:	
-    g_cursor_x = (unsigned long) x;
-    g_cursor_y = (unsigned long) y;	
-	
-	
-	//
-	// Coisas do screen buffer.
-	//
-    
-	move_to ( x, y);
-};
-
 
 /*
  *******************************************
  * shellThread:
  *     Um thread dentro para testes.
  */
+
 void shellThread (){
 	
 	printf("\n");
@@ -4203,18 +4172,10 @@ void shellThread (){
 	printf("$\n");
     printf("\n");
 	
-    refresh_screen();
+    refresh_screen ();
 	
-	while(1){}
-    while(1)
-	{	
-	    //printf("$");
-		asm ( "pause" );
-		asm ( "pause" );
-		asm ( "pause" );
-		asm ( "pause" );
-    }	
-};
+	while (1){ asm ( "pause" ); };
+}
 
 
 //help message
@@ -4377,17 +4338,15 @@ void shellTestLoadFile (){
 		
 		} else {   			
 		    
-			shellInsertNextChar ( (char) ch_test ); 		
+			terminalInsertNextChar ( (char) ch_test ); 		
 	    };
 	};	
-	
-
- 
+	 
 done:
     //
 fail:
     return;	
-};
+}
 
 
 /*
@@ -4698,7 +4657,7 @@ void shellShowWindowInfo (){
 	// em kernel mode.
 	//if( shell_info.main_window->left > 0 && shell_info.main_window->top > 0  )
 	//{
-	//    shellSetCursor( (shell_info.main_window->left/8), (shell_info.main_window->top/8) );
+	//    terminalSetCursor( (shell_info.main_window->left/8), (shell_info.main_window->top/8) );
 	//}
 		
 		
@@ -4714,7 +4673,7 @@ void shellShowWindowInfo (){
 	//Obs: isso funcionou. setando o cursor.
 	//if( terminal_rect.left > 0 && terminal_rect.top > 0 )
 	//{											  
-    //    shellSetCursor( (terminal_rect.left/8), (terminal_rect.top/8) );													  
+    //    terminalSetCursor( (terminal_rect.left/8), (terminal_rect.top/8) );													  
 	//};
 		
 		
@@ -4902,33 +4861,33 @@ void shellTaskList (){
 	int PID;
 
 	//Pega o PID do processo atual.
-    PID = (int) system_call( SYSTEMCALL_GETPID, 0, 0, 0 );
+    PID = (int) system_call ( SYSTEMCALL_GETPID, 0, 0, 0 );
 	
     //X = apiGetCursorX();
-	Y = apiGetCursorY();
+	Y = apiGetCursorY ();
 	
 	Y++;
 	X=0;
-	shellSetCursor(X,Y);	
+	terminalSetCursor (X,Y);	
     printf("PID ");
 	X=8;
-	shellSetCursor(X,Y);
+	terminalSetCursor (X,Y);
 	printf("XXXXXXXX");
 	
 	Y++;
 	X=0;
-	shellSetCursor(X,Y);
+	terminalSetCursor (X,Y);
     printf("====");
 	X=8;
-	shellSetCursor(X,Y);
+	terminalSetCursor (X,Y);
 	printf("========");
 
 	Y++;
 	X=0;
-	shellSetCursor(X,Y);	
+	terminalSetCursor (X,Y);	
     printf("%d",PID);
 	X=8;
-	shellSetCursor(X,Y);
+	terminalSetCursor (X,Y);
 	printf("...");
 	
     //...		
@@ -6234,8 +6193,8 @@ int textGetBottomRow ()
 }
 
 
-void clearLine ( int line_number )
-{
+void clearLine ( int line_number ){
+	
     int lin = (int) line_number; 
 	int col = 0;  
 	
@@ -6247,7 +6206,7 @@ void clearLine ( int line_number )
 	//início da área de cliente.
 	//left será a coluna.
 	
-	shellSetCursor ( col, lin );
+	terminalSetCursor ( col, lin );
 		
 	//colunas.
 	for ( col=0; col < wlMaxColumns; col++ )
@@ -6354,7 +6313,7 @@ void shellRefreshVisibleArea (){
     left = (terminal_rect.left/8);
     top = (terminal_rect.top/8);
 	
-    shellSetCursor ( left, top );
+    terminalSetCursor ( left, top );
 	
 	// efetua o refresh do char atual, que agora é o primeiro 
 	// depois os outros consecutivos.
@@ -7286,7 +7245,7 @@ do_run_internal_shell:
 	//
 	
 	
-	shellSetCursor ( (terminal_rect.left / 8) , ( terminal_rect.top/8) );	
+	terminalSetCursor ( (terminal_rect.left / 8) , ( terminal_rect.top/8) );	
 	
 	// Habilitando o cursor piscante de textos.
 	

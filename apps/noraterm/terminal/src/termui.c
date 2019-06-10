@@ -126,7 +126,7 @@ void *terminalTopbarProcedure ( struct window_d *window,
 					//input( (unsigned long) long1);      
                     
 					// Coloca no stdout.
-					//shellInsertNextChar((char) long1);  
+					//terminalInsertNextChar((char) long1);  
 					//
 					// #importante: IMPRIMINDO.
 					// Funcionando bem.
@@ -493,7 +493,7 @@ void terminalCreateEditBox (){
 	//Registrar.
     APIRegisterWindow (editboxWindow);
 
-	//shellSetCursor ( 8, 8 );								   
+	//terminalSetCursor ( 8, 8 );								   
 }
 
 

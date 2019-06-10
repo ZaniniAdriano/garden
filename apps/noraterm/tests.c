@@ -48,8 +48,7 @@ void testsTimerUpdateObject (){
       objectY = 24; 
       deltaY = -deltaValue;
    }
-
-    
+   
 	//
 	// ## test ##
 	//
@@ -59,12 +58,12 @@ void testsTimerUpdateObject (){
     //textCurrentCol = objectY;
    
     //putchar.
-	//shellInsertNextChar ( (char) 'T' );  
+	//terminalInsertNextChar ( (char) 'T' );  
 	
-	shellSetCursor ( objectX, objectY );	
+	terminalSetCursor ( objectX, objectY );	
 	
-	printf("%c",(char) 'X');
-};
+	printf ("%c", (char) 'X');
+}
 
 
 void testsInitTimer (struct window_d * window){
@@ -81,10 +80,29 @@ void testsInitTimer (struct window_d * window){
             (unsigned long) 50, (int) 2 );			
 		
 		//inicializando.
+	
         objectX = 0;
         objectY = 0;
+	
         deltaX = deltaValue;
         deltaY = deltaValue;
 }
+
+// # terminal stuff
+// usado para teste de scroll.
+// imprime varias vezes o char indicado.
+
+void testScrollChar ( int c ){
+	
+    int i;
+	
+    for ( i=0; i < (wlMaxColumns*26); i++ )
+	{
+	    //se chegamos no limite do screen_buffer
+		//...
+		terminalInsertNextChar ((char) c);	
+	}		
+}
+
 
 

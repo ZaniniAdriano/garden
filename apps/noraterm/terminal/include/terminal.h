@@ -430,44 +430,56 @@ int terminalTestButtons ();
 // Typing support.
 //
 
-void shellInsertNextChar(char c);
+void terminalInsertNextChar (char c);
+void terminalInsertNullTerminator ();
+void terminalInsertLF ();
+void terminalInsertCR ();
+static void lf (void);
+static void ri (void);
+static void cr (void);
+static void del (void);
 
-void shellInsertNullTerminator();
-void shellInsertLF();
-void shellInsertCR();
-
-void testScrollChar();
 
 char 
-shellGetCharXY ( unsigned long x, 
+terminalGetCharXY ( unsigned long x, 
                  unsigned long y );
 
-
-
-void shellInsertCharXY(unsigned long x, unsigned long y, char c);
+void terminalInsertCharXY (unsigned long x, unsigned long y, char c);
 
  
-static void lf(void);
-static void ri(void);
-static void cr(void);
-static void del(void);
+
 
 static void save_cur(void);
 static void restore_cur(void);
 
-void shellRefreshCurrentChar(); //refresh do char que está na posição usada pelo input.
 
-void shellRefreshChar ( int line_number, int col_number );
+//refresh do char que está na posição usada pelo input.
+void terminalRefreshCurrentChar (); 
 
-void shellRefreshLine ( int line_number );
+
+void terminalRefreshChar ( int line_number, int col_number );
+
+void terminalRefreshLine ( int line_number );
 
 //
 // terminal screen support.
 //
 
 
-void shellRefreshScreen(); //copia o conteúdo do buffer para a tela. (dentro da janela)
-void shellClearScreen();
+//copia o conteúdo do buffer para a tela. (dentro da janela)
+void shellRefreshScreen(); 
+
+
+
+void shellClearScreen ();
+
+
+
+//
+// Cursor support.
+//
+
+void terminalSetCursor (unsigned long x, unsigned long y);
 
 
 
