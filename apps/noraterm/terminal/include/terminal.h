@@ -180,8 +180,6 @@ struct line_d
 };
 
 
-
-
 //Conterá ponteiros para estruturas de linha.
 unsigned long lineList[LINE_COUNT_MAX];
 
@@ -236,7 +234,6 @@ unsigned long screenbufferList[8];
 //
 // ====
 //
-
 
 
 //marcador do cursor.
@@ -353,9 +350,13 @@ unsigned long wpWindowTop;
 
 
 
-//
-// ====
-//
+//=======================================
+//               Cursor                //  
+//=======================================
+
+//linha e coluna atuais
+int textCurrentRow;
+int textCurrentCol;
 
 
 //#importante:
@@ -365,9 +366,6 @@ unsigned long wpWindowTop;
 int textTopRow;  //Top nem sempre será '0'.
 int textBottomRow;
 
-//linha e coluna atuais
-int textCurrentRow;
-int textCurrentCol;
 
 int textSavedRow;
 int textSavedCol;
@@ -498,5 +496,11 @@ int textGetTopRow ();
 int textGetBottomRow ();
 
 
+void textSetCurrentRow ( int number );
+int textGetCurrentRow ();
+void textSetCurrentCol ( int number );
+int textGetCurrentCol ();
+
+void move_to ( unsigned long x, unsigned long y);
 
 

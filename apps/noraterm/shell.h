@@ -695,7 +695,7 @@ void shellScroll();
 
 
 
-void move_to( unsigned long x, unsigned long y);
+
 //...
 
 

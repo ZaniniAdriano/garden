@@ -601,9 +601,6 @@ static inline void rep_nop (void){
 
  
  
- 
-
-
 
 /*
  ***********************************************
@@ -653,11 +650,8 @@ void *noratermProcedure ( struct window_d *window,
 				
 				// Null key.
 				case 0:
-				    pause();
-					pause();
-					//pause();
-					//pause();
-					cpu_relax();
+					pause ();
+					cpu_relax ();
 				    return NULL;
 				    break;
 				
@@ -669,7 +663,7 @@ void *noratermProcedure ( struct window_d *window,
 					printf("\r");
 					printf("\n");
 				
-				    input('\0'); 
+				    input ('\0'); 
 					
 					//#obs: 
 					//#importante 
@@ -683,7 +677,7 @@ void *noratermProcedure ( struct window_d *window,
 
 				//#test	
                 case VK_TAB:					
-					printf("\t");
+					printf ("\t");
 					goto done;
 				    break;	
 
@@ -706,6 +700,7 @@ void *noratermProcedure ( struct window_d *window,
 				// Enfilera os caracteres na string 'prompt[]' para depois 
 				// ser comparada com outras strings.
 				// prompt[] é o stdin.
+					
                 default:			   
 				    
 					// Coloca no stdin, prompt[].
@@ -793,13 +788,13 @@ void *noratermProcedure ( struct window_d *window,
 			switch (long1)
 			{
 				// Isso indica que o terminal tem chars na stream da tty,
-				// então ele deve pegar e exibir.	
+				// então ele deve pegar e exibir.
+				//Pega um char, mas não é o último que foi colocado, é o que ainda não foi pego.	
 				int x_ch;
 				case 2000:
 					printf ("MSG_TERMINALCOMMAND.2000 pode pegar >> \n");
 		            while (1)
 		            {
-		                //pega um char, mas não é o último que foi colocado, é o que ainda não foi pego.
 		                x_ch = (int) system_call ( 1002, 0, 0, 0 );
 		                if (x_ch == '\n'){ break;};
 			            printf (" %c ",x_ch);
@@ -819,20 +814,24 @@ void *noratermProcedure ( struct window_d *window,
 				//pois estamos pegando chars no arquivo de saída da libc.	
 				// >> a libc escreve nos arquivos e o terminal escreve na tela.
 				case TERMINALCOMMAND_PRINTCHAR:
-					 //apiDrawText ( NULL, 0, 0, COLOR_RED, 
-				     //    "MSG_TERMINALCOMMAND: TERMINALCOMMAND_PRINTCHAR:" );
-					
 					 apiDrawText ( NULL, 0, 0, COLOR_RED, 
 				         "====(top)=============" );
-					
 					 apiDrawText ( NULL, 0, 25*8, COLOR_RED, 
 				         "====(bottom)=============" );	
-					
 					refresh_screen ();
 					break;
 					
-					//...
+				//select current row
+				case 2005:
+					textSetCurrentRow ( (int) long2 );
+					break;
 					
+				//select current col	
+				case 2006:
+					textSetCurrentCol ( (int) long2 );
+					break;
+					
+					//...
 			}
 			break;
 
@@ -842,15 +841,15 @@ void *noratermProcedure ( struct window_d *window,
 			{
 				// Null.
 				case 0:
-				    MessageBox ( 1, "Shell test", "Testing MSG_COMMAND.NULL." );
+				    MessageBox ( 1, "Noraterm", "Testing MSG_COMMAND NULL" );
 				    break;
 				
 				// About.
 				// Abre uma janela e oferece informações sobre o aplicativo.
 				case CMD_ABOUT:
 				    // Test.
-					printf("X SERVER\n");
-				    MessageBox ( 1, "X SERVER TEST", "Testing MSG_COMMAND.CMD_ABOUT." );
+					printf ("noraterm: CMD_ABOUT\n");
+				    MessageBox ( 1, "Noraterm", "Testing MSG_COMMAND CMD_ABOUT" );
 				    break;
 				
 				//clicaram no botão
@@ -862,8 +861,8 @@ void *noratermProcedure ( struct window_d *window,
 					   //@todo: abre o interpretador de comandos.
 					//}
 					//#debug
-					printf(" * BN_CLICKED * \n");
-				break;
+					printf (" * BN_CLICKED * \n");
+				    break;
 				//...
 				
 				//default:
@@ -877,7 +876,7 @@ void *noratermProcedure ( struct window_d *window,
 		    //isso deve fechar qualquer janela que esteja usando esse procedimento.
 			//pode ser uma janela filha ou ainda uma janela de dialogo criada pelo sistema.
 			//??
-		    printf("SHELL.BIN: MSG_CLOSE\n");
+		    printf ("noraterm: MSG_CLOSE\n");
 			
 			//@todo: Criar essa função na api.
 			//apiExitProcess(0);
@@ -885,7 +884,7 @@ void *noratermProcedure ( struct window_d *window,
 		
 		//Essa mensagem pode ser acionada clidando um botão.
 		case MSG_DESTROY:
-		    printf ("SHELL.BIN: MSG_DESTROY\n");
+		    printf ("noraterm: MSG_DESTROY\n");
 		    break;
 			
 		// MSG_MOUSEKEYDOWN	
@@ -1039,8 +1038,7 @@ void *noratermProcedure ( struct window_d *window,
             break;	
 
 		// MSG_MOUSEOVER	
-		case 33:
-		    
+		case 33: 
 			//se tiver passando em cima do botão de close.
 			if ( window == close_button )
 			{
@@ -1067,14 +1065,21 @@ void *noratermProcedure ( struct window_d *window,
 		    }
             break;
 			
-		//Quando a aplicativo em user mode chama o kernel para 
-		//que o kernel crie uma janela, depois que o kernel criar a janela,
-		//ele faz uma chamada ao procedimento de janela do aplicativo com a mensagem 
-        //MSG_CREATE, se o aplicativo retornar -1, então a rotina em kernel mode que 
-        //esta criando a janela, cancela a janela que está criando e retorn NULL.		
+		// Quando a aplicativo em user mode chama o kernel para 
+		// que o kernel crie uma janela, depois que o kernel criar a janela,
+		// ele faz uma chamada ao procedimento de janela do aplicativo com a mensagem 
+        // MSG_CREATE, se o aplicativo retornar -1, então a rotina em kernel mode que 
+        // esta criando a janela, cancela a janela que está criando e retorn NULL.		
 		case MSG_CREATE:
-		    printf("SHELL.BIN: MSG_CREATE\n");
+		    printf ("noraterm: MSG_CREATE\n");
 		    break;
+			
+		//isso pinta os elementos da área de cliente.
+        //essa mensagem é enviada para o aplicativo quando 
+        //a função 'update window'	é chamada.	
+        case MSG_PAINT:
+            printf ("noraterm: MSG_PAINT\n");
+			break;
 			
 		// MSG_TIMER 
 		// #TODO INCLUIR ISS0 NA API.
@@ -1087,19 +1092,11 @@ void *noratermProcedure ( struct window_d *window,
 			break; 		
 		
 		case MSG_SETFOCUS:
-		    APISetFocus(window);
+		    APISetFocus (window);
 			break;
 			
 		case MSG_KILLFOCUS:
             break;
-
-		//isso pinta os elementos da área de cliente.
-        //essa mensagem é enviada para o aplicativo quando 
-        //a função 'update window'	é chamada.	
-        case MSG_PAINT:
-            printf("SHELL.BIN: MSG_PAINT\n");
-			break;
-			
 
 		//@todo: isso ainda não existe na biblioteca. criar.	
         //case MSG_CLS:
@@ -1314,9 +1311,9 @@ done:
 /*
  ******************************
  * shellWaitCmd:
- *     Espera completar o comando 
- * com um [ENTER]. ##suspensa
+ *     Espera completar o comando com um [ENTER]. ##suspensa
  */
+
 void shellWaitCmd (){
 		
 	// @todo: Cuidado com loop infinito.
@@ -1352,7 +1349,7 @@ void shellWaitCmd (){
 	} while (1);
 
     prompt_status = 0;	
-};
+}
 
 
 /*
@@ -4394,26 +4391,6 @@ void shellTestMBR (){
 	//return;
 }
 
-
-/*
- * move_to:
- *    Move o cursor de posição.
- *    Assim o próximo char será em outro lugar da janela.
- */
-
-void move_to ( unsigned long x, unsigned long y ){
-	
-	if ( x > wlMaxColumns || y > wlMaxRows )
-		return;
-	
-	//screen_buffer_x = x;
-	//screen_buffer_y = y;
-	
-	textCurrentCol = x;
-	textCurrentRow = y;
-	
-	//screen_buffer_pos = ( screen_buffer_y * wlMaxColumns + screen_buffer_x ) ;
-}
 
 
 //show shell info

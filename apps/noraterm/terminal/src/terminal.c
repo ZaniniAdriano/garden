@@ -668,6 +668,51 @@ int textGetBottomRow ()
 
 
 
+void textSetCurrentRow ( int number )
+{
+    textCurrentRow = (int) number; 	
+}
+
+
+int textGetCurrentRow ()
+{
+    return (int) textCurrentRow; 	
+}
+
+
+
+void textSetCurrentCol ( int number )
+{
+    textCurrentCol = (int) number; 	
+}
+
+
+int textGetCurrentCol ()
+{
+    return (int) textCurrentCol; 	
+}
+
+
+/*
+ * move_to:
+ *    Move o cursor de posição.
+ *    Assim o próximo char será em outro lugar da janela.
+ */
+
+void move_to ( unsigned long x, unsigned long y ){
+	
+	if ( x > wlMaxColumns || y > wlMaxRows )
+		return;
+	
+	//screen_buffer_x = x;
+	//screen_buffer_y = y;
+	
+	textCurrentCol = x;
+	textCurrentRow = y;
+	
+	//screen_buffer_pos = ( screen_buffer_y * wlMaxColumns + screen_buffer_x ) ;
+}
+
 
 
 
