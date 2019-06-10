@@ -561,8 +561,8 @@ Linker script and memory map
                 0x000000000040c9f8                terminalRefreshCurrentChar
                 0x000000000040ca30                terminalRefreshChar
                 0x000000000040ca8c                terminalRefreshLine
-                0x000000000040cb02                shellRefreshScreen
-                0x000000000040cba4                shellClearScreen
+                0x000000000040cb02                terminalRefreshScreen
+                0x000000000040cba4                terminalClearScreen
                 0x000000000040cc1d                terminalSetCursor
  .text          0x000000000040cc58      0x877 termui.o
                 0x000000000040cc58                termui_fntos

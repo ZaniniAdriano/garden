@@ -259,7 +259,7 @@ void terminalRefreshLine ( int line_number ){
 	
 #ifdef SHELL_VERBOSE		
 	//#debug
-	printf ("shellRefreshScreen:\n");
+	printf ("terminalRefreshLine:\n");
 #endif 
 
 	//cursor apontando par ao início da janela.
@@ -274,14 +274,14 @@ void terminalRefreshLine ( int line_number ){
 	for ( col=0; col < wlMaxColumns; col++ )
 	{
 	    //Mostra um char do screen buffer.
-		printf( "%c", LINES[lin].CHARS[col] );
+		printf ( "%c", LINES[lin].CHARS[col] );
 	};
 }
 
 
 /*
  *******************************************
- * shellRefreshScreen:
+ * terminalRefreshScreen:
  * 
  *     #importante 
  *      
@@ -296,7 +296,7 @@ void terminalRefreshLine ( int line_number ){
  * para sabermos a cor do caractere e de seu background.
  */
 
-void shellRefreshScreen (){
+void terminalRefreshScreen (){
 
 	//desabilita o cursor
 	system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
@@ -323,12 +323,12 @@ void shellRefreshScreen (){
 
 /*
  *************************************
- * shellClearScreen:
+ * terminalClearScreen:
  *     Limpar a tela do shell.
  *     usada pelo comando 'cls'.
  */
  
-void shellClearScreen (){
+void terminalClearScreen (){
 
 	struct window_d *w;
 	unsigned long left, top, right, bottom;
@@ -371,7 +371,7 @@ void shellClearScreen (){
 	// a área de cliente do shell.
 	// obs: A outra opção seria repintarmos a janela.
 
-    //shellRefreshScreen ();	
+    //terminalRefreshScreen ();	
 	
 	//shellRefreshVisibleArea();
 	

@@ -467,13 +467,9 @@ void terminalRefreshLine ( int line_number );
 
 
 //copia o conteúdo do buffer para a tela. (dentro da janela)
-void shellRefreshScreen(); 
+void terminalRefreshScreen(); 
 
-
-
-void shellClearScreen ();
-
-
+void terminalClearScreen ();
 
 //
 // Cursor support.

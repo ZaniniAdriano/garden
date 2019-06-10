@@ -19,7 +19,7 @@ void cd_buitins (){
 //cls
 void cls_builtins (){
 	
-    shellClearScreen ();
+    terminalClearScreen ();
 }
 
 
