@@ -23,36 +23,41 @@
  * C function to demonstrate the working of arithmetic operators 
  */
 
-void _main (){
+//void _main (){
+int main (int argc, char *argv[] ){
 	
     unsigned char count;
 	unsigned char standard_ascii_max = STANDARD_ASCII_MAX;
 	
-	printf("\n");
-	printf("ASCII.BIN:\n");
-	printf("Show ascii table ...\n");
-	printf("\n");
+	printf ("\n");
+	printf ("ASCII.BIN:\n");
+	printf ("Show ascii table ...\n");
+	printf ("\n");
 	
-    for( count=0; count<standard_ascii_max; count++ )
+    for ( count=0; count<standard_ascii_max; count++ )
     {
-		printf(" %d - %c",count,count);
-        if( count % 4 == 0 ){
+		printf (" %d - %c", count, count);
+        
+		if ( count % 4 == 0 )
+		{
             printf("\n");
 		}
     };	
 	
-	printf("\n");
-	printf("Done!\n");
+	printf ("\n");
+	printf ("Done!\n");
 	
 	//exit 9 é o código do reaproveitamento.
 	//é excepcional.
+	
 	exit (9);
 	 
-	//while(1){
-	//	asm("pause");
-	//}
+	while (1){ asm("pause"); };
     
-    //return 0;
-   
-};
+    return 0;
+}
+
+
+
+
 
