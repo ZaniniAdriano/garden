@@ -60,7 +60,7 @@ myObjects = crt0.o main.o \
 stubs.o \
 ctype.o stdio.o stdlib.o string.o conio.o socket.o signal.o unistd.o \
 api.o \
-builtins.o desktop.o login.o tests.o \
+builtins.o desktop.o login.o tests.o shell.o \
 pixel.o line.o rect.o char.o gws.o \
 terminal.o termui.o   
 
@@ -85,7 +85,8 @@ all-c:
 	gcc  -c  builtins.c  -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o builtins.o
 	gcc  -c  login.c     -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o login.o
 	gcc  -c  tests.c     -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o tests.o
-
+	gcc  -c  shell.c     -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o shell.o
+	
 	
 #gws
 	gcc  -c  gws/src/gws/char.c     -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o char.o

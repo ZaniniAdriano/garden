@@ -478,12 +478,24 @@ void terminalClearScreen ();
 void terminalSetCursor (unsigned long x, unsigned long y);
 
 
+void terminalClearBuffer();
 
+void terminalShowScreenBuffer();
 
+void terminalRefreshVisibleArea ();
 
+void updateVisibleArea ( int direction );
 
+void testChangeVisibleArea();
 
+void testShowLines();
 
+void clearLine ( int line_number );
+
+void textSetTopRow ( int number );
+void textSetBottomRow ( int number );
+int textGetTopRow ();
+int textGetBottomRow ();
 
 
 

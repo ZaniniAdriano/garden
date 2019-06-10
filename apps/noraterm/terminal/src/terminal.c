@@ -336,9 +336,7 @@ void terminalClearScreen (){
     //desabilita o cursor
 	system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);	
 	
-	shellClearBuffer ();
-	
-
+	terminalClearBuffer ();
 	
 	w = (void *) shell_info.terminal_window;
 	
@@ -413,6 +411,263 @@ void terminalSetCursor ( unsigned long x, unsigned long y ){
     
 	move_to ( x, y);
 }
+
+
+
+/*
+ ****************************************
+ * shellClearBuffer:
+ *     Limpa o buffer da tela.
+ *     Inicializamos com espaços.
+ */
+
+void terminalClearBuffer (){
+	
+	int i = 0;
+	int j = 0;	
+
+	for ( i=0; i<32; i++ )
+	{
+		for ( j=0; j<80; j++ )
+		{
+		    LINES[i].CHARS[j] = (char) ' ';
+		    LINES[i].ATTRIBUTES[j] = (char) 7;
+	    }
+		
+		LINES[i].left = 0;
+		LINES[i].right = 0;
+		LINES[i].pos = 0;
+	};
+}
+
+
+
+/*
+ * shellShowScreenBuffer:
+ *     Quando for efeturar o refresh da tela
+ * é o conteúdo desse buffer que deve ser pintado 
+ * no retãngulo que é a área de cliente do shell.  
+ */
+//mostra o buffer screen buffer, onde ficam 
+//armazenados os caracteres e atributos datela
+//do terminal virtual.
+
+// #importante: 
+// vamos mostrar todo o buffer de words, a partir 
+// da posição atual do cursor, forçando um scroll
+
+void terminalShowScreenBuffer (){
+	
+	// Mostra a área visível dentro do buffer de linhas.
+    terminalRefreshVisibleArea ();
+}
+
+
+/*
+   #todo
+ * Return true if any character cell starting at [row,col], for len-cells is
+ * nonnull.
+ */
+/*
+int
+non_blank_line ( int row,
+	             int col,
+	             int len)
+{
+    int i;
+    int found = 0;
+	
+	if ( row < 0 )
+		return -1;
+	
+	if ( col < 0 )
+		return -1;
+	
+	if ( len < 0 )
+		return -1;
+	
+	for (i = col; i < len; i++) 
+	{
+	    if ( LINES[row].CHARS[i] ) 
+		{
+	        found = 1;
+	        break;
+	    }
+	}
+	
+    return found;
+}
+*/
+
+
+
+// Mostra a área visível dentro do buffer de linhas.
+
+void terminalRefreshVisibleArea (){
+	
+	//desabilita o cursor
+	system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
+	
+	
+	//seta o cursor no início da janela.
+	
+	unsigned long left, top, right, bottom;
+ 
+    left = (terminal_rect.left/8);
+    top = (terminal_rect.top/8);
+	
+    terminalSetCursor ( left, top );
+	
+	// efetua o refresh do char atual, que agora é o primeiro 
+	// depois os outros consecutivos.
+	
+	int i=0;
+	int j=0;
+	
+	//textTopRow = 3;
+	//textBottomRow = 3 + 25;
+	
+	if ( textTopRow > textBottomRow )
+	{
+		printf("shellRefreshVisibleArea: textTopRow fail");
+	}
+	
+	//toda a área visível.
+	//for ( i=0; i<25; i++ )	
+	for ( i=textTopRow; i<textBottomRow; i++ )
+	{
+		for ( j=0; j<80; j++ )
+		{	
+	        //refresh
+            printf ("%c", LINES[i].CHARS[j] );						
+		}
+	};
+
+	//reabilita o cursor
+	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);	
+}
+
+
+//terminal stuff
+void updateVisibleArea ( int direction ){
+	
+    switch (direction)
+    {
+	    case 0:
+	        textTopRow += textWheelDelta;
+	        textBottomRow += textWheelDelta;			
+            break; 		
+			
+	    case 1:
+	        textTopRow -= textWheelDelta;
+	        textBottomRow -= textWheelDelta;					
+            break; 		
+	}	
+}
+
+
+
+
+void testChangeVisibleArea()
+{
+	textTopRow += textWheelDelta;
+	textBottomRow += textWheelDelta;	
+}
+
+
+/*
+ **********************************************
+ * testShowLines:
+ *     #importante
+ *     Um teste mostrando todas as linhas do buffer de linhas.
+ *     #bugbug: Essa rotina é muito lenta. A linha demora para ser 
+ * mostrada na tela.    
+ */
+
+
+void testShowLines ()
+{
+	//enterCriticalSection (); 
+	
+	//desabilita o cursor
+	system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
+	
+	int i=0;
+	int j=0;
+	
+	for ( i=0; i<32; i++ )
+	{
+		for ( j=0; j<80; j++ )
+		{	        
+			printf ("%c", LINES[i].CHARS[j] );
+		}
+		
+		printf ("\n");
+	};
+
+	//reabilita o cursor
+	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);	
+	
+	//exitCriticalSection (); 
+}
+
+
+
+void clearLine ( int line_number ){
+	
+    int lin = (int) line_number; 
+	int col = 0;  
+	
+	int Offset = 0; //Deslocamento dentro do screen buffer.
+	
+	//cursor apontando par ao início da janela.
+	//usado pelo printf.
+	//@todo: podemos colocar o cursor no 
+	//início da área de cliente.
+	//left será a coluna.
+	
+	terminalSetCursor ( col, lin );
+		
+	//colunas.
+	for ( col=0; col < wlMaxColumns; col++ )
+	{
+	    //Mostra um char do screen buffer.
+		printf( "%c", screen_buffer[Offset] );
+		    
+		Offset++; //ignora o atributo.
+	    Offset++;
+	};
+	
+    //shell_buffer_pos = 0;  //?? posição dentro do buffer do shell.	
+}
+
+//Qual será a linha que estará no topo da janela.
+void textSetTopRow ( int number )
+{
+    textTopRow = (int) number; 	
+}
+
+
+int textGetTopRow ()
+{
+    return (int) textTopRow; 	
+}
+
+
+//Qual será a linha que estará na parte de baixo da janela.
+void textSetBottomRow ( int number )
+{
+    textBottomRow = (int) number; 	
+}
+
+
+int textGetBottomRow ()
+{
+    return (int) textBottomRow; 	
+}
+
+
+
 
 
 

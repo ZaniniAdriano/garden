@@ -38,6 +38,7 @@
 #include "compiler.h"
 
 
+
 //lib C
 #include <types.h>
 #include <stddef.h>
@@ -80,7 +81,6 @@
 
 
 #include "tests.h"
-
 
 //#define SHELL_VERBOSE 1
 
@@ -689,8 +689,8 @@ void shellScroll();
 // Buffer support.
 //
 
-void shellClearBuffer();
-void shellShowScreenBuffer();
+
+
 //...
 
 
@@ -769,17 +769,18 @@ void shellInitializeWorkingDiretoryString ();
 //lista informações sobre os processos.
 void shellTaskList();
 
-void shellShowPID();
-void shellShowPPID();
 
+//
+// shell.c
+//
 
-
-void shellShowUID();
-void shellShowGID();
-
+void shellShowPID ();
+void shellShowPPID ();
+void shellShowUID ();
+void shellShowGID ();
 
 void shellShowUserSessionID();
-void shellShowWindowStationID();
+void shellShowWindowStationID();  //room
 void shellShowDesktopID();
 
 void shellShowProcessHeapPointer();
@@ -802,19 +803,7 @@ int shell_gramado_core_init_execve( const char *arg1,
                                     const char *arg2, 
                                     const char *arg3 );
 
-//
-// shelui.c
-//
-
-
-
-
-
-
-
-
-					
-				
+		
 
 //um comando no shell aponta o script para executar.
 int shellExecuteThisScript ( char* script_name );
@@ -842,7 +831,10 @@ int shellInitPathname ();
 //inicializaremos o supporte a filename
 int shellInitFilename ();
 
+
+
 void shellExit (int code);	
+
 
 /* 
  Remove the last N directories from PATH.  
@@ -864,5 +856,9 @@ int is_sh1 ( char *cmd );
 
 int shellCheckPassword ();
 
+void shellPipeTest ();
+
+//não é o soquete da libc.
+void shellSocketTest ();
 
 

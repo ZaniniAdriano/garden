@@ -75,7 +75,6 @@ void exec_builtins (){
 void exit_builtins (){
 	
 	printf ("noraterm: Exiting ...\n");
-	
 	exit (0);	
 }
 
@@ -83,7 +82,6 @@ void exit_builtins (){
 int getpid_builtins (){
 	
     shellShowPID ();	
-	
 	return 0; 
 }
 
@@ -91,7 +89,6 @@ int getpid_builtins (){
 int getppid_builtins (){
 	
 	shellShowPPID ();
-	
 	return 0;
 }
 
@@ -99,7 +96,6 @@ int getppid_builtins (){
 int getuid_builtins (){
 	
 	shellShowUID ();
-	
 	return 0;
 }
 
@@ -107,7 +103,6 @@ int getuid_builtins (){
 int getgid_builtins (){
 	
 	shellShowGID ();
-	
 	return 0;
 }
 
