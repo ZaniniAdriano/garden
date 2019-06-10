@@ -2996,6 +2996,111 @@ char *getenv(const char *name)
 */
 
 
+
+
+/*credits: bsd*/
+/*
+ * Return the (stdio) flags for a given mode.  Store the flags
+ * to be passed to an open() syscall through *optr.
+ * Return 0 on error.
+ */
+
+/*
+int
+__sflags(const char *mode, int *optr);
+int
+__sflags(const char *mode, int *optr)
+{
+	int ret, m, o;
+
+	//#todo: Falta essa macro. ela fica em assert.h
+	//_DIAGASSERT(mode != NULL);
+
+	switch (*mode++) {
+
+	case 'r':	// open for reading 
+		ret = __SRD;
+		m = O_RDONLY;
+		o = 0;
+		break;
+
+	case 'w':	// open for writing 
+		ret = __SWR;
+		m = O_WRONLY;
+		o = O_CREAT | O_TRUNC;
+		break;
+
+	case 'a':	// open for appending 
+		ret = __SWR;
+		m = O_WRONLY;
+		o = O_CREAT | O_APPEND;
+		break;
+
+	default:	// illegal mode 
+		errno = EINVAL;
+		return 0;
+	}
+
+	
+	 //[rwa]\+ or [rwa]b\+ means read and write 
+	 //e means set close on exec.
+	 //f means open only plain files.
+	 //l means don't follow symlinks.
+	 //x means exclusive open.
+	 
+	for (; *mode; mode++)
+		switch (*mode) {
+		case '+':
+			ret = __SRW;
+			m = O_RDWR;
+			break;
+		case 'b':
+			break;
+		case 'e':
+			o |= O_CLOEXEC;
+			break;
+		case 'f':
+			o |= O_REGULAR;
+			break;
+		case 'l':
+			o |= O_NOFOLLOW;
+			break;
+		case 'x':
+			o |= O_EXCL;
+			break;
+		default:	// We could produce a warning here 
+			break;
+		}
+
+	*optr = m | o;
+	return ret;
+}
+*/
+
+
+/*credits: bsd*/
+/*
+int
+_fwalk(int (*function)(FILE *));
+int
+_fwalk(int (*function)(FILE *))
+{
+	FILE *fp;
+	int n, ret;
+	struct glue *g; //falta isso.
+
+    //#todo: Falta essa macro. ela fica em assert.h
+	_DIAGASSERT(function != NULL);
+
+	ret = 0;
+	for (g = &__sglue; g != NULL; g = g->next)
+		for (fp = g->iobs, n = g->niobs; --n >= 0; fp++)
+			if (fp->_flags != 0)
+				ret |= (*function)(fp);
+	return ret;
+}
+*/
+
 //
 // End.
 //

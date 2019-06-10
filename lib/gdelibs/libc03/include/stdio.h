@@ -474,6 +474,63 @@ int prompt_status;
 //...
 
 
+/*
+ * The __sfoo macros are here so that we can 
+ * define function versions in the C library.
+ */
+
+//#todo Precisamos de __srget.
+//#define	__sgetc(p) (--(p)->_r < 0 ? __srget(p) : (int)(*(p)->_p++))
+
+//#todo Precisamos de __swbuf.
+/*
+#if defined(__GNUC__) && defined(__STDC__)
+static __inline int __sputc(int _c, FILE *_p) {
+	if (--_p->_w >= 0 || (_p->_w >= _p->_lbfsize && (char)_c != '\n'))
+		return (*_p->_p++ = _c);
+	else
+		return (__swbuf(_c, _p));
+}
+#else
+//This has been tuned to generate reasonable code on the vax using pcc.
+#define	__sputc(c, p) \
+	(--(p)->_w < 0 ? \
+		(p)->_w >= (p)->_lbfsize ? \
+			(*(p)->_p = (c)), *(p)->_p != '\n' ? \
+				(int)*(p)->_p++ : \
+				__swbuf('\n', p) : \
+			__swbuf((int)(c), p) : \
+		(*(p)->_p = (c), (int)*(p)->_p++))
+#endif
+*/
+
+
+
+
+
+
+
+/*bsd*/
+#define	__sfeof(p)	(((p)->_flags & __SEOF) != 0)
+#define	__sferror(p)	(((p)->_flags & __SERR) != 0)
+#define	__sclearerr(p)	((void)((p)->_flags &= ~(__SERR|__SEOF)))
+#define	__sfileno(p)	((p)->_file)
+//define	feof(p)		__sfeof(p)
+//#define	ferror(p)	__sferror(p)
+//#define	clearerr(p)	__sclearerr(p)
+
+//#ifndef _ANSI_SOURCE
+//#define	fileno(p)	__sfileno(p)
+//#endif
+
+//#ifndef lint
+//#define	getc(fp)	__sgetc(fp)
+//#define putc(x, fp)	__sputc(x, fp)
+//#endif /* lint */
+
+//#define	getchar()	getc(stdin)
+//#define	putchar(x)	putc(x, stdout)
+
 
 /*minix3/bsd style*/
 /*
