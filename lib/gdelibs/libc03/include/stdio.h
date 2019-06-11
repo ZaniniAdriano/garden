@@ -342,7 +342,7 @@ struct _iobuf
 	// e os elementos ainda estão presentes em várias rotinas.
 	//No futuro vamos deletar isso. (Talvez não.)
 	int   _cnt;      // number of available characters in buffer 
-	char *_base;     // Pointer to the base of the file. the buffer
+	unsigned char *_base;     // Pointer to the base of the file. the buffer 
 	int   _charbuf;   
 	char *_tmpfname;
 };

@@ -4207,13 +4207,13 @@ do_compare:
 			printf ("t20: writing in the stdout\n"); //ring3 ??
 			
 			//pega o stdout do kernel
-			//_fp = (FILE *) system_call ( 1000, getpid(), 0, 0 );
+			_fp = (FILE *) system_call ( 1000, getpid(), 0, 0 );
 			
 			// #bugbug
 			// ISSO NÃO FUNCIONA !!
 			
 			//fprintf (stdout,"gdeshell: This is a string ..."); //#bugbug
-			//fprintf (_fp,"gdeshell: This is a string ..."); //#bugbug
+			fprintf (_fp,"gdeshell: This is a string ..."); //#bugbug
 			
 			//#importante
 			//Aqui podemos configurar o terminal.

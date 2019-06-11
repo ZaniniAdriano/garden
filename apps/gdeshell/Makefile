@@ -37,8 +37,11 @@ CFLAGS = -m32 \
 #	-s
 
 
-LIBC    = ../../lib/gdelibs/libc02/include/
-LIBCOBJ = ../../lib/gdelibs/libc02/obj
+#LIBC    = ../../lib/gdelibs/libc02/include/
+#LIBCOBJ = ../../lib/gdelibs/libc02/obj
+LIBC    = ../../lib/gdelibs/libc03/include/
+LIBCOBJ = ../../lib/gdelibs/libc03/obj
+
 
 #API   = ../../lib/gdelibs/api01/include/
 #APIOBJ  = ../../lib/gdelibs/api01/obj

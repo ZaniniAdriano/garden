@@ -857,10 +857,12 @@ void *noratermProcedure ( struct window_d *window,
 					//fprintf (stdout,"noraterm: This is a string ..."); //#bugbug
 					printf ("MSG_TERMINALCOMMAND.2008 pode pegar, coloca no buffer >> \n");
 					//#suspenso.
-					break;
+					//break;
 					
 		            while (1)
 		            {
+						//xxx_ch = 0x65;
+						
 		                xxx_ch = (int) system_call ( 1002, 0, 0, 0 );
 		                //#importante
 						// se for \n sifnifica que temos que efetuar o flush do buffer
