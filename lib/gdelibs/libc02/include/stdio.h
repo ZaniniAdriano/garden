@@ -179,6 +179,11 @@ typedef char *stdio_va_list;
 typedef struct _iobuf FILE; 
 struct _iobuf 
 {
+	int used;
+	int magic;
+	
+	int iopl;	
+	
 	char *_ptr;      // Current position of file pointer (absolute address).
 	int   _cnt;      // number of available characters in buffer 
 	char *_base;     // Pointer to the base of the file. the buffer

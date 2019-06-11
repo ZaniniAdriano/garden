@@ -1570,6 +1570,7 @@ int fprintf(FILE *fp, const char *fmt, ...)
 /*
  ********************************
  * fprintf:     
+ *     A estrutura será gerenciada em ring0.
  */
 
 int fprintf ( FILE *stream, const char *format, ... ){

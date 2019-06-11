@@ -276,6 +276,12 @@ typedef	struct __sFILE {
 typedef struct _iobuf FILE; 
 struct _iobuf 
 {
+	
+	int used;
+	int magic;
+	
+	int iopl;
+	
 	// current position in (some) buffer
 	// Current position of file pointer (absolute address).
 	unsigned char *_p;	           	

@@ -4127,6 +4127,7 @@ do_compare:
 	{
 		//get tty stream
 		//o shell pega um stream para escrever.
+		//pega o stdout do kernel
 		opentty_fp = (FILE *) system_call ( 1000, getpid(), 0, 0 );
 		fprintf (opentty_fp, "test1 ...\n");
 		fprintf (opentty_fp, "test2 ...");   //sem \n
@@ -4188,7 +4189,9 @@ do_compare:
 	}
 	
 	//t20
+	//isso executa o terminal e manda uma mensagem pra ele.
 	int terminal___PID;
+	FILE *_fp;
 	if ( strncmp ( prompt, "t20", 3 ) == 0 )
 	{
 		terminal___PID = (int) apiStartTerminal ();
@@ -4198,11 +4201,32 @@ do_compare:
 	        goto exit_cmp;
 	    }else{
 			
+            
+			printf ("t20: The terminal PID is %d \n", terminal___PID );		
+			
+			printf ("t20: writing in the stdout\n"); //ring3 ??
+			
+			//pega o stdout do kernel
+			//_fp = (FILE *) system_call ( 1000, getpid(), 0, 0 );
+			
+			// #bugbug
+			// ISSO NÃO FUNCIONA !!
+			
+			//fprintf (stdout,"gdeshell: This is a string ..."); //#bugbug
+			//fprintf (_fp,"gdeshell: This is a string ..."); //#bugbug
+			
 			//#importante
 			//Aqui podemos configurar o terminal.
 			//pegar as características do terminal para configurar o app cliente.
-		    printf ("t20: The terminal PID is %d \n", terminal___PID );		
-		    __SendMessageToProcess ( terminal___PID, NULL, MSG_TERMINALCOMMAND, 2001, 2001 );		
+			
+			//testando mensagens diferentes.
+			//#importante: Não tá dando pra enviar mensagens seguidas.
+			//acho que tem que esperar.
+			
+			//__SendMessageToProcess ( terminal___PID, NULL, MSG_TERMINALCOMMAND, 2001, 2001 );	//ok	
+			__SendMessageToProcess ( terminal___PID, NULL, MSG_TERMINALCOMMAND, 2008, 2008 );	//ok			
+			//__SendMessageToProcess ( terminal___PID, NULL, MSG_TERMINALCOMMAND, 2009, 2009 );		
+			//...
 		}		
 		goto exit_cmp;
 	}
