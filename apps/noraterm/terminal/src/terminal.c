@@ -24,6 +24,10 @@ utf8countBytes (int c)
 */
 
 
+
+
+
+	
 /*
  ***************************************************
  * terminalInsertNextChar:
@@ -220,6 +224,19 @@ static void restore_cur (void){
 	textCurrentRow = textSavedRow;
 }
 
+
+
+//#aind anão foi testada.
+void terminalRefreshCurrentChar2 (){
+	
+	char *p;
+	
+	p[0] = LINES[textCurrentRow].CHARS[textCurrentCol];
+	p[1] = 0;
+	
+    apiDrawText ( NULL, textCurrentRow*8, textCurrentCol*8, 
+		COLOR_RED, (char *) p );
+}
 
 
 //refresh do char que está na posição usada pelo input.
@@ -715,6 +732,26 @@ void move_to ( unsigned long x, unsigned long y ){
 
 
 
+/* credits: bsd*/
+/* Pad STRING to COUNT characters by inserting blanks. */
+
+int pad_to (int count, char *string){
+	
+    register int i;
+
+    i = strlen (string);
+
+    if (i >= count)
+        string[i++] = ' ';
+    else
+    {
+        while (i < count)
+            string[i++] = ' ';
+    }
+    string[i] = '\0';
+
+    return (i);
+}
 
 
 

@@ -451,6 +451,8 @@ static void save_cur(void);
 static void restore_cur(void);
 
 
+void terminalRefreshCurrentChar2 ();
+
 //refresh do char que está na posição usada pelo input.
 void terminalRefreshCurrentChar (); 
 
@@ -502,5 +504,11 @@ void textSetCurrentCol ( int number );
 int textGetCurrentCol ();
 
 void move_to ( unsigned long x, unsigned long y);
+
+/* credits: bsd*/
+/* Pad STRING to COUNT characters by inserting blanks. */
+
+int pad_to (int count, char *string);
+
 
 

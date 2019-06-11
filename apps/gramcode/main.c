@@ -736,6 +736,11 @@ void *teditorProcedure ( struct window_d *window,
 				
 	};
 	
+	
+	// #test
+	// Cuidado com isso. Podemos chamar duas rotinas quando pressionarmos
+	// alguma tecla. Por exemplo F1 chamaria uma rotina aqui e outra no kernel.
+	
 	return (void *) gde_system_procedure ( window, msg, long1, long2 );
 }
 

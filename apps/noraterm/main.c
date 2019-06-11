@@ -741,9 +741,11 @@ void *noratermProcedure ( struct window_d *window,
 		    switch (long1)
 			{
 		        
-				case VK_F1:               
-					//shellTestLoadFile ();
+				case VK_F1:  
+					textSetCurrentRow ( (int) 0 );
+					textSetCurrentCol ( (int) 0 );
 					
+					//shellTestLoadFile ();
 					//inicializa a área visível.
 					//textTopRow = 0;
 	                //textBottomRow = 0 + 24;
@@ -789,7 +791,7 @@ void *noratermProcedure ( struct window_d *window,
 			{
 				// Isso indica que o terminal tem chars na stream da tty,
 				// então ele deve pegar e exibir.
-				//Pega um char, mas não é o último que foi colocado, é o que ainda não foi pego.	
+				// Pega um char, mas não é o último que foi colocado, é o que ainda não foi pego.	
 				int x_ch;
 				case 2000:
 					printf ("MSG_TERMINALCOMMAND.2000 pode pegar >> \n");
