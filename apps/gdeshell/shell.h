@@ -1,17 +1,59 @@
+
+// sh.h 
+
+//onde ficar√£o todos os header se poss√≠vel. 
+
+
+//Setup current compiler 
+#include "compiler.h"
+
+
+#include <types.h>
+#include <stddef.h>
+#include <stdarg.h>   
+#include <stdio.h>  
+#include <stdlib.h>  
+#include <string.h>
+
+
+//shell stuff 
+//#include "shell2.h"
+#include "globals.h"
+#include "builtins.h"
+
+#include <api.h>
+
+#include "desktop.h"
+
+//# bash 1.05 stuff #
+#include "variables.h"
+#include "general.h"
+#include "flags.h"
+#include "alias.h"
+#include "ndir.h"
+#include "version.h"
+//...
+
+
+//#include "shell2.h"
+
+
+
+
 /*
- * File: shell.h
+ * File: shell2.h
  *
- * DescriÁ„o:
+ * Descri√ß√£o:
  *     Header principal do Shell.
  *     SHELL.BIN (32bit User Mode) 
  *
  * Obs: 
- * Para atender os comandos do usu·rio o Shell chamar· v·rios programas, assim 
- * como ter· rotinas internas que atendem os comandos. Para isso, esse 
- * diretÛrio deve ter v·rias pastas, uma para cada um dos comandos principais, 
- * como shutdown. Cda pasta È um programa que o Shell vai chamar.
+ * Para atender os comandos do usu√°rio o Shell chamar√° v√°rios programas, assim 
+ * como ter√° rotinas internas que atendem os comandos. Para isso, esse 
+ * diret√≥rio deve ter v√°rias pastas, uma para cada um dos comandos principais, 
+ * como shutdown. Cda pasta √© um programa que o Shell vai chamar.
  *
- * O kernel que gerencia a estrutura de processo deve criar o fluxo padr„o ?
+ * O kernel que gerencia a estrutura de processo deve criar o fluxo padr√£o ?
  * 
  *
  * History:
@@ -24,7 +66,7 @@
  
  
 //
-// botıes
+// bot√µes
 // 
 
 //janela da taskbar
@@ -453,7 +495,7 @@ struct connection_d
     struct command_d *first;
     struct command_d *second;
     
-	//qual È o tipo de conector entre os comandos
+	//qual √© o tipo de conector entre os comandos
 	// | ??? 
 	int connectorType;  	
 };
@@ -464,14 +506,14 @@ connection_t *current_connection;
 //...
 
 //Lista de palavras reservadas.
-//S„o as mesmas da gramado language, pois 
-//a gramado language È uma linguagem de script.
+//S√£o as mesmas da gramado language, pois 
+//a gramado language √© uma linguagem de script.
 //*.gra  usar esse >>> (*.gl1)
 static char *RESERVED[] = {
-	"start",   //inÌcio do script
+	"start",   //in√≠cio do script
 	"finish",  //fim do script
-	"super",   //tipo genÈrico.
-	"rules",   //fecha declaraÁ„o (;)
+	"super",   //tipo gen√©rico.
+	"rules",   //fecha declara√ß√£o (;)
 	"condition",   //
 	"open",        //( 
 	"close",       //)
@@ -564,23 +606,7 @@ int EOF_Reached;
 //#define NPAR 16
    
 
-//
-// BUFFER SUPPORT
-//
 
-//
-// Screen Buffer: 
-// Igual a tela do vga, com caracteres e atributos.
-// @todo: O buffer deve ser maior, com v·rias vistas para rolagem.
-// mas apenas uma parte do buffer ser· mostrada na tela por vez.
-//
-
-#define DEFAULT_BUFFER_MAX_COLUMNS 80
-#define DEFAULT_BUFFER_MAX_ROWS    25
-#define SCREEN_BUFFER_SIZE ( ((DEFAULT_BUFFER_MAX_COLUMNS*DEFAULT_BUFFER_MAX_ROWS)*2)+1)
-
-
- 
 
  
 //
@@ -608,7 +634,7 @@ int EOF_Reached;
 
 
 //@todo: 
-//a vers„o do sistema operacional deve-se obter atravÈs de uma chamada ao sistema. 
+//a vers√£o do sistema operacional deve-se obter atrav√©s de uma chamada ao sistema. 
 #define OS_VERSION     "0.1"  
 #define SHELL_VERSION  "0.1"
 
@@ -661,7 +687,7 @@ int g_current_workingdirectory_id;  //??
 
 
 #define WORKINGDIRECTORY_STRING_MAX 32
-// a string do diretÛrio de trabalho.
+// a string do diret√≥rio de trabalho.
 char current_workingdiretory_string[WORKINGDIRECTORY_STRING_MAX];
 int pwd_initialized;
 
@@ -754,7 +780,7 @@ static const char init_file_name[] = "INIT    TXT";
  
 
 /*
-    Fluxo padr„o: definido em <stdio.h>
+    Fluxo padr√£o: definido em <stdio.h>
 	
     FILE *stdin; 
     FILE *stdout; 
@@ -769,7 +795,7 @@ static const char init_file_name[] = "INIT    TXT";
 //FILE *font_file;
 
  
-//DiretÛrios para o shell comparar os comandos com os nomes dos arquivos l·. 
+//Diret√≥rios para o shell comparar os comandos com os nomes dos arquivos l√°. 
 struct _iobuf *pwd; 
 struct _iobuf *root;
 //...
@@ -810,7 +836,7 @@ shell_metrics_t *ShellMetrics;
  
  
 /*
- #bugbug isso d· problema. falta de p·gina.
+ #bugbug isso d√° problema. falta de p√°gina.
  
 typedef struct shell_message_d shell_message_t;  
 struct shell_message_d
@@ -828,9 +854,9 @@ struct shell_message_d
 
 
 //
-// ComunicaÁ„o Cliente/Servidor:
-// N˙mero da mensagem enviada pelo terminal virtual.
-// S„o apenas mensagens usadas pelo terminal virtual 
+// Comunica√ß√£o Cliente/Servidor:
+// N√∫mero da mensagem enviada pelo terminal virtual.
+// S√£o apenas mensagens usadas pelo terminal virtual 
 // em modo texto, relativas a input e output de textos.
 // 
 //
@@ -874,7 +900,7 @@ struct terminal_screen_info_d
  
 //#importante. 
 //rect info
-//ret‚ngulo da ·rea de cliente onde aparecer„o os caracteres.
+//ret√¢ngulo da √°rea de cliente onde aparecer√£o os caracteres.
 typedef struct terminal_rect_info_d terminal_rect_info_t; 
 struct terminal_rect_info_d
 {
@@ -914,7 +940,7 @@ struct terminal_char_info_d
 
 //
 // Estrutura principal.
-// InformaÁıes sobre o shell.
+// Informa√ß√µes sobre o shell.
 //
 
 typedef struct shell_info_d shell_info_t;
@@ -931,7 +957,7 @@ struct shell_info_d
 	//struct _iobuf *stdout;
 	//struct _iobuf *stderr;
 	
-	//O ret‚ngulo da ·rea de cliente.
+	//O ret√¢ngulo da √°rea de cliente.
 	struct rect_d *rect;   
 	//struct terminal_rect_info_d *r;
 	
@@ -1002,10 +1028,10 @@ int main ( int argc, char *argv[] );
 //
 
 void shellClearScreen();
-void shellRefreshScreen(); //copia o conte˙do do buffer para a tela. (dentro da janela)
+void shellRefreshScreen(); //copia o conte√∫do do buffer para a tela. (dentro da janela)
 void shellRefreshLine ( int line_number );
 void shellRefreshChar ( int line_number, int col_number );
-void shellRefreshCurrentChar(); //refresh do char que est· na posiÁ„o usada pelo input.
+void shellRefreshCurrentChar(); //refresh do char que est√° na posi√ß√£o usada pelo input.
 
 
 
@@ -1062,7 +1088,7 @@ void shellPrompt();
 
 
 //cmd
-//FunÁıes chamadas pelos comandos.
+//Fun√ß√µes chamadas pelos comandos.
 void shellHelp();
 void shellTree();
 void shellThread();
@@ -1086,7 +1112,7 @@ shellSendMessage( struct window_d *window,
 //...
 
 // Wait for commands.
-//Isso n„o È usado, temos um while.
+//Isso n√£o √© usado, temos um while.
 void shellWaitCmd();             
  
  // Compare comands.
@@ -1116,7 +1142,7 @@ void shellUpdateWorkingDiretoryString( char *string );
 
 void shellInitializeWorkingDiretoryString ();
 
-//lista informaÁıes sobre os processos.
+//lista informa√ß√µes sobre os processos.
 void shellTaskList();
 
 void shellShowPID();
@@ -1230,7 +1256,7 @@ int is_sh1 ( char *cmd );
 int shellCheckPassword();
 
 
-//testando bot„o.
+//testando bot√£o.
 int shellTestButtons ();
 
 
@@ -1240,4 +1266,10 @@ void testCreateWindow ();
 //
 // End.
 //
+
+
+
+
+
+
 

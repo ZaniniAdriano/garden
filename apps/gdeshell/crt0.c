@@ -10,7 +10,7 @@
  */
 
 
-#include "sh.h" 
+#include "shell.h" 
 
 
 static char *argv[] = { 

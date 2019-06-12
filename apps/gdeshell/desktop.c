@@ -5,7 +5,7 @@
 //
 
 
-#include "sh.h"
+#include "shell.h"
 
 
 //desktop folders.
@@ -29,6 +29,6 @@ int desktopInitialize (){
     printf("%s\n",secondary_desktop_folder);	
 	
 	return 0;
-};
+}
 
 

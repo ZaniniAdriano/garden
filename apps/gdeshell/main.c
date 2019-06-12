@@ -82,6 +82,9 @@
  less than console_loglevel. 
 */ 
 
+
+#include "shell.h"
+
 //# usado para teste 
 //divisível por 4 é mais lento.
 
@@ -89,9 +92,6 @@
 #define WINDOW_HEIGHT    600    //400
 #define WINDOW_LEFT      0      //10
 #define WINDOW_TOP       0      //10
-
- 
-#include "sh.h"
 
 
 // Input flags.
@@ -105,6 +105,10 @@
 #define SHELLFLAG_FEEDTERMINAL 7
 #define SHELLFLAG_EXIT 8
 //...
+
+
+
+
 
 
 /*

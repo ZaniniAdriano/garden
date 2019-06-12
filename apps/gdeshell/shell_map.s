@@ -590,39 +590,41 @@ Linker script and memory map
                 0x0000000000413ce0                _data = .
                 0x0000000000413ce0                __data = .
  *(.data)
- .data          0x0000000000413ce0      0x4c4 crt0.o
- *fill*         0x00000000004141a4       0x1c 
- .data          0x00000000004141c0      0x55c main.o
-                0x0000000000414660                _running
-                0x0000000000414664                the_current_maintainer
-                0x0000000000414668                primary_prompt
-                0x000000000041466c                secondary_prompt
-                0x0000000000414670                current_user_name
-                0x0000000000414674                current_host_name
-                0x0000000000414678                remember_on_history
-                0x000000000041467c                current_command_number
-                0x0000000000414680                bashrc_file
-                0x0000000000414684                shell_config_file
-                0x00000000004146a0                long_args
-                0x0000000000414718                deltaValue
- *fill*         0x000000000041471c        0x4 
- .data          0x0000000000414720      0x4a0 shellui.o
- .data          0x0000000000414bc0      0x440 api.o
- .data          0x0000000000415000        0x0 ctype.o
- .data          0x0000000000415000        0x0 stdio.o
- .data          0x0000000000415000        0x8 stdlib.o
-                0x0000000000415000                _infinity
- .data          0x0000000000415008        0x0 string.o
- .data          0x0000000000415008        0x0 conio.o
- *fill*         0x0000000000415008       0x18 
- .data          0x0000000000415020      0x4a0 builtins.o
- .data          0x00000000004154c0      0x4a8 desktop.o
-                0x0000000000415960                primary_desktop_folder
-                0x0000000000415964                secondary_desktop_folder
- .data          0x0000000000415968        0x0 unistd.o
- .data          0x0000000000415968        0x0 stubs.o
+ .data          0x0000000000413ce0      0x4b8 crt0.o
+ *fill*         0x0000000000414198        0x8 
+ .data          0x00000000004141a0      0x53c main.o
+                0x0000000000414634                _running
+                0x0000000000414638                the_current_maintainer
+                0x000000000041463c                primary_prompt
+                0x0000000000414640                secondary_prompt
+                0x0000000000414644                current_user_name
+                0x0000000000414648                current_host_name
+                0x000000000041464c                remember_on_history
+                0x0000000000414650                current_command_number
+                0x0000000000414654                bashrc_file
+                0x0000000000414658                shell_config_file
+                0x0000000000414660                long_args
+                0x00000000004146d8                deltaValue
+ *fill*         0x00000000004146dc        0x4 
+ .data          0x00000000004146e0      0x492 shellui.o
+ *fill*         0x0000000000414b72        0xe 
+ .data          0x0000000000414b80      0x440 api.o
+ .data          0x0000000000414fc0        0x0 ctype.o
+ .data          0x0000000000414fc0        0x0 stdio.o
+ .data          0x0000000000414fc0        0x8 stdlib.o
+                0x0000000000414fc0                _infinity
+ .data          0x0000000000414fc8        0x0 string.o
+ .data          0x0000000000414fc8        0x0 conio.o
+ *fill*         0x0000000000414fc8       0x18 
+ .data          0x0000000000414fe0      0x492 builtins.o
+ *fill*         0x0000000000415472        0xe 
+ .data          0x0000000000415480      0x49c desktop.o
+                0x0000000000415914                primary_desktop_folder
+                0x0000000000415918                secondary_desktop_folder
+ .data          0x000000000041591c        0x0 unistd.o
+ .data          0x000000000041591c        0x0 stubs.o
                 0x0000000000416000                . = ALIGN (0x1000)
- *fill*         0x0000000000415968      0x698 
+ *fill*         0x000000000041591c      0x6e4 
 
 .got            0x0000000000416000        0x0
  .got           0x0000000000416000        0x0 crt0.o

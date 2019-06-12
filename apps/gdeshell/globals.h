@@ -265,7 +265,23 @@ int textMaxWheelDelta;  //máximo que se pode rolar o texto
 //
 // Buffer support.
 // 
+//
+// BUFFER SUPPORT
+//
 
+//
+// Screen Buffer: 
+// Igual a tela do vga, com caracteres e atributos.
+// @todo: O buffer deve ser maior, com várias vistas para rolagem.
+// mas apenas uma parte do buffer será mostrada na tela por vez.
+//
+
+#define DEFAULT_BUFFER_MAX_COLUMNS 80
+#define DEFAULT_BUFFER_MAX_ROWS    25
+#define SCREEN_BUFFER_SIZE ( ((DEFAULT_BUFFER_MAX_COLUMNS*DEFAULT_BUFFER_MAX_ROWS)*2)+1)
+
+
+ 
 
 //
 //  ** SCREEN BUFFER ***
