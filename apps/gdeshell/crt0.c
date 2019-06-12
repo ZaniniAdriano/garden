@@ -1,13 +1,17 @@
 /*
- * \o/
  * Gramado Operating System - The main file for the shell.
- * (c) Copyright 2015~2018 - Fred Nora.
+ * (c) Copyright 2015~2019 - Fred Nora.
  *
- * File: apps\shell\crt0.c
+ * File: apps/shell/crt0.c
  *
  * Environment: Gramado Core.
  * Usado para inicializar a rt na libc99
  */
+
+// #bugbug: 
+// No momento estamos usando uma versão persnalizada do crt0,
+// onde os argumentos são criados à mão. Mas precisamos usar o crt0 padrão
+// que pega os argumentos enviados pelo processo pai.
 
 
 #include "shell.h" 
@@ -88,12 +92,12 @@ void crt0 (){
 hang:	
     printf("crt0: EXIT ERROR! \n");
     printf("crt0: *Hang!\n");
-	while(1)
-	{
-		asm("pause");
-		asm("pause");
-		asm("pause");
-		asm("pause");
-	};
-};
+	
+	while (1){ asm("pause"); };
+}
+
+
+
+
+
 

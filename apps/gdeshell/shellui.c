@@ -63,7 +63,7 @@ void shellui_fntos (char *name){
         *name++ = ext[i];
 
     *name = '\0';
-};
+}
 	
 
 /*
@@ -72,6 +72,7 @@ void shellui_fntos (char *name){
  *     Procedimento de janela.
  *     LOCAL
  */
+
 unsigned long 
 shellTopbarProcedure ( struct window_d *window, 
                        int msg, 
@@ -475,13 +476,13 @@ done:
 	
 	//return (unsigned long) apiDefDialog(window,msg,long1,long2);
     return (unsigned long) 0;	
-};
-
+}
 
 
 // Criando edit box
 // o tipo dois funciona.
 // testando colocar o ponteiro no edit box. setar foco.
+
 void shellCreateEditBox (){
     
 	editboxWindow = (void *) APICreateWindow ( WT_EDITBOX, 1, 1, "shell-editbox1",     
@@ -502,7 +503,7 @@ void shellCreateEditBox (){
     APIRegisterWindow (editboxWindow);
 
 	//shellSetCursor ( 8, 8 );								   
-};
+}
 
 
 /*
@@ -574,8 +575,8 @@ struct window_d *shellCreateMainWindow( int status ){
 	struct window_d *w;
 
 	w = (void *) APICreateWindow ( 1, 1, 1, "shell-main",     
-                                left, top, width, height,    
-                                0, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
+                     left, top, width, height,    
+                     0, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
 								
 	if ( (void *) w == NULL )
 	{	
@@ -588,27 +589,24 @@ struct window_d *shellCreateMainWindow( int status ){
 		//exit(0);
 	};
 	
-	//Registrar.
-    APIRegisterWindow (w);
+	//Registrar e mostrar.
 	
+    APIRegisterWindow (w);
 	apiShowWindow (w);
 	
 	return w;
-};
-
+}
 
 
 void testCreateWindow (){
-
 	
-	struct window_d *hWindow;
-	
+	struct window_d *hWindow;	
 	
 	apiBeginPaint ();
 	
 	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, "XXX",     
-                                10, 10, 200, 200,
-                                0, 0, COLOR_RED, COLOR_YELLOW ); //xCOLOR_GRAY1, xCOLOR_GRAY1 );
+                           10, 10, 200, 200,
+                           0, 0, COLOR_RED, COLOR_YELLOW ); //xCOLOR_GRAY1, xCOLOR_GRAY1 );
 	
 	if ( (void *) hWindow == NULL )
 	{
@@ -618,15 +616,15 @@ void testCreateWindow (){
 		die ("shell.bin: hWindow fail");
 	}
 	
-	//Registrar.
-    APIRegisterWindow (hWindow);
+	//Registrar e mostrar.
 	
+    APIRegisterWindow (hWindow);
 	apiShowWindow (hWindow);	
 
-    apiEndPaint();
+    apiEndPaint ();
 	
-    printf("ok\n");
-};
+    printf ("ok\n");
+}
 
 
 /*
@@ -634,6 +632,7 @@ void testCreateWindow (){
  * shellDisplayBMP:
  *     Carrega um arquivo .bmp na memória e decodifica, mostrando na tela.
  */
+
 int shellDisplayBMP (char *file_name){	
 	
 	// #bugbug @todo: Aumenta o tamanho do heap do processo.
@@ -695,7 +694,7 @@ loadFile:
 	//printf("data area address %x \n",&bmp[base]);
 	
 	return 0;
-};
+}
 
 
 /*
@@ -704,6 +703,7 @@ loadFile:
  *     Carrega um arquivo .bmp na memória e decodifica, mostrando na tela.
  *  tamanho dado em kb
  */
+
 int shellDisplayBMPEx (char *file_name, int size ){	
 	
 	
@@ -768,7 +768,7 @@ loadFile:
 	//printf("data area address %x \n",&bmp[base]);
 	
 	return 0;
-};
+}
 
 
 
@@ -777,6 +777,7 @@ loadFile:
  *     Carrega um arquivo .bmp na memória e decodifica, mostrando na tela.
  *     Devemos usar a função oferecida pela api.
  */
+
 void shellTestDisplayBMP (){
 	
 	
@@ -830,9 +831,8 @@ loadFile:
 	//printf("magic1 %c\n", bmp[1]);
 	//printf("data area begin %c %c %c \n",bmp[base] ,bmp[base+1] ,bmp[base+2]);	
 	//printf("buffer %x \n",bmp);
-	//printf("data area address %x \n",&bmp[base]);
-		
-};
+	//printf("data area address %x \n",&bmp[base]);		
+}
 
 
 /*
@@ -840,13 +840,14 @@ loadFile:
  *     Mostra na tela uma imagem .bmp carregada na memória.
  *     #todo: No kernel ou na api tem rotina mais aprimorada que essa.
  */
-void bmpDisplayBMP ( void *address, 
-                     unsigned long x, 
-					 unsigned long y, 
-					 int width, 
-					 int height )
-{
 
+void 
+bmpDisplayBMP ( void *address, 
+                unsigned long x, 
+				unsigned long y, 
+				int width, 
+				int height )
+{
     apiDisplayBMP ( (char *) address, x, y ); 
     
 	/*
@@ -913,17 +914,17 @@ void bmpDisplayBMP ( void *address,
 	};
 	
 	*/
+	
 	return;
-};
+}
 
 
 //testando botão.
 //quando clicamos no menu da barra de tarefas.
 //todo mudar o nome da função.
+
 int shellTestButtons (){
-	
-	
-	
+
 	// Tamanho da tela.	
 	unsigned long ScreenWidth = apiGetSystemMetrics(1);
     unsigned long ScreenHeight = apiGetSystemMetrics(2); 	
@@ -993,6 +994,9 @@ int shellTestButtons (){
     APIRegisterWindow (app4_button);	
     
 
-	
     return 0;	
-};
+}
+
+
+
+

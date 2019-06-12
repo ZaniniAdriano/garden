@@ -17,7 +17,6 @@
 
 
 //shell stuff 
-//#include "shell2.h"
 #include "globals.h"
 #include "builtins.h"
 
@@ -35,13 +34,7 @@
 //...
 
 
-//#include "shell2.h"
-
-
-
-
 /*
- * File: shell2.h
  *
  * Descrição:
  *     Header principal do Shell.
@@ -487,6 +480,8 @@ struct command_d
 };
 command_t *current_command;
 */
+
+
 /*
 //command struct
 typedef struct connection_d connection_t;
@@ -505,15 +500,18 @@ connection_t *current_connection;
 
 //...
 
+
+// ?? what crazy thing haha
 //Lista de palavras reservadas.
 //São as mesmas da gramado language, pois 
 //a gramado language é uma linguagem de script.
 //*.gra  usar esse >>> (*.gl1)
+
 static char *RESERVED[] = {
-	"start",   //início do script
-	"finish",  //fim do script
-	"super",   //tipo genérico.
-	"rules",   //fecha declaração (;)
+	"start",      //início do script
+	"finish",      //fim do script
+	"super",       //tipo genérico.
+	"rules",       //fecha declaração (;)
 	"condition",   //
 	"open",        //( 
 	"close",       //)
@@ -796,6 +794,7 @@ static const char init_file_name[] = "INIT    TXT";
 
  
 //Diretórios para o shell comparar os comandos com os nomes dos arquivos lá. 
+
 struct _iobuf *pwd; 
 struct _iobuf *root;
 //...
@@ -877,6 +876,7 @@ typedef enum terminal_api_message_number_d {
     terminalCursorHeight,
     terminalCharWidth,
     terminalCharHeight	
+	//...
 	
 }terminal_api_message_number_t;
 
@@ -933,9 +933,9 @@ struct terminal_char_info_d
 
 //...
 
-#define SHELL_STREAM_STATUS_INPUT  1 //input
-#define SHELL_STREAM_STATUS_OUTPUT 2 //output
-#define SHELL_STREAM_STATUS_ERROR  3 //error
+#define SHELL_STREAM_STATUS_INPUT  1    // input
+#define SHELL_STREAM_STATUS_OUTPUT 2    // output
+#define SHELL_STREAM_STATUS_ERROR  3    // error
 
 
 //
@@ -1000,6 +1000,7 @@ struct COMMAND_D
 COMMAND_T *CurrentCommand;  
 //...
 
+
 typedef struct COMMANDHISTORY_D COMMANDHISTORY_T;
 struct COMMANDHISTORY_D
 {
@@ -1027,16 +1028,22 @@ int main ( int argc, char *argv[] );
 // Screen support.
 //
 
-void shellClearScreen();
-void shellRefreshScreen(); //copia o conteúdo do buffer para a tela. (dentro da janela)
+void shellClearScreen ();
+
+//copia o conteúdo do buffer para a tela. (dentro da janela)
+void shellRefreshScreen (); 
+
 void shellRefreshLine ( int line_number );
+
 void shellRefreshChar ( int line_number, int col_number );
-void shellRefreshCurrentChar(); //refresh do char que está na posição usada pelo input.
+
+//refresh do char que está na posição usada pelo input.
+void shellRefreshCurrentChar (); 
 
 
 
 //scroll dentro da screen_buffer. (VGA emulada)
-void shellScroll();
+void shellScroll ();
 //...
 
 
@@ -1045,7 +1052,7 @@ void shellScroll();
 //
 
 void shellClearBuffer();
-void shellShowScreenBuffer();
+void shellShowScreenBuffer ();
 //...
 
 
@@ -1053,21 +1060,23 @@ void shellShowScreenBuffer();
 // Typing support.
 //
 
-void shellInsertCR();
-void shellInsertLF();
-void shellInsertNullTerminator();
-void shellInsertNextChar(char c);
+void shellInsertCR ();
+void shellInsertLF ();
+void shellInsertNullTerminator ();
+void shellInsertNextChar (char c);
 
-void shellInsertCharXY(unsigned long x, unsigned long y, char c);
+void shellInsertCharXY (unsigned long x, unsigned long y, char c);
+
 char 
 shellGetCharXY ( unsigned long x, 
                  unsigned long y );
  
-static void lf(void);
-static void ri(void);
-static void cr(void);
-static void del(void);
-void move_to( unsigned long x, unsigned long y);
+static void lf (void);
+static void ri (void);
+static void cr (void);
+static void del (void);
+
+void move_to ( unsigned long x, unsigned long y);
 //...
 
 
@@ -1075,52 +1084,52 @@ void move_to( unsigned long x, unsigned long y);
 // Cursor support.
 //
 
-void shellSetCursor(unsigned long x, unsigned long y);
-static void save_cur(void);
-static void restore_cur(void);
+void shellSetCursor (unsigned long x, unsigned long y);
+static void save_cur (void);
+static void restore_cur (void);
 
 
 //
 // Reset prompt.
 //
 
-void shellPrompt();
+void shellPrompt ();
 
 
 //cmd
 //Funções chamadas pelos comandos.
-void shellHelp();
-void shellTree();
-void shellThread();
-void shellTestLoadFile();
-void shellTestThreads();
-void shellTestMBR();
+void shellHelp ();
+void shellTree ();
+void shellThread ();
+void shellTestLoadFile ();
+void shellTestThreads ();
+void shellTestMBR ();
 
 
 //int test_operators();
 
-void shellShowWindowInfo();
-void shellShowInfo();
-void shellShowMetrics();
-void shellShowSystemInfo();
+void shellShowWindowInfo ();
+void shellShowInfo ();
+void shellShowMetrics ();
+void shellShowSystemInfo ();
 
 unsigned long 
-shellSendMessage( struct window_d *window, 
-                  int msg, 
-				  unsigned long long1, 
-				  unsigned long long2 );
+shellSendMessage ( struct window_d *window, 
+                   int msg, 
+				   unsigned long long1, 
+				   unsigned long long2 );
 //...
 
 // Wait for commands.
 //Isso não é usado, temos um while.
-void shellWaitCmd();             
+void shellWaitCmd ();             
  
  // Compare comands.
 unsigned long shellCompare (struct window_d *window);   
  
 // Initialization. 
-int shellInit( struct window_d *window );                //Init.
-void shellShell();               //Constructor. 
+int shellInit ( struct window_d *window );    // Init.
+void shellShell ();                           // Constructor. 
  
 // Finalizing ... 
 // ??exit, die... 
@@ -1131,42 +1140,39 @@ void shellShell();               //Constructor.
 
 
 // copia bytes	
-void shell_memcpy_bytes ( unsigned char *Dest, 
-                          unsigned char *Source,
-                          unsigned long Length );
+void 
+shell_memcpy_bytes ( unsigned char *Dest, 
+                     unsigned char *Source,
+                     unsigned long Length );
 
- 
- 
-void shellUpdateCurrentDirectoryID( int id ); 
-void shellUpdateWorkingDiretoryString( char *string );
+
+void shellUpdateCurrentDirectoryID ( int id ); 
+void shellUpdateWorkingDiretoryString ( char *string );
 
 void shellInitializeWorkingDiretoryString ();
 
 //lista informações sobre os processos.
-void shellTaskList();
+void shellTaskList ();
 
-void shellShowPID();
-void shellShowPPID();
+void shellShowPID ();
+void shellShowPPID ();
 
+void shellShowUID ();
+void shellShowGID ();
 
+void shellShowUserSessionID ();
+void shellShowWindowStationID ();
+void shellShowDesktopID ();
 
-void shellShowUID();
-void shellShowGID();
+void shellShowProcessHeapPointer ();
+void shellShowKernelHeapPointer ();
 
+void shellShowDiskInfo ();
+void shellShowVolumeInfo ();
 
-void shellShowUserSessionID();
-void shellShowWindowStationID();
-void shellShowDesktopID();
-
-void shellShowProcessHeapPointer();
-void shellShowKernelHeapPointer();
-
-void shellShowDiskInfo();
-void shellShowVolumeInfo();
-
-void shellShowMemoryInfo();
-void shellShowPCIInfo();
-void shellShowKernelInfo();
+void shellShowMemoryInfo ();
+void shellShowPCIInfo ();
+void shellShowKernelInfo ();
 
 
 /*
@@ -1174,9 +1180,12 @@ void shellShowKernelInfo();
  * Executa um programa exclusivamente dentro 
  * do ambiente Gramado Core no lugar do processo init.bin.
  */
-int shell_gramado_core_init_execve( const char *arg1, 
-                                    const char *arg2, 
-                                    const char *arg3 );
+
+int 
+shell_gramado_core_init_execve ( const char *arg1, 
+                                 const char *arg2, 
+                                 const char *arg3 );
+
 
 //
 // shelui.c
@@ -1190,21 +1199,18 @@ struct window_d *shellCreateMainWindow( int status );
 
 
 
-
-int shellDisplayBMP( char *file_name );
-
-
+int shellDisplayBMP ( char *file_name );
 
 int shellDisplayBMPEx (char *file_name, int size );
-void shellTestDisplayBMP();
 
+void shellTestDisplayBMP ();
 
-void bmpDisplayBMP ( void* address, 
-                     unsigned long x, 
-					 unsigned long y, 
-					 int width, 
-					 int height );
-					
+void 
+bmpDisplayBMP ( void* address, 
+                unsigned long x, 
+				unsigned long y, 
+				int width, 
+				int height );	
 				
 
 //um comando no shell aponta o script para executar.
@@ -1253,7 +1259,7 @@ int is_bin ( char *cmd );
 /* Check if it's a .sh1 file */
 int is_sh1 ( char *cmd );
 
-int shellCheckPassword();
+int shellCheckPassword ();
 
 
 //testando botão.
