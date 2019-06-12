@@ -1,4 +1,4 @@
-#reboot command for gde
+#jackpot for gde
 
 #history:
 #2019 - Created by Fred Nora.
@@ -13,7 +13,7 @@ VERSION = 0
 PATCHLEVEL = 0
 SUBLEVEL = 0
 EXTRAVERSION =
-#NAME = reboot
+#NAME = jackpot
 
 #todo:
 #We need to simplify these flags
@@ -43,10 +43,10 @@ CFLAGS = -m32 \
 #APIOBJ  = ../../../lib/gdelibs/api01/obj
 
 
-LIBC    = ../../../lib/gdelibs/libc02/include/
-LIBCOBJ = ../../../lib/gdelibs/libc02/obj
-API02   = ../../../lib/gdelibs/api02/include/
-APIOBJ  = ../../../lib/gdelibs/api02/obj
+LIBC    = ../../lib/gdelibs/libc02/include/
+LIBCOBJ = ../../lib/gdelibs/libc02/obj
+API02   = ../../lib/gdelibs/api02/include/
+APIOBJ  = ../../lib/gdelibs/api02/obj
 
 
 	##
@@ -91,14 +91,13 @@ all-c:
 
 
 jackpot-link:
-	ld -m elf_i386 -T link.ld -o REBOOT.BIN $(myObjects) -Map map.s
+	ld -m elf_i386 -T link.ld -o JACKPOT.BIN $(myObjects) -Map map.s
 
 finalize:
-	cp REBOOT.BIN  ../../../bin
+	cp JACKPOT.BIN  ../../bin
 
 clean:
 	-rm *.o
-	-rm REBOOT.BIN 
-	
+	-rm JACKPOT.BIN 
 	
 	

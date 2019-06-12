@@ -1,4 +1,4 @@
-#jackpot for gde  hello.bin
+#reboot command for gde
 
 #history:
 #2019 - Created by Fred Nora.
@@ -13,7 +13,7 @@ VERSION = 0
 PATCHLEVEL = 0
 SUBLEVEL = 0
 EXTRAVERSION =
-#NAME = jackpot
+#NAME = reboot
 
 #todo:
 #We need to simplify these flags
@@ -37,16 +37,16 @@ CFLAGS = -m32 \
 #	-s
 	
 	
-#LIBC    = ../../../lib/gdelibs/libc01/include/
-#LIBCOBJ = ../../../lib/gdelibs/libc01/obj
-#API01   = ../../../lib/gdelibs/api01/include/
-#APIOBJ  = ../../../lib/gdelibs/api01/obj
+#LIBC    = ../../lib/gdelibs/libc01/include/
+#LIBCOBJ = ../../lib/gdelibs/libc01/obj
+#API01   = ../../lib/gdelibs/api01/include/
+#APIOBJ  = ../../lib/gdelibs/api01/obj
 
 
-LIBC    = ../../../lib/gdelibs/libc02/include/
-LIBCOBJ = ../../../lib/gdelibs/libc02/obj
-API02   = ../../../lib/gdelibs/api02/include/
-APIOBJ  = ../../../lib/gdelibs/api02/obj
+LIBC    = ../../lib/gdelibs/libc02/include/
+LIBCOBJ = ../../lib/gdelibs/libc02/obj
+API02   = ../../lib/gdelibs/api02/include/
+APIOBJ  = ../../lib/gdelibs/api02/obj
 
 
 	##
@@ -91,13 +91,14 @@ all-c:
 
 
 jackpot-link:
-	ld -m elf_i386 -T link.ld -o HELLO.BIN $(myObjects) -Map map.s
+	ld -m elf_i386 -T link.ld -o REBOOT.BIN $(myObjects) -Map map.s
 
 finalize:
-	cp HELLO.BIN  ../../../bin
+	cp REBOOT.BIN  ../../bin
 
 clean:
 	-rm *.o
-	-rm HELLO.BIN 
+	-rm REBOOT.BIN 
+	
 	
 	

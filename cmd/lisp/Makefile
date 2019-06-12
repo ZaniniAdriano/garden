@@ -29,11 +29,11 @@ CFLAGS = -m32 \
 #	-s
 
 
-LIBC    = ../../../lib/gdelibs/libc01/include/
-LIBCOBJ = ../../../lib/gdelibs/libc01/obj
+LIBC    = ../../lib/gdelibs/libc01/include/
+LIBCOBJ = ../../lib/gdelibs/libc01/obj
 
-API01   = ../../../lib/gdelibs/api01/include/
-APIOBJ  = ../../../lib/gdelibs/api01/obj
+API01   = ../../lib/gdelibs/api01/include/
+APIOBJ  = ../../lib/gdelibs/api01/obj
 
 
 	##
@@ -80,7 +80,7 @@ jackpot-link:
 	ld -m elf_i386 -T link.ld -o LISP.BIN $(myObjects) -Map map.s
 
 finalize:
-	cp LISP.BIN  ../../../bin
+	cp LISP.BIN  ../../bin
 
 clean:
 	-rm *.o

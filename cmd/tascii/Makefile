@@ -1,14 +1,18 @@
-# cat for gde
 
 #history:
 #2019 - Created by Fred Nora.
+
+#todo:
+#fazer um makefile pra compilar o shell
+#obs: #bugbug tem que arrumas as coisas aqui.
+
 
 
 VERSION = 0
 PATCHLEVEL = 0
 SUBLEVEL = 0
 EXTRAVERSION =
-#NAME = cat
+#NAME = tascii
 
 #todo:
 #We need to simplify these flags
@@ -26,13 +30,17 @@ CFLAGS = -m32 \
 	-no-pie \
 	-fno-stack-protector \
 	-s
-	
-	
-LIBC    = ../../../lib/gdelibs/libc01/include/
-LIBCOBJ = ../../../lib/gdelibs/libc01/obj
 
-API01   = ../../../lib/gdelibs/api01/include/
-APIOBJ  = ../../../lib/gdelibs/api01/obj
+#	-fleading-underscore \
+#	-fno-stack-protector \
+#	-s
+
+
+LIBC    = ../../lib/gdelibs/libc01/include/
+LIBCOBJ = ../../lib/gdelibs/libc01/obj
+
+API01   = ../../lib/gdelibs/api01/include/
+APIOBJ  = ../../lib/gdelibs/api01/obj
 
 
 	##
@@ -46,20 +54,21 @@ stdlib.o \
 string.o \
 time.o \
 api.o \
-unistd.o  
+unistd.o \
+stubs.o    
 
 
 
-.PHONY: all all-c cat-link finalize clean
 
-all: main.o all-c cat-link finalize clean
+.PHONY: all all-c tascii-link finalize clean
+
+all: main.o all-c tascii-link finalize clean
 	@echo "Ok?"
 
 main.o:
 	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o main.o
 
 all-c:
-	
 	cp $(APIOBJ)/api.o      .
 	
 	cp $(LIBCOBJ)/ctype.o   .
@@ -68,17 +77,17 @@ all-c:
 	cp $(LIBCOBJ)/string.o .
 	cp $(LIBCOBJ)/time.o    .
 	cp $(LIBCOBJ)/unistd.o  .
+	cp $(LIBCOBJ)/stubs.o  .
 	
 
-
-cat-link:
-	ld -m elf_i386 -T link.ld -o CAT.BIN $(myObjects) -Map map.s
+tascii-link:
+	ld -m elf_i386 -T link.ld -o TASCII.BIN $(myObjects) -Map app_map.s
 
 finalize:
-	cp CAT.BIN  ../../../bin
+	cp TASCII.BIN ../../bin
 
 clean:
 	-rm *.o
-	-rm CAT.BIN 
+	-rm TASCII.BIN 
 	
 	

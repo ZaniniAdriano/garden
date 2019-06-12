@@ -6,14 +6,18 @@
 
 
 
-    /apps     - In this folder we have gui apps, console apps.
+    /apps     - In this folder we have GUI apps.
 	
 	/bin      - Binaries.   
+	
+	/cmd      - Terminal apps.
 	
 	/docs     - Docs.
 	
 	/lib      - Libs used in the project.
 	
 	/licenses - Licenses.
+	
+    /gt       - Gramado Toolchain
 	
     /...

@@ -31,17 +31,17 @@ CFLAGS = -m32 \
 	-s
 	
 #salvando original	
-#LIBC    = ../../../lib/gdelibs/libc01/include/
-#LIBCOBJ = ../../../lib/gdelibs/libc01/obj
-#API01   = ../../../lib/gdelibs/api01/include/
-#APIOBJ  = ../../../lib/gdelibs/api01/obj
+#LIBC    = ../../lib/gdelibs/libc01/include/
+#LIBCOBJ = ../../lib/gdelibs/libc01/obj
+#API01   = ../../lib/gdelibs/api01/include/
+#APIOBJ  = ../../lib/gdelibs/api01/obj
 
-LIBC    = ../../../lib/glibc01/include/
-LIBCOBJ = ../../../lib/glibc01/obj
+LIBC    = ../../lib/glibc01/include/
+LIBCOBJ = ../../lib/glibc01/obj
 
 #api do gramado.
-#API01   = ../../../lib/gdelibs/api01/include/
-#APIOBJ  = ../../../lib/gdelibs/api01/obj
+#API01   = ../../lib/gdelibs/api01/include/
+#APIOBJ  = ../../lib/gdelibs/api01/obj
 
 
 	##
@@ -106,7 +106,7 @@ glibct1-link:
 	ld -m elf_i386 -T link.ld -o GLIBCT1.BIN $(myObjects) -Map map.s
 
 finalize:
-	cp GLIBCT1.BIN  ../../../bin
+	cp GLIBCT1.BIN  ../../bin
 
 clean:
 	-rm *.o

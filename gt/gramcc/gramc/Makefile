@@ -35,11 +35,11 @@ CFLAGS = -m32 \
 #	-s
 
 
-LIBC    = ../../../../lib/gdelibs/libc02/include/
-LIBCOBJ = ../../../../lib/gdelibs/libc02/obj
+LIBC    = ../../../lib/gdelibs/libc02/include/
+LIBCOBJ = ../../../lib/gdelibs/libc02/obj
 
-API     = ../../../../lib/gdelibs/api02/include/
-APIOBJ  = ../../../../lib/gdelibs/api02/obj
+API     = ../../../lib/gdelibs/api02/include/
+APIOBJ  = ../../../lib/gdelibs/api02/obj
 
 
 	##
@@ -96,7 +96,7 @@ gramcc-link:
 	ld -m elf_i386 -T link.ld -o GRAMC.BIN $(myObjects) -Map app_map.s
 
 finalize:
-	cp GRAMC.BIN  ../../../../bin
+	cp GRAMC.BIN  ../../../bin
 
 clean:
 	-rm *.o

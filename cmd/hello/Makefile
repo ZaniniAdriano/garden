@@ -1,3 +1,4 @@
+#jackpot for gde  hello.bin
 
 #history:
 #2019 - Created by Fred Nora.
@@ -12,7 +13,7 @@ VERSION = 0
 PATCHLEVEL = 0
 SUBLEVEL = 0
 EXTRAVERSION =
-#NAME = tascii
+#NAME = jackpot
 
 #todo:
 #We need to simplify these flags
@@ -34,20 +35,26 @@ CFLAGS = -m32 \
 #	-fleading-underscore \
 #	-fno-stack-protector \
 #	-s
+	
+	
+#LIBC    = ../../lib/gdelibs/libc01/include/
+#LIBCOBJ = ../../lib/gdelibs/libc01/obj
+#API01   = ../../lib/gdelibs/api01/include/
+#APIOBJ  = ../../lib/gdelibs/api01/obj
 
 
-LIBC    = ../../../lib/gdelibs/libc01/include/
-LIBCOBJ = ../../../lib/gdelibs/libc01/obj
-
-API01   = ../../../lib/gdelibs/api01/include/
-APIOBJ  = ../../../lib/gdelibs/api01/obj
+LIBC    = ../../lib/gdelibs/libc02/include/
+LIBCOBJ = ../../lib/gdelibs/libc02/obj
+API02   = ../../lib/gdelibs/api02/include/
+APIOBJ  = ../../lib/gdelibs/api02/obj
 
 
 	##
 	## Objects
 	##
 
-myObjects = main.o \
+myObjects = crt0.o \
+main.o \
 ctype.o \
 stdio.o \
 stdlib.o \
@@ -59,14 +66,13 @@ stubs.o
 
 
 
+.PHONY: all all-c jackpot-link finalize clean
 
-.PHONY: all all-c tascii-link finalize clean
-
-all: main.o all-c tascii-link finalize clean
+all: main.o all-c jackpot-link finalize clean
 	@echo "Ok?"
 
 main.o:
-	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o main.o
+	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API02) -o main.o
 
 all-c:
 	cp $(APIOBJ)/api.o      .
@@ -79,15 +85,19 @@ all-c:
 	cp $(LIBCOBJ)/unistd.o  .
 	cp $(LIBCOBJ)/stubs.o  .
 	
+#test
+	cp $(LIBCOBJ)/crt0.o   .
 
-tascii-link:
-	ld -m elf_i386 -T link.ld -o TASCII.BIN $(myObjects) -Map app_map.s
+
+
+jackpot-link:
+	ld -m elf_i386 -T link.ld -o HELLO.BIN $(myObjects) -Map map.s
 
 finalize:
-	cp TASCII.BIN ../../../bin
+	cp HELLO.BIN  ../../bin
 
 clean:
 	-rm *.o
-	-rm TASCII.BIN 
+	-rm HELLO.BIN 
 	
 	
