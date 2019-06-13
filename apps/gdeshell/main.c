@@ -2920,15 +2920,22 @@ do_compare:
 			
 			printf ("t20: writing in the stdout\n"); //ring3 ??
 			
+			// #importante
+			// Aqui vamos pegar o stdout associado com o terminal atual,
+			// mas deveríamos pegar o stdout associado com o tty
+			// usado pelo aplicativo.
+			// Mesma coisa para o input. A aplicativo deve pegar
+			// os chars no stdin do tty associado ao aplicativo e não
+			// diretamente no driver de terminal.
+			// Esse tipo de coisa ajudará a controlar a concorrência
+			// dos aplicativos por input.
+			
 			//pega o stdout do kernel
 			_fp = (FILE *) system_call ( 1000, getpid(), 0, 0 );
 			
-			// #bugbug
-			// ISSO NÃO FUNCIONA !!
-			
 			//fprintf (stdout,"gdeshell: This is a string ..."); //#bugbug
 			fprintf (_fp,"gdeshell: This is a string ..."); //#bugbug
-			
+			fprintf (_fp,"gdeshell: We're writing in the terminal's stdout. ");
 			//#importante
 			//Aqui podemos configurar o terminal.
 			//pegar as características do terminal para configurar o app cliente.
