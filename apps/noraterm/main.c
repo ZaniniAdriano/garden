@@ -75,6 +75,12 @@
 
 
 // #importante:
+// O terminal não pinta, ele deve chamar o X para isso.
+// > O xterm chama o X-server e o windows terminal chama o direct X.
+	
+
+
+// #importante:
 // #todo
 // SetTerminalPID()
 // SetTerminalTID()
@@ -86,7 +92,11 @@
 //Abort() // se o terminal receber uma mensagem enquanto está criando
 //as coisas do terminal, então ele pode abortar a criação de liberar os recursos.
 
-#include "shell.h" 
+
+// #bugbug
+// O header principal não deve ser esse. deve ser noraterm.h.
+
+#include "noraterm.h" 
 
 
 // Input flags.

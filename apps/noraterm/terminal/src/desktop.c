@@ -4,7 +4,7 @@
 // manipulação dos ícones no desktop.
 
 
-#include "shell.h" 
+#include "noraterm.h" 
 
 
 //desktop folders.

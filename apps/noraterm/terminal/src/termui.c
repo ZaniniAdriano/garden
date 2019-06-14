@@ -12,7 +12,7 @@
  */
  
  
-#include "shell.h" 
+#include "noraterm.h" 
 
 
 extern int ShellFlag;

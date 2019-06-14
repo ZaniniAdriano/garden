@@ -7,7 +7,7 @@
  */
 
  
-#include "shell.h" 
+#include "noraterm.h" 
 
 
 void cd_buitins (){

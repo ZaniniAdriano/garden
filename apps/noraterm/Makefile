@@ -45,11 +45,16 @@ API02   = ../../lib/gdelibs/api02/include/
 APIOBJ  = ../../lib/gdelibs/api02/obj
 
 
+GWS  = gws/include/   
 
-GWS    = gws/include/   
-#GWSOBJ = gws/obj cancelado
+#RENDERER = renderer/include/  
 
-TERMINAL    = terminal/include/   
+#SHELL = shell/include/   
+
+#TERMINAL  = terminal/include/   
+
+
+
 
 	##
 	## Objects
@@ -75,33 +80,39 @@ head.o:
 #	nasm  head.s  -felf -o head.o
 
 crt0.o:
-	gcc  -c  crt0.c -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o crt0.o
+	gcc  -c  arch/x86/crt0.c -I $(LIBC) -I $(API02)  -I $(GWS) -I . $(CFLAGS) -o crt0.o
 
 main.o:
-	gcc  -c  main.c -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o main.o
+	gcc  -c  main.c -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o main.o
 
 all-c:
 
-	gcc  -c  builtins.c  -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o builtins.o
-	gcc  -c  login.c     -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o login.o
-	gcc  -c  tests.c     -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o tests.o
-	gcc  -c  shell.c     -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o shell.o
-	
-	
 #gws
-	gcc  -c  gws/src/gws/char.c     -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o char.o
-	gcc  -c  gws/src/gws/line.c     -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o line.o
-	gcc  -c  gws/src/gws/pixel.c    -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o pixel.o
-	gcc  -c  gws/src/gws/rect.c     -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o rect.o
-	gcc  -c  gws/src/gws.c          -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o gws.o
+	gcc  -c  gws/src/gws/char.c     -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o char.o
+	gcc  -c  gws/src/gws/line.c     -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o line.o
+	gcc  -c  gws/src/gws/pixel.c    -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o pixel.o
+	gcc  -c  gws/src/gws/rect.c     -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o rect.o
+	gcc  -c  gws/src/gws.c          -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o gws.o
 # ...	
 
+
+#renderer
+#	gcc  -c  renderer/src/renderer.c     -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o renderer.o
+	
+#shell
+	gcc  -c  shell/src/shell.c     -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o shell.o
+	gcc  -c  shell/src/builtins.c  -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o builtins.o
+	gcc  -c  shell/src/tests.c     -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o tests.o
+	gcc  -c  shell/src/login.c     -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o login.o
+	
+
 #terminal
-	gcc  -c  terminal/src/terminal.c  -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o terminal.o
-	gcc  -c  terminal/src/termui.c    -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o termui.o
-	gcc  -c  terminal/src/desktop.c   -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o desktop.o	
+	gcc  -c  terminal/src/terminal.c  -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o terminal.o
+	gcc  -c  terminal/src/termui.c    -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o termui.o
+	gcc  -c  terminal/src/desktop.c   -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o desktop.o	
+
 	
-	
+#more
 #	gcc  -c  parser.c    -I ../../../include/libc/ $(CFLAGS) -o parser.o
 #	gcc  -c  lexer.c     -I ../../../include/libc/ $(CFLAGS) -o lexer.o
 #	gcc  -c  net.c       -I ../../../include/libc/ $(CFLAGS) -o net.o
@@ -131,7 +142,7 @@ all-c:
 	
 
 shell-link:
-	ld -m elf_i386 -T link.ld -o NORATERM.BIN $(myObjects) -Map app_map.s
+	ld -m elf_i386 -T include/link.ld -o NORATERM.BIN $(myObjects) -Map docs/app_map.s
 
 
 finalize:

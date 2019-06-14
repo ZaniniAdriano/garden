@@ -4,7 +4,7 @@
 // Nesse arquivo ficarão alguns testes.
 // Esse arquivo poderá ser descartado depois.
 
-#include "shell.h" 
+#include "noraterm.h" 
 
 
 //

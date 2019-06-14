@@ -689,14 +689,14 @@ Linker script and memory map
  .data          0x0000000000418960      0x4c8 crt0.o
  *fill*         0x0000000000418e28       0x18 
  .data          0x0000000000418e40      0x538 main.o
-                0x00000000004192e0                running
-                0x00000000004192e4                primary_prompt
-                0x00000000004192e8                secondary_prompt
-                0x00000000004192ec                mainwindow_used
-                0x00000000004192f0                remember_on_history
-                0x00000000004192f4                current_command_number
-                0x00000000004192f8                bashrc_file
-                0x00000000004192fc                shell_config_file
+                0x00000000004192d4                running
+                0x00000000004192d8                primary_prompt
+                0x00000000004192dc                secondary_prompt
+                0x00000000004192e0                mainwindow_used
+                0x00000000004192e4                remember_on_history
+                0x00000000004192e8                current_command_number
+                0x00000000004192ec                bashrc_file
+                0x00000000004192f0                shell_config_file
                 0x0000000000419300                long_args
  .data          0x0000000000419378        0x0 stubs.o
  .data          0x0000000000419378        0x0 ctype.o
@@ -709,25 +709,29 @@ Linker script and memory map
  .data          0x0000000000419380        0x0 signal.o
  .data          0x0000000000419380        0x0 unistd.o
  .data          0x0000000000419380      0x440 api.o
- .data          0x00000000004197c0      0x4a0 builtins.o
- .data          0x0000000000419c60      0x4a8 desktop.o
-                0x000000000041a100                primary_desktop_folder
-                0x000000000041a104                secondary_desktop_folder
- *fill*         0x000000000041a108       0x18 
- .data          0x000000000041a120      0x4a0 login.o
- .data          0x000000000041a5c0      0x4a4 tests.o
-                0x000000000041aa60                deltaValue
- *fill*         0x000000000041aa64       0x1c 
- .data          0x000000000041aa80      0x4a0 shell.o
- .data          0x000000000041af20      0x440 pixel.o
- .data          0x000000000041b360      0x440 line.o
- .data          0x000000000041b7a0      0x440 rect.o
- .data          0x000000000041bbe0      0x440 char.o
- .data          0x000000000041c020      0x840 gws.o
- .data          0x000000000041c860      0x4a0 terminal.o
- .data          0x000000000041cd00      0x4a0 termui.o
+ .data          0x00000000004197c0      0x492 builtins.o
+ *fill*         0x0000000000419c52        0xe 
+ .data          0x0000000000419c60      0x49c desktop.o
+                0x000000000041a0f4                primary_desktop_folder
+                0x000000000041a0f8                secondary_desktop_folder
+ *fill*         0x000000000041a0fc        0x4 
+ .data          0x000000000041a100      0x492 login.o
+ *fill*         0x000000000041a592        0xe 
+ .data          0x000000000041a5a0      0x498 tests.o
+                0x000000000041aa34                deltaValue
+ *fill*         0x000000000041aa38        0x8 
+ .data          0x000000000041aa40      0x492 shell.o
+ *fill*         0x000000000041aed2        0xe 
+ .data          0x000000000041aee0      0x440 pixel.o
+ .data          0x000000000041b320      0x440 line.o
+ .data          0x000000000041b760      0x440 rect.o
+ .data          0x000000000041bba0      0x440 char.o
+ .data          0x000000000041bfe0      0x840 gws.o
+ .data          0x000000000041c820      0x492 terminal.o
+ *fill*         0x000000000041ccb2        0xe 
+ .data          0x000000000041ccc0      0x492 termui.o
                 0x000000000041e000                . = ALIGN (0x1000)
- *fill*         0x000000000041d1a0      0xe60 
+ *fill*         0x000000000041d152      0xeae 
 
 .got            0x000000000041e000        0x0
  .got           0x000000000041e000        0x0 crt0.o

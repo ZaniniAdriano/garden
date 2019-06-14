@@ -9,7 +9,7 @@
  */
 
 
-#include "shell.h" 
+#include "noraterm.h" 
 
 
 

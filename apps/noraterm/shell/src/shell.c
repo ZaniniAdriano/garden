@@ -2,7 +2,7 @@
 // its used to setup the terminal in the development step.
 
 
-#include "shell.h" 
+#include "noraterm.h" 
 
 
 void shellShowPID (){

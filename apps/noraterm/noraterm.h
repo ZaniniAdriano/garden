@@ -1,5 +1,5 @@
 /*
- * File: shell.h
+ * File: noraterm.h old shell.h
  *
  * Descrição:
  *     Header principal do Shell.
@@ -34,10 +34,8 @@
 
 
 
-//Setup current compiler 
-#include "compiler.h"
 
-
+#include <stubs/gramado.h>
 
 //lib C
 #include <types.h>
@@ -51,36 +49,39 @@
 //#tedt: open()
 #include <fcntl.h>
   
+#include <api.h>
 
-#include "globals.h"
+
+//Setup current compiler 
+#include "include/config/compiler.h"
+
+#include "include/globals.h"
+//# bash 1.05 stuff #
+#include "include/variables.h"
+#include "include/general.h"
+#include "include/flags.h"
+#include "include/alias.h"
+#include "include/ndir.h"
+#include "include/version.h"
+//...
+
 
  
-
-#include "builtins.h"
-
-#include <api.h>
 #include <gws.h>
 
+
+#include "renderer/include/renderer.h"
+
+#include "shell/include/shell.h"
+#include "shell/include/builtins.h"
+
+#include "shell/include/login.h"
+#include "shell/include/tests.h"
 
 #include "terminal/include/desktop.h"
 #include "terminal/include/terminal.h"
 
-//# bash 1.05 stuff #
-#include "variables.h"
-#include "general.h"
-#include "flags.h"
-#include "alias.h"
-#include "ndir.h"
-#include "version.h"
-//...
 
-
-#include "login.h"
-
-#include <stubs/gramado.h>
-
-
-#include "tests.h"
 
 //#define SHELL_VERBOSE 1
 

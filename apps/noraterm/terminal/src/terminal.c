@@ -2,7 +2,7 @@
 // Colocar as rotinas de terminal virtual aqui,
 // separadas do shell
 
-#include "shell.h" 
+#include "noraterm.h"  
 
 
 /*
