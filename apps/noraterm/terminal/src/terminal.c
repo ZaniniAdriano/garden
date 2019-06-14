@@ -37,7 +37,8 @@ utf8countBytes (int c)
  * pudesse usar, ou o servidor de recursos gráficos pudesse usar.
  */
 
-// # terminal stuff
+	//#importante:
+	//o refresh é chamado no default do procedimento de janela
 
 void terminalInsertNextChar (char c){
 	
@@ -46,37 +47,8 @@ void terminalInsertNextChar (char c){
 	// \n \r ... ??
 			
 	// Coloca no buffer.
-	// cursor da linha	
 	
 	LINES[textCurrentRow].CHARS[textCurrentCol] = (char) c;
-	
-	// refresh
-	// mostra na tela. 
-	// #todo
-	// Tem caracteres que não são imprimíveis.
-	
-	terminalRefreshCurrentChar ();
-	
-	// Atualiza os deslocamanentos dentro do buffer.
-	
-	// update
-	textCurrentCol++;
-	
-	if (textCurrentCol >= 80 )
-	{
-		textCurrentCol = 0;
-		
-		textCurrentRow++;
-		
-		if ( textCurrentRow >= 25 )
-		{
-			shellScroll ();
-			while (1){}
-		}
-	}
-	
-	LINES[textCurrentRow].pos = textCurrentCol;
-	LINES[textCurrentRow].right = textCurrentCol;
 }
 
 
@@ -226,23 +198,88 @@ static void restore_cur (void){
 
 
 
-//#aind anão foi testada.
+/*
+ * terminalRefreshCurrentChar:
+ *    refresh do char que está na posição usada pelo input.     
+ *    em seguida fazemos a atualização das posições.
+ */
+
+// #test
+// Vamos tentar imprimir na tela usando a api.
+
 void terminalRefreshCurrentChar2 (){
 	
-	char *p;
+	int c = (int) LINES[textCurrentRow].CHARS[textCurrentCol];
 	
-	p[0] = LINES[textCurrentRow].CHARS[textCurrentCol];
-	p[1] = 0;
+	apiPutChar (c);
+		
+	// Atualiza os deslocamanentos dentro do buffer.
 	
-    apiDrawText ( NULL, textCurrentRow*8, textCurrentCol*8, 
-		COLOR_RED, (char *) p );
+	// update
+	textCurrentCol++;
+	
+	if (textCurrentCol >= 80 )
+	{
+		textCurrentCol = 0;
+		
+		textCurrentRow++;
+		
+		if ( textCurrentRow >= 25 )
+		{
+			shellScroll ();
+			while (1){}
+		}
+	}
+	
+	LINES[textCurrentRow].pos = textCurrentCol;
+	LINES[textCurrentRow].right = textCurrentCol;
+	
+	
+	//atualizando o cursor do sistema,
+	//terminalSetCursor ( textCurrentRow, textCurrentCol );
+	
 }
 
 
-//refresh do char que está na posição usada pelo input.
+
+/*
+ * terminalRefreshCurrentChar:
+ *    refresh do char que está na posição usada pelo input.     
+ *    em seguida fazemos a atualização das posições.
+ */
+
+// #bugbug
+// A libc não imprime na tela. Então o terminal virtual precisa usar a api
+// ou enviar o servidor através de arquivo ou mensagem.
+
+// #importante: No nosso caso vamos usar a api e impimir na tela.
+
+
 void terminalRefreshCurrentChar (){
 	
+	//#usar api.
 	printf ("%c", LINES[textCurrentRow].CHARS[textCurrentCol] );
+	
+	// Atualiza os deslocamanentos dentro do buffer.
+	
+	// update
+	textCurrentCol++;
+	
+	if (textCurrentCol >= 80 )
+	{
+		textCurrentCol = 0;
+		
+		textCurrentRow++;
+		
+		if ( textCurrentRow >= 25 )
+		{
+			shellScroll ();
+			while (1){}
+		}
+	}
+	
+	LINES[textCurrentRow].pos = textCurrentCol;
+	LINES[textCurrentRow].right = textCurrentCol;
 }
 
 

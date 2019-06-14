@@ -478,9 +478,18 @@ void terminalClearScreen ();
 void terminalSetCursor (unsigned long x, unsigned long y);
 
 
+//
+// buffer
+//
+
 void terminalClearBuffer();
 
 void terminalShowScreenBuffer();
+
+
+//
+// visible area
+//
 
 void terminalRefreshVisibleArea ();
 
@@ -488,20 +497,45 @@ void updateVisibleArea ( int direction );
 
 void testChangeVisibleArea();
 
+
+//
+// lines
+//
+	
+
+
 void testShowLines();
 
 void clearLine ( int line_number );
 
+
+//
+// top and bottom
+//
+
+
 void textSetTopRow ( int number );
+
 void textSetBottomRow ( int number );
+
 int textGetTopRow ();
+
 int textGetBottomRow ();
 
 
+//
+// current row and col.
+//
+
 void textSetCurrentRow ( int number );
+
 int textGetCurrentRow ();
+
 void textSetCurrentCol ( int number );
+
 int textGetCurrentCol ();
+
+
 
 void move_to ( unsigned long x, unsigned long y);
 

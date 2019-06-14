@@ -494,6 +494,11 @@ int argbuf_index;
 // ======== ## Prototypes ## ======== 
 //
 
+
+// escreve um char no backbuffer e exibe na tela
+// usando o cursor gerenciado pelo sistema,
+void terminal_write_char ( int c);
+
 void shellInitSystemMetrics();
 void shellInitWindowLimits();
 void shellInitWindowSizes();
@@ -618,9 +623,9 @@ static inline void rep_nop (void){
  */
 
 void *noratermProcedure ( struct window_d *window, 
-                       int msg, 
-                       unsigned long long1, 
-                       unsigned long long2 )
+                          int msg, 
+                          unsigned long long1, 
+                          unsigned long long2 )
 {
 
     unsigned long input_ret;
@@ -666,11 +671,10 @@ void *noratermProcedure ( struct window_d *window,
 				// Enter.
 				// Finaliza a string e compara.
 				case VK_RETURN:
-				    
-					//#test
-					printf("\r");
-					printf("\n");
-				
+				     
+					terminal_write_char ((int) '\r');
+					terminal_write_char	((int) '\n');
+					
 				    input ('\0'); 
 					
 					//#obs: 
@@ -685,15 +689,13 @@ void *noratermProcedure ( struct window_d *window,
 
 				//#test	
                 case VK_TAB:					
-					printf ("\t");
+					terminal_write_char ( (int) '\t');
 					goto done;
 				    break;	
 
 				//#todo
 				case VK_BACK:
-				    
 					//#test
-					//o cursor do ldisc no kernel precisa ser atualizado tambem.
 					//textCurrentCol--;
 					//apiSetCursor (textCurrentCol,textCurrentRow);
 					//terminalSetCursor (textCurrentCol,textCurrentRow);
@@ -712,25 +714,12 @@ void *noratermProcedure ( struct window_d *window,
                 default:			   
 				    
 					// Coloca no stdin, prompt[].
-					input ( (unsigned long) long1 );      
-                    
-					// Coloca na memória de video virtual,
-					// Que é semelhante a vga, contendo char e atributo.
-					terminalInsertNextChar ( (char) long1 );  
+					input ( (unsigned long) long1 );   
 					
-					// #importante:   
-					// IMPRIMINDO.
-					// Funcionando bem.
-					// Ok, no caso de backspace não deve imprimir nada,
-					// mas talvez avançe.
-					//obs: tem que olhar o que a rotina no kernel faz no caso do backspace.
-					
-					//#importante: A ROTINA QUE INSERE O CHAR TEM QUE EFETUAR O REFRESH 
-					//ASSIM ELA PODE CHAMAR O SCROLL SE PRECISAR.
-					
-					//shellRefreshCurrentChar();
-					//printf ("%c", (char) long1 ); 	//deletar.				
-					
+                    //coloca no buffer de linhas e colunas e					
+					// imprime na tela usando api
+					terminal_write_char ( (int) long1 );
+                   					
 					goto done;
                     break;               
             };
@@ -807,7 +796,9 @@ void *noratermProcedure ( struct window_d *window,
 		            {
 		                x_ch = (int) system_call ( 1002, 0, 0, 0 );
 		                if (x_ch == '\n'){ break;};
+						
 			            printf (" %c ",x_ch);
+						//terminal_write_char ( (int) long1 );
 	                }					
 					break;
 					
@@ -5444,6 +5435,20 @@ void show_shell_version (){
 }
 
 
+// escreve um char no backbuffer e exibe na tela
+// usando o cursor gerenciado pelo sistema,
+void terminal_write_char ( int c)
+{
+    //coloca no buffer de linhas e colunas.
+	terminalInsertNextChar ( (char) c );  
+
+	// imprime na tela usando libc. (funcionou)
+	//terminalRefreshCurrentChar ();
+					
+	// #bugbug
+	// imprime na tela usando api  (implementando ainda) isso funcionou.
+	terminalRefreshCurrentChar2 ();		
+}
 
 /*
  ********************************************************
