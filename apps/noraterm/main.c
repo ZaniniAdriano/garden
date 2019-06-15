@@ -5463,6 +5463,15 @@ void terminal_write_char ( int c)
 	terminalRefreshCurrentChar2 ();		
 }
 
+
+/*
+void reset_terminal()
+void reset_terminal(){
+}
+*/
+
+
+
 /*
  ********************************************************
  * main: 
