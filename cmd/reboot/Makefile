@@ -43,10 +43,10 @@ CFLAGS = -m32 \
 #APIOBJ  = ../../lib/gdelibs/api01/obj
 
 
-LIBC    = ../../lib/gdelibs/libc02/include/
-LIBCOBJ = ../../lib/gdelibs/libc02/obj
-API02   = ../../lib/gdelibs/api02/include/
-APIOBJ  = ../../lib/gdelibs/api02/obj
+LIBC    = ../../lib/libc02/include/
+LIBCOBJ = ../../lib/libc02/obj
+API02   = ../../lib/api02/include/
+APIOBJ  = ../../lib/api02/obj
 
 
 	##

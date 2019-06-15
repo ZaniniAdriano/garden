@@ -2243,10 +2243,14 @@ do_compare:
         goto exit_cmp;
     };
 	
-	//#gws - testando funcionalidades do gws
+	// #gws
+	// Testando funcionalidades do gws.
+	// gws é um recurso importante de terminal, pois
+	// pode trazer recursos de interface gráfica personalizados
+	// para dentro do terminal. É um diferencial.
 	if ( strncmp ( prompt, "gws", 3 ) == 0 )
 	{
-		gws_init();
+		gws_init ();
 		
 		gws_backbuffer_putpixel ( COLOR_RED,   100, 250 );
 		gws_backbuffer_putpixel ( COLOR_GREEN, 105, 250 );
@@ -2256,14 +2260,13 @@ do_compare:
 		gws_drawchar_transparent ( 250 +8,    250, COLOR_GREEN, (unsigned long) 'G');
 		gws_drawchar_transparent ( 250 +8 +8, 250, COLOR_BLUE,  (unsigned long) 'B');
 		
-		
 		gws_draw_char ( 300, 300, (unsigned long) 'X', COLOR_YELLOW, COLOR_RED );
 		
-		my_buffer_horizontal_line( 400, 88, 500, COLOR_PINK );
+		my_buffer_horizontal_line ( 400, 88, 500, COLOR_PINK );
 		
 		drawDataRectangle ( 200, 400, 100, 60, COLOR_YELLOW );
 
-		refresh_screen();
+		refresh_screen ();
 		goto exit_cmp;
 	}
 

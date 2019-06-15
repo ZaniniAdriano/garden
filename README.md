@@ -14,7 +14,9 @@
 	
 	/docs     - Docs.
 	
-	/lib      - Libs used in the project.
+	/lib      - gdelibs original libs.
+	
+	/lib2     - 3rdparty ported libs.
 	
 	/licenses - Licenses.
 	

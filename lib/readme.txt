@@ -1,15 +1,10 @@
+/gde/gdelibs
+
+Libs criadas pelo projeto /gde para odarem no gramado.
 
 
- Bibliotecas e conjuntos de bibliotecas;
- 
- 
- /gdelibs
-     GDE Libs,
-	 
-	 
- /glibc01
-     GNU C Libs versao 0.1.1 adaptada para o Gramado.
-	 
-	 #importante: essa libs sera' usada em /gde, mas nao no /gramado
-	 
-	 
+    A libs gde para o sistema gramado ser~ao apenas importadas 
+	do sistemqa gramado, nao construiremos eles aqui.
+	
+
+

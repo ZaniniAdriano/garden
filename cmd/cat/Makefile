@@ -28,11 +28,11 @@ CFLAGS = -m32 \
 	-s
 	
 	
-LIBC    = ../../lib/gdelibs/libc01/include/
-LIBCOBJ = ../../lib/gdelibs/libc01/obj
+LIBC    = ../../lib/libc01/include/
+LIBCOBJ = ../../lib/libc01/obj
 
-API01   = ../../lib/gdelibs/api01/include/
-APIOBJ  = ../../lib/gdelibs/api01/obj
+API01   = ../../lib/api01/include/
+APIOBJ  = ../../lib/api01/obj
 
 
 	##
@@ -46,7 +46,9 @@ stdlib.o \
 string.o \
 time.o \
 api.o \
-unistd.o  
+unistd.o \
+stubs.o
+
 
 
 
@@ -68,7 +70,7 @@ all-c:
 	cp $(LIBCOBJ)/string.o .
 	cp $(LIBCOBJ)/time.o    .
 	cp $(LIBCOBJ)/unistd.o  .
-	
+	cp $(LIBCOBJ)/stubs.o  .
 
 
 cat-link:
