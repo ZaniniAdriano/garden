@@ -36,6 +36,9 @@
 
 
 
+//#importante: Tem que inicializar isso.
+static int __libc_output_mode = 0;
+static int terminal___PID;
 
 /*
 int putchar(int c) {
@@ -69,6 +72,47 @@ unsigned long stdioGetCursorY();
 
 //interna; Mudar o nome
 static size_t stdio_strlen (const char *s);
+
+
+
+
+//
+// ===============================================================
+//
+
+int
+__SendMessageToProcess ( int pid, 
+                          unsigned long window, 
+                          int message,
+                          unsigned long long1,
+                          unsigned long long2 );
+int
+__SendMessageToProcess ( int pid, 
+                          unsigned long window, 
+                          int message,
+                          unsigned long long1,
+                          unsigned long long2 )
+{
+	unsigned long message_buffer[5];
+
+	
+    if (pid<0)
+		return -1;
+	
+	message_buffer[0] = (unsigned long) window;
+	message_buffer[1] = (unsigned long) message;
+	message_buffer[2] = (unsigned long) long1;
+	message_buffer[3] = (unsigned long) long2;
+	//...
+
+	return (int) system_call ( 112 , (unsigned long) &message_buffer[0], 
+	                 (unsigned long) pid, (unsigned long) pid );
+}
+//
+// ===============================================================
+//
+
+
 
 
 // stdio_atoi:
@@ -1006,11 +1050,49 @@ int putchar (int ch){
 	// A aplicativo terminal virtual em ring3 deverá imprimir
 	// as coisas na tela usando os recursos do servidor kgws ou outro.
 	
-    gramado_system_call ( 65, (unsigned long) ch, (unsigned long) ch, 
-        (unsigned long) ch );
+	
+	// printf deve sempre funcionar no modo normal
+	// outra funçao semelhante `a printf devepode ser criada para o modo draw
+	// esse nova printf ser'a s'o uma vers~ao diferente do wrapper da
+	// printf. todo o resto deve permanecer igual, mudando tamb'em 
+	// o final da funçao onde pintaremos o char na tela ao inv'es de colocar no arquivo.
+	
+	if ( __libc_output_mode == LIBC_DRAW_MODE ){
+	
+        gramado_system_call ( 65, (unsigned long) ch, (unsigned long) ch, 
+            (unsigned long) ch );
+		
+	} else if (  __libc_output_mode == LIBC_NORMAL_MODE){
+
+	    // #todo
+	    putc ( ch, stdout );
+	};
 
     return (int) ch;
 }
+
+
+
+//setup libc mode
+void libc_set_output_mode ( int mode ){
+	
+    switch (mode)
+	{ 
+		case LIBC_DRAW_MODE:
+			__libc_output_mode = mode;
+			break;
+
+		case LIBC_NORMAL_MODE:
+			__libc_output_mode = mode;
+			break;
+
+		default:
+			__libc_output_mode = LIBC_DRAW_MODE;
+			printf ("libc_set_output_mode: fail");
+			break;
+	}
+}	
+
 
 
 /*
@@ -1179,6 +1261,9 @@ void _outbyte ( int c ){
 	//printf usa outra coisa (65).
 	
 	gramado_system_call ( 7, 8*g_cursor_x,  8*g_cursor_y, (unsigned long) c ); 
+	
+	//#todo
+	//putc ( ch, stdout );
 }
 
 
@@ -1394,6 +1479,70 @@ void stdioInitialize (){
 	unsigned char buffer2[BUFSIZ];
 	
 	
+	
+	//
+	// # libc mode #
+	//
+	
+	// #bugbug:
+	// Vamos usar o modo draw até implementarmos o modo normal.
+	
+	//Os caracteres são colocados em stdout.
+    //__libc_output_mode = LIBC_NORMAL_MODE;	
+	
+	//Os caracteres são pintados na tela.
+	__libc_output_mode = LIBC_DRAW_MODE;
+	
+	
+	
+	// #bugbug
+	//precisamos usar ponteiros de arquivos
+	//que estão em ring0, senão fprintf não funcionará;
+	
+	FILE *_fp;
+	
+	//?? será que isso funciona.
+	//pegamos a stdout válida
+	_fp = (FILE *) system_call ( 1000, getpid(), 0, 0 );
+	
+	stdout = (FILE *) _fp;
+	
+	
+	// #bugbug
+	// talvez seja melhor o aplicativo decidir se precisa de um terminal ou não.
+	// talvez o aplicativo ou o crt0.o precisam configurar o terminal
+	// o terminal será configurado de acordo com o tipo de crt0.o.
+	
+	/*
+	//Inicialziamos o terminal que serr'usado pelo aplicativo.
+	//terminal___PID = (int) apiStartTerminal ();
+	
+
+	// 'Clona' e executa o noraterm como processo filho. 
+	terminal___PID = (int) system_call ( 900, (unsigned long) "noraterm.bin", 0, 0 );
+	//PID = (int) system_call ( 901, (unsigned long) "noraterm.bin", 0, 0 );
+		
+	// Exibe o PID para debug.
+	//printf ("PID = %d \n", PID);
+
+    //registra o terminal como terminal atual.
+	system_call ( 1003, terminal___PID, 0, 0 ); 
+		
+	//invalida a variável.
+	terminal___PID = -1;
+		
+	//pega o pid do terminal atual
+	terminal___PID = (int) system_call ( 1004, 0, 0, 0 ); 
+		
+    if ( terminal___PID <= 0 )
+	{
+        printf ("stdioInitialize: PID fail. We can't start terminal for this app *hang\n");
+		while(1){}
+    }
+	*/
+	
+	
+	
 	// # fluxo padrão.
 	// Aqui temos os ponteiros em ring3. Mas precisamos
 	// configurar os ponteiros que estão na estrutura do processo em ring0.
@@ -1406,7 +1555,7 @@ void stdioInitialize (){
 
 	// Alocando espaço para as estruturas.
 	stdin = (FILE *) &buffer0[0];
-	stdout = (FILE *) &buffer1[0];
+	//stdout = (FILE *) &buffer1[0];
 	stderr = (FILE *) &buffer2[0];
 	
 	
@@ -1461,19 +1610,21 @@ void stdioInitialize (){
 	stdin->_tmpfname = "stdin";
 	//...
 	
-	//stdout - Usando o buffer 'prompt_out[.]' como arquivo.
+ 
+	
+	/*
 	stdout->_base = &prompt_out[0];
-	
-	//stdout->_ptr = stdout->_base;
 	stdout->_p = stdout->_base;
-	
-	//stdout->_bufsiz = PROMPT_MAX_DEFAULT; 
 	stdout->_lbfsize = PROMPT_MAX_DEFAULT; 
+	*/
 	
-	//stdin->_cnt = stdout->_bufsiz;
+	
 	stdin->_cnt = stdout->_lbfsize;	
+	
+	/*
 	stdout->_file = 1;
 	stdout->_tmpfname = "stdout";
+	*/
 	//...
 	
 	//stderr - Usando o buffer 'prompt_err[.]' como arquivo.
@@ -1492,21 +1643,11 @@ void stdioInitialize (){
 	//...
 	
 	// Limpando os buffers.
-	
-	//#bugbug: Cuidado com o tamanho.
-	/*
-	for ( i=0; i<PROMPT_MAX_DEFAULT; i++ ){
-		
-		prompt[i] = (char) '\0';
-		prompt_out[i] = (char) '\0';
-		prompt_err[i] = (char) '\0';
-	}
-	*/
     
 	for ( i=0; i < BUFSIZ; i++ )
 	{
 	    stdin->_base[i] = (char) '\0';			
-	    stdout->_base[i] = (char) '\0';	
+	    //stdout->_base[i] = (char) '\0';	
 	    stderr->_base[i] = (char) '\0';	
 	}			
 	
@@ -1520,15 +1661,12 @@ void stdioInitialize (){
 	//stdin->_cnt = stdin->_bufsiz;
 	stdin->_cnt = stdin->_lbfsize;
 	
-    //stdout->_ptr = stdout->_base;
+
+	/*
     stdout->_p = stdout->_base;		
-    
-	//stdout->_bufsiz = BUFSIZ; 
 	stdout->_lbfsize = BUFSIZ; 
-	
-	
-	//stdout->_cnt = stdout->_bufsiz;
 	stdout->_cnt = stdout->_lbfsize;
+	*/
 	
     //stderr->_ptr = stderr->_base;	
     stderr->_p = stderr->_base;		
@@ -2300,7 +2438,7 @@ static size_t stdio_strlen (const char *s){
 	while (*s++)
 		l++;
 	return l;
-};
+}
 
 
 /* Max number conversion buffer length: 
@@ -2338,7 +2476,7 @@ static char *ksprintn ( char *nbuf,
 	if (lenp)
 		*lenp = p - nbuf;
 	return (p);
-};
+}
 
 
 /*
@@ -2810,6 +2948,11 @@ int printf ( const char *fmt, ... ){
 	//#todo.
 	va_end (ap);
 	
+	//#test
+	//vamos pedir pro terminal virtual imprimir o conteúdo do buffer. 
+	//MSG_TERMINALCOMMAND = 100
+	//__SendMessageToProcess ( terminal___PID, 0, 100, 2008, 2008 );
+	
 	// #todo
 	//return 0;
 }
@@ -2817,6 +2960,55 @@ int printf ( const char *fmt, ... ){
 //=============================================================
 // printf end
 //=============================================================
+
+
+/*
+ *===========================================
+ * printf_draw:
+ *     http://www.pagetable.com/?p=298
+ */
+
+// Nessa versão a rotina pintará na tela ao invés de
+// colocar o char no arquivos.
+// para isso ela configura o modo de output, voltando ao normal
+// ao fim da rotina.
+// >> Essa rotina é usada para debug no caso de não termos acesso
+// a rotinas da api ou do x-server para pintura na tela.
+
+
+int printf_draw ( const char *fmt, ... ){
+	
+	//Habilita o modo draw.
+	libc_set_output_mode ( LIBC_DRAW_MODE );
+	
+	// #todo
+	// Talvez usar semáforo aqui.
+	
+	va_list ap;
+	va_start(ap, fmt);
+	
+	//int 
+	//kvprintf ( char const *fmt, 
+    //       void (*func)( int, void* ), 
+	//	   void *arg, 
+	//	   int radix, //??10 gives octal; 20 gives hex.
+	//	   va_list ap );	
+	
+	kvprintf ( fmt, xxxputchar, NULL, 10, ap );
+	
+	//#todo.
+	va_end (ap);
+	
+	
+	//reabilita o modo normal. Onde os caracteres serão colocados 
+	//no stdout.
+	libc_set_output_mode ( LIBC_NORMAL_MODE );
+	
+	// #todo
+	//return 0;
+}
+
+
 
 
 

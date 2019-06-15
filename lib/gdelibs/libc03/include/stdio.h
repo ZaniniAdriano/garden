@@ -20,6 +20,27 @@
 #include <stddef.h>
 #include <stdarg.h> 
 
+
+//
+// # Modes #
+//
+
+
+// #test
+//Os caracteres são colocados em stdout.
+#define LIBC_NORMAL_MODE 1
+//Os caracteres são pintados na tela.
+#define LIBC_DRAW_MODE 2
+// ...
+
+//printf using draw mode.
+int printf_draw ( const char *fmt, ... );
+
+//setup libc mode
+void libc_set_output_mode ( int mode );
+
+	
+	
 #ifdef	_BSD_SIZE_T_
 typedef	_BSD_SIZE_T_	size_t;
 #undef	_BSD_SIZE_T_
