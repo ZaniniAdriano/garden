@@ -695,13 +695,6 @@ void shellScroll();
 //...
 
 
-
-
-//...
-
-
-
-
 //
 // Reset prompt.
 //
@@ -730,23 +723,34 @@ void shellShowMetrics();
 void shellShowSystemInfo();
 
 unsigned long 
-shellSendMessage( struct window_d *window, 
-                  int msg, 
-				  unsigned long long1, 
-				  unsigned long long2 );
+shellSendMessage ( struct window_d *window, 
+                   int msg, 
+				   unsigned long long1, 
+				   unsigned long long2 );
 //...
 
+
 // Wait for commands.
-//Isso não é usado, temos um while.
-void shellWaitCmd();             
+// Isso não é usado, temos um while.
+void shellWaitCmd ();             
  
  // Compare comands.
 unsigned long shellCompare (struct window_d *window);   
  
+
+
+//
 // Initialization. 
-int shellInit( struct window_d *window );                //Init.
-void shellShell();               //Constructor. 
- 
+//
+
+ //Init.
+int terminalInit ( struct window_d *window );               
+
+
+//Constructor.
+void terminalTerminal ();                
+
+
 // Finalizing ... 
 // ??exit, die... 
  
@@ -756,10 +760,10 @@ void shellShell();               //Constructor.
 
 
 // copia bytes	
-void shell_memcpy_bytes ( unsigned char *Dest, 
-                          unsigned char *Source,
-                          unsigned long Length );
-
+void 
+shell_memcpy_bytes ( unsigned char *Dest, 
+                     unsigned char *Source,
+                     unsigned long Length );
  
  
 void shellUpdateCurrentDirectoryID( int id ); 

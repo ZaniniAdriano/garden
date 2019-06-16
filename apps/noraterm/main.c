@@ -1,8 +1,7 @@
 /*
  * File: main.c 
  *
- * About: It's a multi-porpose application for gramado kernel development support.
- *        It's a terminal, a shell and a graphical server.
+ * Client side terminal app for gde project.
  *
  *
  * Gramado Core Shell.
@@ -928,6 +927,11 @@ void *noratermProcedure ( struct window_d *window,
 					printf (" * BN_CLICKED * \n");
 				    break;
 				//...
+					
+				case CMD_EXIT:
+					exit_builtins ();
+					exit ();
+					break;
 				
 				//default:
 				//break;
@@ -941,6 +945,8 @@ void *noratermProcedure ( struct window_d *window,
 			//pode ser uma janela filha ou ainda uma janela de dialogo criada pelo sistema.
 			//??
 		    printf ("noraterm: MSG_CLOSE\n");
+			//exit_builtins ();
+			//exit ();
 			
 			//@todo: Criar essa função na api.
 			//apiExitProcess(0);
@@ -949,6 +955,8 @@ void *noratermProcedure ( struct window_d *window,
 		//Essa mensagem pode ser acionada clidando um botão.
 		case MSG_DESTROY:
 		    printf ("noraterm: MSG_DESTROY\n");
+			//exit_builtins ();
+			//exit ();
 		    break;
 			
 		// MSG_MOUSEKEYDOWN	
@@ -2308,7 +2316,7 @@ do_compare:
 	// hd ??
     if ( strncmp( prompt, "hd", 2 ) == 0 )
 	{
-	    printf("~hd\n");
+	    printf ("~hd\n");
         goto exit_cmp;
     };	
 	
@@ -2408,7 +2416,7 @@ do_compare:
 	// Mostra algumas informações de métrica do sistema.
 	if ( strncmp( prompt, "metrics", 7 ) == 0 )
 	{
-		shellShowMetrics();
+		shellShowMetrics ();
         goto exit_cmp;
 	};	
 
@@ -2555,7 +2563,7 @@ do_compare:
 	if ( strncmp( prompt, "shell-info", 10 ) == 0 )
 	{	
 	    printf("~@todo: shell info.\n");
-		shellShowInfo();
+		shellShowInfo ();
         goto exit_cmp;
     };	
 	
@@ -2575,7 +2583,7 @@ do_compare:
     // shutdown - isso será um programa. shutdown.bin
 	if ( strncmp( prompt, "shutdown", 8 ) == 0 )
 	{
-	    printf("~shutdown \n");
+	    printf ("~shutdown \n");
         goto exit_cmp;
     };	
 
@@ -2600,7 +2608,7 @@ do_compare:
 		// e ajusta as margens do cursor. :)
 		// Qualquer editbox precisa desse tipo de ajuste.
 	    
-		APISetFocus(window);
+		APISetFocus (window);
 		//shellPrompt();
 		printf("~start\n");
 		
@@ -3620,13 +3628,22 @@ void shellInitWindowPosition()
 	//wpWindowTop = (unsigned long) ( (smScreenHeight - wsWindowHeight)/2 );  	
 }
 
+
+
+
 /*
  ******************************************
- * shellShell:
+ * terminalTerminal:
  *     Constructor.
  *     Não emite mensagens.
  */
-void shellShell (){
+
+// #bugbug
+// essas configurações são configurações de janela,
+// então estão mais para terminal do que para shell.
+
+
+void terminalTerminal (){
 	
 	int i=0;
 	int j=0;
@@ -3776,23 +3793,22 @@ void shellShell (){
 	//terminalSetCursor( (shell_info.main_window->left/8) , (shell_info.main_window->top/8));	
 	
 	//shellPrompt();
-};
+}
 
 
 /*
  ******************************************
- * shellInit:
+ * terminalInit:
  *     Inicializa o Shell.  
- *
- *     #bugbug: 
- *     Essa rotina começa escrever na janela com o foco de entrada. 
- * Mas um outro aplicativo solicitou o foco de entrada e essa rotina 
- * esta terminando de escrever mas agora na janela do outro aplicativo.
  *
  * @todo: Inicializar globais e estruturas.
  */
  
-int shellInit ( struct window_d *window ){
+// #bugbug
+// Essa rotina contém coisas de terminal e de shell
+// precisa organizar isso.
+
+int terminalInit ( struct window_d *window ){
 	
 	//#bugbug 
 	//o ponteiro do argumento pode ser inválido, pois 
@@ -3962,6 +3978,8 @@ int shellInit ( struct window_d *window ){
 	
 	//PID = (int) APIGetPID();
 	
+	//#todo usar libc
+	
     PID = (int) system_call( SYSTEMCALL_GETPID, 0, 0, 0 );
 	if ( PID == (-1) ){
 	    printf("ERROR getting PID\n");	
@@ -3994,7 +4012,7 @@ int shellInit ( struct window_d *window ){
 	};
 */	
 	
-	
+	/*
 #ifdef SHELL_VERBOSE
     
     printf("Creating processes ...\n");	
@@ -4023,7 +4041,7 @@ int shellInit ( struct window_d *window ){
 	printf("Created!\n");
 	//...
 #endif	
-	
+	*/
 	
 	//
 	//@todo: 
@@ -4042,23 +4060,16 @@ int shellInit ( struct window_d *window ){
 	//app_clear(0);  //Não fez nada.
     //...
 
+	/*
 	//stdlib.h
 #ifdef SHELL_VERBOSE			
 	printf("Testing stdlib:\n");
 #endif
-	
-	//
-	// *Importante:
-	//     Isso inicializa o gerenciamento de memória oferecido pela 
-	// biblioteca C99 em user mode. Coisas como inicializar o 'heap'
-	// oferecido pela biblioteca.
-	// Agora poderemos alocar memória dentro do heap oferecido pela biblioteca.
-	//
-	
-//initRT:	
-	//libcInitRT(); 
+*/	
 	
 	
+	
+	/*
 #ifdef SHELL_VERBOSE			
 	//Obs: Sempre inicia com o mesmo número.
 	int rand_value;
@@ -4070,7 +4081,9 @@ int shellInit ( struct window_d *window ){
 	//printf("RandValue3={%d}\n", rand_value);
 	//...
 #endif	
-
+*/
+	
+	
 	//stddef.h
 	//printf("Testing stddef:\n");	
 	
@@ -4101,6 +4114,7 @@ int shellInit ( struct window_d *window ){
 	//
 	// Testing commands.
 	//
+	/*
 #ifdef SHELL_VERBOSE		
 	//Lib C.
 	//libC. (stdlib.c)
@@ -4110,8 +4124,9 @@ int shellInit ( struct window_d *window ){
 	//system("xxfailxx");
 	//...
 #endif
+	*/
 	
-	
+	/*
 #ifdef SHELL_VERBOSE			
 	//API.
 	apiSystem("test");    
@@ -4120,6 +4135,7 @@ int shellInit ( struct window_d *window ){
 	//apiSystem("xxfailxx");
 	//...
 #endif
+	*/
 	
 	//Ok funcionando ...
 	//@todo: Testar outros comandos.
@@ -4134,75 +4150,10 @@ int shellInit ( struct window_d *window ){
 	//        System call redraw client area.
 	
 	
-	// ## prompt string support ##
-	shellInitializeWorkingDiretoryString ();
-
-	
 // Done.
 	
 done:
-		
-	//#suspenso
-	//supendemos isso porque fopen está falhando na máquina real.
-	
-	//if (interactive == 1)
-	    //loginCheckPassword ();
 
-
-	// @todo:
-	// Gerenciamento do heap do processo. ??
-	
-	// @todo:
-	// Chamar rotinas da biblioteca que ofereçam informações sobre 
-	// o heap oferecido pela biblioteca.
-	// Obs: A rt foi inicializada logo acima.
-	
-	
-    //heapTest:
-	
-    /*	
-	printf("\n...\n");
-	printf("Testing C99 RT ...\n");
-	
-	unsigned long hStart, hEnd, hPointer, hAvail;
-	
-	hStart   = (unsigned long) rtGetHeapStart();
-	hEnd     = (unsigned long) rtGetHeapEnd();
-	hPointer = (unsigned long) rtGetHeapPointer();
-	hAvail   = (unsigned long) rtGetAvailableHeap();
-	
-	printf("heapStart{%x} heapEnd{%x} heapPointer{%x} heapAvailable={%x}\n", 
-	     hStart, hEnd, hPointer, hAvail);
-	
-	// resultados do teste:
-	// os valores parecem satisfatórios pois estão realmente dentro da área 
-	// de memória do aplicativo.
-	// @todo: Confirmar no memorymap gerado pelo compilador se essa área de memória 
-	// é apropriada. #bugbug
-	// observando o mmmap pelo jeito o compilador colocou o buffer do heap 
-	// no bss do arquivo e do tamanho certo.
-	// tudo indica que é saudável aumentar o tamanho do buffer usado pelo heap.
-	*/
-	
-	
-	if ( interactive == 1 )
-	    shellPrompt ();
-	
-	
-	
-	// #bugbug 
-	// Vamos retornar sem mostrarmos a janela 
-	// ou podemos confiar no ponteiro passado via argumento 
-	// e efetuarmos o refresh da janela.
-	
-    //refresh_screen ();
-	
-	//isso deve mostrar as string
-	//Se é que isso é preciso, pois 
-	//a rotina de printf mostra as strings.
-	//>>vamos tentar sem isso e confiarmos na função printf.
-	//apiShowWindow(window);
-	
     return 0;
 }
 
@@ -5506,14 +5457,17 @@ int main ( int argc, char *argv[] ){
 	char *filename;
 	register int i;
 	
-	//
+	
+	int _quit = 0;
+	
+	
 	// Obs: Esse não é um programa que roda em modo terminal,
 	// ele na verdade cria um terminal dentro de uma janela filha.
 	// isso pode servir para esse programa interpretar linguagem 
 	// basic por exemplo.
 	// os programas em modo terminal não criarão janelas e rodarão nas 
 	// janelas de terminal cridas para eles pelo kernel.
-	//
+	
 	
 	//#debug
 	//deixe o kernel usar essa janela para teste.
@@ -5712,11 +5666,23 @@ int main ( int argc, char *argv[] ){
 		};		
 		
 		
+		//se version _quit = 1;
+		
 
         //...		
 	};
 	
 	//Nothing.
+	
+	
+	if (_quit)
+		exit (0);
+	
+	
+	
+	// #todo
+	// Nesse momento usa-se as funções de termio.h para configurar o terminal.
+	// Ou outra lib/api apropriada.
 	
 	
 	// #debug
@@ -5748,7 +5714,7 @@ noArgs:
 	// Os argumentos tratados abaixo podem modificar esses padrões
 	// Ex: Um argumento de entrada pode solicitar a troca de cor de fonte.
 	
-	shellShell (); 	
+	terminalTerminal (); 	
 	
 	
 	//
@@ -6059,7 +6025,7 @@ noArgs:
 	
 
 	// #obs
-	// shellShell() inicializou todas as globais.
+	// terminalTerminal() inicializou todas as globais.
 	
 	
     if ( mainwindow_used == 1 ){
@@ -6262,11 +6228,33 @@ do_run_internal_shell:
     //#BUGBUG
     //Estamos passando um ponteiro que é uma variável local.	
 	
-	enterCriticalSection();
-	Status = (int) shellInit (hWindow2); 
 	
-	if ( Status != 0 ){
-		die ("SHELL.BIN: app_main: shellInit fail");
+	//#todo
+	//devemos chamar as rotina de configuração do terminal ainda antes
+	//de chegarmos na parte do shell interno ou de chamarmos o aplicativo
+	//que vai rodar no terminal
+	
+	enterCriticalSection();
+	Status = (int) terminalInit (hWindow2); 
+	
+	if ( Status != 0 )
+	{
+		die ("noraterm: terminalInit fail");
+	}else{
+			
+	    //#isso é coisa de shell.
+	    // ## prompt string support ##
+	    shellInitializeWorkingDiretoryString ();	
+	
+	    //#suspenso
+	    //supendemos isso porque fopen está falhando na máquina real.
+	
+	    //if (interactive == 1)
+	        //loginCheckPassword ();
+
+	    //#isso é coisa de shell.
+	    if ( interactive == 1 )
+	        shellPrompt ();
 	};
 	exitCriticalSection();     		
 	
@@ -6284,14 +6272,15 @@ do_run_internal_shell:
 	// #obs
 	// Noraterm é um terminal, mas estamos lidando com
 	// rotinas de seu shell interno.
+
 	
-	if ( interactive != 1 ){
-		
-		//#debug
-        printf ("shell is not interactive\n");
-		
+	//#debug
+	if ( interactive != 1 )
+	{
+        printf ("noraterm: Internal shell is not interactive\n");	
 		goto skip_input;
 	};
+	
 	
 	
 	//@todo: Isso é um teste.

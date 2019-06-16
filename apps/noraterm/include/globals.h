@@ -65,25 +65,6 @@ typedef unsigned long POOLLIST;
 //#define FILENAME_LENGTH (8+3) 
 
 
-
-
- 
-
- 
-//
-// Messages support.
-//
-
-
-#define CMD_ABOUT 1000
-//#define CMD_ABOUT 1001
-//#define CMD_ABOUT 1002
-//#define CMD_ABOUT 1003
-//...
-
-
-
-
 //
 // Strings
 //

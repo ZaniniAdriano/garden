@@ -1985,7 +1985,13 @@ static unsigned long vga_256colors_palette[256] = {
 #define TERMINALCOMMAND_PRINTCHAR 1000
 //#define TERMINALCOMMAND_PRINT??? 1001
 //...
- 
+
+
+
+#define CMD_ABOUT 1000
+#define CMD_EXIT 1001
+//#define CMD_??? 1002
+//... 
  
 // # Window Type #
 #define WT_NULL          0 
