@@ -550,6 +550,35 @@ __SendMessageToProcess ( int pid,
 
 
 
+
+
+
+
+//diálogo para alimentar o terminal usado pelos aplicativos.				
+int feedterminalDialog( struct window_d *window, 
+                      int msg, 
+				      unsigned long long1, 
+				      unsigned long long2 );
+
+
+
+int process_input ();
+
+// Procedimento de janela principal do aplicativo.
+void *noratermProcedure ( struct window_d *window, 
+                       int msg, 
+				       unsigned long long1, 
+				       unsigned long long2 );
+
+// ...
+
+
+//
+// ======== ## Internal functions ## ========
+//
+
+
+
 int
 __SendMessageToProcess ( int pid, 
                           struct window_d *window, 
@@ -574,29 +603,6 @@ __SendMessageToProcess ( int pid,
 }
 
 
-
-
-
-//diálogo para alimentar o terminal usado pelos aplicativos.				
-int feedterminalDialog( struct window_d *window, 
-                      int msg, 
-				      unsigned long long1, 
-				      unsigned long long2 );
-
-
-
-// Procedimento de janela principal do aplicativo.
-void *noratermProcedure ( struct window_d *window, 
-                       int msg, 
-				       unsigned long long1, 
-				       unsigned long long2 );
-
-// ...
-
-
-//
-// ======== ## Internal functions ## ========
-//
 
 void quit ( int status ){
 	
@@ -623,6 +629,43 @@ static inline void rep_nop (void){
 
  
  
+
+//main loop
+//pegamos a mensagem e enviamos para o procedimento de janela.
+//essa rotina poderia fazer parte da api ?? o problema é o 'running'
+int process_input (){
+
+	int msg_status = 0;	
+	unsigned long message_buffer[16];	
+
+	//#obs: O retorno será 1 se tiver mensagem e 0 se não tiver.
+	//message_buffer[1] será 0 se não tiver mensagem
+	
+	while (running)
+	{	
+		msg_status = host_get_message ( (unsigned long) &message_buffer[0] );		
+		
+			
+		// Se temos mensagem.
+		if (msg_status != 0)
+		{
+			// Chamaremos o procedimento de janelas do aplicativo.
+			
+	        noratermProcedure ( (struct window_d *) message_buffer[0], 
+		        (int) message_buffer[1], 
+		        (unsigned long) message_buffer[2], 
+		        (unsigned long) message_buffer[3] );
+			
+			message_buffer[0] = 0;  //window
+            message_buffer[1] = 0;  //msg
+            message_buffer[3] = 0;  //long1
+            message_buffer[4] = 0;	//long2
+        };				
+	};
+
+	return 0;
+}
+
 
 /*
  ***********************************************
@@ -6341,11 +6384,11 @@ do_run_internal_shell:
 	// Na verdade essa rotina está pegando a mensagem na janela 
 	// com o foco de entrada. Esse argumento foi passado mas não foi usado.
 		
-	unsigned long message_buffer[32];	
+	//unsigned long message_buffer[32];	
 	
 	//vamos testar se a mensagem esta no range padrao de servidores
 	//9000 ~  9999
-	int msgtest;
+	//int msgtest;
 	
 	
 	//
@@ -6353,9 +6396,14 @@ do_run_internal_shell:
 	//
 		
 Mainloop:
+	
+	process_input ();
     
 	/* Nesse teste vamos enviar um ponteiro de array, pegarmos os quatro 
 	   elementos da mensagem e depois zerar o buffer */
+	
+	
+	/*
 	
 	while (running)
 	{
@@ -6384,6 +6432,10 @@ Mainloop:
             message_buffer[4] = 0;	//long2
         };				
 	};
+	
+	*/
+	
+	
 	
 	//
 	// Entramos aqui se running for igual a 0.

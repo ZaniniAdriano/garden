@@ -1,3 +1,7 @@
+// são as sequẽncias que comandam o display para fazer as coisas.
+// os comandos estão nos arquivos para o jeito unix-like.
+// masos comandos podem vim através do procedimento de janela.
+
 // #todo: 
 // Colocar as rotinas de terminal virtual aqui,
 // separadas do shell

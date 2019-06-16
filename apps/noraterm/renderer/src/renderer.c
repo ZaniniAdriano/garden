@@ -1,3 +1,5 @@
+// rendering the text in the buffers onto the screen 
+// we need to dispatch commands to a specific final display engine
 
 // vamos pintar na tela.
 

@@ -14,7 +14,7 @@ VERSION = 0
 PATCHLEVEL = 1
 SUBLEVEL = 0
 EXTRAVERSION = -rc0
-#NAME = Gramado Core Shell
+#NAME = Noraterm for gde.
 
 
 CFLAGS = -m32 \
@@ -49,7 +49,7 @@ GWS  = gws/include/
 
 #RENDERER = renderer/include/  
 
-#SHELL = shell/include/   
+#CMDLINE = cmdline/include/   
 
 #TERMINAL  = terminal/include/   
 
@@ -65,7 +65,8 @@ myObjects = crt0.o main.o \
 stubs.o \
 ctype.o stdio.o stdlib.o string.o conio.o socket.o signal.o unistd.o \
 api.o \
-builtins.o desktop.o login.o tests.o shell.o \
+builtins.o desktop.o login.o tests.o cmdline.o \
+input.o \
 pixel.o line.o rect.o char.o gws.o \
 terminal.o termui.o   
 
@@ -99,13 +100,17 @@ all-c:
 #renderer
 #	gcc  -c  renderer/src/renderer.c     -I $(LIBC) -I $(API02) -I $(TERMINAL) -I $(GWS) -I . $(CFLAGS) -o renderer.o
 	
-#shell
-	gcc  -c  shell/src/shell.c     -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o shell.o
-	gcc  -c  shell/src/builtins.c  -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o builtins.o
-	gcc  -c  shell/src/tests.c     -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o tests.o
-	gcc  -c  shell/src/login.c     -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o login.o
+#cmdline
+	gcc  -c  cmdline/src/cmdline.c   -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o cmdline.o
+	gcc  -c  cmdline/src/builtins.c  -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o builtins.o
+	gcc  -c  cmdline/src/tests.c     -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o tests.o
+	gcc  -c  cmdline/src/login.c     -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o login.o
 	
 
+#host
+	gcc  -c  host/src/input.c  -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o input.o
+#	gcc  -c  host/src/output.c  -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o output.o
+	
 #terminal
 	gcc  -c  terminal/src/terminal.c  -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o terminal.o
 	gcc  -c  terminal/src/termui.c    -I $(LIBC) -I $(API02)   -I $(GWS) -I . $(CFLAGS) -o termui.o

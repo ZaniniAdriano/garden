@@ -1,17 +1,7 @@
 /*
- * File: noraterm.h old shell.h
+ * File: noraterm.h
  *
  * Descrição:
- *     Header principal do Shell.
- *     SHELL.BIN (32bit User Mode) 
- *
- * Obs: 
- * Para atender os comandos do usuário o Shell chamará vários programas, assim 
- * como terá rotinas internas que atendem os comandos. Para isso, esse 
- * diretório deve ter várias pastas, uma para cada um dos comandos principais, 
- * como shutdown. Cda pasta é um programa que o Shell vai chamar.
- *
- * O kernel que gerencia a estrutura de processo deve criar o fluxo padrão ?
  * 
  *
  * History:
@@ -72,15 +62,20 @@
 
 #include "renderer/include/renderer.h"
 
-#include "shell/include/shell.h"
-#include "shell/include/builtins.h"
+// cmdline
+// Internal command line support.
 
-#include "shell/include/login.h"
-#include "shell/include/tests.h"
+#include "cmdline/include/cmdline.h"
+#include "cmdline/include/builtins.h"
+#include "cmdline/include/login.h"
+#include "cmdline/include/tests.h"
 
 #include "terminal/include/desktop.h"
 #include "terminal/include/terminal.h"
 
+
+#include "host/include/input.h"
+//#include "host/include/output.h"
 
 
 //#define SHELL_VERBOSE 1
