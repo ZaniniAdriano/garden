@@ -2596,7 +2596,8 @@ do_compare:
 	//no cursor. Isso força um scroll.
 	if ( strncmp( prompt, "t1", 2 ) == 0 )
 	{	
-		shellTestLoadFile();		
+		//esse testa com fopen
+		shellTestLoadFile ();		
         goto exit_cmp;
     };
 	
@@ -2624,14 +2625,16 @@ do_compare:
 	// t4 - testando fopen
 	if ( strncmp( prompt, "t4", 2 ) == 0 )
 	{
-		printf("\n t4: Open init.txt \n");
+		printf ("\n t4: Open init.txt \n");
         
-		f1 = fopen("init.txt","rb");  
+		f1 = fopen ("init.txt","rb");  
         if( f1 == NULL )
 		{
-			printf("fopen fail\n");
+			printf ("fopen fail\n");
+			//goto exit_cmp;
 		}else{
-			printf("fopen ok\n");
+			printf ("fopen ok\n");
+			//goto exit_cmp;
 		}
 		
 		//Isso mostra que o arquivo foi carregado corretamente 

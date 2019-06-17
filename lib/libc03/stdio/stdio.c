@@ -270,9 +270,6 @@ static __inline__ int fclose(FILE *__f)
  */
 
 int fclose (FILE *stream){
- 
-    //return (int) stdio_system_call ( 232, (unsigned long) stream, 
-	//				 (unsigned long) stream, (unsigned long) stream ); 
 
     return (int) gramado_system_call ( 232, (unsigned long) stream, 
 					 (unsigned long) stream, (unsigned long) stream ); 
@@ -294,13 +291,7 @@ int fclose (FILE *stream){
  */
 
 FILE *fopen ( const char *filename, const char *mode ){
-	
-	//salvando. isso funciona.
-    //return (FILE *) stdio_system_call ( 246, (unsigned long) filename, 
-	//				 (unsigned long) mode, (unsigned long) mode ); 
-	
-	//#teste
-	//tentando esse.
+
     return (FILE *) gramado_system_call ( 246, (unsigned long) filename, 
 					 (unsigned long) mode, (unsigned long) mode ); 
 }
@@ -483,6 +474,10 @@ int puts(const char *str)
  ***********************
  * puts:
  */
+
+// #bugbug
+// isso deve escrever no arquivo, assim como
+// tudo em libc.
 
 int puts ( const char *str ){
 	
@@ -1955,6 +1950,7 @@ done:
 
 
 /*dietlibc style*/
+//isso deve ir para ring0
 /*
 int ungetc(int c, FILE *stream) 
 {
@@ -1976,13 +1972,10 @@ int ungetc(int c, FILE *stream)
  */
 
 int ungetc ( int c, FILE *stream ){
-	
-	//#bugbug
-	//precisamos chamr a system call.	
-		
-    return (int) -1;	
-}
 
+    return (int) system_call ( 606, (unsigned long) c, 
+                      (unsigned long) stream, (unsigned long) stream );
+}
 
 
 /*linux - klibc style*/
@@ -1994,32 +1987,23 @@ static __inline__ off_t ftell(FILE *__f)
 }
 */
 
+// Dixaremos o kernel manipular a estrutura.
 long ftell (FILE *stream){
-    
-	//#bugbug
-	//precisamos chamr a system call.		
-    return (long) -1;	
+	
+    return (long) system_call ( 249, (unsigned long) stream, 
+                      (unsigned long) stream, (unsigned long) stream );	
 }
 
-/*
-int fileno(FILE *fp)
-{
-	return fp->fd;
-}
-*/
 
 int fileno ( FILE *stream ){
 	
-	//#bugbug
-	//precisamos chamar a system call.		
-
-	return (int) -1;  //fd
+    return (int) system_call ( 605, (unsigned long) stream, 
+                      (unsigned long) stream, (unsigned long) stream );	
 }
 
 
-
-
 /*linux klibc style.*/
+//isso deve ir para ring0
 /*
 int fgetc(FILE *f)
 {
@@ -2030,6 +2014,7 @@ int fgetc(FILE *f)
 
 
 /*uClibb style*/
+//isso deve ir para ring0
 /*
 int getc(FILE *stream)
 {
