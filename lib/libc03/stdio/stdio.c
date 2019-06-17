@@ -1063,10 +1063,14 @@ int putchar (int ch){
         gramado_system_call ( 65, (unsigned long) ch, (unsigned long) ch, 
             (unsigned long) ch );
 		
-	} else if (  __libc_output_mode == LIBC_NORMAL_MODE){
+	} else if ( __libc_output_mode == LIBC_NORMAL_MODE ){
 
-	    // #todo
-	    putc ( ch, stdout );
+		// #bugbug
+		// Teremos problemas se stdout não for um ponteiro válido.
+	    
+		//vamos tentar outr pois putc chama fputc e não fprintf.
+		putc ( ch, stdout );
+		//fprintf ( stdout, "%c", ch );
 	};
 
     return (int) ch;
@@ -1722,6 +1726,7 @@ int fflush ( FILE *stream ){
 	
     return (int) gramado_system_call ( 233, (unsigned long) stream, 
 					 (unsigned long) stream, (unsigned long) stream ); 
+	
 }
 
 
@@ -1749,8 +1754,47 @@ int fprintf(FILE *fp, const char *fmt, ...)
 
 int fprintf ( FILE *stream, const char *format, ... ){
 	
-    return (int) gramado_system_call ( 234, (unsigned long) stream, 
-					 (unsigned long) format, (unsigned long) format ); 
+    //return (int) gramado_system_call ( 234, (unsigned long) stream, 
+	//				 (unsigned long) format, (unsigned long) format );
+	
+    gramado_system_call ( 234, (unsigned long) stream, 
+					 (unsigned long) format, (unsigned long) format );
+	
+
+	//pegamos o pid do terminal atual e enviamos uma notificação de evento para ele.
+	int terminal___PID = -1;
+	unsigned long message_buffer[5];
+	
+	//SÓ NOTIFICAREMOS O TERMINAL SE TIVERMOS NO MODO NORMAL
+	if ( __libc_output_mode == LIBC_NORMAL_MODE )
+	{
+	    terminal___PID = (int) system_call ( 1004, 0, 0, 0 ); 
+	
+	    if ( terminal___PID < 0 )
+	    {
+			//libc_set_output_mode (LIBC_DRAW_MODE);
+		    //printf_draw ("fprintf:fail\n");
+		    return -1;
+	    }
+		
+        //if (pid<0)
+		    //return -1;
+	
+	    message_buffer[0] = (unsigned long) 0;    //window
+	    message_buffer[1] = (unsigned long) 100;  //message;  //MSG_TERMINALCOMMAND
+	    message_buffer[2] = (unsigned long) 2008; //long1;    //2008  
+	    message_buffer[3] = (unsigned long) 2008; //long2;    //2008
+	    //...
+
+	    //notifica o terminal de que ele tem mensagens.
+	    return (int) system_call ( 112 , (unsigned long) &message_buffer[0], 
+	                 (unsigned long) terminal___PID, (unsigned long) terminal___PID );
+
+        //#todo temos que usar essa chamada ao invés dessa rotina acima.
+	    // __SendMessageToProcess ( terminal___PID, NULL, MSG_TERMINALCOMMAND, 2008, 2008 );	//ok		
+	}
+	
+	return 0;
 }
 
 
@@ -2127,7 +2171,7 @@ int fputc ( int ch, FILE *stream )
       return EOF;
     }
 
-  return __putc(c, stream);
+  return __putc (c, stream);
 }
 */
 
@@ -3293,6 +3337,54 @@ _fwalk(int (*function)(FILE *))
 	return ret;
 }
 */
+
+
+/* 
+ * apiStartTerminal:
+ *     
+ */
+
+// 'Clona' e executa o noraterm como processo filho. 
+// registra o terminal noraterm como terminal atual.
+// pega o pid do terminal atual
+// manda uma mensagem pedindo para o terminal dizer hello.
+
+// #obs: Isso funcionou.
+
+
+int libcStartTerminal (void){
+
+	int PID;
+	
+	// 'Clona' e executa o noraterm como processo filho. 
+	PID = (int) system_call ( 900, (unsigned long) "noraterm.bin", 0, 0 );
+	//PID = (int) system_call ( 901, (unsigned long) "noraterm.bin", 0, 0 );
+		
+	// Exibe o PID para debug.
+	//printf ("PID = %d \n", PID);
+
+    //registra o terminal como terminal atual.
+	system_call ( 1003, PID, 0, 0 ); 
+		
+	//invalida a variável.
+	PID = -1;
+		
+	//pega o pid do terminal atual
+	PID = (int) system_call ( 1004, 0, 0, 0 ); 
+		
+	if ( PID <= 0 )
+	{
+		printf ("PID fail. We can't send the message\n");
+	    return -1;
+	}
+		
+	//manda uma mensagem pedindo para o terminal dizer hello.
+	//__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 2001, 2001 );
+
+	return (int) PID;
+}
+
+
 
 //
 // End.

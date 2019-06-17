@@ -884,14 +884,14 @@ void *noratermProcedure ( struct window_d *window,
 					textSetCurrentCol ( (int) long2 );
 					break;
 					
-				//write a char in the current line buffer,
+				// write a char in the current line buffer,
 				// Isso indica que o terminal tem chars na stream da tty,
 				// então ele deve pegar e exibir.
 				// Pega um char, mas não é o último que foi colocado, é o que ainda não foi pego.
 				// #todo: O terminal deve configurar qual stream ele quer pegar bytes.
 					
 				// #bugbug
-				// Isso funciona na VirtualBox mas n~ao funcionou na ma'quina real ainda
+				// Isso funciona na VirtualBox mas nao funcionou na ma'quina real ainda
 				// suspenso.
 					
 				int xxx_ch;

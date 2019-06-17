@@ -729,16 +729,16 @@ int sscanf(const char *str, const char *format, ...);
  * Character Input and Output Functions
  */
  
-int fgetc( FILE *stream );;
+int fgetc ( FILE *stream );;
 #define getc fgetc
-int ungetc( int c, FILE *stream );
+int ungetc ( int c, FILE *stream );
 
 long ftell (FILE *stream);
 
-int fputc(int ch, FILE *stream);
-char *gets(char *s);
-int getchar(void);
-int putchar(int ch);
+int fputc (int ch, FILE *stream);
+char *gets (char *s);
+int getchar (void);
+int putchar (int ch);
 
 
 //#define getc(p)     fgetc(p)
@@ -746,9 +746,19 @@ int putchar(int ch);
 //#define getchar()   getc(stdin)
 //#define putchar(x)  putc((x), stdout)
 
+//#importante:
+//Podemos usar isso para compatibilidade com as
+//rotinas de baixo nível do bsd.
+//#todo: podemos fazer o mesmo para compatibilidade com outras libs.
+//>>> sempre usando as rotinas de baixo nível do gde.
+//#define __sgetc(p) fgetc(p)
+//#define __sputc(x, p) fputc(x, p)
 
-size_t fread(void *ptr, size_t size, size_t n, FILE *fp);
-size_t fwrite(const void *ptr, size_t size, size_t n, FILE *fp);
+
+
+size_t fread (void *ptr, size_t size, size_t n, FILE *fp);
+size_t fwrite (const void *ptr, size_t size, size_t n, FILE *fp);
+
 
 /*
  * Direct Input and Output Functions
@@ -798,6 +808,8 @@ int fscanf (FILE *stream, const char *format, ... );
 
 // inicializa o fluxo padrão para o processo.
 int stdio_initialize_standard_streams (void);
+
+int libcStartTerminal (void);
 
 /*Inicialização da biblioteca*/
 void stdioInitialize ();

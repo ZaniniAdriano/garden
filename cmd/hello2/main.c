@@ -33,13 +33,20 @@ int main (int argc, char *argv[] ){
     unsigned char count;
 	unsigned char standard_ascii_max = STANDARD_ASCII_MAX;
 	
-	
+	//nesse modo o terminal não será notificado.
 	libc_set_output_mode (LIBC_DRAW_MODE);
 	printf ("\n");
-	printf ("hello2:\n");
+	printf ("hello2:\n"); 
 	printf_draw ("hello2:printf_draw test\n"); //ao fim isso habilita o modo normal.
 	
-	printf ("normal mode\n");
+	//depois disso printf e fprintf terão um terminal pra enviarem notificações
+	//de que escrveram em stdout.
+	
+	//temos que criar uma função dessa para a libc
+	libcStartTerminal ();
+	
+	//nesse momento printf notificar o terminal
+	//printf (">>>normal mode<<<\n");
 	
 	libc_set_output_mode (LIBC_DRAW_MODE);
 	//libc_set_output_mode (LIBC_NORMAL_MODE);	
@@ -56,14 +63,25 @@ int main (int argc, char *argv[] ){
 		}
     };	
 	
+	
+	//esperando um pouquinho
+	//for ( count=0; count < 99999; count++ )
+	
+	libc_set_output_mode (LIBC_NORMAL_MODE);
+	
+	printf (">>>normal mode<<<\n");
 	printf ("\n");
-	printf ("Done!\n");
+	printf ("Done! normal\n");
+	fprintf ( stdout, "normal mode fprintf\n");
+	
+	libc_set_output_mode (LIBC_DRAW_MODE);
+	printf ("Done! draw mode *hang\n");
 	
 	//exit 9 é o código do reaproveitamento.
 	//é excepcional.
  
 	
-	exit (9);
+	//exit (9);
 	 
 	while (1){ asm("pause"); };
     
