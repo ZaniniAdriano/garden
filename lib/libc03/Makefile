@@ -1,11 +1,11 @@
 
-# libc02
-# libc version 0.2 for GDE project
+# libc03
+# libc version 0.3 for GDE project
 # 2019 - Created by Fred Nora.
 
 
 VERSION = 0
-PATCHLEVEL = 2
+PATCHLEVEL = 3
 SUBLEVEL = 0
 EXTRAVERSION = -rc0
 NAME = Gramado LibC
@@ -17,8 +17,8 @@ TARGETOS ?= gramado
 #TARGETOS ?= linux
 
 
-#STATIC_LIB = obj/lib/libc02.a
-#SHARED_LIB = obj/lib/libc02.so
+#STATIC_LIB = obj/lib/libc03.a
+#SHARED_LIB = obj/lib/libc03.so
 
 
 #todo:
@@ -118,15 +118,15 @@ all-c:
 
 #create 'ar'
 libc-link:
-	ar rc LIBC02.A $(OBJECTS)
-	ld -m elf_i386 socrt0.o somain.o -nostdlib -T elf_ia32_efi.lds -shared -znocombreloc -Bsymbolic -L . -l:LIBC02.A -o LIBC02.SO -Map map.s
+	ar rc LIBC03.A $(OBJECTS)
+	ld -m elf_i386 socrt0.o somain.o -nostdlib -T elf_ia32_efi.lds -shared -znocombreloc -Bsymbolic -L . -l:LIBC03.A -o LIBC03.SO -Map map.s
 
 finalize:
 #	cp JACKPOT.BIN  ../../../bin
 	-mkdir obj/
 	-cp *.o obj/
-	-cp LIBC02.A obj/
-	-cp LIBC02.SO obj/
+	-cp LIBC03.A obj/
+	-cp LIBC03.SO obj/
 	
 	
 	

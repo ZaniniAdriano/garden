@@ -3144,30 +3144,17 @@ void perror (const char *str){
 	
     stderr_printf (str);	
 }
- 
- 
-//#test 
-//?? coisa do c++ 
 
+// O ponto de leitura e escrita volta a ser a base.
 void rewind ( FILE * stream ){
-	
-	if ( (void *) stream == NULL )
-		return;
-	
-    //apota par o início do arquivo.
-	//#bugbug: isso vai sobrescrever
-	//as coisas que ainda estão no arquivo;
-    
-    // #bugbug: ring3 não tem acesso aos elementos dessa estrtutura.
-	
-	//stdin->_ptr = stdin->_base;
-	stdin->_p = stdin->_base;
-	
-    //stdin->_bufsiz = BUFSIZ; 		
-    stdin->_lbfsize = BUFSIZ; 			
-	
-	//stdin->_cnt = stdin->_bufsiz;		
-	stdin->_cnt = stdin->_lbfsize;			
+
+    if ( (void *) stream == NULL )
+        return;
+
+    gramado_system_call ( 609, 
+        (unsigned long) stream, 
+        (unsigned long) stream, 
+        (unsigned long) stream ); 
 }
 
 

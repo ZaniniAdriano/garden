@@ -33,11 +33,52 @@ int main (int argc, char *argv[] ){
     unsigned char count;
 	unsigned char standard_ascii_max = STANDARD_ASCII_MAX;
 	
+	char buffer[512];
+	
+	
+	
+	sprintf( buffer, "durty buffer" );
+	
 	//nesse modo o terminal não será notificado.
 	libc_set_output_mode (LIBC_DRAW_MODE);
 	printf ("\n");
 	printf ("hello2:\n"); 
-	printf_draw ("hello2:printf_draw test\n"); //ao fim isso habilita o modo normal.
+	
+	//#atenção: ao fim isso habilita o modo normal.
+	//printf_draw ("hello2:printf_draw test\n"); 
+	
+	//
+	// testing fread.
+	//
+	
+	FILE *fp;	
+	
+    fp = fopen ("init.txt", "r");
+    
+    if (fp != NULL) 
+    {
+		//espearamos que isso escreva em fp.
+		//libc_set_output_mode (LIBC_NORMAL_MODE);
+        //fprintf (fp, "testing fprintf normal mode\n");	
+        
+		//ler 32 bytes do arquivo e coloca-los no buffer.
+        fread ( buffer, 1, 32, fp );
+        
+        // finalisa o arquivo.
+        buffer[511] = 0;
+                
+        //fclose (rm);
+    }else{
+		libc_set_output_mode (LIBC_DRAW_MODE);
+        printf("File Not Found.\r\n");
+	};
+
+    //imprime o buffer,	
+	libc_set_output_mode (LIBC_DRAW_MODE);
+	printf ("done: fim do teste do fread.\n");
+    printf ( ">>buffer={%s} *hang\n", buffer);
+	while (1){}
+	//exit (0);
 	
 	//depois disso printf e fprintf terão um terminal pra enviarem notificações
 	//de que escrveram em stdout.
