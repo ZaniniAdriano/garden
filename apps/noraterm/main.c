@@ -768,7 +768,7 @@ void *noratermProcedure ( struct window_d *window,
 					// Coloca no stdin, prompt[].
 					input ( (unsigned long) long1 );   
 					
-                    //coloca no buffer de linhas e colunas e					
+                    // coloca no buffer de linhas e colunas e					
 					// imprime na tela usando api
 					terminal_write_char ( (int) long1 );
                    					
@@ -945,9 +945,14 @@ void *noratermProcedure ( struct window_d *window,
                 //blob/6d7876bb95c160596c74f0ba4b011ede31429b1a/userspace/terminal.c
                 #define READ_BUFFER_SIZE 512
                 char ___buffer[READ_BUFFER_SIZE];
+				int _i;
 				case 2020:
-				    fread ( (void *) &___buffer[0], 1, READ_BUFFER_SIZE, stdout );
-					printf (___buffer);
+				    fread ( (void *) ___buffer, 1, READ_BUFFER_SIZE, stdout );
+					//printf ("buffer={%s}\n",___buffer);
+					for (_i=0; _i<50; _i++)
+					{
+					    terminal_write_char ( (int) ___buffer[_i] );						
+					}
 					break;	
 					//...
 			}
@@ -2980,8 +2985,11 @@ do_compare:
 		//__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 
 		    //TERMINALCOMMAND_PRINTCHAR, TERMINALCOMMAND_PRINTCHAR );	
 		    
-		__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 
-		    2020, 2020 );		
+		
+		__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 2005, 4 );	
+		__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 2006, 4 );	
+		
+		__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 2020, 2020 );		
         
 		//obs: essa rotina existe nas libs do projeto gramado.
 		//apiSendMessageToProcess ( PID, NULL, MSG_COMMAND, CMD_ABOUT, CMD_ABOUT );
