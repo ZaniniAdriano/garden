@@ -541,7 +541,8 @@ size_t fread(void *ptr, size_t size, size_t nmemb, FILE *f)
 
 size_t fread (void *ptr, size_t size, size_t n, FILE *fp){
 	
-    return -1;
+    return (size_t) gramado_system_call ( 607, (unsigned long) ptr, 
+					 (unsigned long) n, (unsigned long) fp ); 
 }
 
 
@@ -552,7 +553,8 @@ size_t fread (void *ptr, size_t size, size_t n, FILE *fp){
 
 size_t fwrite (const void *ptr, size_t size, size_t n, FILE *fp){
 	
-	return -1;
+    return (size_t) gramado_system_call ( 608, (unsigned long) ptr, 
+					 (unsigned long) n, (unsigned long) fp ); 
 }
 
 

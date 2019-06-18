@@ -936,7 +936,19 @@ void *noratermProcedure ( struct window_d *window,
 					//provisorio
 					printf (LINE_BUFFER);
 					break;
-						
+					
+				// #importante	
+                // pegar mensagens no arquivo de entrada
+                // do terminal.
+                // bugbug: por enquanto vamos pegar no stdout.
+                // ver: https://github.com/skiftOS/skift/
+                //blob/6d7876bb95c160596c74f0ba4b011ede31429b1a/userspace/terminal.c
+                #define READ_BUFFER_SIZE 512
+                char ___buffer[READ_BUFFER_SIZE];
+				case 2020:
+				    fread ( (void *) &___buffer[0], 1, READ_BUFFER_SIZE, stdout );
+					printf (___buffer);
+					break;	
 					//...
 			}
 			break;
@@ -2959,12 +2971,17 @@ do_compare:
         enterCriticalSection ();
         printf ("t18:\n");
 
+        //fprintf (stdout, "This is a string in stdout \n" );
+         
 		//get pid
         PID = (int) system_call ( SYSTEMCALL_GETPID, 0, 0, 0 );
 
 		//Enviando uma mensagem para um processo.		
+		//__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 
+		    //TERMINALCOMMAND_PRINTCHAR, TERMINALCOMMAND_PRINTCHAR );	
+		    
 		__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 
-		    TERMINALCOMMAND_PRINTCHAR, TERMINALCOMMAND_PRINTCHAR );		
+		    2020, 2020 );		
         
 		//obs: essa rotina existe nas libs do projeto gramado.
 		//apiSendMessageToProcess ( PID, NULL, MSG_COMMAND, CMD_ABOUT, CMD_ABOUT );
@@ -2998,13 +3015,16 @@ do_compare:
 		//get tty stream
 		//o shell pega um stream para escrever.
 		opentty_fp = (FILE *) system_call ( 1000, getpid(), 0, 0 );
-		fprintf (opentty_fp, "test1 ...\n");
-		fprintf (opentty_fp, "test2 ...");   //sem \n
+		
+		stdout = opentty_fp;
+		
+		fprintf (stdout, "test1 ...\n");
+		fprintf (stdout, "test2 ...");   //sem \n
 		
 		//vamos avisar o terminal que ele pode pegar os chars na stream do tty
 		//apiSendMessageToProcess ??
-		__SendMessageToProcess ( getpid(), NULL, MSG_TERMINALCOMMAND, 2000, 2000 );
-	
+		//__SendMessageToProcess ( getpid(), NULL, MSG_TERMINALCOMMAND, 2000, 2000 );
+	    __SendMessageToProcess ( getpid(), NULL, MSG_TERMINALCOMMAND, 2020, 2020 );
 		
 		//get tty stream
 		//o terminal pegar um stream para ler.
