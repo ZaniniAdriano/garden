@@ -35,9 +35,7 @@ int main (int argc, char *argv[] ){
 	
 	char buffer[512];
 	
-	
-	
-	sprintf( buffer, "durty buffer" );
+	char buffer2[] = "DURTY...........";
 	
 	//nesse modo o terminal não será notificado.
 	libc_set_output_mode (LIBC_DRAW_MODE);
@@ -59,8 +57,15 @@ int main (int argc, char *argv[] ){
     {
 		//espearamos que isso escreva em fp.
 		//libc_set_output_mode (LIBC_NORMAL_MODE);
-        //fprintf (fp, "testing fprintf normal mode\n");	
+        //fprintf (fp, "testing fprintf normal mode\n");
         
+        //não funcionou.
+        //sprintf( buffer, "fwrite durty" );
+        
+        //funcionou
+        fwrite ( buffer2, 1, 7, fp);	
+        
+        //funcionou.
 		//ler 32 bytes do arquivo e coloca-los no buffer.
         fread ( buffer, 1, 32, fp );
         
