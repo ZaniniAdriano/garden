@@ -3361,6 +3361,49 @@ int libcStartTerminal (void){
 
 
 //
+// stream buffer support
+//
+
+// see: 
+// https://linux.die.net/man/3/setvbuf
+
+void setbuf (FILE *stream, char *buf){
+	
+    gramado_system_call ( 610, 
+        (unsigned long) stream, 
+        (unsigned long) buf, 
+        (unsigned long) buf ); 
+}
+
+
+void setbuffer (FILE *stream, char *buf, size_t size){
+	
+    gramado_system_call ( 611, 
+        (unsigned long) stream, 
+        (unsigned long) buf, 
+        (unsigned long) size ); 
+}
+
+void setlinebuf (FILE *stream){
+		
+    gramado_system_call ( 612, 
+        (unsigned long) stream, 
+        (unsigned long) stream, 
+        (unsigned long) stream ); 	
+}
+
+// #bugbug
+// precisamos do argumento size.
+int setvbuf (FILE *stream, char *buf, int mode, size_t size){
+	
+    return (int) gramado_system_call ( 613, 
+					(unsigned long) stream, 
+					(unsigned long) buf, 
+					(unsigned long) mode ); 	
+}
+
+
+//
 // End.
 //
 

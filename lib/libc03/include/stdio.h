@@ -110,9 +110,15 @@ typedef char *stdio_va_list;
 #define	_IOLBF	1		// setvbuf should set line buffered 
 #define	_IONBF	2		// setvbuf should set unbuffered 
 */
-#define _IOFBF    0x0000  /* full buffered */
-#define _IOLBF    0x0040  /* line buffered */
-#define _IONBF    0x0004  /* not buffered */
+
+//#define _IOFBF    0x0000  /* full buffered */
+//#define _IOLBF    0x0040  /* line buffered */
+//#define _IONBF    0x0004  /* not buffered */
+
+/*bsd-like*/
+#define	_IOFBF	0		// setvbuf should set fully buffered 
+#define	_IOLBF	1		// setvbuf should set line buffered 
+#define	_IONBF	2		// setvbuf should set unbuffered 
 
 /*
  * The buffer size as used by setbuf such that it is equivalent to
@@ -808,6 +814,14 @@ int fscanf (FILE *stream, const char *format, ... );
 
 // inicializa o fluxo padrão para o processo.
 int stdio_initialize_standard_streams (void);
+
+
+// see: https://linux.die.net/man/3/setvbuf
+void setbuf(FILE *stream, char *buf);
+void setbuffer(FILE *stream, char *buf, size_t size);
+void setlinebuf(FILE *stream);
+int setvbuf(FILE *stream, char *buf, int mode, size_t size);
+
 
 int libcStartTerminal (void);
 
