@@ -508,7 +508,7 @@ void shellCreateEditBox (){
 
 /*
  ******************** 
- * shellCreateTaskBar:
+ * shellCreateMainWindow:
  *
  *     CRIANDO A TOP BAR.
  *     Obs: Essa é uma janela filha.
@@ -518,61 +518,61 @@ void shellCreateEditBox (){
  *
  */
  
-struct window_d *shellCreateMainWindow( int status ){
-	
-	// #todo:
-	// Precisamos registrar no kernel que essa janela corresponde 
-	// a área de taskbar e que a área de trabalho agora é menor.
-	
-	// # ??
-	// Pegando a janela principal para usarmos como janela mãe.
-	
-	/*
-	
-	struct window_d *pW;
-
-	pW = (struct window_d *) apiGetWSScreenWindow ();
-	
-	if ( (void *) pW == NULL )
-	{
-	    printf("Screen Window fail\n ");
-	    
-		while (1){
-			asm ("pause");
-			//exit (1);
-		}
-	}
-	*/
-	
+// #todo
+// Vamos criar a main window do tamanho da tela. get system metrics. 
+ 
+struct window_d *shellCreateMainWindow ( int status ){
 	
 	unsigned long left;
 	unsigned long top;
+	
 	unsigned long width;
 	unsigned long height;
-	
-	//left = 0;
-	//top = (600 - (600/16));
-	//width = 800;
-	//height = (600/8); 	
-	
-	//left = wpWindowLeft;
-	//top = wpWindowTop;
-	//width = wsWindowWidth;
-	//height = wsWindowHeight;
 
-	wpWindowLeft = 0;
-	wpWindowTop = 0;
-	wsWindowWidth = 800;
-	wsWindowHeight = 600;
+	struct window_d *w;
+		
+     //#bugbug
+     //shellShell já inicializou isso com a métrica do sistema.
+      
+	//wpWindowLeft = 0;
+	//wpWindowTop = 0;
+	//wsWindowWidth = 800;
+	//wsWindowHeight = 600;
 
 	
 	left = wpWindowLeft;
 	top = wpWindowTop;
 	width = wsWindowWidth;
 	height = wsWindowHeight;
-
 	
-	struct window_d *w;
+    //
+    // Limits.
+    //	
+	
+	if ( left > 50 )
+	    left = 50;
+	
+	if ( top > 50 )
+	    top = 50;	
+
+	if ( width > 2048 )
+	    width = 2048;
+
+	if ( height > 2048 )
+	    height = 2048;
+	    
+    //no zeros.
+    	    
+	if ( width == 0 )
+	    width = 100;
+
+	if ( height == 0 )
+	    height = 100;
+	    
+    
+    //
+    // Draw.
+    //
 
 	w = (void *) APICreateWindow ( 1, 1, 1, "shell-main",     
                      left, top, width, height,    
@@ -580,12 +580,10 @@ struct window_d *shellCreateMainWindow( int status ){
 								
 	if ( (void *) w == NULL )
 	{	
-		printf("shellCreateTaskBar: taskbar Window fail");
-		refresh_screen();
+		printf ("shellCreateMainWindow: taskbar Window fail");
+		//refresh_screen ();
 		
-		while (1){
-			asm("pause");
-		}
+		while (1){ asm ("pause"); }
 		//exit(0);
 	};
 	

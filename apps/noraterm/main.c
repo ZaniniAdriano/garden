@@ -3021,13 +3021,17 @@ do_compare:
 	{
 		printf("t20: \n");
 		//get tty stream
-		//o shell pega um stream para escrever.
+		//pega um stream para escrever.
 		opentty_fp = (FILE *) system_call ( 1000, getpid(), 0, 0 );
 		
 		stdout = opentty_fp;
 		
 		fprintf (stdout, "test1 ...\n");
 		fprintf (stdout, "test2 ...");   //sem \n
+		
+		// #bugbug
+		// Essa rotina falha porque fread acusa que a estrutura nao foi 
+		// inicialziada corretamente.
 		
 		//vamos avisar o terminal que ele pode pegar os chars na stream do tty
 		//apiSendMessageToProcess ??
