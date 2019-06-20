@@ -23,6 +23,38 @@
 
 #define STANDARD_ASCII_MAX 128
 
+
+int
+__PostMessageToProcess ( int pid, 
+                          unsigned long window, 
+                          int message,
+                          unsigned long long1,
+                          unsigned long long2 );
+                          
+int
+__PostMessageToProcess ( int pid, 
+                          unsigned long window, 
+                          int message,
+                          unsigned long long1,
+                          unsigned long long2 )
+{
+	unsigned long message_buffer[5];
+
+	
+    if (pid<0)
+		return -1;
+	
+	message_buffer[0] = (unsigned long) window;
+	message_buffer[1] = (unsigned long) message;
+	message_buffer[2] = (unsigned long) long1;
+	message_buffer[3] = (unsigned long) long2;
+	//...
+
+	return (int) system_call ( 112 , (unsigned long) &message_buffer[0], 
+	                 (unsigned long) pid, (unsigned long) pid );
+}
+
+
 /*
  * # main #
  * C function to demonstrate the working of arithmetic operators 
@@ -81,15 +113,26 @@ int main (int argc, char *argv[] ){
     //imprime o buffer,	
 	libc_set_output_mode (LIBC_DRAW_MODE);
 	printf ("done: fim do teste do fread.\n");
-    printf ( ">>buffer={%s} *hang\n", buffer);
-	while (1){}
+    
+    
+    //printf ( ">>buffer={%s} *hang\n", buffer);
+	//while (1){}
 	//exit (0);
 	
 	//depois disso printf e fprintf terão um terminal pra enviarem notificações
 	//de que escrveram em stdout.
 	
-	//temos que criar uma função dessa para a libc
-	libcStartTerminal ();
+	
+	//#funcionou: Essa rotina executou um terminal. Mas sem input.
+	int terminal___PID = -1;
+	terminal___PID = (int) libcStartTerminal ();
+	
+	//# talvez tenha que esperar pra mandar essa mensagem
+	//MSG_TERMINALCOMMAND
+	//__PostMessageToProcess ( terminal___PID, 0, 100 , 2021, 'X' );
+	
+	printf ("done: fim do teste do terminal *hang\n");	
+	while (1){}
 	
 	//nesse momento printf notificar o terminal
 	//printf (">>>normal mode<<<\n");

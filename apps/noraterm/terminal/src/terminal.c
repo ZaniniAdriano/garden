@@ -642,9 +642,8 @@ void testChangeVisibleArea()
  * mostrada na tela.    
  */
 
-
-void testShowLines ()
-{
+void testShowLines (){
+	
 	//enterCriticalSection (); 
 	
 	//desabilita o cursor
@@ -793,13 +792,6 @@ int pad_to (int count, char *string){
 
     return (i);
 }
-
-
-
-
-
-
-
 
 
 

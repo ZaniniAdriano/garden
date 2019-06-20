@@ -570,6 +570,8 @@ void *noratermProcedure ( struct window_d *window,
 				       unsigned long long1, 
 				       unsigned long long2 );
 
+
+void terminal_test_write ();
 // ...
 
 
@@ -577,6 +579,11 @@ void *noratermProcedure ( struct window_d *window,
 // ======== ## Internal functions ## ========
 //
 
+
+void terminal_test_write ()
+{
+	
+}
 
 
 int
@@ -629,28 +636,34 @@ static inline void rep_nop (void){
 
  
  
-
+/*
+ ***********************  
+ * process_input:
+ * 
+ */
+ 
 //main loop
 //pegamos a mensagem e enviamos para o procedimento de janela.
 //essa rotina poderia fazer parte da api ?? o problema é o 'running'
+
 int process_input (){
 
+	unsigned long message_buffer[16];
+		
 	int msg_status = 0;	
-	unsigned long message_buffer[16];	
 
-	//#obs: O retorno será 1 se tiver mensagem e 0 se não tiver.
-	//message_buffer[1] será 0 se não tiver mensagem
-	
+	// #obs: 
+	// O retorno será 1 se tiver mensagem e 0 se não tiver.
+	// message_buffer[1] será 0 se não tiver mensagem
+	// Chamaremos o procedimento de janelas do aplicativo.
+			
 	while (running)
 	{	
 		msg_status = host_get_message ( (unsigned long) &message_buffer[0] );		
-		
-			
+					
 		// Se temos mensagem.
 		if (msg_status != 0)
 		{
-			// Chamaremos o procedimento de janelas do aplicativo.
-			
 	        noratermProcedure ( (struct window_d *) message_buffer[0], 
 		        (int) message_buffer[1], 
 		        (unsigned long) message_buffer[2], 
@@ -679,7 +692,6 @@ void *noratermProcedure ( struct window_d *window,
                           unsigned long long1, 
                           unsigned long long2 )
 {
-
     unsigned long input_ret;
     unsigned long compare_return;
     int q;
@@ -778,8 +790,7 @@ void *noratermProcedure ( struct window_d *window,
         break;
 		
 		case MSG_KEYUP: 
-		     //printf("%c", (char) 'u');
-             //printf("%c", (char) long1 );  			
+            // Nothing. 			
 		    break;
 		
 		//Não interceptaremos mensagens do sistema por enquanto.
@@ -809,12 +820,21 @@ void *noratermProcedure ( struct window_d *window,
 				    //terminalRefreshVisibleArea();
 					break;
 					
+				// Não usaer esses.
+				// No momento são gerenciados pelo procedimento de janelas
+				// do sistema.	
+				case VK_F5:
+				case VK_F6:
+				case VK_F7:
+				case VK_F8:
+				    // Nothing.
+				    break;
+					
 				//...
 				
                 //full screen
                 //colocar em full screen somente a área de cliente. 				
 		        case VK_F11:
-				    
 					break;
 				//...
 			};
@@ -838,9 +858,11 @@ void *noratermProcedure ( struct window_d *window,
 		case MSG_TERMINALCOMMAND:
 			switch (long1)
 			{
+				
 				// Isso indica que o terminal tem chars na stream da tty,
 				// então ele deve pegar e exibir.
-				// Pega um char, mas não é o último que foi colocado, é o que ainda não foi pego.	
+				// Pega um char, mas não é o último que foi colocado, 
+				// é o que ainda não foi pego.	
 				int x_ch;
 				case 2000:
 					printf ("MSG_TERMINALCOMMAND.2000 pode pegar >> \n");
@@ -849,10 +871,11 @@ void *noratermProcedure ( struct window_d *window,
 		                x_ch = (int) system_call ( 1002, 0, 0, 0 );
 		                if (x_ch == '\n'){ break;};
 						
-			            printf (" %c ",x_ch);
-						//terminal_write_char ( (int) long1 );
+						terminal_write_char ( (int) x_ch );
+			            //printf (" %c ",x_ch);
 	                }					
 					break;
+					
 					
 				//hello	
 				case 2001:
@@ -876,23 +899,25 @@ void *noratermProcedure ( struct window_d *window,
 					
 				//select current row
 				case 2005:
-					textSetCurrentRow ( (int) long2 );
+				    //#bugbug: isso gerencia somente internamente.
+					//textSetCurrentRow ( (int) long2 );
+					terminalSetCursor ( long2, textCurrentCol );
 					break;
 					
 				//select current col	
 				case 2006:
-					textSetCurrentCol ( (int) long2 );
+				    //#bugbug: isso gerencia somente internamente.
+					//textSetCurrentCol ( (int) long2 );
+					terminalSetCursor ( textCurrentRow, long2 );
 					break;
+						
 					
 				// write a char in the current line buffer,
 				// Isso indica que o terminal tem chars na stream da tty,
 				// então ele deve pegar e exibir.
-				// Pega um char, mas não é o último que foi colocado, é o que ainda não foi pego.
+				// Pega um char, mas não é o último que foi colocado, 
+				//é o que ainda não foi pego.
 				// #todo: O terminal deve configurar qual stream ele quer pegar bytes.
-					
-				// #bugbug
-				// Isso funciona na VirtualBox mas nao funcionou na ma'quina real ainda
-				// suspenso.
 					
 				int xxx_ch;
 				case 2008:
@@ -951,9 +976,17 @@ void *noratermProcedure ( struct window_d *window,
 					//printf ("buffer={%s}\n",___buffer);
 					for (_i=0; _i<50; _i++)
 					{
+						// isso imprime na posição x y.
+						// 2005 e 2006 gerenciam o posicionamento atual
 					    terminal_write_char ( (int) ___buffer[_i] );						
 					}
 					break;	
+					
+				//#importante
+				// Write char on terminal x y.	
+				case 2021:
+				    terminal_write_char ( (int) long2 );
+				    break;
 					//...
 			}
 			break;
@@ -2985,9 +3018,10 @@ do_compare:
 		//__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 
 		    //TERMINALCOMMAND_PRINTCHAR, TERMINALCOMMAND_PRINTCHAR );	
 		    
-		
-		__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 2005, 4 );	
-		__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 2006, 4 );	
+		// #Bugbug: A mensagem é postada na verdade e demora para ser lida,
+		//então teremos uma sobreposição, pois não temos fila ainda.
+		//__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 2005, 4 );	
+		//__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 2006, 4 );	
 		
 		__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 2020, 2020 );		
         
@@ -3061,13 +3095,22 @@ do_compare:
 		printf("t21: registrando terminal e criando shell como processo filho\n");
 		system_call ( 1003, getpid(), 0, 0 );
 		
-		//clona e executa o filho dado o nome do filho.
+		//>>> clona e executa o filho dado o nome do filho.
+		system_call ( 900, (unsigned long) "hello.bin", 0, 0 );		
 		//system_call ( 900, (unsigned long) "gdeshell.bin", 0, 0 );
 		//system_call ( 900, (unsigned long) "gramcode.bin", 0, 0 );
-		system_call ( 900, (unsigned long) "hello.bin", 0, 0 );
-		
+
 		goto exit_cmp;
 	}
+	
+	//write char on x y.
+	//ok isso funcionou.
+	if ( strncmp ( prompt, "t22", 3 ) == 0 )
+	{	
+	    __SendMessageToProcess ( getpid(), NULL, MSG_TERMINALCOMMAND, 2021, 'X' );
+        goto exit_cmp;
+    }
+
 
 	// setup-x
 	// setup x server PID
@@ -3124,26 +3167,6 @@ do_compare:
 		goto exit_cmp;
 	}
 
-	
-	
-	
-
-/*
-		//veja essa rotina na api.
-		//apiSendMessageToProcess
-		//apiSendMessageToThread
-		
-		//isso funciona.
-		//message_buffer[0] = 0;
-		//message_buffer[1] = MSG_COMMAND;  //msg
-		//message_buffer[2] = CMD_ABOUT;    //long1
-		//message_buffer[3] = CMD_ABOUT;		
-		//system_call ( 112, (unsigned long) &message_buffer[0], PID, PID );
-*/	
-	
-
-	
-	
 	//flush stdout
 	if ( strncmp( prompt, "flush-stdout", 12 ) == 0 )
 	{
@@ -3154,7 +3177,8 @@ do_compare:
 	
 	// tasklist - Lista informações sobre os processos.
 	//isso será um programa tasklist.bin
-	if ( strncmp( prompt, "tasklist", 8 ) == 0 ){
+	if ( strncmp( prompt, "tasklist", 8 ) == 0 )
+	{
 		shellTaskList();
         goto exit_cmp;
     };	
@@ -3175,7 +3199,8 @@ do_compare:
 	};	
 	
 	// time
-	if ( strncmp( prompt, "time", 4 ) == 0 ){
+	if ( strncmp( prompt, "time", 4 ) == 0 )
+	{
         goto exit_cmp;
     };
 	
@@ -3200,6 +3225,18 @@ do_compare:
 		terminalCreateTaskBar ();
 		goto exit_cmp;
     };			
+	
+	
+	// test-terminal
+    // o terminal executa um processo filho que
+    // lhe enviará mensagens.
+    // Para isso tem que passar para o processo filho o PID
+    // do terminal;
+    if ( strncmp( prompt, "test-terminal", 13 ) == 0 )
+	{
+		//#todo
+		goto exit_cmp;
+    };		
 	
 	
 	// tree
@@ -5474,10 +5511,17 @@ void show_shell_version (){
 }
 
 
+/*
+ *********************
+ * terminal_write_char: 
+ * 
+ */
+
 // escreve um char no backbuffer e exibe na tela
 // usando o cursor gerenciado pelo sistema,
-void terminal_write_char ( int c)
-{
+
+void terminal_write_char ( int c){
+	
     //coloca no buffer de linhas e colunas.
 	terminalInsertNextChar ( (char) c );  
 
@@ -5485,7 +5529,9 @@ void terminal_write_char ( int c)
 	//terminalRefreshCurrentChar ();
 					
 	// #bugbug
-	// imprime na tela usando api  (implementando ainda) isso funcionou.
+	// imprime na tela usando api.  
+	//(implementando ainda). 
+	//isso funcionou.
 	terminalRefreshCurrentChar2 ();		
 }
 

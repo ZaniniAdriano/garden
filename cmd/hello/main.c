@@ -78,6 +78,11 @@ int main ( int argc, char *argv[] ){
 	//get kernel stdout
 	//fp1 = (FILE *) system_call ( 1006, 0, 0, 0 );
 	
+	//get current tty stdou_ring0
+	fp1 = (FILE *) system_call ( 1000, 0, 0, 0 );
+	
+    stdout = fp1;
+	
 	//opentty_fp = (FILE *) system_call ( 1000, getpid(), 0, 0 );
 	//fprintf (opentty_fp, "#### HELLO ###\n");
 	//fprintf (opentty_fp, "#### HELLO2 ###");   //sem \n
@@ -88,18 +93,22 @@ int main ( int argc, char *argv[] ){
 	// a rotina de clonagem tem que fazer o clone herdar o fluxo tambem
 	//ou pelo menos obter os arquivos do fluxo do kernel.
 	
-	printf ("HELLO.BIN: hello tentando escrever no proprio stdout... DEBUG NAO CONSEGUE PORQUE EH UM CLONE\n");
+	printf ("HELLO.BIN: hello tentando no proprio stdout ... \n");
+	
 	fprintf ( stdout, "#### HELLO ###\n");
+	
 	printf ("HELLO.BIN: escreveu\n");
 	
-		//get terminal pid
-		//avisa o terminal que ele pode imprimir as mesangens pendentes que estao na stream
+	//# isso funcionou.
+	//get terminal pid
+	//avisa o terminal que ele pode imprimir as mesangens pendentes que estao na stream
+		
 	terminal_PID = (int) system_call ( 1004, 0, 0, 0 );
-		__SendMessageToProcess ( terminal_PID, 0, MSG_TERMINALCOMMAND, 2000, 2000 );
+	
+	__SendMessageToProcess ( terminal_PID, 0, MSG_TERMINALCOMMAND, 2000, 2000 );
 	
 	printf ("hello.bin: done *hang");
-	while(1){}
-	
+	while (1){}
 
 	int code = 0;
 	
