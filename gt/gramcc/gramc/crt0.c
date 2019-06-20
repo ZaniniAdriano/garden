@@ -1,12 +1,14 @@
 
+//#todo:
+//devemos usar o crt0.o que está na libc e não esse.
 
 #include  "c.h"
 
 
 extern int main ( int argc, char *argv[] );
 
-void crt0 ()
-{
+void crt0 (){
+	
 	// Lexemes suport.
 	
 	char *tokenList[TOKENLIST_MAX_DEFAULT];

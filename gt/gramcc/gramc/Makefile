@@ -35,11 +35,10 @@ CFLAGS = -m32 \
 #	-s
 
 
-LIBC    = ../../../lib/gdelibs/libc02/include/
-LIBCOBJ = ../../../lib/gdelibs/libc02/obj
-
-API     = ../../../lib/gdelibs/api02/include/
-APIOBJ  = ../../../lib/gdelibs/api02/obj
+LIBC    = ../../../lib/libc02/include/
+LIBCOBJ = ../../../lib/libc02/obj
+API     = ../../../lib/api02/include/
+APIOBJ  = ../../../lib/api02/obj
 
 
 	##
@@ -69,8 +68,6 @@ all: main.o all-c gramcc-link finalize clean
 	@echo "Ok?"
 
 main.o:
-#	nasm crt0.asm -f elf -o crt0.o
-
 	gcc  -c  crt0.c  $(CFLAGS) -I $(LIBC) -I $(API) -o crt0.o
 	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API) -o main.o
 	gcc  -c  lexer.c  -I $(LIBC) -I $(API) $(CFLAGS) -o lexer.o

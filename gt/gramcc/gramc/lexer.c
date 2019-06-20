@@ -104,6 +104,9 @@ int skip_white_space (){
 	
 begin:		
 
+    //#obs:
+    // tranquilo. isso chamará o kernel para pegar informações;
+    
     c = getc (finput);
 
     for (;;)

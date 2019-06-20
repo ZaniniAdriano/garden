@@ -88,9 +88,12 @@ int gramc_main ()
  * In this fuction:
  *     Initializes crt.
  *     Initializes stdio.
- *
  */
-int mainTextEditor( int argc, char *argv[] )
+ 
+//#bugbug
+//vamos cancelar isso já que temos um main() 
+ 
+int mainTextEditor ( int argc, char *argv[] )
 {
 	int ch;
 	FILE *fp;
@@ -235,18 +238,19 @@ done:
 		asm("pause");
 		exit(0);
 	};
+	
     // Never reach this.	
-	return (int) 0;
-};
+    
+	return 0;
+}
 
 
 /*
- *  
  *     Limpar a tela deletar isso
  */
 
-void editorClearScreen()
-{
+void editorClearScreen (){
+	
 	int lin, col;    
 
 	// @todo:
@@ -273,10 +277,8 @@ void editorClearScreen()
 	    }
 	};
 	
-	apiSetCursor(0,2);
-};
-
-
+	apiSetCursor (0,2);
+}
 
 
 //procurar os marcadores no arquivo intermediário 
@@ -338,7 +340,7 @@ done:
 	lexer_token_count = (int) token_count;  
 	
     return (char **) Ret;	
-};
+}
 
 
 // Imprime todas as strings de um vetor de ponteiros.
@@ -402,9 +404,9 @@ int gramcInitialize (){
 	int i=0;
 	
 	
-#ifdef GRAMC_VERBOSE	
+//#ifdef GRAMC_VERBOSE	
     printf("gramcInitialize: Initializing ...\n");
-#endif	
+//#endif	
 	
 	
 	// Clear buffers
@@ -478,12 +480,12 @@ int gramcInitialize (){
 	
 	//...
 	
-#ifdef GRAMC_VERBOSE	
-    printf("gramcInitialize: done\n");
-#endif		
+//#ifdef GRAMC_VERBOSE	
+    printf ("gramcInitialize: done\n");
+//#endif		
 
     return (int) Status;	
-};
+}
 
 
 //testing ctype support
@@ -571,11 +573,12 @@ void debugShowStat (){
 	
 };
 
+
 /*
  ********************************
  * main:
- *     Main function. The entry point is is crt0.c.
- *
+ *     Main function. 
+ *     The entry point is is crt0.c.
  */
 
 int main ( int argc, char *argv[] ){
@@ -614,14 +617,18 @@ int main ( int argc, char *argv[] ){
 	
 	// Initializing.
     
-#ifdef GRAMC_VERBOSE		
+//#ifdef GRAMC_VERBOSE		
     printf ("\n");
-	printf ("main: Initializing ..\n");
-#endif 
+	printf ("gramc: Initializing ..\n");
+	//while (1){}
+//#endif 
    
     // Inicializa variáveis globais.
     
 	gramcInitialize ();
+
+    //printf ("*breakpoint");
+    //while (1){}
 
 	//
 	// ## Args ##
@@ -669,6 +676,13 @@ int main ( int argc, char *argv[] ){
 	// # Arquivo de entrada #
 	//
 	
+	// #bugbug
+	// lembrando que não podemos mais usar os elementos
+	// da estrutura em user mode.
+	// Então o buffer é gerenciado pelo kernel.
+	// podemos copiar o conteúdo do arquivo para um buffer aqui no programa
+	// através de fread, mas fread está disponível apenas na libc03.
+	
     fp = fopen ( (char *) argv[2], "rb" );	
 	
 	if ( fp == NULL )
@@ -696,7 +710,9 @@ int main ( int argc, char *argv[] ){
 	stdin = fp;
 	finput = fp;
 	
-    
+    //#debug
+    //printf ("*breakpoint");
+    //while (1){}   
     
 	//
 	// ## Parse ##
@@ -705,9 +721,12 @@ int main ( int argc, char *argv[] ){
     //Testando funções do compilador.
     
 	parse_ret = (int) parse ();
-
 	
-	printf ("main: parse returned %d\n");
+	printf ("main: parse returned %d\n", parse_ret);
+
+    //#debug
+    //printf ("*breakpoint");
+    //while (1){} 
     
 	/*
 	//#todo parse return
@@ -753,15 +772,13 @@ out:
     //printf("\n");	
 	printf ("main: DONE \n");	
     
-	//while (1){
-	//	asm ("pause");
-	//}
+	//while (1){ asm ("pause"); }
 
 //exit_success:	
 
-#ifdef GRAMC_VERBOSE		
+//#ifdef GRAMC_VERBOSE		
 	printf ("main: exit success \n");
-#endif 
+//#endif 
     
     return 0;
 }

@@ -304,9 +304,10 @@ unsigned long parse_expression ( int token ){
 	}	
 	
 	
-	//#todo:
-	//estamos suspendendo a parte de baixo e chamado uma rotina 
-	//em tree para calcular a expressão.
+	// #todo:
+	// #importante:
+	// estamos suspendendo a parte de baixo e chamado uma rotina 
+	// em tree para calcular a expressão.
 	return (unsigned long) tree_eval ();
 	
 	//===========================================================
@@ -837,8 +838,7 @@ unsigned long parse_expression ( int token ){
 expression_exit:
     
 	return (unsigned long) Result;
-};
-
+}
 
 
 int parse_asm ( int token )
@@ -951,11 +951,11 @@ int parse_asm ( int token )
 	}
 	
 
-    printf("parse_asm: todo unexpected error in asm string");
-	exit(1);		
+    printf ("parse_asm: todo unexpected error in asm string");
+	exit (1);		
 		   
 	return 0;
-};
+}
 
 
 int parse_function ( int token )
@@ -1074,12 +1074,13 @@ int parse_function ( int token )
 			    break;
 			
 			default:
-				printf("parse_function: default statement\n");
-				exit(1);				    
+				printf ("parse_function: default statement\n");
+				exit (1);				    
 			    break;
 		};
 	};	
-};
+}
+
 
 // #return statement
 // >> termina com  ';'
@@ -1091,6 +1092,7 @@ int parse_function ( int token )
 // return function();
 // return (int) function();
 //interna 
+
 int parse_return ( int token ){
 	
 	
@@ -1372,8 +1374,9 @@ do_separator:
     */	
 	
 done:		
+
    return c;
-};
+}
 
 
 //## if ##
@@ -1432,12 +1435,9 @@ int parse_if (int token){
 		exit(1);
 	}
 	
-
-	
 	//exit(1);
     return (int) If_Result;	
-};
-
+}
 
 
 int parse_while (int token){
@@ -1487,21 +1487,25 @@ int parse_while (int token){
 	printf ("EXP={%d}\n",Exp_Result);
 	//exit(1);
     return (int) While_Result;	
-};
+}
 
-int parse_do ( int token )
-{
+
+int parse_do ( int token ){
+	
 	printf("todo: parse_do in line %d\n ", lineno );
-	exit(1);
+	exit (1);
+	
     return -1;	
-};
+}
 
-int parse_for ( int token )
-{
-	printf("todo: parse_while in line %d \n", lineno );
-	exit(1);
+
+int parse_for ( int token ){
+	
+	printf ("todo: parse_while in line %d \n", lineno );
+	exit (1);
+	
     return -1;	
-};
+}
 
 
 /*
@@ -1524,8 +1528,26 @@ int parse (){
     // Não temos mais acesso a elementos da estrutura em user mode.
     // Tem que usar outro recurso para encontrar o tamanho.
     
-	size_t size = (size_t) strlen ( (const char *) stdin->_base );
+	size_t size;
 	
+	// # HACK HACK
+	size =  128;
+	
+	//size_t size = (size_t) strlen ( (const char *) stdin->_base );
+
+    //Isso falhou;
+    //fseek ( stdin, 0, SEEK_END); // seek to end of file
+    //size = ftell(stdin); // get current file pointer
+    //fseek (stdin, 0, SEEK_SET); // seek back to beginning of file
+    // proceed with allocating memory and reading the file	
+    
+    //size = (size_t) system_call ( 178, file_name, 0, 0, 0 );	
+	
+	//#debug
+	//printf ("size=%d\n", size);
+	//while(1){}
+
+     
 	
 	//{([
 	//se entramos em um desses corpos.
@@ -1541,11 +1563,12 @@ int parse (){
 	//steps;
 	int State = 1;
 	
-    printf ("\n");
+
 	
-#ifdef GRAMC_VERBOSE	
+//#ifdef GRAMC_VERBOSE	
+    printf ("\n");
     printf ("parse: Initializing ...\n");
-#endif		
+//#endif		
 	
 	
 	//#obs
@@ -2142,12 +2165,12 @@ int parse (){
 					default:
 					    if ( parentheses_inside > 0 )
 					    {
-						    printf("State3: bugbug searching for keyword inside parentheses");
+						    printf("State3: bugbug searching for keyword inside parentheses \n");
 						    exit(1);
 					    }
 					    if ( braces_inside > 0 )
 					    {
-						    printf("State3: bugbug searching for keyword inside braces");
+						    printf("State3: bugbug searching for keyword inside braces \n");
 						    exit(1);
 					    }
 						//??em que momento espera-se por uma keyword e não encontra ??

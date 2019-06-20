@@ -1777,11 +1777,11 @@ static __inline__ off_t ftell(FILE *__f)
 }
 */
 
+// Dixaremos o kernel manipular a estrutura.
 long ftell (FILE *stream){
-    
-	//#bugbug
-	//precisamos chamr a system call.		
-    return (long) -1;	
+	
+    return (long) system_call ( 249, (unsigned long) stream, 
+                      (unsigned long) stream, (unsigned long) stream );	
 }
 
 /*
