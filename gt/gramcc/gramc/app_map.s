@@ -429,7 +429,7 @@ Linker script and memory map
                 0x000000000040902a                parse_for
                 0x000000000040905a                parse
                 0x0000000000409850                parserInit
- .text          0x0000000000409923      0x842 tree.o
+ .text          0x0000000000409923      0x89b tree.o
                 0x0000000000409923                my_isdigit
                 0x0000000000409949                newNode
                 0x0000000000409982                inorder
@@ -444,10 +444,10 @@ Linker script and memory map
                 0x0000000000409e49                eval
                 0x0000000000409f2e                testtest_main
                 0x0000000000409f46                tree_eval
- .text          0x000000000040a165       0x28 stubs.o
-                0x000000000040a165                gramado_system_call
+ .text          0x000000000040a1be       0x28 stubs.o
+                0x000000000040a1be                gramado_system_call
                 0x000000000040b000                . = ALIGN (0x1000)
- *fill*         0x000000000040a18d      0xe73 
+ *fill*         0x000000000040a1e6      0xe1a 
 
 .iplt           0x000000000040b000        0x0
  .iplt          0x000000000040b000        0x0 crt0.o

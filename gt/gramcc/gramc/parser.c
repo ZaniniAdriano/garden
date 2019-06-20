@@ -1616,9 +1616,6 @@ int parse (){
 			// Esperamos um MODIFIER, TYPE and SEPARATOR
                 
 			case 1:
-//#ifdef PARSER_VERBOSE						
-	//		    printf ("<1> ");
-//#endif
 				switch (c)
 				{
 	                case TOKENMODIFIER:
@@ -1655,27 +1652,14 @@ int parse (){
 					
 					case TOKENSEPARATOR:
 					
-//#ifdef PARSER_VERBOSE						
-	//				     printf("State1: TOKENSEPARATOR={%s} line %d\n", real_token_buffer, lineno );
-//#endif						 
-
+					    //printf("State1: TOKENSEPARATOR={%s} line %d\n", real_token_buffer, lineno );
 					
-						//; função
+						// ( função
 						if ( strncmp( (char *) real_token_buffer, "(", 1 ) == 0  )
                         {
-							
-//#ifdef PARSER_VERBOSE								
-	//					    printf ("State2: SEP={%s} line %d\n", 
-	//						    real_token_buffer, lineno );
-//#endif 
-								
-								//incrementamos
-								//pois podemos estar no primeiro, no segundo etc ...
+						    // printf ("State2: SEP={%s} line %d\n", real_token_buffer, lineno );
+                            // printf ("[PAR] line %d\n", lineno ); 
 							parentheses_inside++;
-							
-//#ifdef PARSER_VERBOSE										
-	//						printf ("[PAR] line %d\n", lineno );  //debug par open
-//#endif
 
 								//#test
 								//peekChar = c;
@@ -1696,20 +1680,12 @@ int parse (){
 						//entramos no corpo da função.
 						if ( strncmp( (char *) real_token_buffer, "{", 1 ) == 0  )
 						{
-							
-//#ifdef PARSER_VERBOSE								
-	//						printf ("State1: separator={%s} line %d\n", 
-	//						    real_token_buffer, lineno );  
-//#endif						
-						
-							braces_inside++;
-							
-//#ifdef PARSER_VERBOSE										
-						    printf ("[BRACE] line %d\n", lineno);  //debug par close
-//#endif									
+							//printf ("State1: separator={%s} line %d\n", real_token_buffer, lineno ); 
+							printf ("[BRACE] line %d\n", lineno); 
+							braces_inside++;									
 									
-									//isso vai para o 1 onde procura-se por modificadores e tipos,
-									//mas se estivermos com o corpo da função aberto ele avançará para o próximo state.
+							//isso vai para o 1 onde procura-se por modificadores e tipos,
+							//mas se estivermos com o corpo da função aberto ele avançará para o próximo state.
 							State = 1;
 							break;
 						};
@@ -1719,9 +1695,7 @@ int parse (){
 						{
 						    if ( parentheses_inside > 0 )
 							{
-//#ifdef PARSER_VERBOSE											
-	//							printf("[/PAR] line %d\n", lineno);
-//#endif                                
+								//printf("[/PAR] line %d\n", lineno);
 								parentheses_inside--;
                                 State = 1;
 								break;
@@ -1735,10 +1709,7 @@ int parse (){
                         {
 						    if ( braces_inside > 0 )
 							{
-//#ifdef PARSER_VERBOSE											
 								printf("[/BRACE] line %d\n", lineno);
-//#endif                                
-								
 								braces_inside--;
                                 State = 1;
 								break;							
@@ -1747,13 +1718,10 @@ int parse (){
 						
 						if ( strncmp( (char *) real_token_buffer, ";", 1 ) == 0  )
 						{
-							printf("; separator found!\n");
+							printf(" ; separator found!\n");
 							State = 1;
 						}
 					    break;
-
-
-
 
                     //#bugbug						
 					//Não devemos aceitar diretivas do preprocessador nesse momento,
@@ -1825,9 +1793,6 @@ int parse (){
 			// Esperamos um identificador, pos estamos logo após um tipo.
 			// Pode ser uma função ou uma declaração de variável, isso depende do peekChar.
 			case 2:
-//#ifdef PARSER_VERBOSE						
-	//		    printf("<2> ");
-//#endif
 			    switch (c)
 				{
 				    //identificador. (símbolo)
@@ -2084,9 +2049,6 @@ int parse (){
 			//			
             
             case 3:
-//#ifdef PARSER_VERBOSE				
-	//		    printf("<3> ");
-//#endif
 			    switch(c)
 				{
 					//KEYWORD.
@@ -2224,9 +2186,6 @@ int parse (){
             //###################################
             //state4 ';'			
 			case 4:
-//#ifdef PARSER_VERBOSE						
-			   // printf("<4> ");
-//#endif
 				switch (c)
 				{
 		            case TOKENSEPARATOR:
@@ -2267,14 +2226,13 @@ int parse (){
                 break;				
  
 	
-
-
-
-
 	    };//switch State	
 		
+	
+	
 				
 		size--;
+	
 		
 		//sai do while
         if (size <= 0)
@@ -2323,10 +2281,8 @@ syntax:
 	
 parse_exit:
 
-//#ifdef GRAMC_VERBOSE	
     printf ("parse: done\n");
-//#endif		
-  	
+
 	return 0;
 }
 

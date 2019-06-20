@@ -501,7 +501,15 @@ unsigned long tree_eval (){
             printf("tree_eval: #error EOF in line %d\n", lineno);
             exit(1);			
 		}  
-
+		
+		if( c == TOKENSEPARATOR )
+		{
+			if ( strncmp( (char *) real_token_buffer, ";", 1 ) == 0  )
+			{
+			    goto done;	
+			}
+		}
+		
 		switch (State)   
 	    {
 			//números
@@ -514,9 +522,21 @@ unsigned long tree_eval (){
 						exp_offset++;
 						State = 2; //depois de um número espera-se um operador ou um separador.
 						break;	
+					
+					// ; separador no caso de return void.
+					//para quando a expressão é depois do return.
+					case TOKENSEPARATOR:
+					    if ( strncmp( (char *) real_token_buffer, ";", 1 ) == 0  )
+					    {
+							goto done;
+						}
 						
-
+						//if ( strncmp( (char *) real_token_buffer, ")", 1 ) == 0  )
+						//{}
 						
+					//#todo
+					//temos que tratar as aberturas e fechamentos (),{}	
+					
 				    default:
 					    printf("tree_eval: State1 default");
 						exit(1);
@@ -572,7 +592,7 @@ unsigned long tree_eval (){
 			    break;
 				
 		    default:
-			    printf("tree_eval: #error State default \n");
+			    printf("tree_eval: #error State2 default \n");
 			    break;
         };		
 		
@@ -626,7 +646,11 @@ do_bst:
 	printf("result: %d\n",ret_val);
 	
 	return (ret_val); 
-};
+	
+done:
+    return (ret_val);
+}
+
 
 //
 // End.
