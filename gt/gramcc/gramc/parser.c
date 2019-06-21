@@ -1541,20 +1541,28 @@ int parse (){
 	size_t size;
 	
 	// # HACK HACK
-	size =  128;
+	//size =  128;
 	
 	//size_t size = (size_t) strlen ( (const char *) stdin->_base );
 
     //Isso falhou;
-    //fseek ( stdin, 0, SEEK_END); // seek to end of file
-    //size = ftell(stdin); // get current file pointer
-    //fseek (stdin, 0, SEEK_SET); // seek back to beginning of file
+    fseek ( stdin, 0, SEEK_END); // seek to end of file
+    size = ftell (stdin); // get current file pointer
+    fseek (stdin, 0, SEEK_SET); // seek back to beginning of file
     // proceed with allocating memory and reading the file	
     
     //size = (size_t) system_call ( 178, file_name, 0, 0, 0 );	
 	
+	//printf ("original ftell=%d\n", ftell (stdin)); 
+	
+	//fseek ( stdin, 0, SEEK_END);
+	//printf ("end ftell=%d\n", ftell (stdin)); 
+	
+	//fseek (stdin, 0, SEEK_SET);
+	//printf ("begin ftell=%d\n", ftell (stdin));
+	 		
 	//#debug
-	//printf ("size=%d\n", size);
+	printf ("size=%d\n", size);
 	//while(1){}
 
      
