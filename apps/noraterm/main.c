@@ -3,7 +3,7 @@
  *
  * Client side terminal app for gde project.
  *
- *
+ *  --- cut here ---
  * Gramado Core Shell.
  * A shell to run only on Gramado Core environment. 
  *
@@ -3017,17 +3017,24 @@ do_compare:
 		goto exit_cmp;
 	}
 	
-	//se registra como terminal
+	// t21
+	// Se registra como terminal
 	if ( strncmp ( prompt, "t21", 3 ) == 0 )
 	{
-		printf("t21: registrando terminal e criando shell como processo filho\n");
+		// Isso já foi feito na inicialização do terminal.
+		//printf ("t21: registrando terminal e criando shell como processo filho\n");
+		
+		printf ("t21: Executing child process ...\n");
+		
+		// registrando teminal.
 		system_call ( 1003, getpid(), 0, 0 );
 		
 		//>>> clona e executa o filho dado o nome do filho.
-		system_call ( 900, (unsigned long) "hello.bin", 0, 0 );		
+		system_call ( 900, (unsigned long) "hello3.bin", 0, 0 );		
 		//system_call ( 900, (unsigned long) "gdeshell.bin", 0, 0 );
 		//system_call ( 900, (unsigned long) "gramcode.bin", 0, 0 );
-
+         
+        printf ("t21: done\n"); 
 		goto exit_cmp;
 	}
 	
@@ -3861,6 +3868,11 @@ int terminalInit ( struct window_d *window ){
 		
 	char buffer[512];
 	
+	
+	PID = getpid ();
+	
+	// Registrar o terminal na estrutura de tty.
+	system_call ( 1003, PID, 0, 0 );
 	
 	// #bugbug:
     //     Esse ponteiro de estrutura está em kernel mode. 

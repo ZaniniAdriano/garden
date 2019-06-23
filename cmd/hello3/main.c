@@ -103,7 +103,7 @@ int main (int argc, char *argv[] ){
 	//
 	
 
-	
+	/*
     fp = fopen ("init.txt", "r");
     
     if (fp != NULL) 
@@ -129,14 +129,18 @@ int main (int argc, char *argv[] ){
     }else{
         printf("File Not Found.\r\n");
 	};
+    */
 
 	// isso pode fazer com que o terminal imprima na tela.
-	fprintf ( stdout, "normal mode fprintf\n");
+	//fprintf ( stdout, ">>> normal mode fprintf <<<\n");
 	
-	printf ("done: fim do teste do fread.\n");
-	printf ("testando libc03 ...\n");
-	printf ("\n");
+	//Escrevendo em stdout agora com printf.
 	
+	//printf ("done: fim do teste do fread.\n");
+	printf ("{Testando libc03 ...} ");
+	//printf ("\n");
+	
+	/*
     for ( count=0; count<standard_ascii_max; count++ )
     {
 		printf (" %d - %c", count, count);
@@ -146,21 +150,17 @@ int main (int argc, char *argv[] ){
             printf ("\n");
 		}
     };	
-	
+	*/
 	
 	//esperando um pouquinho
 	//for ( count=0; count < 99999; count++ )
 	
 	
-	printf (">>>normal mode<<<\n");
-	printf ("\n");
-	printf ("Done! normal\n");
+	printf ("{normal mode} ");
+	//printf ("\n");
+	printf ("{Done!} ");
 	
-	
-	// isso pode fazer com que o terminal imprima na tela.
-	fprintf ( stdout, "normal mode fprintf\n");
-	
-	printf ("Done! draw mode *hang\n");
+	printf ("*hang\n");
 	    
 //done:    
     

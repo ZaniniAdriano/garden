@@ -1064,9 +1064,13 @@ int putchar (int ch){
 
 		// #bugbug
 		// Teremos problemas se stdout não for um ponteiro válido.
+		
+		// #bugbug
+		// Não podemos chamar o terminal à cada char.
+		// Então é mehlor usar fputc e filtrar o char.
 	    
 		//vamos tentar outr pois putc chama fputc e não fprintf.
-		putc ( ch, stdout );
+		fputc ( ch, stdout );
 		//fprintf ( stdout, "%c", ch );
 	};
 
@@ -1714,16 +1718,48 @@ int __fflush_stderr(void)
  */
 
 int fflush ( FILE *stream ){
-	
-	// #importante
-	// Devemos copiar o conteúdo que está nesse arquivo em ring3
-	// para o arquivo que está em ring 0.
-	// O arquivo em ring0 é o arquivo gerenciado pela estrutura do
-	// processo.
-	
+
+	//fflush deve limpar o buffer agora.
     return (int) gramado_system_call ( 233, (unsigned long) stream, 
 					 (unsigned long) stream, (unsigned long) stream ); 
+
+    /*
+	//fflush deve mostrar no terminal o conteúdo agora
+    // Pegamos o pid do terminal e enviamos uma 
 	
+	// notificação de evento para ele.
+	int terminal___PID = -1;
+	unsigned long message_buffer[5];
+	
+	//SÓ NOTIFICAREMOS O TERMINAL SE TIVERMOS NO MODO NORMAL
+	if ( __libc_output_mode == LIBC_NORMAL_MODE )
+	{
+	    terminal___PID = (int) system_call ( 1004, 0, 0, 0 ); 
+	
+	    if ( terminal___PID < 0 )
+	    {
+			//libc_set_output_mode (LIBC_DRAW_MODE);
+		    //printf_draw ("fprintf:fail\n");
+		    return -1;
+	    }
+		
+        //if (pid<0)
+		    //return -1;
+	
+	    message_buffer[0] = (unsigned long) 0;    //window
+	    message_buffer[1] = (unsigned long) 100;  //message;  //MSG_TERMINALCOMMAND
+	    message_buffer[2] = (unsigned long) 2008; //long1;    //2008  
+	    message_buffer[3] = (unsigned long) 2008; //long2;    //2008
+	    //...
+
+	    //notifica o terminal de que ele tem mensagens.
+	    return (int) system_call ( 112 , (unsigned long) &message_buffer[0], 
+	                 (unsigned long) terminal___PID, (unsigned long) terminal___PID );
+
+        //#todo temos que usar essa chamada ao invés dessa rotina acima.
+	    // __SendMessageToProcess ( terminal___PID, NULL, MSG_TERMINALCOMMAND, 2008, 2008 );	//ok		
+	}
+	*/
 }
 
 
@@ -2153,8 +2189,62 @@ int fputc(int c, FILE *f)
 
 int fputc ( int ch, FILE *stream ){
     
-     return (int) gramado_system_call ( 196, (unsigned long) ch,  
-					 (unsigned long) stream,  (unsigned long) stream );    
+    
+    
+     gramado_system_call ( 196, (unsigned long) ch,  
+	    (unsigned long) stream,  (unsigned long) stream );    
+	
+	// se não for \n não precisa notificar o terminal
+	if ( ch != '\n')
+	{
+		return 0;
+	}	
+					 
+	// #importante
+	// Notificaremos o terminal somente se o char for '\n'	
+	
+    //
+    // Terminal.
+    //
+
+    // #bugbug
+    // Rever isso e pegar a pid certo.
+
+	// Pegamos o pid do terminal e enviamos uma 
+	// notificação de evento para ele.
+	int terminal___PID = -1;
+	unsigned long message_buffer[5];
+	
+	//SÓ NOTIFICAREMOS O TERMINAL SE TIVERMOS NO MODO NORMAL
+	if ( __libc_output_mode == LIBC_NORMAL_MODE )
+	{
+	    terminal___PID = (int) system_call ( 1004, 0, 0, 0 ); 
+	
+	    if ( terminal___PID < 0 )
+	    {
+			//libc_set_output_mode (LIBC_DRAW_MODE);
+		    //printf_draw ("fprintf:fail\n");
+		    return -1;
+	    }
+		
+        //if (pid<0)
+		    //return -1;
+	
+	    message_buffer[0] = (unsigned long) 0;    //window
+	    message_buffer[1] = (unsigned long) 100;  //message;  //MSG_TERMINALCOMMAND
+	    message_buffer[2] = (unsigned long) 2008; //long1;    //2008  
+	    message_buffer[3] = (unsigned long) 2008; //long2;    //2008
+	    //...
+
+	    //notifica o terminal de que ele tem mensagens.
+	    return (int) system_call ( 112 , (unsigned long) &message_buffer[0], 
+	                 (unsigned long) terminal___PID, (unsigned long) terminal___PID );
+
+        //#todo temos que usar essa chamada ao invés dessa rotina acima.
+	    // __SendMessageToProcess ( terminal___PID, NULL, MSG_TERMINALCOMMAND, 2008, 2008 );	//ok		
+	}
+	
+	return 0;			 			 
 }
 
 
