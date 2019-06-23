@@ -81,6 +81,9 @@
 //#define SHELL_VERBOSE 1
 
 
+//#define MIN(x,y) ((x < y) ? x : y)
+
+
 //
 // botões
 // 
@@ -712,7 +715,9 @@ void shellTestMBR();
 
 //int test_operators();
 
-void shellShowWindowInfo();
+void terminalShowWindowInfo ();
+
+
 void shellShowInfo();
 void shellShowMetrics();
 void shellShowSystemInfo();

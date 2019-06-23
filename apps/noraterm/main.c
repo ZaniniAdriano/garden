@@ -111,43 +111,6 @@
 //...
 
 
-/*
-
- //para ficar igual a do Nelson;
-
-struct shell_command {
-	
-    char *name;
-    void *fun;
-    char *help;
-	
-};
-
-//extern struct command cmd_table[];
-struct shell_command cmd_table[];
-
-struct command cmd_table[] = {
-    {"?",           cmd_help,           "This help"                                     },
-    {"cd",          cmd_cd,             "Change current directory"                      },
-    {"cls",         cmd_cls,            "Clear screen"                                  },
-    {"copy",        cmd_copy,           "Copy file or directory"                        },
-    {"date",        cmd_date,           "Date"                                          },
-    {"del",         cmd_del,            "Delete file or directory"                      },
-    {"dir",         cmd_dir,            "List directory"                                },
-    {"echo",        cmd_echo,           "This ---"                                      },
-    {"exit",        cmd_exit,           "Exit shell"                                    },
-    {"help",        cmd_help,           "This help"                                     },
-    {"mov",         cmd_mov,            "Move file or directory"                        },
-    {"new",         cmd_new,            "New file or directory"                         },
-    {"reboot",      cmd_reboot,         "Reboot system"                                 },
-    {"rename",      cmd_rename,         "Rename file or directory"                      },
-    {"shutdown",    cmd_shutdown,       "Shutdown your computer locally or remotely"    },
-    {"time",        cmd_time,           "Time"                                          },
-    {"version",     cmd_version,        "Shell version"                                 },
-};
-
-*/
-
 
 #define LINE_BUFFER_SIZE 1024
 char LINE_BUFFER[LINE_BUFFER_SIZE];
@@ -156,8 +119,6 @@ int line_buffer_head;  //saída.
 int line_buffer_buffersize;
 //...
  
-
-//#define MIN(x,y) ((x < y) ? x : y)
 
 
 // _init_app 
@@ -259,12 +220,14 @@ char password[11];
 // ======== ## Prompt support ## ========
 //
 
-
+//coisa de shell
 #ifndef PPROMPT
 #define PPROMPT "shell\\$ "
 #endif
 char *primary_prompt = PPROMPT;
 
+
+//coisa de shell
 #ifndef SPROMPT
 #define SPROMPT "shell> "
 #endif
@@ -375,35 +338,6 @@ int no_brace_expansion = 0;	/* Non-zero means no foo{a,b} -> fooa fooa. */
 
 
 
-
-
-/*
-struct {
-	
-  char *word;
-  int token;
-  
-} token_word_alist[] = {
-  {"if", IF},
-  {"then", THEN},
-  {"else", ELSE},
-  {"elif", ELIF},
-  {"fi", FI},
-  {"case", CASE},
-  {"esac", ESAC},
-  {"for", FOR},
-  {"while", WHILE},
-  {"until", UNTIL},
-  {"do", DO},
-  {"done", DONE},
-  {"in", IN},
-  {"function", FUNCTION},
-  {"{", '{'},
-  {"}", '}'},
-  { (char *) NULL, 0 }
-};
-*/
-
 //
 // ======== ## bash Arguments support ## ========
 //
@@ -508,11 +442,13 @@ int argbuf_index;
 // usando o cursor gerenciado pelo sistema,
 void terminal_write_char ( int c);
 
-void shellInitSystemMetrics();
-void shellInitWindowLimits();
-void shellInitWindowSizes();
-void shellInitWindowPosition();
+void terminalInitSystemMetrics ();
 
+void terminalInitWindowLimits ();
+
+void terminalInitWindowSizes ();
+
+void terminalInitWindowPosition ();
 
 
 
@@ -534,23 +470,12 @@ int save_string2 ( char string[], char file_name[] );
 
 
 
-
-
 int
-__SendMessageToProcess ( int pid, 
+__PostMessageToProcess ( int pid, 
                           struct window_d *window, 
                           int message,
                           unsigned long long1,
                           unsigned long long2 );
-
-
-
-
-
-
-
-
-
 
 
 
@@ -587,28 +512,27 @@ void terminal_test_write ()
 
 
 int
-__SendMessageToProcess ( int pid, 
-                          struct window_d *window, 
-                          int message,
-                          unsigned long long1,
-                          unsigned long long2 )
+__PostMessageToProcess ( int pid, 
+                         struct window_d *window, 
+                         int message,
+                         unsigned long long1,
+                         unsigned long long2 )
 {
-	unsigned long message_buffer[5];
+    unsigned long message_buffer[5];
 
-	
     if (pid<0)
-		return -1;
-	
-	message_buffer[0] = (unsigned long) window;
-	message_buffer[1] = (unsigned long) message;
-	message_buffer[2] = (unsigned long) long1;
-	message_buffer[3] = (unsigned long) long2;
+        return -1;
+
+    message_buffer[0] = (unsigned long) window;
+    message_buffer[1] = (unsigned long) message;
+    message_buffer[2] = (unsigned long) long1;
+    message_buffer[3] = (unsigned long) long2;
+
 	//...
 
-	return (int) system_call ( 112 , (unsigned long) &message_buffer[0], 
-	                 (unsigned long) pid, (unsigned long) pid );
+    return (int) system_call ( 112 , (unsigned long) &message_buffer[0], 
+                    (unsigned long) pid, (unsigned long) pid );
 }
-
 
 
 void quit ( int status ){
@@ -616,6 +540,10 @@ void quit ( int status ){
 	running = 0;
 }
 
+
+/*
+ *  pause:
+ */
 
 static inline void pause (void){
 	
@@ -630,7 +558,7 @@ static inline void pause (void){
 
 static inline void rep_nop (void){
 	
-    __asm__ __volatile__ ("rep;nop": : :"memory");
+    asm volatile ("rep;nop" :::"memory");
 };
 #define cpu_relax()  rep_nop()
 
@@ -3015,20 +2943,20 @@ do_compare:
         PID = (int) system_call ( SYSTEMCALL_GETPID, 0, 0, 0 );
 
 		//Enviando uma mensagem para um processo.		
-		//__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 
+		//__PostMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 
 		    //TERMINALCOMMAND_PRINTCHAR, TERMINALCOMMAND_PRINTCHAR );	
 		    
 		// #Bugbug: A mensagem é postada na verdade e demora para ser lida,
 		//então teremos uma sobreposição, pois não temos fila ainda.
-		//__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 2005, 4 );	
-		//__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 2006, 4 );	
+		//__PostMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 2005, 4 );	
+		//__PostMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 2006, 4 );	
 		
-		__SendMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 2020, 2020 );		
+		__PostMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 2020, 2020 );		
         
 		//obs: essa rotina existe nas libs do projeto gramado.
 		//apiSendMessageToProcess ( PID, NULL, MSG_COMMAND, CMD_ABOUT, CMD_ABOUT );
 
-		//__SendMessageToProcess ( PID, NULL, MSG_COMMAND, CMD_ABOUT, CMD_ABOUT );
+		//__PostMessageToProcess ( PID, NULL, MSG_COMMAND, CMD_ABOUT, CMD_ABOUT );
 		
        	printf ("t18: done\n");
         exitCriticalSection ();
@@ -3069,8 +2997,8 @@ do_compare:
 		
 		//vamos avisar o terminal que ele pode pegar os chars na stream do tty
 		//apiSendMessageToProcess ??
-		//__SendMessageToProcess ( getpid(), NULL, MSG_TERMINALCOMMAND, 2000, 2000 );
-	    __SendMessageToProcess ( getpid(), NULL, MSG_TERMINALCOMMAND, 2020, 2020 );
+		//__PostMessageToProcess ( getpid(), NULL, MSG_TERMINALCOMMAND, 2000, 2000 );
+	    __PostMessageToProcess ( getpid(), NULL, MSG_TERMINALCOMMAND, 2020, 2020 );
 		
 		//get tty stream
 		//o terminal pegar um stream para ler.
@@ -3107,7 +3035,7 @@ do_compare:
 	//ok isso funcionou.
 	if ( strncmp ( prompt, "t22", 3 ) == 0 )
 	{	
-	    __SendMessageToProcess ( getpid(), NULL, MSG_TERMINALCOMMAND, 2021, 'X' );
+	    __PostMessageToProcess ( getpid(), NULL, MSG_TERMINALCOMMAND, 2021, 'X' );
         goto exit_cmp;
     }
 
@@ -3268,7 +3196,7 @@ do_compare:
 	// window
     if ( strncmp( prompt, "window", 6 ) == 0 )
 	{
-		shellShowWindowInfo();
+		terminalShowWindowInfo ();
         goto exit_cmp;
     };
 
@@ -3602,7 +3530,7 @@ done:
 
 
 /*
- * shellInitSystemMetrics:
+ * terminalInitSystemMetrics:
  *     mudar para noratermInitSystemMetrics
  */
 
@@ -3616,7 +3544,7 @@ done:
 // #todo: Criar uma função que mostre todas as informações configuradas
 // Mostre as informações depois de criar uma tela.
 
-void shellInitSystemMetrics (){
+void terminalInitSystemMetrics (){
 	
 	
 	// Tamanho da tela.	
@@ -3641,7 +3569,7 @@ void shellInitSystemMetrics (){
 
 
 /*
- * shellInitWindowLimits:
+ * terminalInitWindowLimits:
  *     #todo: mudar para noratermInitWindowLimits
  *    #importante
  */
@@ -3649,7 +3577,7 @@ void shellInitSystemMetrics (){
 //#todo:
 //ordem: fullscreeen sizes, font sizes, mínimos e máximos.
 
-void shellInitWindowLimits (){
+void terminalInitWindowLimits (){
 	
 	// #todo
 	// Tem variáveis aqui que não podem ser '0'.
@@ -3658,7 +3586,7 @@ void shellInitWindowLimits (){
 	/*
 	if (InitSystemMetricsStatus == 0)
 	{
-	    shellInitSystemMetrics ();
+	    terminalInitSystemMetrics ();
 	}
 	*/
 	
@@ -3698,7 +3626,7 @@ void shellInitWindowLimits (){
 }
 
 
-void shellInitWindowSizes()
+void terminalInitWindowSizes()
 {
 	
 //
@@ -3724,12 +3652,10 @@ void shellInitWindowSizes()
 	{
 	    wsWindowHeight = wlMinWindowHeight;	
 	}
+}
 
 
-};
-
-
-void shellInitWindowPosition()
+void terminalInitWindowPosition()
 {
 	
 	//window position
@@ -3797,16 +3723,16 @@ void terminalTerminal (){
 	// tamanho da tela.
 	
 	//inicializa as metricas do sistema.
-	shellInitSystemMetrics ();
+	terminalInitSystemMetrics ();
 	
     //inicializa os limites da janela.
-	shellInitWindowLimits();
+	terminalInitWindowLimits ();
 	
 	//inicia o tamanho da janela.
-	shellInitWindowSizes();
+	terminalInitWindowSizes ();
 	
 	//inicializar a posição da janela.
-	shellInitWindowPosition();
+	terminalInitWindowPosition ();
  
  
     //
@@ -4554,7 +4480,7 @@ void shellShowMetrics (){
     //reinicializa as metricas do sistema.
 	//isso pega os valores e coloca nas variáveis globais.
 	
-	shellInitSystemMetrics ();
+	terminalInitSystemMetrics ();
 	
 	printf ("\n");  
 	printf (" # shellShowMetrics: # \n");
@@ -4603,7 +4529,7 @@ void shellShowSystemInfo (){
 
 
 //mostrar informações sobre janelas.
-void shellShowWindowInfo (){
+void terminalShowWindowInfo (){
 	
     int wID;	
 	//
@@ -4614,9 +4540,9 @@ void shellShowWindowInfo (){
 	// Podemos ter erros de memória com essas operações.
 		
 	printf ("\n");	
-	printf (" # shellShowWindowInfo #\n");
+	printf ("terminalShowWindowInfo:\n");
 	
-	printf ("mainWindow={%x}", shell_info.main_window );
+	//printf ("mainWindow={%x}", shell_info.main_window );
 		
 	//#bugbug 
 	//temos um problema aqui.
