@@ -1731,6 +1731,7 @@ int fflush ( FILE *stream ){
 
 
 /*
+ * #opção.
 int fprintf(FILE *fp, const char *fmt, ...)
 {
     va_list ap;
@@ -1751,14 +1752,25 @@ int fprintf(FILE *fp, const char *fmt, ...)
 
 int fprintf ( FILE *stream, const char *format, ... ){
 	
-    //return (int) gramado_system_call ( 234, (unsigned long) stream, 
-	//				 (unsigned long) format, (unsigned long) format );
+	//
+	// Stream.
+	//
+	
+	// #obs:
+	// Talvez essa chamada devesse ela mesma notificar o terminal.
 	
     gramado_system_call ( 234, (unsigned long) stream, 
 					 (unsigned long) format, (unsigned long) format );
 	
+    //
+    // Terminal.
+    //
 
-	//pegamos o pid do terminal atual e enviamos uma notificação de evento para ele.
+    // #bugbug
+    // Rever isso e pegar a pid certo.
+
+	// Pegamos o pid do terminal e enviamos uma 
+	// notificação de evento para ele.
 	int terminal___PID = -1;
 	unsigned long message_buffer[5];
 	
