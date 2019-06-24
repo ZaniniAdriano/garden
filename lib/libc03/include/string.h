@@ -16,7 +16,11 @@ typedef	_BSD_SIZE_T_	size_t;
 
 int memcmp (const void *s1, const void *s2, size_t n);
 
+void *memmove(void *dest, const void *src, size_t count);
+void *memscan (void *addr, int c, size_t size);
  
+char * strpbrk(const char * cs,const char * ct); 
+char *strncat(char *dst, const char *src, size_t n);
 
 char *strdup(const char *str);
 char *strndup(const char *s, size_t n);

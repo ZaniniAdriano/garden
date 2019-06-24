@@ -15,6 +15,56 @@
 #include <inttypes.h>
 
 
+
+
+/**
+ * linux style.
+ * strncasecmp - Case insensitive, length-limited string comparison
+ * @s1: One string
+ * @s2: The other string
+ * @len: the maximum number of characters to compare
+ */
+/*
+int strncasecmp(const char *s1, const char *s2, size_t len); 
+int strncasecmp(const char *s1, const char *s2, size_t len)
+{
+	//Yes, Virginia, it had better be unsigned 
+	unsigned char c1, c2;
+
+	if (!len)
+		return 0;
+
+	do {
+		c1 = *s1++;
+		c2 = *s2++;
+		if (!c1 || !c2)
+			break;
+		if (c1 == c2)
+			continue;
+		c1 = tolower(c1);
+		c2 = tolower(c2);
+		if (c1 != c2)
+			break;
+	} while (--len);
+	return (int)c1 - (int)c2;
+}
+*/
+
+
+/* linux style*/
+/*
+int strcasecmp(const char *s1, const char *s2)
+{
+	int c1, c2;
+
+	do {
+		c1 = tolower(*s1++);
+		c2 = tolower(*s2++);
+	} while (c1 == c2 && c1 != 0);
+	return c1 - c2;
+}
+*/
+
 /*
  #todo
  
@@ -89,6 +139,73 @@ char *strndup (const char *s, size_t n){
 	
 	return d;
 }
+
+
+/**
+ * skip_spaces - Removes leading whitespace from @str.
+ * @str: The string to be stripped.
+ *
+ * Returns a pointer to the first non-whitespace character in @str.
+ */
+/* 
+char *skip_spaces(const char *str); 
+char *skip_spaces(const char *str)
+{
+	while (isspace(*str))
+		++str;
+	return (char *)str;
+}
+*/
+
+
+/*linux style*/
+/**
+ * strim - Removes leading and trailing whitespace from @s.
+ * @s: The string to be stripped.
+ *
+ * Note that the first trailing whitespace is replaced with a %NUL-terminator
+ * in the given string @s. Returns a pointer to the first non-whitespace
+ * character in @s.
+ */
+/* 
+char *strim(char *s); 
+char *strim(char *s)
+{
+	size_t size;
+	char *end;
+
+	size = strlen(s);
+	if (!size)
+		return s;
+
+	end = s + size - 1;
+	while (end >= s && isspace(*end))
+		end--;
+	*(end + 1) = '\0';
+
+	return skip_spaces(s);
+}
+*/
+
+
+
+/*linux-style*/
+/**
+ * strnchr - Find a character in a length limited string
+ * @s: The string to be searched
+ * @count: The number of characters to be searched
+ * @c: The character to search for
+ */
+/* 
+char *strnchr(const char *s, size_t count, int c); 
+char *strnchr(const char *s, size_t count, int c)
+{
+	for (; count-- && *s != '\0'; ++s)
+		if (*s == (char)c)
+			return (char *)s;
+	return NULL;
+}
+*/
 
 
 /*
@@ -266,7 +383,7 @@ void *memset(void *s, int c, size_t count)
 
 /*
  * memset:
- * 
+ *    #todo: rever tipos;
  */
 
 void *memset ( void *ptr, int value, int size ){
@@ -398,6 +515,26 @@ char *strcat ( char *to, const char *from ){
 }
 
 
+/*linux style*/
+/**
+ * strchrnul - Find and return a character in a string, or end of string
+ * @s: The string to be searched
+ * @c: The character to search for
+ *
+ * Returns pointer to first occurrence of 'c' in s. If c is not found, then
+ * return a pointer to the null byte at the end of s.
+ */
+/* 
+char *strchrnul(const char *s, int c); 
+char *strchrnul(const char *s, int c)
+{
+	while (*s && *s != (char)c)
+		s++;
+	return (char *)s;
+}
+*/
+
+
 /*
 size_t strlcat(char *dst, const char *src, size_t size)
 size_t strlcat(char *dst, const char *src, size_t size)
@@ -423,8 +560,7 @@ size_t strlcat(char *dst, const char *src, size_t size)
 */
 
 
-/*
-char *strncat(char *dst, const char *src, size_t n);
+
 char *strncat(char *dst, const char *src, size_t n)
 {
 	char *q = strchr(dst, '\0');
@@ -438,7 +574,6 @@ char *strncat(char *dst, const char *src, size_t n)
 	*q = '\0';
 	return dst;
 }
-*/
 
 
 /* 
@@ -450,8 +585,8 @@ void bcopy ( char *from, char *to, int len ){
 	//if ( len < 0 )
 	//    return;
 	
-	while ( len-- )
-	{ 
+	while ( len-- ){
+		 
         *to++ = *from++; 
 	};
 }
@@ -521,6 +656,196 @@ size_t strnlen ( const char *s, size_t maxlen ){
 }
 
 
+char * strpbrk(const char * cs,const char * ct)
+{
+	const char *sc1,*sc2;
+
+	for( sc1 = cs; *sc1 != '\0'; ++sc1) {
+		for( sc2 = ct; *sc2 != '\0'; ++sc2) {
+			if (*sc1 == *sc2)
+				return (char *) sc1;
+		}
+	}
+	return NULL;
+}
+
+
+/*linux style*/
+/**
+ * strsep - Split a string into tokens
+ * @s: The string to be searched
+ * @ct: The characters to search for
+ *
+ * strsep() updates @s to point after the token, ready for the next call.
+ *
+ * It returns empty tokens, too, behaving exactly like the libc function
+ * of that name. In fact, it was (*stolen) from glibc2 and de-fancy-fied.
+ * Same semantics, slimmer shape. ;)
+ */
+/* 
+char *strsep(char **s, const char *ct); 
+char *strsep(char **s, const char *ct)
+{
+	char *sbegin = *s;
+	char *end;
+
+	if (sbegin == NULL)
+		return NULL;
+
+	end = strpbrk(sbegin, ct);
+	if (end)
+		*end++ = '\0';
+	*s = end;
+	return sbegin;
+}
+*/
+
+
+/*linux style*/
+/**
+ * sysfs_streq - return true if strings are equal, modulo trailing newline
+ * @s1: one string
+ * @s2: another string
+ *
+ * This routine returns true iff two strings are equal, treating both
+ * NUL and newline-then-NUL as equivalent string terminations.  It's
+ * geared for use with sysfs input strings, which generally terminate
+ * with newlines but are compared against values without newlines.
+ */
+//mudar esse bool.
+/* 
+bool sysfs_streq(const char *s1, const char *s2)/ 
+bool sysfs_streq(const char *s1, const char *s2)
+{
+	while (*s1 && *s1 == *s2) {
+		s1++;
+		s2++;
+	}
+
+	if (*s1 == *s2)
+		return true;
+	if (!*s1 && *s2 == '\n' && !s2[1])
+		return true;
+	if (*s1 == '\n' && !s1[1] && !*s2)
+		return true;
+	return false;
+}
+*/
+
+
+/*linux stuff*/
+/**
+ * match_string - matches given string in an array
+ * @array:	array of strings
+ * @n:		number of strings in the array or -1 for NULL terminated arrays
+ * @string:	string to match with
+ *
+ * Return:
+ * index of a @string in the @array if matches, or %-EINVAL otherwise.
+ */
+/*
+int match_string(const char * const *array, size_t n, const char *string); 
+int match_string(const char * const *array, size_t n, const char *string)
+{
+	int index;
+	const char *item;
+
+	for (index = 0; index < n; index++) {
+		item = array[index];
+		if (!item)
+			break;
+		if (!strcmp(item, string))
+			return index;
+	}
+
+	return -EINVAL;
+}
+*/
+
+
+/**
+ * memset16() - Fill a memory area with a uint16_t
+ * @s: Pointer to the start of the area.
+ * @v: The value to fill the area with
+ * @count: The number of values to store
+ *
+ * Differs from memset() in that it fills with a uint16_t instead
+ * of a byte.  Remember that @count is the number of uint16_ts to
+ * store, not the number of bytes.
+ */
+/* 
+void *memset16(uint16_t *s, uint16_t v, size_t count); 
+void *memset16(uint16_t *s, uint16_t v, size_t count)
+{
+	uint16_t *xs = s;
+
+	while (count--)
+		*xs++ = v;
+	return s;
+}
+*/
+
+
+/**
+ * memset32() - Fill a memory area with a uint32_t
+ * @s: Pointer to the start of the area.
+ * @v: The value to fill the area with
+ * @count: The number of values to store
+ *
+ * Differs from memset() in that it fills with a uint32_t instead
+ * of a byte.  Remember that @count is the number of uint32_ts to
+ * store, not the number of bytes.
+ */
+/* 
+void *memset32(uint32_t *s, uint32_t v, size_t count); 
+void *memset32(uint32_t *s, uint32_t v, size_t count)
+{
+	uint32_t *xs = s;
+
+	while (count--)
+		*xs++ = v;
+	return s;
+}
+*/
+
+/*
+static void *check_bytes8(const u8 *start, u8 value, unsigned int bytes);
+static void *check_bytes8(const u8 *start, u8 value, unsigned int bytes)
+{
+	while (bytes) {
+		if (*start != value)
+			return (void *)start;
+		start++;
+		bytes--;
+	}
+	return NULL;
+}
+*/
+
+
+/**
+ * strreplace - Replace all occurrences of character in string.
+ * @s: The string to operate on.
+ * @old: The character being replaced.
+ * @new: The character @old is replaced with.
+ *
+ * Returns pointer to the nul byte at the end of @s.
+ */
+/* 
+char *strreplace(char *s, char old, char new); 
+char *strreplace(char *s, char old, char new)
+{
+	for (; *s; ++s)
+		if (*s == old)
+			*s = new;
+	return s;
+}
+*/
+
+
+
+
+
 /*
  * strcspn:
  *     ??
@@ -563,9 +888,7 @@ size_t strcspn ( const char *str, const char *reject ){
 		if ( matches )
 			return (size_t) result;
 	};
-	
-	//??
-};
+}
 
 
 /*
@@ -574,6 +897,7 @@ size_t strcspn ( const char *str, const char *reject ){
  * Credits: 
  * Copyright (c) 2011, 2012 Jonas 'Sortie' Termansen.
  */
+ 
 size_t strspn ( const char* str, const char* accept ){
 	
 	int result;
@@ -612,9 +936,7 @@ size_t strspn ( const char* str, const char* accept ){
 		if ( !matches )
 			return (size_t) result;
 	};
-	
-	//??
-};
+}
 
 
 /*
@@ -738,7 +1060,8 @@ char *strchr (const char *s, int c){
 }
 
 
-/*linux style
+/*linux style*/
+
 void *memmove(void *dest, const void *src, size_t count)
 {
 	char *tmp;
@@ -757,9 +1080,10 @@ void *memmove(void *dest, const void *src, size_t count)
 		while (count--)
 			*--tmp = *--s;
 	}
+
 	return dest;
 }
-*/
+
 
 
 /*
@@ -771,19 +1095,22 @@ void *memmove(void *dest, const void *src, size_t count)
  *
  * returns the address of the first occurrence of @c, or 1 byte past
  * the area if @c is not found
- void *memscan(void *addr, int c, size_t size)
-{
+ */
+ 
+void *memscan (void *addr, int c, size_t size){
+	
 	unsigned char *p = addr;
 
-	while (size) {
+	while (size){
+		
 		if (*p == c)
 			return (void *)p;
 		p++;
 		size--;
 	}
-  	return (void *)p;
+
+  	return (void *) p;
 }
-*/
 
 
 /**
