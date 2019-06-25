@@ -1,13 +1,25 @@
 
+// Window manager simples com uma barra
+// e poucas janelas no modo tiling.
+
 // gwm - Gramado Window Manager.
 // a window manager for Gramado Window Server; (gws)
 // + initialization and main loop;
 
 
-#include <gde.h>
+
+// #todo c headers.
+#include <types.h>
+#include <stddef.h>
+#include <stdio.h>
+
+#include <api.h>
 
 #include "gwm.h" 
 
+
+
+int _running = 1;
 
 unsigned long 
 gwm_procedure ( struct window_d *window, 
@@ -16,9 +28,29 @@ gwm_procedure ( struct window_d *window,
 				unsigned long long2 );
 
 
-int gwm_main ( int argc, char **argv ){
 
-	FILE *default_input = stdin;
+
+unsigned long 
+gwm_procedure ( struct window_d *window, 
+                int msg, 
+				unsigned long long1, 
+				unsigned long long2 )
+{
+
+    //switch()
+		
+	return 0;
+}
+
+
+
+// main:
+
+int main ( int argc, char *argv[] ){
+
+	//
+	// args;
+	// 
 	
 	// Se não há argumentos.
 	if (argc < 1)
@@ -26,9 +58,10 @@ int gwm_main ( int argc, char **argv ){
 		//printf("No args !\n");
 		//#Test.
         //fprintf( stderr,"Starting Shell with no arguments...\n");	 	
-		die ("No args");
+		//die ("No args");
 		
-		goto noArgs; 
+		//goto noArgs; 
+		
 	}else{
 		
 		//argv[0] = Tipo de shell: interativo ou não
@@ -41,7 +74,7 @@ int gwm_main ( int argc, char **argv ){
 		
 	    if ( strncmp ( (char *) argv[0], "-interactive", 12 ) == 0 ){
 			
-			interactive = 1;
+			//interactive = 1;
             
             //printf("Initializing an interactive shell ...\n");
             //printf("arg[0]={%s}\n",argv[0]);			
@@ -57,7 +90,7 @@ int gwm_main ( int argc, char **argv ){
 		
 	    if ( strncmp ( (char *) argv[1], "-login", 6 ) == 0 ){
 			
-			login_shell = 1;
+			//login_shell = 1;
 			
 			//printf("Initializing login ...\n");
             //printf("arg[1]={%s}\n",argv[1]);    
@@ -71,7 +104,7 @@ int gwm_main ( int argc, char **argv ){
 	
 	
 	
-//
+    //
 	// **** Mensagens  ****
 	//
 	
@@ -105,7 +138,7 @@ Mainloop:
 	/* Nesse teste vamos enviar um ponteiro de array, pegarmos os quatro 
 	   elementos da mensagem e depois zerar o buffer */
 	
-	while (running)
+	while (_running)
 	{
 		//#obs: O retorno será 1 se tiver mensagem e 0 se não tiver.
 		enterCriticalSection(); 
@@ -132,55 +165,9 @@ Mainloop:
             message_buffer[3] = 0;
             message_buffer[4] = 0;	
         };				
-	};
-	
-	//
-	// Entramos aqui se running for igual a 0.
-	//
-	
-	switch (ShellFlag)
-	{
-	    // Sai do shell.
-		case SHELLFLAG_EXIT:
-		    goto end;
-			break;
-
-		//@todo:
-        //opções ...
+	};	
 		
-		// Sai do shell.	
-        default:
-            goto end;
-			break;		
-	};
-
-	
-	//
-	// Pulamos a parte que pega mensgens de input de teclado 
-	// porque esse shell não está configurado como interativo.
-	//
-	
-//	
-// # RunScript #	
-//
-
-skip_input:		
-	
-	
-	
-	
     return 0;
 }
 
 
-unsigned long 
-gwm_procedure ( struct window_d *window, 
-                int msg, 
-				unsigned long long1, 
-				unsigned long long2 )
-{
-
-    //switch()
-		
-	return 0;
-};
