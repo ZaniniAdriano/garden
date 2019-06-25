@@ -27,47 +27,10 @@ char number[16];
 
 void Start ();
 void GetResults ();
-int jackpot_atoi (char * s);
 int jackpot_main ();
 
 
-/*
- * main:
- *     Entry point. 
- */
-
-// ??
-// Qual janela tem o foco de entrada ?
-// A disciplina de linha precisa disso para encontrar
-// a thread que receberá mensagem.
-	
-int main ( int argc, char *argv[] ){
-
-	int code = 0;
-	
-	printf ("\n");
-	printf ("####################################################\n");
-	  puts ("################## JackPot #########################\n");
-	printf ("####################################################\n");
-	printf ("\n");	
-	
-	
-	code = (int) jackpot_main ();
-	
-	switch (code) 
-	{
-	    
-        case 0:
-            exit (0);
-            break;	
-
-		default:	
-		    exit (code);
-			break;	
-	};
-	
-	return -1;
-}
+//int jackpot_atoi (char * s);
 
 
 void Start (){
@@ -109,7 +72,7 @@ void Start (){
 			
 	    if ( c != -1 )
 		{	
-	        printf ("%c",c);	        
+	        printf ("%c", c);	        
 			goto selected;
 		};
 	};	
@@ -134,7 +97,12 @@ selected:
 		case '3' : 
 		    maxrand = 50;
             break;
-        
+            
+        case 'Q':    
+        case 'q':
+            exit (0);
+            break;
+            
 		default : 
 		    maxrand = 15;
 		    //exit(0);
@@ -158,19 +126,22 @@ selected:
 void GetResults (){
 	
 	// if player has no more life then he lose
-    if ( life <= 0 ){
-		
-        printf("You lose !\n\n");
-        Start();
+    if ( life <= 0 )
+    {	
+        printf ("You lose !\n\n");
+        Start ();
     }
 
 	// #  Pedimos para digitar um número ... #
+	printf ("\n\n");
 	printf ("Type a number: \n");
 	
 	//isso coloca a string digitada em 'number'
 	gets (number);
 	
-	i = jackpot_atoi ( number );
+	//i = jackpot_atoi ( number );
+	i = atoi ( number );
+	
 	
 checkNumber:
 
@@ -197,7 +168,7 @@ checkNumber:
         Start ();
 		
 		//#todo:
-        //Podemos criar uma solução mais elegante para filalizar.
+        //Podemos criar uma solução mais elegante para finalizar.
     
 	}else if (i>j){
         
@@ -227,12 +198,13 @@ checkNumber:
 }
 
 
+/*
 int jackpot_atoi (char * s){
 	
     int rv=0; 
     char sign = 0;
 
-    /* skip till we find either a digit or '+' or '-' */
+    // skip till we find either a digit or '+' or '-' 
 	
     while (*s) 
 	{
@@ -261,6 +233,8 @@ int jackpot_atoi (char * s){
      
     //     return (sign ? -rv : rv);
 }
+*/
+
 
 
 /*
@@ -276,9 +250,9 @@ int jackpot_main (){
 	//stdio
 	//inicializando o suporte ao fluxo padrão.
 	
-	libcInitRT ();
-    
-	stdioInitialize ();		
+	//#cancelado. Porque o crt0.o faz isso.
+	//libcInitRT ();
+	//stdioInitialize ();		
 	
     printf ("** Jackpot game **\n");
     printf ("The goal of this game is to guess a number. You will be ask to type\n");
@@ -289,5 +263,44 @@ int jackpot_main (){
 	
 	return 0;
 }
+
+/*
+ * main:
+ *     Entry point. 
+ */
+
+// ??
+// Qual janela tem o foco de entrada ?
+// A disciplina de linha precisa disso para encontrar
+// a thread que receberá mensagem.
+	
+int main ( int argc, char *argv[] ){
+
+	int code = 0;
+	
+	printf ("\n");
+	printf ("####################################################\n");
+	  puts ("################## JackPot #########################\n");
+	printf ("####################################################\n");
+	printf ("\n");	
+	
+	
+	code = (int) jackpot_main ();
+	
+	switch (code) 
+	{
+	    
+        case 0:
+            exit (0);
+            break;	
+
+		default:	
+		    exit (code);
+			break;	
+	};
+	
+	return -1;
+}
+
 
 

@@ -3227,29 +3227,29 @@ doexec_first_command:
 	    buffer[z] = (unsigned long) tokenList[z];	
 	}						 
 
-    Execve_Ret = execve ( (const char *) tokenList[0], //nome
-	                       (const char *) 0,            //NULL
-						   (const char *) 0);           //NULL
+    // #test
+    // Testando a opção de executar um processo filho
+    // ao invés de chamarmos execve;
+    // Assim o shell continua funcionando.  
+    // Poderemos chamar execve se a opção for -exit, que fecha o shell.
+    
+    // #bugbug: Isso não funcionou.
+    //system_call ( 900, (unsigned long) tokenList[0], 0, 0 ); 
+    //goto exit_cmp;	
+    
+    
+    //
+    // execve
+    //    
+    
+    // name, NULL, NULL
+    Execve_Ret = execve ( (const char *) tokenList[0], 
+	                 (const char *) 0, (const char *) 0); 
 
-	
-	// ## ISSO DEU CERTO ## 	
-    // Passamos anteriormente a linha de comandos via memória compartilhada,
-    // agora então precisamos passar somente o nome do arquivo.	
-    //Execve_Ret = (int) shell_gramado_core_init_execve ( 
-	//                       (const char *) tokenList[0], //nome
-	//                       (const char *) 0,            //NULL
-	//					   (const char *) 0);           //NULL
-						 
-	
-	
-    //Execve_Ret = (int) shell_gramado_core_init_execve( 
-	//                       (const char*) tokenList[0], //nome
-	//                       (const char*) tokenList[1], 
-	//					   (const char*) tokenList[2]); //env ...deve ser null
-	
 	// Ok, funcionou e o arquivo foi carregado,
 	// mas demora para receber tempo de processamento.
-	if( Execve_Ret == 0 )
+	
+	if ( Execve_Ret == 0 )
 	{
 		//
 		// ## WAIT ??
@@ -3279,6 +3279,8 @@ doexec_first_command:
 		printf("shell: execve fail\n");
 		goto fail;
 	};
+	
+	
 	
 	
 	//

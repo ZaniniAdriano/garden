@@ -85,7 +85,6 @@ all-c:
 	cp $(LIBCOBJ)/unistd.o  .
 	cp $(LIBCOBJ)/stubs.o  .
 	
-#test
 	cp $(LIBCOBJ)/crt0.o   .
 
 

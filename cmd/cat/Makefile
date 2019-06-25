@@ -28,18 +28,17 @@ CFLAGS = -m32 \
 	-s
 	
 	
-LIBC    = ../../lib/libc01/include/
-LIBCOBJ = ../../lib/libc01/obj
-
-API01   = ../../lib/api01/include/
-APIOBJ  = ../../lib/api01/obj
+LIBC    = ../../lib/libc03/include/
+LIBCOBJ = ../../lib/libc03/obj
+API01   = ../../lib/api02/include/
+APIOBJ  = ../../lib/api02/obj
 
 
 	##
 	## Objects
 	##
 
-myObjects = main.o \
+myObjects = crt0.o main.o \
 ctype.o \
 stdio.o \
 stdlib.o \
@@ -72,7 +71,8 @@ all-c:
 	cp $(LIBCOBJ)/unistd.o  .
 	cp $(LIBCOBJ)/stubs.o  .
 
-
+	cp $(LIBCOBJ)/crt0.o  .
+	
 cat-link:
 	ld -m elf_i386 -T link.ld -o CAT.BIN $(myObjects) -Map map.s
 

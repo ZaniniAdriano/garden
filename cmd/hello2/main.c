@@ -81,6 +81,9 @@ int main (int argc, char *argv[] ){
 	// testing fread.
 	//
 	
+	//#precisamos configurar stdout?
+	//ele pode ser fp??
+	
 	FILE *fp;	
 	
     fp = fopen ("init.txt", "r");

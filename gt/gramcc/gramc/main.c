@@ -717,8 +717,6 @@ int main ( int argc, char *argv[] ){
 	//
 	// ## Parse ##
 	//
-	
-    //Testando funções do compilador.
     
 	parse_ret = (int) parse ();
 	
