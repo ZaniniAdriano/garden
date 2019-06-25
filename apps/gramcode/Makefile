@@ -70,7 +70,9 @@ main.o:
 	
 all-c:
 
-	cp $(APIOBJ)/api.o      .
+	cp $(LIBCOBJ)/crt0.o   .
+	
+	cp $(LIBCOBJ)/stubs.o   .
 	
 	cp $(LIBCOBJ)/ctype.o   .
 	cp $(LIBCOBJ)/stdio.o   .
@@ -79,11 +81,7 @@ all-c:
 	cp $(LIBCOBJ)/time.o    .
 	cp $(LIBCOBJ)/unistd.o  .
 	
-	cp $(LIBCOBJ)/stubs.o   .
-
-#test
-	cp $(LIBCOBJ)/crt0.o   .
-	
+	cp $(APIOBJ)/api.o      .
 
 
 gramcode-link:

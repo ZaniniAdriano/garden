@@ -35,19 +35,17 @@ CFLAGS = -m32 \
 
 
 
-LIBC    = ../../lib/libc01/include/
-LIBCOBJ = ../../lib/libc01/obj
-
-API01   = ../../lib/api01/include/
-APIOBJ  = ../../lib/api01/obj
+LIBC    = ../../lib/libc02/include/
+LIBCOBJ = ../../lib/libc02/obj
+API     = ../../lib/api02/include/
+APIOBJ  = ../../lib/api02/obj
 
 
 	##
 	## Objects
 	##
 
-myObjects = crt0.o \
-main.o \
+myObjects = crt0.o main.o \
 shellui.o \
 api.o \
 ctype.o \
@@ -65,30 +63,29 @@ stubs.o
 
 .PHONY: all all-c shell-link finalize clean
 
-all: crt0.o main.o all-c shell-link finalize clean
+all: main.o all-c shell-link finalize clean
 	@echo "Ok?"
 
-#head.o:
-#	nasm  head.s  -felf -o head.o
-
-crt0.o:
-	gcc  -c  crt0.c    $(CFLAGS) -I $(LIBC) -I $(API01) -o crt0.o
+#crt0.o:
+#	gcc  -c  crt0.c    $(CFLAGS) -I $(LIBC) -I $(API01) -o crt0.o
 
 main.o:
-	gcc  -c  main.c    $(CFLAGS) -I $(LIBC) -I $(API01) -o main.o
+	gcc  -c  main.c    $(CFLAGS) -I $(LIBC) -I $(API) -o main.o
 
 all-c:
-	gcc  -c  shellui.c    -I $(LIBC) -I $(API01) $(CFLAGS) -o shellui.o
-	gcc  -c  builtins.c   -I $(LIBC) -I $(API01) $(CFLAGS) -o builtins.o
-	gcc  -c  desktop.c    -I $(LIBC) -I $(API01) $(CFLAGS) -o desktop.o
+	gcc  -c  shellui.c    -I $(LIBC) -I $(API) $(CFLAGS) -o shellui.o
+	gcc  -c  builtins.c   -I $(LIBC) -I $(API) $(CFLAGS) -o builtins.o
+	gcc  -c  desktop.c    -I $(LIBC) -I $(API) $(CFLAGS) -o desktop.o
 	
 #	gcc  -c  parser.c    -I ../lib/libc01/include/ -I ../lib/api01/include/ $(CFLAGS) -o parser.o
 #	gcc  -c  lexer.c     -I ../lib/libc01/include/ -I ../lib/api01/include/ $(CFLAGS) -o lexer.o
 #	gcc  -c  net.c       -I ../lib/libc01/include/ -I ../lib/api01/include/ $(CFLAGS) -o net.o
 #	gcc  -c  terminal.c  -I ../lib/libc01/include/ -I ../lib/api01/include/ $(CFLAGS) -o terminal.o
 
-	cp $(APIOBJ)/api.o      .
+	cp $(LIBCOBJ)/crt0.o   .
 	
+	cp $(LIBCOBJ)/stubs.o  .
+			
 	cp $(LIBCOBJ)/ctype.o   .
 	cp $(LIBCOBJ)/stdio.o   .
 	cp $(LIBCOBJ)/stdlib.o  .
@@ -96,9 +93,8 @@ all-c:
 	cp $(LIBCOBJ)/conio.o   .
 	cp $(LIBCOBJ)/wait.o    .
 	cp $(LIBCOBJ)/unistd.o  .
-	cp $(LIBCOBJ)/stubs.o  .
-	
-	
+
+	cp $(APIOBJ)/api.o      .	
 
 shell-link:
 	ld -m elf_i386 -T link.ld -o SPR.BIN $(myObjects) -Map map.s
