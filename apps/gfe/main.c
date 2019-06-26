@@ -258,7 +258,7 @@ int main ( int argc, char *argv[] ){
 	//++
 	apiBeginPaint (); 
 	gWindow = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "GRID-WINDOW",
-	                       700, 10, 300, 300,    
+	                       (1024-150), 10, 100, 320,    
                            hWindow, 0, 0x303030, 0x303030 );	  
 	if ( (void *) gWindow == NULL )
 	{	
@@ -269,6 +269,10 @@ int main ( int argc, char *argv[] ){
 	}else{
 		
         APIRegisterWindow (gWindow);		
+		
+		// #bugbug
+		// problemas na largura dos ítens quando pintamos no modo vertical;
+		// ver a rotina no kgws,
 		
 	    //#obs: Acho que isso cria grid.
 	    int s = (int) system_call ( 148, (unsigned long) gWindow, 
@@ -294,11 +298,13 @@ int main ( int argc, char *argv[] ){
 	// Menu.
 	//
 	
+	/*
 	//++
 	apiBeginPaint (); 
 	mWindow = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "MENU-WINDOW",
-	                       700, 460, 200, 100,    
-                           hWindow, 0, 0x303030, 0x303030 );	  
+	                       (1024-350), 400, 320, 200,
+	                       hWindow, 0, COLOR_PINK, COLOR_PINK );	    
+                           //hWindow, 0, 0x303030, 0x303030 );	  
 
 	if ( (void *) mWindow == NULL )
 	{	
@@ -310,7 +316,11 @@ int main ( int argc, char *argv[] ){
 		
         APIRegisterWindow (mWindow);		
 
-	    //#obs: Acho que isso cria menu.
+	    // #obs: Acho que isso cria menu.
+	    // Criaremos o menu de acordo com a janela mãe
+	    // mas usaremos apenas o posicionamento da janela mãe. left top
+	    // ou o ponteiro do mouse, quando clicarmos com o botão direito.
+	    
         system_call ( 149, (unsigned long) mWindow, 
             (unsigned long) mWindow, (unsigned long) mWindow );
             
@@ -318,8 +328,7 @@ int main ( int argc, char *argv[] ){
 	};
 	apiEndPaint ();
     //--	
-	
-	
+	*/
 	
 	
 	//
@@ -338,7 +347,7 @@ int main ( int argc, char *argv[] ){
 	
 	int i;
 	
-	for ( i=0; i<7; i++ )
+	for ( i=0; i<11; i++ )
 	{
 		// #isso é um teste.
 		// Criando janelas para os ícones, mas deveria 
@@ -366,6 +375,20 @@ int main ( int argc, char *argv[] ){
 	    //ACHO QUE ISSO SOMENTE PINTA NO BACKBUFFER
 	    apiDisplayBMP ( (char *) b, 40, 1 + 60 + (i*24) ); 
     };
+    
+    
+    
+	 //
+	 // Novo menu.
+	 //
+	 
+	 // #obs: Acho que isso cria menu.
+	 // Criaremos o menu de acordo com a janela mãe
+	 // mas usaremos apenas o posicionamento da janela mãe. left top
+	 // ou o ponteiro do mouse, quando clicarmos com o botão direito.
+	    
+     system_call ( 149, (unsigned long) hWindow, 
+         (unsigned long) hWindow, (unsigned long) hWindow );    
 	
 			
 	//
