@@ -29,62 +29,34 @@ int running = 1;
 //static unsigned char *dest_envp[] = { "-sujo", NULL };
 //static unsigned char dest_msg[512];
 
-void editorClearScreen(); 
-
-int tgfeProcedure ( struct window_d *window, 
-                    int msg, 
-					unsigned long long1, 
-					unsigned long long2 );
  
 
+int 
+gfeProcedure ( struct window_d *window, 
+               int msg, 
+			   unsigned long long1, 
+			   unsigned long long2 );
  
+
+
 /*
- * Limpar a tela */
-
-void editorClearScreen (){
-	
-	int lin, col;    
-
-	// @todo:
-	//system( "cls" ); // calls the cls command.
-	
-	//cursor.
-	apiSetCursor( 0, 0 );
-	
-	//
-	// Tamanho da tela. 80x25
-	//
-	
-	//linhas.
-	for( lin=0; lin < ((600/8)-1); lin++)
-	{
-		col = 0;
-		
-		apiSetCursor(col,lin);
-		
-		//colunas.
-		for( col=0; col < ((800/8)-1); col++)
-		{
-			printf("%c",' ');
-	    }
-	};
-	
-	apiSetCursor(0,2);
-};
-
-
-int tgfeProcedure ( struct window_d *window, 
-                    int msg, 
-					unsigned long long1, 
-					unsigned long long2 )
+ * *********************************
+ * gfeProcedure:
+ *     Procedimento de janela.
+ */
+ 
+int 
+gfeProcedure ( struct window_d *window, 
+               int msg, 
+			   unsigned long long1, 
+			   unsigned long long2 )
 {
 	switch (msg)
 	{
 		
 		case MSG_SYSKEYDOWN:
 		    switch (long1)
-			{
-		        
+			{  
 				case VK_F1:
 						
 					break;
@@ -213,7 +185,6 @@ int main ( int argc, char *argv[] ){
     //goto done;
 
 	//apiBeginPaint();    
-	//editorClearScreen(); 
 	//topbarInitializeTopBar();
 	//statusInitializeStatusBar();
 	//update_statuts_bar("# Status bar string 1","# Status bar string 2");
@@ -418,9 +389,9 @@ Mainloop:
 			(unsigned long)&message_buffer[0] );
 		exitCriticalSection(); 
 			
-		if (	message_buffer[1] != 0 )
+		if ( message_buffer[1] != 0 )
 		{
-	        tgfeProcedure ( (struct window_d *) message_buffer[0], 
+	        gfeProcedure ( (struct window_d *) message_buffer[0], 
 		        (int) message_buffer[1], 
 		        (unsigned long) message_buffer[2], 
 		        (unsigned long) message_buffer[3] );

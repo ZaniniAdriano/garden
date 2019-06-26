@@ -2,8 +2,8 @@
 
 #include <types.h>
 
-#include "heap.h"
-#include "api.h"
+//#include "heap.h"
+//#include "api.h"
 
 #include <stddef.h>
 #include <stdlib.h>
@@ -13,12 +13,18 @@
 #include "status.h"
 #include "addrbar.h"
 
+
 /*
  * topbarInitializeTopBar:
  *
  */
-void topbarInitializeTopBar()
-{
+ 
+// #obs:
+// Ainda refletindo de esse apps deve ou não criar uma topbar.
+// A Topbar pode ficar no window manager.
+ 
+void topbarInitializeTopBar (){
+	
 	int i;
 	
 	unsigned long OldX, OldY;

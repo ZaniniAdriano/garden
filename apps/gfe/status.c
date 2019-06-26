@@ -4,8 +4,10 @@
 
 #include <types.h>
 
-#include "heap.h"
-#include "api.h"
+
+//#include "heap.h"
+//#include "api.h"
+
 
 #include <stddef.h>
 #include <stdlib.h>
