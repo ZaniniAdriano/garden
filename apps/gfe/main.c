@@ -133,9 +133,8 @@ int tgfeProcedure ( struct window_d *window,
 		    break;
 	};
 	
-    return (int) 0;	
-};
-
+    return 0;	
+}
 
 
 /*
@@ -144,12 +143,13 @@ int tgfeProcedure ( struct window_d *window,
  */
 
 int main ( int argc, char *argv[] ){
-	
-	int ch;
-	FILE *fp;
-    int char_count = 0;	
-	
+
 	struct window_d *hWindow;
+	
+	FILE *fp;
+		
+	int ch;
+    int char_count = 0;	
 	
 	
 #ifdef TEDITOR_VERBOSE			
@@ -181,28 +181,34 @@ int main ( int argc, char *argv[] ){
     //
 	// ## app window ##
 	//
-	
-	apiBeginPaint(); 
-	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, "File Explorer",
-	                    10, 10, 700, 250,    
-                        0, 0, COLOR_WHITESMOKE, 0x303030 );	  
+
+    //++
+	apiBeginPaint (); 
+	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, 
+	                       "Gramado File Explorer",
+	                       10, 10, 800, 600,    
+                           0, 0, COLOR_WHITESMOKE, 0x303030 );
 
 	if ( (void *) hWindow == NULL )
 	{	
-		printf("gfeMain2: hWindow fail");
-		apiEndPaint();
+		printf ("gfe: hWindow fail");
+		apiEndPaint ();
+		
 		goto fail;
-	}
-    APIRegisterWindow (hWindow);
-    APISetActiveWindow (hWindow);	
-	//#importante: Focus.
-	APISetFocus (hWindow);
-	
-	apiShowWindow (hWindow);
-	//refresh_screen ();	
-	
+    }else{
+
+        APIRegisterWindow (hWindow);
+
+        APISetActiveWindow (hWindow);
+
+        APISetFocus (hWindow);
+
+        apiShowWindow (hWindow);
+    };
 	apiEndPaint ();
-	
+    //--
+
+
 	//printf("Nothing for now! \n");
     //goto done;
 
@@ -217,33 +223,27 @@ int main ( int argc, char *argv[] ){
 	//  ## Testing file support. ##
 	//
 	
-//file:
-
-#ifdef TEDITOR_VERBOSE		
-	//printf("\n");
-	//printf("\n");
-   // printf("Loading file ...\n");
-#endif	
-	
-	//#atenção
-	
+	//++
 	void *b = (void *) malloc (1024*30); 	 
     
 	if ( (void *) b == NULL )
 	{
-		printf("allocation fail\n");
-		goto done;
-		//while(1){}
-	}
+		printf ("gfe: allocation fail\n");
+		
+		goto fail;
+	}else{
+		
+        // @todo: 
+	    // Usar alguma rotina da API específica para carregar arquivo.
+	    // na verdade tem que fazer essas rotinas na API.
+	
+	    system_call ( SYSTEMCALL_READ_FILE, (unsigned long) "FOLDER  BMP", 
+		    (unsigned long) b, (unsigned long) b );			
+	};
+    //--
 
-	//printf("Loading icon...\n");
 	
-    // @todo: 
-	// Usar alguma rotina da API específica para carregar arquivo.
-	// na verdade tem que fazer essas rotinas na API.
-	
-	system_call ( SYSTEMCALL_READ_FILE, (unsigned long) "FOLDER  BMP", 
-		(unsigned long) b, (unsigned long) b );	
+
 	
 	//
     // ## testes ##
@@ -255,40 +255,37 @@ int main ( int argc, char *argv[] ){
 	// Grid.
 	//
 	
-	apiBeginPaint(); 
+	//++
+	apiBeginPaint (); 
 	gWindow = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "GRID-WINDOW",
-	                    200, 450, 320, 50,    
-                        hWindow, 0, 0x303030, 0x303030 );	  
-
+	                       (1024-100), 10, 80, 320,    
+                           hWindow, 0, 0x303030, 0x303030 );	  
 	if ( (void *) gWindow == NULL )
 	{	
-		printf("gfeMain2: gWindow fail");
-		apiEndPaint();
+		printf ("gfe: gWindow fail");
+		apiEndPaint ();
+
 		goto fail;
-	}
-	
-    APIRegisterWindow (gWindow);
-	
-	//#isso funcionou ... 
-	// mas estão se sobrepondo.
-	//fazer apenas um deles.
-    //#debug 
-	//grid.
-    //printf("Creating  grid \n");	 
-	
-	//#obs: Acho que isso cria grid.
-	int s = (int) system_call ( 148, (unsigned long) gWindow, 4, 
-	                (unsigned long) GRID_HORIZONTAL );
-	 
-	if (s == 1)
-    {
-		printf("148 fail.\n");
-	}		
-	
-	apiShowWindow (gWindow);
-	//refresh_screen();	
-    
+	}else{
+		
+        APIRegisterWindow (gWindow);		
+		
+	    //#obs: Acho que isso cria grid.
+	    int s = (int) system_call ( 148, (unsigned long) gWindow, 
+	                      4, (unsigned long) GRID_VERTICAL );
+	                      //4, (unsigned long) GRID_HORIZONTAL );		
+        if (s == 1)	
+        {
+		    printf ("gfe: 148 fail.\n");
+	        apiEndPaint ();
+	        
+	        goto fail;
+	    }
+	    
+	    apiShowWindow (gWindow);	    			
+	};
 	apiEndPaint();
+	//--
 	
 	
 	
@@ -296,35 +293,30 @@ int main ( int argc, char *argv[] ){
 	// Menu.
 	//
 	
-	apiBeginPaint(); 
+	//++
+	apiBeginPaint (); 
 	mWindow = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "MENU-WINDOW",
-	                    50, 450, 100, 80,    
-                        hWindow, 0, 0x303030, 0x303030 );	  
+	                       (1024-100), 460, 180, 100,    
+                           hWindow, 0, 0x303030, 0x303030 );	  
 
 	if ( (void *) mWindow == NULL )
 	{	
-		printf("gfeMain2: mWindow fail");
-		apiEndPaint();
+		printf ("gfe: mWindow fail");
+		apiEndPaint ();
+		
 		goto fail;
-	}
-	
-    APIRegisterWindow (mWindow);
-	
-	
-	
-    //menu.
-	//criando menu de teste.
-	//#obs: Acho que isso cria menu.
-    system_call ( 149, (unsigned long) mWindow, (unsigned long) mWindow, 
-	    (unsigned long) mWindow );		
-	
-	
-	
-	apiShowWindow (mWindow);
-	//refresh_screen ();	
-    
-	apiEndPaint();
-	
+	}else{
+		
+        APIRegisterWindow (mWindow);		
+
+	    //#obs: Acho que isso cria menu.
+        system_call ( 149, (unsigned long) mWindow, 
+            (unsigned long) mWindow, (unsigned long) mWindow );
+            
+    	apiShowWindow (mWindow);            
+	};
+	apiEndPaint ();
+    //--	
 	
 	
 	//
