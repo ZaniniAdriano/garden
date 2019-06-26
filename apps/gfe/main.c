@@ -186,7 +186,7 @@ int main ( int argc, char *argv[] ){
 	apiBeginPaint (); 
 	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, 
 	                       "Gramado File Explorer",
-	                       10, 10, 800, 600,    
+	                       10, 10, 600, 600,    
                            0, 0, COLOR_WHITESMOKE, 0x303030 );
 
 	if ( (void *) hWindow == NULL )
@@ -258,7 +258,7 @@ int main ( int argc, char *argv[] ){
 	//++
 	apiBeginPaint (); 
 	gWindow = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "GRID-WINDOW",
-	                       (1024-100), 10, 80, 320,    
+	                       700, 10, 300, 80,    
                            hWindow, 0, 0x303030, 0x303030 );	  
 	if ( (void *) gWindow == NULL )
 	{	
@@ -272,8 +272,8 @@ int main ( int argc, char *argv[] ){
 		
 	    //#obs: Acho que isso cria grid.
 	    int s = (int) system_call ( 148, (unsigned long) gWindow, 
-	                      4, (unsigned long) GRID_VERTICAL );
-	                      //4, (unsigned long) GRID_HORIZONTAL );		
+	                      4, (unsigned long) GRID_HORIZONTAL );		
+	
         if (s == 1)	
         {
 		    printf ("gfe: 148 fail.\n");
@@ -296,7 +296,7 @@ int main ( int argc, char *argv[] ){
 	//++
 	apiBeginPaint (); 
 	mWindow = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "MENU-WINDOW",
-	                       (1024-100), 460, 180, 100,    
+	                       700, 460, 200, 100,    
                            hWindow, 0, 0x303030, 0x303030 );	  
 
 	if ( (void *) mWindow == NULL )
