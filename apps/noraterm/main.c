@@ -60,6 +60,20 @@
  *     2016 - Created by Fred Nora.
  *     2018 - More commands.
  */
+ 
+ //https://www.mkssoftware.com/docs/man5/struct_termios.5.asp
+ /*
+Erase and kill:
+Erase and kill processing occurs when either of two special characters, 
+the ERASE and KILL characters is received. This processing affects data 
+in the canonical input queue that has not yet been delimited by
+a '\n' or EOF character. This un-delimited data makes up the current line.
+The ERASE character deletes the last character in the current line if any. 
+The KILL character deletes all data in the current line.
+The ERASE and KILL characters have no effect if there is no data in the line
+and are themselves never placed in the input queue.  
+ */
+
 
 /*
  Como o kernel envia mensagens para o terminal em user mode?

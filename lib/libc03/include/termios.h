@@ -16,16 +16,19 @@
 #ifndef _TERMIOS_H
 #define _TERMIOS_H
 
-//typedef unsigned short tcflag_t;
-//typedef unsigned char cc_t;
-//typedef unsigned int speed_t;
+// tipos
+typedef unsigned short tcflag_t;
+typedef unsigned int speed_t;
+typedef unsigned char cc_t;
 
 /* size of cc_c array, some extra space for extensions. */
-//#define NCCS		   20
+#define NCCS		   20
 
 
 
 /*
+ * # descrição
+ * 
 tcflag_t c_iflag
     A bit mask specifying flags for input modes; 
 tcflag_t c_oflag
@@ -59,18 +62,23 @@ cc_t     c_cc[NCCS];   // special characters
 */
 
 
-/* Primary terminal control structure. POSIX Table 7-1. */
-/*
+//
+// A estrutura.
+//
+
+// Primary terminal control structure. POSIX Table 7-1. 
+
 struct termios {
+  
   tcflag_t c_iflag;		// input modes 
   tcflag_t c_oflag;		// output modes 
   tcflag_t c_cflag;		// control modes 
   tcflag_t c_lflag;		// local modes 
   speed_t  c_ispeed;	// input speed 
   speed_t  c_ospeed;	// output speed 
+  
   cc_t c_cc[NCCS];		// control characters 
 };
-*/
 
 
 /* Values for termios c_iflag bit map.  POSIX Table 7-2. */
@@ -183,6 +191,7 @@ struct termios {
 
 
 //https://linux.die.net/man/3/tcgetattr
+//https://www.mkssoftware.com/docs/man3/tcsetattr.3.asp
 
 /*
 int tcgetattr(int fd, struct termios *termios_p);

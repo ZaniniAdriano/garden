@@ -185,14 +185,20 @@ int fdatasync (int fd);
 
 //fpathconf, pathconf - get configuration values for files
 //POSIX.1-2001.
-long fpathconf (int fd, int name);
-long pathconf (char *path, int name);
+//#todo
+//https://www.mkssoftware.com/docs/man3/pathconf.3.asp
+long fpathconf (int fildes, int name);
+long pathconf (const char *pathname, int name);
+
+
 
 //SVr4, 4.3BSD, POSIX.1-2001.
 int close (int fd);
 
 //POSIX.1-2001, POSIX.1-2008.
 int pipe ( int pipefd[2] );
+
+
 
 
 /*

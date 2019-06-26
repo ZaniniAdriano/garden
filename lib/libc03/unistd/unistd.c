@@ -245,9 +245,6 @@ done:
 
 
 
-
-
-
 /*
  *************************************
  * exit:
@@ -340,6 +337,7 @@ pid_t sys_fork (void){
 
 
 // chamando uma interrupção só para o fast fork
+// #importante: Esse trem tem sua própria interrupção.
 pid_t 
 fast_fork ( unsigned long ax, 
             unsigned long bx, 
@@ -376,6 +374,7 @@ int setuid ( uid_t uid ){
 
 
 uid_t getuid (void){
+	
 	return (uid_t) gramado_system_call ( 152, 0, 0, 0 );	
 }
 
@@ -396,7 +395,6 @@ uid_t geteuid (void){
 
 pid_t getpid (void){
 	
-	//return (pid_t) unistd_system_call( UNISTD_SYSTEMCALL_GETPID, 0, 0, 0);
 	return (pid_t) gramado_system_call ( UNISTD_SYSTEMCALL_GETPID, 0, 0, 0 );
 }
 
@@ -407,8 +405,7 @@ pid_t getpid (void){
  */
 
 pid_t getppid (void){
-	
-	//return (pid_t) unistd_system_call( UNISTD_SYSTEMCALL_GETPPID, 0, 0, 0);
+
 	return (pid_t) gramado_system_call ( UNISTD_SYSTEMCALL_GETPPID, 0, 0, 0 );
 }
 
@@ -602,31 +599,11 @@ int fdatasync (int fd){
 }
 
 
-/*
- * fpathconf:
- *
- */
-
-long fpathconf (int fd, int name){
-	
-	return -1; //#todo
-}
-
-
-/*
- * pathconf:
- *
- */
-
-long pathconf (char *path, int name){
-	
-	return -1; //#todo
-}
-
+ 
 
 /*
  * ioctl:
- *
+ *     #importante.
  */
 
 int ioctl ( int d, int request, ... ){
@@ -669,6 +646,14 @@ int pipe ( int pipefd[2] ){
     return (int) gramado_system_call ( 247, (unsigned long) pipefd, 
 				    (unsigned long) pipefd, (unsigned long) pipefd );	
 }
+
+long fpathconf (int fildes, int name){
+    return -1;
+}
+
+long pathconf (const char *pathname, int name){
+    return -1;	
+} 
 
 
 //
