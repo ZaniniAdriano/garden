@@ -186,7 +186,7 @@ int main ( int argc, char *argv[] ){
 	apiBeginPaint (); 
 	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, 
 	                       "Gramado File Explorer",
-	                       10, 10, 600, 600,    
+	                       10, 10, 800, 600,    
                            0, 0, COLOR_WHITESMOKE, 0x303030 );
 
 	if ( (void *) hWindow == NULL )
@@ -347,7 +347,7 @@ int main ( int argc, char *argv[] ){
 	
 	int i;
 	
-	for ( i=0; i<11; i++ )
+	for ( i=0; i<15; i++ )
 	{
 		// #isso é um teste.
 		// Criando janelas para os ícones, mas deveria 
