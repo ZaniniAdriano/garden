@@ -258,7 +258,7 @@ int main ( int argc, char *argv[] ){
 	//++
 	apiBeginPaint (); 
 	gWindow = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "GRID-WINDOW",
-	                       700, 10, 300, 80,    
+	                       700, 10, 300, 300,    
                            hWindow, 0, 0x303030, 0x303030 );	  
 	if ( (void *) gWindow == NULL )
 	{	
@@ -272,7 +272,8 @@ int main ( int argc, char *argv[] ){
 		
 	    //#obs: Acho que isso cria grid.
 	    int s = (int) system_call ( 148, (unsigned long) gWindow, 
-	                      4, (unsigned long) GRID_HORIZONTAL );		
+	                      4, (unsigned long) GRID_VERTICAL );
+	                      //4, (unsigned long) GRID_HORIZONTAL );		
 	
         if (s == 1)	
         {
@@ -284,7 +285,7 @@ int main ( int argc, char *argv[] ){
 	    
 	    apiShowWindow (gWindow);	    			
 	};
-	apiEndPaint();
+	apiEndPaint ();
 	//--
 	
 	
@@ -319,15 +320,21 @@ int main ( int argc, char *argv[] ){
     //--	
 	
 	
+	
+	
 	//
 	// ## Mostrando bmps dentro da área de cliente ##
 	//
 	
-	 
-	//#debug 
-    //printf("## test done ##\n");	 
-	
-	struct window *tmpWindow;
+	// #todo:
+	// Ainda em planejamento.
+	 	
+	//struct window *tmpWindow;
+	//struct window *icon1;
+	//struct window *icon2;
+	//struct window *icon3;
+	//struct window *icon4;
+	//...
 	
 	int i;
 	
@@ -359,61 +366,15 @@ int main ( int argc, char *argv[] ){
 	    //ACHO QUE ISSO SOMENTE PINTA NO BACKBUFFER
 	    apiDisplayBMP ( (char *) b, 40, 1 + 60 + (i*24) ); 
     };
-		
-/*
-    //fp = fopen("test1.txt","rb");	
-	//fp = fopen( (char*) &argv[0],"rb");	
 	
-	//folder icon.
-	fp = fopen ("folder.bmp", "rb" );
-	
-	if ( fp == NULL )
-    {
-        printf("fopen fail\n");
-        goto fail;		
-    
-	} else {
-		
-		//
-		// mostrar o icone.
-		//
-		
-#ifdef TEDITOR_VERBOSE			
-        //printf(".\n");		
-       // printf("..\n");		
-       // printf("...\n");
-#endif 
-		// Exibe o arquivo.
-       // printf("%s",fp->_base);	
-
-#ifdef TEDITOR_VERBOSE	        
-		//printf("...\n");
-       // printf("..\n");		
-       // printf(".\n");		
-#endif
-
-
-#ifdef TEDITOR_VERBOSE	
-		//printf("\n");
-		//printf("Typing a text ...\n");
-#endif
-
-
-		
-		//saiu.
-        printf(".\n");		
-        printf(".\n");		
-        printf(".\n");
-
-	};
-*/	
-	
-	
+			
 	//
 	// ## Refresh Window ##
 	//
 	
-	refresh_screen();
+	// #bugbug
+	// Talvez não precisemos disso.
+	refresh_screen ();
 	
 	
 	//
@@ -460,13 +421,9 @@ done:
 	// printf("#debug *hang\n");
     // printf("done.\n");
 	
-	//while (1)
-	//{
-	//	asm ("pause");
-		//exit(0);
-	//};
+	//*hang
+	//while (1){ asm ("pause"); };
 	
-    // Never reach this.	
 	return 0;
 }
 

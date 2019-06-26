@@ -67,7 +67,6 @@ all: main.o all-c gfe-link finalize clean
 	@echo "Ok?"
 
 main.o:
-#	gcc  -c  crt0.c    $(CFLAGS) -I $(LIBC) -I $(API) -o crt0.o
 	gcc  -c  main.c    $(CFLAGS) -I $(LIBC) -I $(API) -o main.o
 	gcc  -c  status.c  $(CFLAGS) -I $(LIBC) -I $(API) -o status.o
 	gcc  -c  addrbar.c  $(CFLAGS) -I $(LIBC) -I $(API) -o addrbar.o
