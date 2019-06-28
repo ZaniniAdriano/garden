@@ -6148,11 +6148,18 @@ noArgs:
 	// Draw window.
 	//
 	
+	// #Atenção
+	// Estamos criando um área de cliente. É uma janela filha que
+	// se sobrepoe ao bg da janela mãe.
+	// #bugbug: Problemas de tamanho, pois está pintando em cima
+	// da barra de scroll.
+	// Vamos improvisar um ajuste.
 	
     //apiBeginPaint();	
 	hWindow2 = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "TERMINAL-CLIENT",
 	                        terminal_rect.left, terminal_rect.top, 
-					        terminal_rect.width, terminal_rect.height,    
+					        (terminal_rect.width - 40), 
+					        (terminal_rect.height - 28),    
                             0, 0, COLOR_TERMINAL2, COLOR_TERMINAL2);	   
 	
 	if ( (void *) hWindow2 == NULL )

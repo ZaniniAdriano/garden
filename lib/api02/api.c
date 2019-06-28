@@ -420,7 +420,7 @@ int system3 ( unsigned long ax,
     int ret_val;
 	
     asm volatile ( "int %1\n"
-		          : "=a"(ret_val)		
+		          : "=a"(ret_val)	
 		          : "i"(203), "a"(ax), "b"(bx), "c"(cx), "d"(dx) );
 				  
 	return (int) ret_val;
@@ -891,7 +891,7 @@ void apiShutDown (){
     system_call ( SYSTEMCALL_SHUTDOWN, 0, 0, 0 );
 	
     // hang forever.
-	while (1){ asm ("pause"); };	
+	while (1){ asm ("pause"); };
 }
 
 
@@ -971,7 +971,7 @@ int MessageBox ( int type, char *string1, char *string2 ){
                 APISetActiveWindow (hWnd);	
                 gde_set_focus (hWnd);		
                 apiDrawText ( (struct window_d *) hWnd,
-                    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );				
+                    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );
 			}
 			gde_end_paint ();
 		    break;
@@ -991,12 +991,12 @@ int MessageBox ( int type, char *string1, char *string2 ){
                 APISetActiveWindow (hWnd);	
                 gde_set_focus (hWnd);	
                 apiDrawText ( (struct window_d *) hWnd,
-                    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );								
+                    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );
 			}
 	        break;
-			
-		 //janela de aplicativo.	
-		// Com botão, Título de alerta.	
+
+		 //janela de aplicativo.
+		// Com botão, Título de alerta.
 	    case 3:
 	        Button = 1;
 			gde_begin_paint ();
@@ -1012,7 +1012,7 @@ int MessageBox ( int type, char *string1, char *string2 ){
                 APISetActiveWindow (hWnd);	
                 gde_set_focus (hWnd);	
                 apiDrawText ( (struct window_d *) hWnd,
-                    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string2 );								
+                    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string2 );
 			}
 			gde_end_paint ();
 	        break;
@@ -1033,7 +1033,7 @@ int MessageBox ( int type, char *string1, char *string2 ){
                 APISetActiveWindow (hWnd);	
                 gde_set_focus (hWnd);	
                 apiDrawText ( (struct window_d *) hWnd,
-                    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );								
+                    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );
 			}
 			gde_end_paint ();
 	        break;
@@ -1055,7 +1055,7 @@ int MessageBox ( int type, char *string1, char *string2 ){
                 APISetActiveWindow (hWnd);	
                 gde_set_focus (hWnd);	
                 apiDrawText ( (struct window_d *) hWnd,
-                    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );				
+                    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );
 			}
 			gde_end_paint ();
 		    break;
@@ -1084,7 +1084,7 @@ int MessageBox ( int type, char *string1, char *string2 ){
 	{
 	    printf("button fail \n");
 	}else{
-        gde_register_window (messagebox_button1);   	
+        gde_register_window (messagebox_button1); 
 	}
 
 
@@ -1092,12 +1092,12 @@ int MessageBox ( int type, char *string1, char *string2 ){
 	messagebox_button2 = (void *) gde_create_window ( WT_BUTTON, 1, 1, "CANCEL",     
                                       ((cx/3)*2), ((cy/4)*3), 80, 24,    
                                       hWnd, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
-								
+
 	if ( (void *) messagebox_button2 == NULL )
 	{
 	    printf("button fail \n");
 	}else{
-        gde_register_window (messagebox_button2);   	
+        gde_register_window (messagebox_button2); 
 	}
 	
 	
@@ -1109,19 +1109,19 @@ int MessageBox ( int type, char *string1, char *string2 ){
 
     //Show window.
 	
-    apiShowWindow (hWnd);	
+    apiShowWindow (hWnd);
 	
 	//====================================
 	// loop support
 	//
-	
-	unsigned long message_buffer[5];	
-	
-	message_buffer[0] = 0;
+
+	unsigned long message_buffer[5];
+
+    message_buffer[0] = 0;
     message_buffer[1] = 0;
     message_buffer[3] = 0;
-    message_buffer[4] = 0;	
-		
+    message_buffer[4] = 0;
+
 Mainloop:
 	
 	while (running)
@@ -1143,13 +1143,13 @@ Mainloop:
 				printf ("Response=%d \n", Response );
 				goto exit_messagebox;
 			}
-			message_buffer[0] = 0;
+            message_buffer[0] = 0;
             message_buffer[1] = 0;
             message_buffer[3] = 0;
-            message_buffer[4] = 0;	
-        };				
+            message_buffer[4] = 0;
+        };
 	};
-	
+
 //
 // Exit.
 //
@@ -1159,7 +1159,7 @@ exit_messagebox:
 	//#debug
 	printf ("Exiting Message Box \n");
 	
-    return (int) Response;	
+    return (int) Response;
 }
 
 
@@ -1203,7 +1203,7 @@ mbProcedure ( struct window_d *window,
                 //case VK_F2:
 				    //Nothing.
 				//	break;
-									
+
 				default:
 				    //printf ("default sys key down\n");
 				    return (unsigned long) 0;
@@ -1221,7 +1221,7 @@ mbProcedure ( struct window_d *window,
 		default:
 		    //printf ("default message\n");
 		    return (unsigned long) 0;
-            break;		
+            break;
 	};
 	
 	//Refresh screen. 
@@ -1229,13 +1229,14 @@ mbProcedure ( struct window_d *window,
 	//if(VideoBlock.useGui == 1){
 	//    refresh_screen();
 	//};
-    
-	printf ("done\n");	
+
+	printf ("done\n");
 	return (unsigned long) 0;
 }
 
 
 /*
+ ******************************
  * DialogBox:
  *     
  *     Types=[1~5]
@@ -1252,16 +1253,16 @@ int DialogBox ( int type, char *string1, char *string2 ){
 	//#debug
 	//printf ("Testing dialog Box type=%d \n", type);
 
-    int Response = 0;	
+    int Response = 0;
     int running = 1;
 
     //
     // Draw !
-    //	
+    //
 	
 	struct window_d *hWnd;    //Window.
 	struct window_d *pWnd;    //Parent.
-	struct window_d *bWnd;    //Button.	
+	struct window_d *bWnd;    //Button.
 	
 	
 	//#todo: usar get system metrics
@@ -1272,7 +1273,7 @@ int DialogBox ( int type, char *string1, char *string2 ){
 	unsigned long x  = (unsigned long) 10;       //deslocamento x
 	unsigned long y  = (unsigned long) 300;      //deslocamento y
     unsigned long cx = (unsigned long) (800/2);  //largura   
-    unsigned long cy = (unsigned long) (600/3);  //altura		
+    unsigned long cy = (unsigned long) (600/3);  //altura
 
 	int Button = 0;	
 	
@@ -1302,7 +1303,7 @@ int DialogBox ( int type, char *string1, char *string2 ){
             
 			gde_register_window (hWnd);
             APISetActiveWindow (hWnd);	
-            gde_set_focus (hWnd);	 			
+            gde_set_focus (hWnd);
 		    break;
 			
 		// Sem botão, considera o título.	
@@ -1390,19 +1391,19 @@ int DialogBox ( int type, char *string1, char *string2 ){
 
 	//show window.
 
-    apiShowWindow (hWnd);		 
+    apiShowWindow (hWnd);
 	
 	//==================================
 	// loop support;
 	//
 	
-	unsigned long message_buffer[5];	
-	
-	message_buffer[0] = 0;
+	unsigned long message_buffer[5];
+
+    message_buffer[0] = 0;
     message_buffer[1] = 0;
     message_buffer[3] = 0;
-    message_buffer[4] = 0;	
-		
+    message_buffer[4] = 0;
+
 Mainloop:
 	
 	while (running)
@@ -1420,20 +1421,21 @@ Mainloop:
 		                        (int) message_buffer[1], 
 		                        (unsigned long) message_buffer[2], 
 		                        (unsigned long) message_buffer[3] );
-			
+
 			if (Response > 100)
 			{
 				printf ("Response=%d \n", Response );
 				goto exit_dialogbox;
 			}
-			message_buffer[0] = 0;
+
+            message_buffer[0] = 0;
             message_buffer[1] = 0;
             message_buffer[3] = 0;
-            message_buffer[4] = 0;	
-        };				
-	};	
-	
-	
+            message_buffer[4] = 0;
+        };
+    };
+
+
 //
 // Exit.
 //
@@ -1442,8 +1444,8 @@ exit_dialogbox:
 
 	//#debug
 	printf ("Exiting dialog Box \n");
-	
-    return (int) Response;	
+
+    return (int) Response;
 }
 
 
@@ -1466,7 +1468,7 @@ dbProcedure ( struct window_d *window,
             {
                 case VK_ESCAPE:	
 				    printf ("scape\n");
-                    return (unsigned long) 101;				   
+                    return (unsigned long) 101;  
 				    break;
 				   
                 default:
@@ -1514,8 +1516,8 @@ dbProcedure ( struct window_d *window,
 	//if(VideoBlock.useGui == 1){
 	//    refresh_screen();
 	//};
-    
-	printf ("done\n");	
+
+	printf ("done\n");
 	return (unsigned long) 0;
 }
 
@@ -1637,7 +1639,7 @@ int call_kernel ( unsigned long int_number,
 	                       break;
         default:
             //Nothing.
-            break;			
+            break;
     };
 	
 	return (int) ret_val;
@@ -1715,9 +1717,9 @@ int call_gui ( unsigned long int_number,
 		    break; 
     };
 
-	return (int) ret_val;
-};
- 
+    return (int) ret_val;
+}
+
 
 /*
  *******************************************************************
@@ -1752,16 +1754,16 @@ void *gde_create_window ( unsigned long type,        //1, Tipo de janela (popup,
                           char *windowname,          //4, Título.                          
                           unsigned long x,           //5, Deslocamento em relação às margens do Desktop.                           
                           unsigned long y,           //6, Deslocamento em relação às margens do Desktop.
-                         unsigned long width,       //7, Largura da janela.
-                         unsigned long height,      //8, Altura da janela.
-                         struct window_d *pWindow,  //9, Endereço da estrutura da janela mãe.
-                         unsigned long onde,        //10, Ambiente.( Est� no desktop, barra, cliente ...)
-                         unsigned long clientcolor, //11, Cor da área de cliente
-                         unsigned long color )      //12, Color (bg) (para janela simples).
+                          unsigned long width,       //7, Largura da janela.
+                          unsigned long height,      //8, Altura da janela.
+                          struct window_d *pWindow,  //9, Endereço da estrutura da janela mãe.
+                          unsigned long onde,        //10, Ambiente.( Est� no desktop, barra, cliente ...)
+                          unsigned long clientcolor, //11, Cor da área de cliente
+                          unsigned long color )      //12, Color (bg) (para janela simples).
 { 
 	struct window_d *Window;
-	
-    // Enviando tudo via argumento.
+
+	// Enviando tudo via argumento.
 	// Esse método dá a possibilidade de enviarmos ainda 
 	// mais argumentos. 
 	// #importante: Isso está funcionado, Vamos fazer assim e 
@@ -1789,10 +1791,16 @@ void *gde_create_window ( unsigned long type,        //1, Tipo de janela (popup,
 					    (unsigned long) &message_buffer[0], 
 						(unsigned long) &message_buffer[0] );
     
-	//exitCriticalSection();								   
-								   
+	//exitCriticalSection();
+
 	if ( (void *) Window == NULL )
-	    return NULL;  
+		return NULL;  
+
+    // ??
+    // #teste
+    // Vamos enviar a mensagem MSG_CREATE para o procedimento de janela.
+    // Assim ele pode terminar de pintar nessa mesma janela.
+
     
 
 	return (void *) Window;    
@@ -1813,11 +1821,13 @@ int gde_register_window (struct window_d *window){
 		
 	}else{
 		
-        return (int) system_call ( SYSTEMCALL_REGISTERWINDOW, (unsigned long) window, 
-                        (unsigned long) window, (unsigned long) window);	
-	}
+        return (int) system_call ( SYSTEMCALL_REGISTERWINDOW, 
+                        (unsigned long) window, 
+                        (unsigned long) window, 
+                        (unsigned long) window);
+    }
 
-    return 2;	
+    return 2;
 }
 
 
@@ -1834,11 +1844,13 @@ int gde_close_window (struct window_d *window){
 		return (int) 1;
 	}else{
 		
-        return (int) system_call ( SYSTEMCALL_CLOSEWINDOW, (unsigned long) window, 
-		                 (unsigned long) window, (unsigned long) window );		
-	}		
+        return (int) system_call ( SYSTEMCALL_CLOSEWINDOW, 
+                         (unsigned long) window, 
+		                 (unsigned long) window, 
+		                 (unsigned long) window );
+	}
 	
-	return 2;	
+	return 2;
 }
 
 
@@ -1855,13 +1867,13 @@ int gde_set_focus (struct window_d *window){
 	}else{
 	
         return (int) system_call ( SYSTEMCALL_SETFOCUS, (unsigned long) window, 
-                        (unsigned long) window, (unsigned long) window );	
+                        (unsigned long) window, (unsigned long) window );
 	}		
 	
 	//a flag 1 indica que deve-se redesenha e efetuar refresh.
 	//APIredraw_window (window,1);
 		
-    return 2;	
+    return 2;
 }
 
 
@@ -1872,7 +1884,7 @@ int gde_set_focus (struct window_d *window){
 
 int gde_get_focus (){
 	
-    return (int) system_call ( SYSTEMCALL_GETFOCUS, 0, 0, 0 );	
+    return (int) system_call ( SYSTEMCALL_GETFOCUS, 0, 0, 0 );
 }
 
 
@@ -1889,13 +1901,13 @@ int APIKillFocus (struct window_d *window){
 	}else{
 	
         return (int) system_call ( SYSTEMCALL_KILLFOCUS, (unsigned long) window, 
-                         (unsigned long) window, (unsigned long) window );	
+                         (unsigned long) window, (unsigned long) window );
 	}
 	
 	//a flag 1 indica que deve-se redesenha e efetuar refresh.
 	//APIredraw_window ( window, 1 );
 		
-    return 2;	
+    return 2;
 }
 
 
@@ -1919,7 +1931,7 @@ int APISetActiveWindow (struct window_d *window){
 	//a flag 1 indica que deve-se redesenha e efetuar refresh.
 	//APIredraw_window ( window, 1 );
 		
-    return 2;	
+    return 2;
 }
 
 
@@ -1929,8 +1941,8 @@ int APISetActiveWindow (struct window_d *window){
  */
 
 int APIGetActiveWindow (){
-	
-    return (int) system_call ( SYSTEMCALL_GETACTIVEWINDOW, 0, 0, 0 );	
+
+    return (int) system_call ( SYSTEMCALL_GETACTIVEWINDOW, 0, 0, 0 );
 }
 
 
@@ -1951,8 +1963,8 @@ void APIShowCurrentProcessInfo (){
 void 
 APIresize_window ( struct window_d *window, 
                    unsigned long x, 
-				   unsigned long y )
-{	
+                   unsigned long y )
+{
 	system_call ( SYSTEMCALL_RESIZEWINDOW, (unsigned long) window, x, y );
 }
 
@@ -1971,7 +1983,7 @@ void APIredraw_window ( struct window_d *window, unsigned long flags ){
 void 
 APIreplace_window ( struct window_d *window, 
                     unsigned long x, 
-					unsigned long y )
+                    unsigned long y )
 {
 	system_call ( SYSTEMCALL_REPLACEWINDOW, (unsigned long) window, x, y );
 }
@@ -1995,7 +2007,7 @@ void APIminimize_window (struct window_d *window){
 void APIupdate_window (struct window_d *window){
 	
 	system_call ( 113, (unsigned long) window, 
-		(unsigned long) window, (unsigned long) window);	
+		(unsigned long) window, (unsigned long) window);
 }
 
 
@@ -2026,7 +2038,7 @@ void apiExit (int exit_code){
     system_call ( SYSTEMCALL_EXIT, (unsigned long) exit_code, 
 		(unsigned long) exit_code, (unsigned long) exit_code );
     
-    while (1){ asm ("pause"); };	
+    while (1){ asm ("pause"); };
 }
 
 
@@ -2086,13 +2098,13 @@ int api_strncmp (char *s1, char *s2, int len){
 		
 		*s1++;
 		*s2++;
-	};				
+	};
 			
 	if ( *s1 != '\0' || *s2 != '\0' )
 	{	
 	    return (int) 2;
 	}
-	
+
 	return 0;
 }
 
@@ -2145,7 +2157,7 @@ void apiReboot (){
 
 void apiSetCursor ( unsigned long x, unsigned long y ){
 	
-    system_call ( SYSTEMCALL_SETCURSOR, x, y, 0 );	
+    system_call ( SYSTEMCALL_SETCURSOR, x, y, 0 );
 }
 
 
@@ -2189,8 +2201,8 @@ void *apiGetClientAreaRect (){
 
 void apiSetClientAreaRect (struct rect_d *r){
 	
-    system_call ( SYSTEMCALL_SETCLIENTAREARECT, (unsigned long) r, 
-		(unsigned long) r, (unsigned long) r );
+    system_call ( SYSTEMCALL_SETCLIENTAREARECT, 
+        (unsigned long) r, (unsigned long) r, (unsigned long) r );
 }
 
 
@@ -2201,10 +2213,10 @@ void apiSetClientAreaRect (struct rect_d *r){
 
 void *gde_create_process ( unsigned long process_eip, 
                            unsigned long process_priority, 
-						   char *name )
+                           char *name )
 {
-    return (void *) system_call ( SYSTEMCALL_CREATEPROCESS, process_eip, 
-						process_priority, (unsigned long) name );		
+    return (void *) system_call ( SYSTEMCALL_CREATEPROCESS, 
+                        process_eip, process_priority, (unsigned long) name );
 }
 
 
@@ -2219,8 +2231,8 @@ void *gde_create_thread ( unsigned long init_eip,
                           unsigned long init_stack, 
                           char *name )
 {
-    return (void *) system_call ( SYSTEMCALL_CREATETHREAD, init_eip, 
-						init_stack, (unsigned long) name );
+    return (void *) system_call ( SYSTEMCALL_CREATETHREAD, 
+                        init_eip, init_stack, (unsigned long) name );
 }
 
 
@@ -2305,13 +2317,13 @@ gde_save_file ( char *file_name,
 	enterCriticalSection ();
 		
 	Ret = (int) system_call ( SYSTEMCALL_WRITE_FILE,
-	                (unsigned long) &message_buffer[0],     
+                    (unsigned long) &message_buffer[0], 
                     (unsigned long) &message_buffer[0],  
-                    (unsigned long) &message_buffer[0] );        
-								
+                    (unsigned long) &message_buffer[0] ); 
+
 	exitCriticalSection (); 
 
-    return (int) Ret;		
+    return (int) Ret;
 }
 
 
@@ -2332,21 +2344,21 @@ void apiDown (struct semaphore_d *s){
 		
 		while (1){ asm ("pause"); };
         
-		//return;	
+		//return;
 	};
-		
-	
-tryAgain:	
+
+tryAgain:
     
 	//0 = deu certo, entrada liberada na sessão crítica.
     //1 = algo deu errado espere tentando novamente.
 	
 	Status = (int) system_call ( SYSTEMCALL_SEMAPHORE_DOWN, 
-	                   (unsigned long) s, (unsigned long) s, (unsigned long) s );
+                    (unsigned long) s, (unsigned long) s, (unsigned long) s );
 
 	// Podemos entrar na região crítica.
 	
-	if (Status == 0){
+	if (Status == 0)
+	{
 		return;
 	}
 	
@@ -2365,8 +2377,8 @@ tryAgain:
 		goto tryAgain;
 	};
 	
-	
 fail:
+
 	goto tryAgain;
 }
 
@@ -2446,7 +2458,7 @@ void enterCriticalSection (){
 	
 done:
     //Muda para zero para que ninguém entre.
-    system_call ( SYSTEMCALL_CLOSE_KERNELSEMAPHORE, 0, 0, 0 );	
+    system_call ( SYSTEMCALL_CLOSE_KERNELSEMAPHORE, 0, 0, 0 );
 	return;
 }
 
@@ -2572,7 +2584,7 @@ void api_set_window_with_text_input ( struct window_d *window ){
 	    }else{
 			
             system_call ( SYSTEMCALL_SET_WINDOW_WITH_TEXT_INPUT, (unsigned long) window, 
-                (unsigned long) window, (unsigned long) window );			
+                (unsigned long) window, (unsigned long) window );
 		}
 	}
 }
@@ -2582,7 +2594,7 @@ void api_set_window_with_text_input ( struct window_d *window ){
 int api_get_window_with_text_input (){
 	
     return (int) system_call ( SYSTEMCALL_GET_WINDOW_WITH_TEXT_INPUT, 
-	                (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );	
+	                (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );
 }
 
 
@@ -2628,15 +2640,15 @@ gramadocore_init_execve ( const char *filename,
  */
 
 int apiDialog ( const char *string ){
-	
+
     int Status = 1; // Yes!
-	int ch;
-	
+    int ch;
+
 	printf (string);
-	
+
     while (1)
-	{
-	    ch = (int) api_getchar ();	    
+    {
+	    ch = (int) api_getchar ();
 		
 		if ( ch != -1 )
 	    {
@@ -2644,7 +2656,7 @@ int apiDialog ( const char *string ){
             {
 				case VK_RETURN:
 				    return (int) Status;
-                    break;				
+                    break;
 					
 			    case 'Y':
 				case 'y':
@@ -2964,11 +2976,11 @@ apiDisplayBMP ( char *address,
 					
 			        //r
 			        c[3] = bmp[offset+1];
-			        c[3] = c[3] & 0x1F;     // 0000 0000 '0001 1111' 										
+			        c[3] = c[3] & 0x1F;     // 0000 0000 '0001 1111' 
 		        
 				    base = base + 2;    
-				//};					
-	        };			
+				//};
+	        };
 			
 
 			// Próximo pixel para 24bpp
@@ -2976,7 +2988,7 @@ apiDisplayBMP ( char *address,
 	        {
 				offset = base;
 			    
-			    c[0] = 0; //A					
+			    c[0] = 0; //A
 				
 				c[1] = bmp[offset];
 			    
@@ -2985,7 +2997,7 @@ apiDisplayBMP ( char *address,
 			
 			    offset = base+2;
 			    c[3] = bmp[offset];
-										
+
 		        base = base + 3;    
 	        };
 			
@@ -2995,7 +3007,7 @@ apiDisplayBMP ( char *address,
 	        { 
 				//A
 				//offset = base+3;
-			    c[0] = 0;				
+			    c[0] = 0;
 				
 				offset = base;
 			    c[1] = bmp[offset];
@@ -3089,16 +3101,15 @@ apiSendMessageToProcess ( int pid,
 
 int 
 apiSendMessageToThread ( int tid, 
-					     struct window_d *window, 
+                         struct window_d *window, 
                          int message,
                          unsigned long long1,
                          unsigned long long2 )
 {
 	unsigned long message_buffer[5];
 
-	
-    if (tid<0)
-		return -1;
+    if (tid < 0)
+        return -1;
 	
 	message_buffer[0] = (unsigned long) window;
 	message_buffer[1] = (unsigned long) message;
@@ -3115,7 +3126,7 @@ apiSendMessageToThread ( int tid,
 /*
  **********
  * apiSendMessage:
- *     Envia uma mensagem para a thread atual.	
+ *     Envia uma mensagem para a thread atual.
  *     Isso funcionou.
  */
 
@@ -3124,13 +3135,13 @@ apiSendMessage ( struct window_d *window,
                  int message,
                  unsigned long long1,
                  unsigned long long2 )
-{		
+{
 	unsigned long message_buffer[5];
 
 	message_buffer[0] = (unsigned long) window;
 	message_buffer[1] = (unsigned long) message;
 	message_buffer[2] = (unsigned long) long1;
-	message_buffer[3] = (unsigned long) long2;  	
+	message_buffer[3] = (unsigned long) long2; 
 
 	return (unsigned long) system_call ( 114 , 
 	                           (unsigned long) &message_buffer[0], 
