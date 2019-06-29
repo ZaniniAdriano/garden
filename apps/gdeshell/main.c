@@ -7348,15 +7348,23 @@ get_input_filename:
 		//printf("No args !\n");
 		//#Test.
         //fprintf( stderr,"Starting Shell with no arguments...\n");	 	
-		die("No args");
+		die ("No args");
+		
+		interactive = 1;
+		login_shell = 1;
 		
 		goto noArgs; 
+		
 	}else{
 		
          if (argc < 2)
 		 {
 		     printf ("main: argc=%d We need 2 args or more\n", argc );
-			 return 1;
+		 
+		    interactive = 1;
+		    login_shell = 1;		 
+		    
+		    goto noArgs;
 		 }
 		
 		//printf("Testing args ...\n");
@@ -7393,6 +7401,7 @@ get_input_filename:
 
         //...		
 	};
+	
 	
 	//Nothing.
 	

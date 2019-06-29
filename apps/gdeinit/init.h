@@ -1,15 +1,17 @@
 
-
-
 //init.h 
 
-#include <api.h>      //api.
 
-#include <stdio.h>    //libC em user mode.
-#include <stddef.h>   //libC em user mode. 
-#include <string.h>
+
+#include <types.h>
+#include <stdio.h>
+#include <stddef.h>    
 #include <ctype.h>
+#include <string.h>
 #include <stdlib.h>
+
+
+#include <api.h>      
 
 int main ( int argc, char *argv[] );
 

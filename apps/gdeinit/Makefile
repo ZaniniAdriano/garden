@@ -39,11 +39,10 @@ CFLAGS = -m32 \
 
 
 
-LIBC    = ../../lib/gdelibs/libc01/include/
-LIBCOBJ = ../../lib/gdelibs/libc01/obj
-
-API01   = ../../lib/gdelibs/api01/include/
-APIOBJ  = ../../lib/gdelibs/api01/obj
+LIBC    = ../../lib/libc03/include/
+LIBCOBJ = ../../lib/libc03/obj
+API     = ../../lib/api02/include/
+APIOBJ  = ../../lib/api02/obj
 
 
 	##
@@ -68,16 +67,14 @@ stubs.o
 all: main.o all-c init-link finalize clean
 	@echo "Ok?"
 
-#head.o:
-#	nasm  head.s  -felf -o head.o
-
 main.o:
-	gcc  -c  crt0.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o crt0.o
-	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o main.o
+	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API) -o main.o
 
 all-c:
 
-	cp $(APIOBJ)/api.o      .
+	cp $(LIBCOBJ)/crt0.o  .
+	
+	cp $(LIBCOBJ)/stubs.o .
 	
 	cp $(LIBCOBJ)/ctype.o   .
 	cp $(LIBCOBJ)/stdio.o .
@@ -86,7 +83,8 @@ all-c:
 	cp $(LIBCOBJ)/conio.o .
 	cp $(LIBCOBJ)/wait.o .
 	cp $(LIBCOBJ)/unistd.o .
-	cp $(LIBCOBJ)/stubs.o .
+	
+	cp $(APIOBJ)/api.o      .
 
 init-link:
 	ld -m elf_i386 -T link.ld -o GDEINIT.BIN $(myObjects) -Map APP_map.s

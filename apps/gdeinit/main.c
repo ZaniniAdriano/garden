@@ -90,7 +90,6 @@ static inline void rep_nop (void){
 	__asm__ __volatile__ ("rep;nop": : :"memory");
 };
 
-
 #define cpu_relax()  rep_nop()
 
 
@@ -99,17 +98,12 @@ void idleLoop (){
 	
     while (1){
 		
-		pause();
-		pause();
-		pause();
-		pause();
-		//pause();
+		pause ();
 		
-		cpu_relax();
+		cpu_relax ();
 	}	
-};
+}
 
- 
 
 /*
  *********************************************************
@@ -118,8 +112,8 @@ void idleLoop (){
  * de driver. Faremos uma chamada ao Kernel dizendo que o driver está 
  * inicializado. Na chamada passaremos alguns parâmetros, como: O número do 
  * serviço, 129 e o código de confirmação, 1234. 4321.
- *
  */
+ 
 void driverInitialize (){
 	
 	// Inicializando o servidor.
@@ -128,8 +122,8 @@ void driverInitialize (){
 	//printf("Idle: Initializing driver ...\n");
 	//system_call( 129, 4321, 4321, 4321 );	
 	
-	printf("IDLE.BIN: Initialized\n");
-};
+	printf ("gdeinit: Initialized\n");
+}
 
 
 /*
@@ -139,6 +133,7 @@ void driverInitialize (){
  * driver, this is where the driver would clean up any resources held by 
  * this driver. (m$)
  */
+ 
 void driverUninitialize (){
 	
 	// Finalizando o servidor.
@@ -162,8 +157,8 @@ void driverUninitialize (){
 	//talvez 128. 127 126..???
 	//system_call( ?? , 4321, 4321, 4321 ); 		
 	
-	printf("IDLE.BIN: Uninitialized\n");
-};
+	printf ("gdeinit: Uninitialized\n");
+}
 
 
 /*
@@ -174,6 +169,7 @@ void driverUninitialize (){
  * Essa deve ficar por último e ter acesso à qualquer rotina acima ou em
  * bibliotecas incluídas.
  */
+ 
 unsigned long idleServices (unsigned long number){
   
     //
@@ -211,7 +207,7 @@ unsigned long idleServices (unsigned long number){
 	};	
 	
     return (unsigned long) 0;	
-};
+}
 
 
 /*
@@ -227,8 +223,9 @@ int idleInit (){
 	//printf("Idle: Initializing idle application ..\n");
 
 	//...
-	return (int) 0;
-};
+
+	return 0;
+}
 
 
 /*
@@ -239,10 +236,9 @@ int idleInit (){
 
 int main ( int argc, char *argv[] ){
 	
-
-	printf ("GDEINIT.BIN: Initializing ... #todo \n");
+	printf ("gdeinit: Initializing ... #todo \n");
     
-	//refresh_screen();	
+	//refresh_screen ();	
 	
 	return 0;
 }
