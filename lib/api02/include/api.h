@@ -3689,6 +3689,13 @@ unsigned long apiGetSysTimeInfo ( int n );
 
 int apiStartTerminal (void);
 
+
+int 
+apiUpdateStatusBar ( struct window_d *window, 
+                  unsigned char *string1, 
+		          unsigned char *string2 );
+		          
+		          
 //
 // End.
 //

@@ -3066,15 +3066,16 @@ do_compare:
     // Tentando atualizar a barra de status da janela.
     if ( strncmp ( prompt, "t23", 3 ) == 0 )
     {
-		system_call ( 300, (unsigned long) main_window, 
-		(unsigned long) "| 1 Updating status bar", 
-		(unsigned long) "| 2 Updating status bar" );	
+		//#funciona.
+		//system call
+		//system_call ( 300, (unsigned long) main_window, 
+		//(unsigned long) "| 1 Updating status bar", 
+		//(unsigned long) "| 2 Updating status bar" );
 		
-		//#bugbug
-		//Isso faz o refresh da janela inteira.
-		//mas queremos apenas o refresh da janela filha, que é a statusbar.
-		//apiShowWindow (window);			
-        //>>> estamos fazendo isso em ring0
+		//#test
+		//api function
+		apiUpdateStatusBar ( (struct window_d *) main_window,
+		     "|new String 1", "|new String 2");	
         goto exit_cmp;		
 	}
 	

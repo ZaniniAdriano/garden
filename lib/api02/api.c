@@ -3256,6 +3256,18 @@ int apiStartTerminal (void){
 }
 
 
+int 
+apiUpdateStatusBar ( struct window_d *window, 
+                  unsigned char *string1, 
+		          unsigned char *string2 )
+{
+    return (int) system_call ( 300, 
+                     (unsigned long) window, 
+                     (unsigned long) string1, 
+                     (unsigned long) string2 );	
+}
+
+
 //
 // End.
 //
