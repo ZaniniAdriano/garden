@@ -2,7 +2,7 @@
 
  GDE - Gramado Desktop Environment
  
- This project provides a user enviroment for Gramado operating system.
+ This project provides an user enviroment for Gramado operating system.
 
 
 
