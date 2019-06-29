@@ -14,7 +14,7 @@ VERSION = 0
 PATCHLEVEL = 0
 SUBLEVEL = 0
 EXTRAVERSION =
-#NAME = /core/taskman for holambra kernel
+NAME = 
 
 #todo:
 #We need to simplify these flags
@@ -41,19 +41,17 @@ CFLAGS = -m32 \
 
 
 
-LIBC    = ../../lib/libc01/include/
-LIBCOBJ = ../../lib/libc01/obj
-
-API01   = ../../lib/api01/include/
-APIOBJ  = ../../lib/api01/obj
+LIBC    = ../../lib/libc03/include/
+LIBCOBJ = ../../lib/libc03/obj
+API     = ../../lib/api02/include/
+APIOBJ  = ../../lib/api02/obj
 
 
 	##
 	## Objects
 	##
 
-myObjects = crt0.o \
-main.o \
+myObjects = crt0.o main.o \
 api.o \
 ctype.o \
 stdio.o \
@@ -68,21 +66,23 @@ stubs.o
 
 .PHONY: all all-c taskman-link finalize clean
 
-all: crt0.o main.o all-c taskman-link finalize clean
+all: main.o all-c taskman-link finalize clean
 	@echo "Ok?"
 
 #head.o:
 #	nasm  head.s  -felf -o head.o
 
-crt0.o:
-	gcc  -c  crt0.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o crt0.o
+#crt0.o:
+#	gcc  -c  crt0.c  $(CFLAGS) -I $(LIBC) -I $(API) -o crt0.o
 
 main.o:
-	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o main.o
+	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API) -o main.o
 
 all-c:
 
-	cp $(APIOBJ)/api.o      .
+	cp $(LIBCOBJ)/crt0.o  .
+	
+	cp $(LIBCOBJ)/stubs.o .
 	
 	cp $(LIBCOBJ)/ctype.o   .
 	cp $(LIBCOBJ)/stdio.o .
@@ -91,7 +91,8 @@ all-c:
 	cp $(LIBCOBJ)/conio.o .
 	cp $(LIBCOBJ)/wait.o .
 	cp $(LIBCOBJ)/unistd.o .
-	cp $(LIBCOBJ)/stubs.o .
+	
+	cp $(APIOBJ)/api.o      .
 	
 taskman-link:
 	ld -m elf_i386 -T link.ld -o GDETM.BIN $(myObjects) -Map taskman_map.s

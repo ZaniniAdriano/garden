@@ -43,23 +43,11 @@
  
  
  
-#include "tm.h"
+#include "gdetm.h"
  
-/* 
-//api 
-#include "api.h"
 
-//libc 
-#include <stdio.h>
-#include <stddef.h>
 
-//taskman 
-#include "taskman.h"
-*/
 
-/* defines */
-#define MAGIC (1234)
-#define TASKMANAGER_BUFFER_SIZE 512
 
 
 //
@@ -92,11 +80,11 @@ static inline void pause (void){
 /* REP NOP (PAUSE) is a good thing to insert into busy-wait loops. */
 static inline void rep_nop (void){
 	
-	__asm__ __volatile__ ("rep;nop": : :"memory");
+	asm volatile ("rep;nop": : :"memory");
 };
 
-
 #define cpu_relax()  rep_nop()
+
 
 
 //
@@ -106,10 +94,11 @@ static inline void rep_nop (void){
  
 //Protótipo do procedimento de janela.
 int 
-tmProc( int junk, 
-        int message, 
-		unsigned long long1, 
-		unsigned long long2 );
+tmProc ( struct window_d *window, 
+         int message, 
+		 unsigned long long1, 
+		 unsigned long long2 );
+		
 		
 		
 //Protótipos de funções internas.
@@ -152,6 +141,7 @@ int tmInit();
  * sleep:
  *     Apenas uma espera, um delay.
  */
+ 
 void tmSleep (unsigned long ms){
 	
     unsigned long t = (ms*512);
@@ -160,7 +150,7 @@ void tmSleep (unsigned long ms){
 	    --t;
 	}while(t > 0);
 
-};
+}
 
 
 /*
@@ -176,13 +166,14 @@ int tmProbeProcessList (int pid){
 	//};
 	
 	return (int) system_call ( SYSTEMCALL_88, pid, pid, pid );
-};
+}
 
  
 /*
  * tmCreateTaskBar:
  *     ??
  */
+ 
 int tmCreateTaskBar (){
 	
 	int i;
@@ -217,8 +208,8 @@ int tmCreateTaskBar (){
 	
 	//nothing
 	
-	return (int) 0;
-};
+	return 0;
+}
 
 
 /*
@@ -228,10 +219,12 @@ int tmCreateTaskBar (){
  *     O procedimento intercepta algumas mensagens e as mensagens de sistema
  * são passadas para o procedimento do sistema na opção default.
  */
-int tmProc ( int junk, 
-             int message, 
-			 unsigned long long1, 
-			 unsigned long long2 )
+ 
+int 
+tmProc ( struct window_d *window, 
+         int message, 
+		 unsigned long long1, 
+		 unsigned long long2 )
 {
     //Filtrar mensagem.
 	
@@ -258,8 +251,8 @@ int tmProc ( int junk,
 
 	//Nothing.
 
-    return (int) 0;
-};
+    return 0;
+}
 
 
 /*
@@ -291,13 +284,10 @@ void tmUpdateStatus (){
 	    wFocus, ActiveWindow, CpuStep );
 		
 	//Cursor.
-	tmSetCursor(0,1);
+	tmSetCursor (0,1);
 
 	//...
-	
-//done:	
-	//return;
-};
+}
 
 
 /*
@@ -305,9 +295,12 @@ void tmUpdateStatus (){
  *     Desenhar uma barra em modo texto.
  *    #bugbug Não é esse o ambiente que estamos. @todo
  */
+ 
 int tmDrawBar (int color){
 	
     unsigned int i = 0;	
+    
+    // #bugbug: cuidado.
 	char *vm = (char *) 0x00800000;  //g_current_vm; //phis=0x000B8000; 
 	
 	
@@ -325,14 +318,15 @@ int tmDrawBar (int color){
 	//Cursor.
 	tmSetCursor(0,0);
 	
-    return (int) 0; 
-};
+    return 0; 
+}
 
 
 /*
  * tmSetCursor:
  *     Configurando o cursor. (stdio.h).
  */
+ 
 void tmSetCursor (unsigned long x, unsigned long y){
 	
 	// #BUGBUG: Aconteceu uma pagefault depois de incluir essa função. 
@@ -347,23 +341,23 @@ void tmSetCursor (unsigned long x, unsigned long y){
 
     g_cursor_x = (unsigned long) x;
     g_cursor_y = (unsigned long) y;	
-};
+}
 
 
 //
 // strlen:
 //     Tamanho de uma string.
 // 
+
 size_t tmstrlen (const char *s){
 	
     size_t i = 0;
 	
-	for ( i=0; s[i] != '\0'; i++ ){ 
-	    ; 
-	};
+	for ( i=0; s[i] != '\0'; i++ )
+	{ ; };
 	
 	return ( (size_t) i );
-};
+}
 
 
 //
@@ -376,6 +370,7 @@ size_t tmstrlen (const char *s){
 //     Credits: Progress bar source code found on 
 //     codeproject.com/Tips/537904/Console-simple-progress 
 //
+
 void DoProgress ( char label[], int step, int total ){
 	
     //progress width
@@ -404,9 +399,7 @@ void DoProgress ( char label[], int step, int total ){
 
     //reset text color, only on Windows
     //SetConsoleTextAttribute(  GetStdHandle( STD_OUTPUT_HANDLE ), 0x08 );
-	
-    //return;	
-};
+}
 
 
 void DoSome (){
@@ -425,14 +418,14 @@ void DoSome (){
 	
     // Nothing.
 
-    printf("\n");
-};
+    printf ("\n");
+}
 
 
 void progress_bar_test (){
     
 	DoSome();
-};
+}
 
 
 
@@ -440,6 +433,7 @@ void progress_bar_test (){
  * tmInit:
  *     Inicializações.
  */
+ 
 int tmInit (){
 	
 	taskmanagerStatus = 0;
@@ -455,21 +449,17 @@ int tmInit (){
 	
 	//...
 
-    return (int) 0;
-};
-
+    return 0;
+}
 
 
 /*
  **********************************************
- * appMain:
+ * main:
  *     Função principal do Task Manager.
- * 
- * @todo:
- *     +... 
  */
 
-int appMain ( int argc, char *argv[] ){
+int main ( int argc, char *argv[] ){	
 	
 	//int Status;	
 	int Flag;
@@ -558,7 +548,7 @@ int appMain ( int argc, char *argv[] ){
 			//#todo:
 			// Chamar o procedimento de janelas. (diálogo)
 			
-            tmProc ( (int) buffer[0], 
+            tmProc ( (struct window_d *) buffer[0], 
 			         (int) buffer[1], 
 			         (unsigned long) buffer[2], 
 			         (unsigned long) buffer[3] );
@@ -567,14 +557,7 @@ int appMain ( int argc, char *argv[] ){
 				
 		cpu_relax();
 		pause();
-		pause();
-		//pause();
-		//pause();
-		//pause();
-		//pause();
-		//pause();
-		//pause();
-		//asm("pause");
+
 		//exit(0);
 	};
 	
@@ -854,20 +837,12 @@ int appMain ( int argc, char *argv[] ){
 		//if(Flag == 1234){}
 		//if(Flag == 1234){}
 		//...
-	};	
-	
-   
-    //
-    // Obs: 
-	// O exit(0) funcionou corretamente no teste.
-    // Mas não usaremos exit(0) ainda pois temos poucas threads no sistema.
-	//
-	
-done:   
-   //exit(0);         //Obs: Não usar por enquanto. 
-   return (int) 0;    //Obs: Retornar com um valor para cr0.s ou head.s.
-};
-
+	};
+		
+done:  
+ 
+   return 0;
+}
 
 
 //
