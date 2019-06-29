@@ -112,6 +112,8 @@ and are themselves never placed in the input queue.
 #include "noraterm.h" 
 
 
+struct window_d *main_window;
+
 // Input flags.
 #define SHELLFLAG_NULL 0
 #define SHELLFLAG_COMMANDLINE 1
@@ -3060,7 +3062,22 @@ do_compare:
         goto exit_cmp;
     }
 
-
+    //t23
+    // Tentando atualizar a barra de status da janela.
+    if ( strncmp ( prompt, "t23", 3 ) == 0 )
+    {
+		system_call ( 300, (unsigned long) main_window, 
+		(unsigned long) "| 1 Updating status bar", 
+		(unsigned long) "| 2 Updating status bar" );	
+		
+		//#bugbug
+		//Isso faz o refresh da janela inteira.
+		//mas queremos apenas o refresh da janela filha, que é a statusbar.
+		//apiShowWindow (window);			
+        //>>> estamos fazendo isso em ring0
+        goto exit_cmp;		
+	}
+	
 	// setup-x
 	// setup x server PID
 	if ( strncmp( prompt, "setup-x", 7 ) == 0 )
@@ -5838,6 +5855,9 @@ noArgs:
 	        enterCriticalSection ();    
             hWindow = (struct window_d *) terminalCreateMainWindow (1);
 	        exitCriticalSection ();
+	        
+	        // Setup a global pointer for main window.
+	        main_window = hWindow;
 		
 		    shell_info.main_window = ( struct window_d * ) hWindow;			
 	    };	
