@@ -867,38 +867,43 @@ void *noratermProcedure ( struct window_d *window,
 				case 2008:
 					line_buffer_buffersize = 1024; //configurando tamanho do buffer.
 					//fprintf (stdout,"noraterm: This is a string ..."); //#bugbug
-					printf ("MSG_TERMINALCOMMAND.2008 pode pegar, coloca no buffer >> \n");
+					//printf ("MSG_TERMINALCOMMAND.2008 pode pegar, coloca no buffer >> \n");
+					printf ("MSG_TERMINALCOMMAND.2008\n");
 					//#suspenso.
 					//break;
 					
-		            while (1)
-		            {
-						//xxx_ch = 0x65;
+					// pegando chars.
+		            // #importante
+					// Se for \n sifnifica que temos que efetuar o flush do buffer
+					// mostrando ele na tela e colocando nos buffers do terminal.
 						
+		            while (1)
+		            {					
 		                xxx_ch = (int) system_call ( 1002, 0, 0, 0 );
-		                //#importante
-						// se for \n sifnifica que temos que efetuar o flush do buffer
-						//mostrando ele na tela e colocando nos buffers do terminal.
+
 						if (xxx_ch == '\n')
 						{
 							printf ("noraterm: EOL, flush me\n");
 							printf (LINE_BUFFER); //provisorio
 							break;
+						}else{
+							
+						    //Colocar o char no buffer
+						    LINE_BUFFER[line_buffer_tail++] = (char) xxx_ch;							
+							
+						    if ( line_buffer_tail >= line_buffer_buffersize )
+						    {
+							    LINE_BUFFER[line_buffer_tail] = 0; //FINALIZA;
+							    line_buffer_tail = 0;
+							    
+							    printf ("noraterm: buffer limits, flush me\n");
+							    printf (LINE_BUFFER); //provisorio
+							    break;
+						    }							
 						};
-						
-						//Colocar o char no buffer
-						
-						LINE_BUFFER[line_buffer_tail++] = (char) xxx_ch;
-						if ( line_buffer_tail >= line_buffer_buffersize )
-						{
-							LINE_BUFFER[line_buffer_tail] = 0; //FINALIZA;
-							line_buffer_tail = 0;
-							printf ("noraterm: buffer limits, flush me\n");
-							printf (LINE_BUFFER); //provisorio
-							break;
-						}
-	                }					
+	                };					
 					break;
+				
 				
 				//flush buffer	
 				case 2009:

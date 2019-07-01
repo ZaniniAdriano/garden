@@ -16,6 +16,9 @@
  *     2015 - Created.
  *     2015~2018 - Revision. 
  */
+ 
+// See:
+// http://kirste.userpage.fu-berlin.de/chemnet/use/info/libc/libc_7.html 
 
 
 #include <limits.h>
@@ -570,6 +573,10 @@ size_t fwrite (const void *ptr, size_t size, size_t n, FILE *fp){
  * prints:
  *
  */
+ 
+// #bubgug:
+// Esses argumentos podem estar fora dos padrões.
+// Mas a implementação feita pelo altor é assim mesmo. 
 
 static int prints ( char **out, const char *string, int width, int pad ){
 	
@@ -2038,6 +2045,7 @@ static __inline__ off_t ftell(FILE *__f)
 */
 
 // Dixaremos o kernel manipular a estrutura.
+//This function returns the current file position of the stream stream. 
 long ftell (FILE *stream){
 	
     return (long) system_call ( 249, (unsigned long) stream, 
@@ -2108,19 +2116,17 @@ int feof ( FILE *stream ){
 }
 
 
+
+    
 /*
+ //This function clears the end-of-file and error indicators for the stream stream. 
 void clearerr(FILE *fp)
 {
-	fp->mode &= ~(__MODE_EOF | __MODE_ERR);
+    //#bugbug: Isso precisa ser feito em ring0;
+	//fp->mode &= ~(__MODE_EOF | __MODE_ERR);
 }
 */
 
-/*
-int ferror(FILE *fp)
-{
-	return fp->mode & __MODE_ERR;
-}
-*/
 
 /*
  *********************************
@@ -2152,6 +2158,7 @@ static __inline__ int fseek(FILE *__f, off_t __o, int __w)
  *     and whence is what that offset is relative to.
  */
 
+// The fseek function is used to change the file position of the stream stream. 
 int fseek ( FILE *stream, long offset, int whence ){
     
      return (int) gramado_system_call ( 195, (unsigned long) stream, 
@@ -2183,6 +2190,31 @@ int fputc(int c, FILE *f)
 
 
 /*
+ * #todo: Implementar isso.
+int putw (int w, FILE *stream);
+int putw (int w, FILE *stream)
+{
+	
+    if ( fwrite ( (const char*) &w, sizeof (w), 1, stream ) != 1 )
+        return EOF;
+
+    return 0;
+}
+*/
+
+
+/*
+ssize_t getline (char **lineptr, size_t *n, FILE *stream); 
+ssize_t getline (char **lineptr, size_t *n, FILE *stream)
+{
+  return getdelim (lineptr, n, '\n', stream);
+}  
+*/
+
+
+
+
+/*
  *****************************************
  * fputc:
  */
@@ -2198,7 +2230,22 @@ int fputc ( int ch, FILE *stream ){
 	if ( ch != '\n')
 	{
 		return 0;
-	}	
+	}
+	
+	// #bugbug
+	// ??
+	// Talvez aqui devéssemos apenas chamar o fflush
+	// deixando o fflush notificar o terminal.
+	
+	
+    /*
+    if ( c == '\n' )
+	{
+		if ( fflush(fp) == EOF )
+			return EOF;
+	}
+	*/
+		
 					 
 	// #importante
 	// Notificaremos o terminal somente se o char for '\n'	
@@ -3478,21 +3525,30 @@ void setbuf (FILE *stream, char *buf){
 }
 
 
+//If buf is a null pointer, this function makes stream unbuffered. 
+//Otherwise, it makes stream fully buffered using buf as the buffer. 
+//The size argument specifies the length of buf.
+//This function is provided for compatibility with old BSD code. 
+//Use setvbuf instead. 
+
 void setbuffer (FILE *stream, char *buf, size_t size){
 	
-    gramado_system_call ( 611, 
-        (unsigned long) stream, 
-        (unsigned long) buf, 
+    gramado_system_call ( 611, (unsigned long) stream, (unsigned long) buf, 
         (unsigned long) size ); 
 }
 
+
+//This function makes stream be line buffered, and allocates the buffer for you.
+//This function is provided for compatibility with old BSD code. 
+//Use setvbuf instead. 
+
 void setlinebuf (FILE *stream){
 		
-    gramado_system_call ( 612, 
-        (unsigned long) stream, 
-        (unsigned long) stream, 
+    gramado_system_call ( 612, (unsigned long) stream, (unsigned long) stream, 
         (unsigned long) stream ); 	
 }
+
+
 
 // #bugbug
 // precisamos do argumento size.

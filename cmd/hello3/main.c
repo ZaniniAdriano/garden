@@ -137,7 +137,7 @@ int main (int argc, char *argv[] ){
 	//Escrevendo em stdout agora com printf.
 	
 	//printf ("done: fim do teste do fread.\n");
-	printf ("{Testando libc03 ...} ");
+	//printf ("{Testando libc03 ...} ");
 	//printf ("\n");
 	
 	/*
@@ -155,12 +155,43 @@ int main (int argc, char *argv[] ){
 	//esperando um pouquinho
 	//for ( count=0; count < 99999; count++ )
 	
-	
-	printf ("{normal mode} ");
+	//printf ("{normal mode} ");
 	//printf ("\n");
-	printf ("{Done!} ");
+	//printf ("{Done!} ");
+	//fprintf (stdout, "{fprintf} ");
 	
+	
+	
+	//
+	//   TESTANDO LIBC 
+	//
+	
+	// Testando rotinas da libc
+	// Mostrando output no terminal noraterm.
+	
+	//ex:
+	//http://kirste.userpage.fu-berlin.de/chemnet/use/info/libc/libc_7.html#SEC80
+	
+	//sprintf, snprintf, asprintf, obstack_printf 
+	//vprintf, vfprintf, vsprintf, vsnprintf, vasprintf  
+	
+	//#test
+	//Ok. Testamos essas funções de output e as string foram exibidas
+	//no terminal virtual noraterm.
+		
+	printf ("{printf} ");
+	puts ("{puts} ");
+	fprintf (stdout, "{fprintf} ");
+	fputc ('X',stdout);
+	fputc (' ',stdout);
+	putc ('Y',stdout);
+	putc (' ',stdout);	
+	putchar('Z');
+	putchar(' ');
+	fputs("{fputs} ",stdout);	
 	printf ("*hang\n");
+	
+	
 	    
 //done:    
     
