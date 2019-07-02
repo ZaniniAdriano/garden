@@ -61,7 +61,35 @@
  *     2018 - More commands.
  */
  
- //https://www.mkssoftware.com/docs/man5/struct_termios.5.asp
+
+//See:
+//https://www.mkssoftware.com/docs/man5/struct_termios.5.asp
+//https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h2-PC-Style-Function-Keys
+ 
+ 
+/* 
+Single-character functions
+BEL       Bell (Ctrl-G).
+BS        Backspace (Ctrl-H).
+CR        Carriage Return (Ctrl-M).
+ENQ       Return Terminal Status (Ctrl-E).  Default response is an empty
+          string, but may be overridden by a resource answerbackString.
+FF        Form Feed or New Page (NP).  (FF  is Ctrl-L).  FF  is treated
+          the same as LF .
+LF        Line Feed or New Line (NL).  (LF  is Ctrl-J).
+SI        Switch to Standard Character Set (Ctrl-O is Shift In or LS0).
+          This invokes the G0 character set (the default) as GL.
+          VT200 and up implement LS0.
+SO        Switch to Alternate Character Set (Ctrl-N is Shift Out or
+          LS1).  This invokes the G1 character set as GL.
+          VT200 and up implement LS1.
+SP        Space.
+TAB       Horizontal Tab (HT) (Ctrl-I).
+VT        Vertical Tab (Ctrl-K).  This is treated the same as LF.
+*/
+ 
+ 
+ 
  /*
 Erase and kill:
 Erase and kill processing occurs when either of two special characters, 
@@ -111,6 +139,8 @@ and are themselves never placed in the input queue.
 
 #include "noraterm.h" 
 
+
+#define VT102_ID "\033[?6c"
 
 struct window_d *main_window;
 
@@ -746,25 +776,27 @@ void *noratermProcedure ( struct window_d *window,
 			{
 		        
 				case VK_F1:  
-					textSetCurrentRow ( (int) 0 );
-					textSetCurrentCol ( (int) 0 );
+				     //MessageBox ( 1, "Noraterm", 
+				     //    "This is Noraterm!" );
+				     MessageBox ( 3, "Noraterm", 
+				         "This is Noraterm!" );				         
+					break;
 					
+				case VK_F2:
+					break;
+					
+				case VK_F3:
+				    //testChangeVisibleArea();				
+				    //terminalRefreshVisibleArea();
+					//textSetCurrentRow ( (int) 0 );
+					//textSetCurrentCol ( (int) 0 );
 					//shellTestLoadFile ();
 					//inicializa a área visível.
 					//textTopRow = 0;
 	                //textBottomRow = 0 + 24;
-						
 					break;
 					
-				case VK_F2:
-				    //testChangeVisibleArea();
-					break;
-					
-				case VK_F3:
-				    //terminalRefreshVisibleArea();
-					break;
-					
-				// Não usaer esses.
+				// Não usar esses.
 				// No momento são gerenciados pelo procedimento de janelas
 				// do sistema.	
 				case VK_F5:
@@ -775,12 +807,24 @@ void *noratermProcedure ( struct window_d *window,
 				    break;
 					
 				//...
-				
+				//??talvez esse tamb'em seja gerenciado pode procedimento do
+				//sistema,
+                case VK_F9:
+                    break;
+                    
+                case VK_F10:
+                    break;
+                
                 //full screen
                 //colocar em full screen somente a área de cliente. 				
 		        case VK_F11:
 					break;
+					
+				case VK_F12:
+				    break;	
+				
 				//...
+				
 			};
 			break;
 		
@@ -5516,7 +5560,6 @@ void reset_terminal()
 void reset_terminal(){
 }
 */
-
 
 
 /*

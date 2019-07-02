@@ -915,6 +915,9 @@ void apiInitBackground (){
  *     @todo: Devemos considerar o retorno? E se a chamada falhar?
  */
 
+// #todo: 
+// usar get system metrics
+	
 int MessageBox ( int type, char *string1, char *string2 ){
 
     int Response = 0;	
@@ -923,11 +926,7 @@ int MessageBox ( int type, char *string1, char *string2 ){
 	struct window_d *hWnd;    //Window.
 	struct window_d *pWnd;    //Parent.
 	struct window_d *bWnd;    //Button.	
-	
-	
-	// #todo: 
-	// usar get system metrics
-	
+		
 	// x and y
 	// @todo centralizado: metade | um terço.
 	// @todo: Pegar a métrica do dispositivo.
@@ -942,8 +941,13 @@ int MessageBox ( int type, char *string1, char *string2 ){
 	unsigned long WindowClientAreaColor;
 	unsigned long WindowColor;
 	
-	WindowClientAreaColor = xCOLOR_GRAY1; //COLOR_YELLOW;
-	WindowColor = COLOR_TERMINAL2; //COLOR_PINK;	
+	//
+	// Colors.
+	//
+	
+	WindowClientAreaColor = xCOLOR_GRAY3;   
+	WindowColor = COLOR_TERMINAL2;          	
+	
 	
 	// Obs: 
 	// Por enquanto para todos os tipos de messagebox 
@@ -969,9 +973,13 @@ int MessageBox ( int type, char *string1, char *string2 ){
 			}else{
 			    gde_register_window (hWnd);
                 APISetActiveWindow (hWnd);	
-                gde_set_focus (hWnd);		
+                gde_set_focus (hWnd);	
+                	
+                //apiDrawText ( (struct window_d *) hWnd,
+                //    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );
+                    
                 apiDrawText ( (struct window_d *) hWnd,
-                    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );
+                    1*(cx/16), 1*(cy/3), COLOR_WHITE, string1 );                    
 			}
 			gde_end_paint ();
 		    break;
@@ -989,14 +997,19 @@ int MessageBox ( int type, char *string1, char *string2 ){
 			}else{
 			    gde_register_window (hWnd);
                 APISetActiveWindow (hWnd);	
-                gde_set_focus (hWnd);	
+                gde_set_focus (hWnd);
+                	
+                //apiDrawText ( (struct window_d *) hWnd,
+                //    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );
                 apiDrawText ( (struct window_d *) hWnd,
-                    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );
+                    1*(cx/16), 1*(cy/3), COLOR_WHITE, string1 );
 			}
 	        break;
 
-		 //janela de aplicativo.
+		// Janela de aplicativo.
 		// Com botão, Título de alerta.
+	    // #bugbug: Não precisamos de barra de rolagem nem barra de status,
+	    // mas elas aparecem.
 	    case 3:
 	        Button = 1;
 			gde_begin_paint ();
@@ -1011,8 +1024,10 @@ int MessageBox ( int type, char *string1, char *string2 ){
 			    gde_register_window (hWnd);
                 APISetActiveWindow (hWnd);	
                 gde_set_focus (hWnd);	
+                //apiDrawText ( (struct window_d *) hWnd,
+                //    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string2 );
                 apiDrawText ( (struct window_d *) hWnd,
-                    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string2 );
+                    1*(cx/16), 1*(cy/3), COLOR_WHITE, string2 );
 			}
 			gde_end_paint ();
 	        break;
@@ -1032,8 +1047,10 @@ int MessageBox ( int type, char *string1, char *string2 ){
 			    gde_register_window (hWnd);
                 APISetActiveWindow (hWnd);	
                 gde_set_focus (hWnd);	
+                //apiDrawText ( (struct window_d *) hWnd,
+                //    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );
                 apiDrawText ( (struct window_d *) hWnd,
-                    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );
+                    1*(cx/16), 1*(cy/3), COLOR_WHITE, string1 );
 			}
 			gde_end_paint ();
 	        break;
@@ -1054,8 +1071,10 @@ int MessageBox ( int type, char *string1, char *string2 ){
 			    gde_register_window (hWnd);
                 APISetActiveWindow (hWnd);	
                 gde_set_focus (hWnd);	
+                //apiDrawText ( (struct window_d *) hWnd,
+                //    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );
                 apiDrawText ( (struct window_d *) hWnd,
-                    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );
+                    1*(cx/16), 1*(cy/3), COLOR_WHITE, string1 );
 			}
 			gde_end_paint ();
 		    break;
@@ -1077,7 +1096,7 @@ int MessageBox ( int type, char *string1, char *string2 ){
 
 	// button 1
 	messagebox_button1 = (void *) gde_create_window ( WT_BUTTON, 1, 1, "OK",     
-                                      (cx/3), ((cy/4)*3), 80, 24,    
+                                      (cx/3), ((cy/8)*5), 80, 24,    
                                       hWnd, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
 	
 	if ( (void *) messagebox_button1 == NULL )
@@ -1090,7 +1109,7 @@ int MessageBox ( int type, char *string1, char *string2 ){
 
 	// button 2
 	messagebox_button2 = (void *) gde_create_window ( WT_BUTTON, 1, 1, "CANCEL",     
-                                      ((cx/3)*2), ((cy/4)*3), 80, 24,    
+                                      ((cx/3)*2), ((cy/8)*5), 80, 24,    
                                       hWnd, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
 
 	if ( (void *) messagebox_button2 == NULL )
@@ -1240,7 +1259,8 @@ mbProcedure ( struct window_d *window,
  * DialogBox:
  *     
  *     Types=[1~5]
- *     @todo: Devemos considerar o retorno? E se a chamada falhar? */
+ *     @todo: Devemos considerar o retorno? E se a chamada falhar? 
+ */
 
 int DialogBox ( int type, char *string1, char *string2 ){
     
@@ -1357,7 +1377,7 @@ int DialogBox ( int type, char *string1, char *string2 ){
 
 	// button 1 	
 	dialogbox_button1 = (void *) gde_create_window ( WT_BUTTON, 1, 1, "OK",     
-                                (cx/3), ((cy/4)*3), 80, 24,    
+                                (cx/3), ((cy/8)*5), 80, 24,    
                                 hWnd, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
 								
 	if ( (void *) dialogbox_button1 == NULL )
@@ -1370,7 +1390,7 @@ int DialogBox ( int type, char *string1, char *string2 ){
      
 	// button 2
 	dialogbox_button2 = (void *) gde_create_window ( WT_BUTTON, 1, 1, "CANCEL",     
-                                ((cx/3)*2), ((cy/4)*3), 80, 24,    
+                                ((cx/3)*2), ((cy/8)*5), 80, 24,    
                                 hWnd, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
 								
 	if ( (void *) dialogbox_button2 == NULL )
@@ -1385,10 +1405,12 @@ int DialogBox ( int type, char *string1, char *string2 ){
 	// string
 	//
 	
-    apiDrawText ( (struct window_d *) hWnd,
-        1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );	
+    //apiDrawText ( (struct window_d *) hWnd,
+    //    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );	
 	
-
+    apiDrawText ( (struct window_d *) hWnd,
+        1*(cx/16), 1*(cy/3), COLOR_WHITE, string1 );	
+        
 	//show window.
 
     apiShowWindow (hWnd);
