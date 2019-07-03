@@ -65,7 +65,16 @@
 //See:
 //https://www.mkssoftware.com/docs/man5/struct_termios.5.asp
 //https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h2-PC-Style-Function-Keys
- 
+//https://en.wikipedia.org/wiki/ANSI_escape_code 
+//https://en.wikipedia.org/wiki/C0_and_C1_control_codes
+//https://vt100.net/docs/vt220-rm/table2-4.html
+//http://notes.burke.libbey.me/ansi-escape-codes/
+
+
+// Iniciando sequências.
+//  \x1b[ 
+//  \033[
+
  
 /* 
 Single-character functions
@@ -138,6 +147,16 @@ and are themselves never placed in the input queue.
 // O header principal não deve ser esse. deve ser noraterm.h.
 
 #include "noraterm.h" 
+
+
+//
+// Modes.
+//
+
+//int __terminal_mode = 0;
+//int __cursor_mode = 0;
+//int __keypad_mode = 0;
+//...
 
 
 #define VT102_ID "\033[?6c"
@@ -497,6 +516,8 @@ void terminalInitWindowSizes ();
 void terminalInitWindowPosition ();
 
 
+void tputc (char *c, int len);
+int print_buffer (void);
 
 
 // #todo:
@@ -653,6 +674,195 @@ int process_input (){
 	return 0;
 }
 
+
+//#todo: fazer estrutura para gerenciar a sequencia.
+int __sequence_status = 0;
+
+// #todo
+// See: https://github.com/gramado/st/blob/tlvince/st.c
+void tputc (char *c, int len){
+	
+	 //int c = (int) *c;
+	 unsigned char ascii = *c;
+	 
+	 //control codes
+	 //bool control = ascii < '\x20' || ascii == 0177;
+     int control = ascii < '\x20' || ascii == 0177;
+	 
+	 
+	 //
+	 // #importante
+	 // Se não é controle é string ou escape sequence.
+	 //
+	 
+	 //??
+	 //if(iofd != -1) {}
+	 
+	 //string normal
+	 if(__sequence_status == 0)
+	 {
+		 switch (ascii)
+		 {
+			 //deixou de ser string normal e
+			 //entramos em uma sequência
+			 //logo abaixo esse char será tratado novamente.
+		     case '\033':
+                 __sequence_status = 1;
+                 break;
+             
+             //Imprimindo caracteres normais.
+             //#todo: talvez possamos usar a API para isso.
+             //como acontece nos caracteres digitados no shell interno.
+             default:
+                 printf ("%c",ascii);
+                 return;			          
+         }
+	 }		 
+	 
+	 //control codes. (dentro de um range)
+	 if(control){
+		 
+		 switch(ascii)
+		 {
+
+		    //case '\v': /* VT */
+		    //case '\a': /* BEL */    
+		    		    		    
+		    case '\t': /* HT */
+		    case '\b': /* BS */
+		    case '\r': /* CR */
+		    case '\f': /* LF */
+            case '\n': /* LF */
+                //#deixa o kernel lidar com isso por enquanto.
+                printf ("%c",ascii);
+                return;	
+                break;
+		    
+			//case '\033':
+		    case '\x1b':
+		        __sequence_status = 1;
+		        printf (" {ESCAPE} ");
+		        return;
+		        break;
+		        
+		    case '\016':	/* SO */
+            case '\017': /* SI */
+		        return;
+		        break;
+		        
+		    case '\032':	/* SUB */
+		    case '\030':	/* CAN */
+			    //csireset();
+                return;
+		        break;
+		            
+		    case '\005':	/* ENQ (IGNORED) */
+		    case '\000':	/* NUL (IGNORED) */
+		    case '\021':	/* XON (IGNORED) */
+		    case '\023':	/* XOFF (IGNORED) */
+		    //case 0177:	/* DEL (IGNORED) */
+                //Nothing;
+                return;
+                
+            //...    
+		 }
+		        
+		 //...	 
+		 
+	 // 1b	 
+	 //se iniciamos uma escape sequence
+	 //} else if(term.esc & ESC_START) {
+	 }else if(__sequence_status == 1) {		 
+	 
+	     switch(ascii)
+	     {
+			 case '[':
+			     printf (" {CSI} ");
+			     return;
+			     break;
+			     
+			 case 'm':
+			     __sequence_status = 0;
+			     printf (" {m} ");
+			     return;
+			     break;
+		 }
+	     //...
+	     
+	     return;
+	 };	 
+	 
+	 //...
+}	
+	
+//O buffer está cheio.
+//vamos mostrar na tela.
+
+int print_buffer (void){
+	
+	int c;
+	
+	int sequence_status = 0;
+	
+	int charsize = 1; /* size of utf8 char in bytes */
+	
+	//provisorio
+    //printf (LINE_BUFFER); 
+    
+    size_t len = strlen (LINE_BUFFER);
+    
+    
+    
+    //#todo limits
+    //LINE_BUFFER_SIZE
+    
+    int i;
+    
+    for (i=0; i<len; i++)
+    {
+	    //tputc (char *c, int len);
+	      tputc ( (char *) &LINE_BUFFER[i], (int) 1 );	
+	}
+	
+    /*
+    for (i=0; i<len; i++)
+    {
+		c = LINE_BUFFER[i];
+		
+	    switch (c)
+	    {
+			//case '\033':
+		    case '\x1b':
+		        sequence_status = 1;
+		        //printf ("{#debug:ESCAPE FOUND!}\n");
+		        break;	
+		     
+		    case 'm':
+		        if (sequence_status == 1 || sequence_status == 2) 
+		            sequence_status = 0;
+		        break;
+		        
+		    case '[':
+		        sequence_status = 2;
+		        break;
+		    
+		     //case ''       
+		
+		    //...
+		    
+		    default:
+		       printf ("%c",c);
+		       break;
+		}	
+	}
+	*/
+    
+    return 0;	
+}
+
+
+//int bufferInsertChar();
+//int bufferInsertChar(){}
 
 /*
  ***********************************************
@@ -928,7 +1138,11 @@ void *noratermProcedure ( struct window_d *window,
 						if (xxx_ch == '\n')
 						{
 							printf ("noraterm: EOL, flush me\n");
-							printf (LINE_BUFFER); //provisorio
+							print_buffer ();
+							
+							//#todo: É nessa hora que temos que tratar
+							//as escape sequencies.
+							//printf (LINE_BUFFER); //provisorio
 							break;
 						}else{
 							
@@ -941,7 +1155,11 @@ void *noratermProcedure ( struct window_d *window,
 							    line_buffer_tail = 0;
 							    
 							    printf ("noraterm: buffer limits, flush me\n");
-							    printf (LINE_BUFFER); //provisorio
+							    
+							    print_buffer ();
+							    //#todo: É nessa hora que temos que tratar
+							    //as escape sequencies.							    
+							    //printf (LINE_BUFFER); //provisorio
 							    break;
 						    }							
 						};
@@ -951,8 +1169,11 @@ void *noratermProcedure ( struct window_d *window,
 				
 				//flush buffer	
 				case 2009:
+					//#todo: É nessa hora que temos que tratar
+					//as escape sequencies.	
 					//provisorio
-					printf (LINE_BUFFER);
+					print_buffer ();
+					//printf (LINE_BUFFER);
 					break;
 					
 				// #importante	
@@ -5541,17 +5762,46 @@ void show_shell_version (){
 
 void terminal_write_char ( int c){
 	
+	
+	//
+	//  Escape sequence.
+	//
+	
+	// #todo
+	// Talvez esse seja o momento de tratarmos
+	// as sequencias.
+	// >>> Talvez seja melhor depois de preenchermos o buffer.
+	
+	
+	/*
+	switch (c)
+	{
+		// #bugbug: \033 e \x1b são a mesma coisa; 
+		//case '\033':
+		case '\x1b':	
+		    //#debug
+		    printf ("[ESCAPE FOUND]");
+		    break;
+		
+		//case ..
+		    //break;
+		
+		//...
+	};
+	*/
+	
     //coloca no buffer de linhas e colunas.
 	terminalInsertNextChar ( (char) c );  
 
-	// imprime na tela usando libc. (funcionou)
-	//terminalRefreshCurrentChar ();
-					
 	// #bugbug
 	// imprime na tela usando api.  
 	//(implementando ainda). 
 	//isso funcionou.
 	terminalRefreshCurrentChar2 ();		
+	
+	//#obs: Não usar mais esse.
+	// imprime na tela usando libc. (funcionou)
+	//terminalRefreshCurrentChar ();
 }
 
 

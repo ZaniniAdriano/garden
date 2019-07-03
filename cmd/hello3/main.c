@@ -64,9 +64,10 @@ __PostMessageToProcess ( int pid,
  * 
  */
 
-int main (int argc, char *argv[] ){
+int main ( int argc, char *argv[] ){
 	
 	FILE *fp;	
+    
     unsigned char count;
 	unsigned char standard_ascii_max = STANDARD_ASCII_MAX;
 	
@@ -80,6 +81,7 @@ int main (int argc, char *argv[] ){
 	// Nesse modo o terminal não será notificado.
 	
 	libc_set_output_mode (LIBC_DRAW_MODE);
+	
 	printf ("hello3: Testing libc in NORMAL MODE ...\n"); 
 	
 	
@@ -180,6 +182,15 @@ int main (int argc, char *argv[] ){
 	//no terminal virtual noraterm.
 		
 	printf ("{printf} ");
+	
+	//printf("\x1b[1Am");  //cursor up
+	//printf("\x1b[1Bm");  //cursor down
+	//printf("\x1b[1Cm");
+	//printf("\x1b[1Dm");
+	//printf("\x1b[1Em");
+	//printf("\x1b[1Fm");
+	//printf("\x1b[1Gm");
+	   
 	puts ("{puts} ");
 	fprintf (stdout, "{fprintf} ");
 	fputc ('X',stdout);
@@ -189,10 +200,24 @@ int main (int argc, char *argv[] ){
 	putchar('Z');
 	putchar(' ');
 	fputs("{fputs} ",stdout);	
-	printf ("*hang\n");
+	
+	//testing scape s.
+	printf("\x1b[m");  
+	
+	//fim.
+	printf ("*fim-do-test\n");
 	
 	
-	    
+	//#bugbug
+	//Esse segundo teste não funcionou.
+	//depois do \n a libc não se comportou como esperado.
+	//provavelmente algo com a renovação do buffer.
+	
+	//testando escape sequencies,
+	//printf ("{\033[0m} ");
+	//printf ("{\x1b[0m} ");
+	//printf ("*fim-do-test\n");
+			    
 //done:    
     
     // Testando a saída normal.
