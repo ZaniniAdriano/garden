@@ -177,428 +177,429 @@ Linker script and memory map
  *(.text)
  .text          0x0000000000401000       0x75 crt0.o
                 0x0000000000401000                crt0
- .text          0x0000000000401075     0x3fbb main.o
+ .text          0x0000000000401075     0x4021 main.o
                 0x0000000000401075                terminal_test_write
                 0x000000000040107b                __PostMessageToProcess
                 0x00000000004010be                quit
                 0x00000000004010de                process_input
                 0x000000000040114f                tputc
                 0x000000000040132a                print_buffer
-                0x0000000000401383                noratermProcedure
-                0x00000000004019d7                shellWaitCmd
-                0x00000000004019f1                shellCompare
-                0x00000000004039b6                terminalInitSystemMetrics
-                0x0000000000403a4f                terminalInitWindowLimits
-                0x0000000000403b0d                terminalInitWindowSizes
-                0x0000000000403b59                terminalInitWindowPosition
-                0x0000000000403b73                terminalTerminal
-                0x0000000000403cfa                terminalInit
-                0x0000000000403df6                shellTestLoadFile
-                0x0000000000403e62                shellTestThreads
-                0x0000000000403f10                shellScroll
-                0x0000000000403f23                shellTestMBR
-                0x0000000000403f7e                shellShowInfo
-                0x000000000040402b                shellShowMetrics
-                0x00000000004040dd                shellShowSystemInfo
-                0x0000000000404158                terminalShowWindowInfo
-                0x0000000000404209                shellSendMessage
-                0x0000000000404225                shell_memcpy_bytes
-                0x0000000000404251                shellExit
-                0x0000000000404268                shellUpdateWorkingDiretoryString
-                0x00000000004042c7                shellInitializeWorkingDiretoryString
-                0x0000000000404351                shellUpdateCurrentDirectoryID
-                0x000000000040435f                shellTaskList
-                0x0000000000404482                shell_fntos
-                0x000000000040459c                shell_gramado_core_init_execve
-                0x0000000000404607                feedterminalDialog
-                0x000000000040468b                die
-                0x00000000004046cd                concat
-                0x0000000000404783                error
-                0x00000000004047d7                fatal
-                0x0000000000404801                save_string
-                0x000000000040483d                shell_save_file
-                0x00000000004049b2                save_string2
-                0x0000000000404ac3                show_shell_version
-                0x0000000000404aed                terminal_write_char
-                0x0000000000404b0d                main
- .text          0x0000000000405030       0x28 stubs.o
-                0x0000000000405030                gramado_system_call
- .text          0x0000000000405058        0x0 ctype.o
- .text          0x0000000000405058     0x25c4 stdio.o
-                0x00000000004050a0                stdio_atoi
-                0x0000000000405167                stdio_fntos
-                0x0000000000405291                fclose
-                0x00000000004052b2                fopen
-                0x00000000004052d3                scroll
-                0x00000000004053a0                puts
-                0x00000000004053bb                fread
-                0x00000000004053dc                fwrite
-                0x00000000004057be                printf3
-                0x00000000004057db                printf_atoi
-                0x00000000004058cb                printf_i2hex
-                0x000000000040592d                printf2
-                0x0000000000405ab2                sprintf
-                0x0000000000405b07                putchar
-                0x0000000000405b28                outbyte
-                0x0000000000405ce6                _outbyte
-                0x0000000000405d15                input
-                0x0000000000405e69                getchar
-                0x0000000000405e97                stdioInitialize
-                0x0000000000406099                fflush
-                0x00000000004060ba                fprintf
-                0x00000000004060db                fputs
-                0x00000000004060fc                gets
-                0x0000000000406187                ungetc
-                0x0000000000406191                ftell
-                0x00000000004061b2                fileno
-                0x00000000004061bc                fgetc
-                0x00000000004061dd                feof
-                0x00000000004061fe                ferror
-                0x000000000040621f                fseek
-                0x0000000000406240                fputc
-                0x0000000000406261                stdioSetCursor
-                0x000000000040627c                stdioGetCursorX
-                0x0000000000406297                stdioGetCursorY
-                0x00000000004062b2                scanf
-                0x000000000040644c                sscanf
-                0x0000000000406607                kvprintf
-                0x0000000000407471                printf
-                0x000000000040749b                vfprintf
-                0x0000000000407513                vprintf
-                0x0000000000407532                stdout_printf
-                0x000000000040755e                stderr_printf
-                0x000000000040758a                perror
-                0x00000000004075a1                rewind
-                0x00000000004075dd                snprintf
-                0x00000000004075f1                stdio_initialize_standard_streams
- .text          0x000000000040761c     0x105e stdlib.o
-                0x0000000000407639                rtGetHeapStart
-                0x0000000000407643                rtGetHeapEnd
-                0x000000000040764d                rtGetHeapPointer
-                0x0000000000407657                rtGetAvailableHeap
-                0x0000000000407661                heapSetLibcHeap
-                0x0000000000407714                heapAllocateMemory
-                0x0000000000407946                FreeHeap
-                0x0000000000407950                heapInit
-                0x0000000000407ae3                stdlibInitMM
-                0x0000000000407b46                libcInitRT
-                0x0000000000407b68                rand
-                0x0000000000407b85                srand
-                0x0000000000407b93                xmalloc
-                0x0000000000407bc5                stdlib_die
-                0x0000000000407bfb                malloc
-                0x0000000000407c37                realloc
-                0x0000000000407c74                free
-                0x0000000000407c7a                calloc
-                0x0000000000407cc0                zmalloc
-                0x0000000000407cfc                system
-                0x00000000004080c0                stdlib_strncmp
-                0x0000000000408123                __findenv
-                0x00000000004081ee                getenv
-                0x000000000040821b                atoi
-                0x00000000004082e2                reverse
-                0x0000000000408349                itoa
-                0x00000000004083f7                abs
-                0x0000000000408407                strtod
-                0x0000000000408639                strtof
-                0x0000000000408655                strtold
-                0x0000000000408668                atof
- .text          0x000000000040867a      0x772 string.o
-                0x000000000040867a                memcmp
-                0x00000000004086df                strdup
-                0x0000000000408731                strndup
-                0x0000000000408792                strrchr
-                0x00000000004087cd                strtoimax
-                0x00000000004087d7                strtoumax
-                0x00000000004087e1                strcasecmp
-                0x0000000000408849                strncpy
-                0x000000000040889f                strcmp
-                0x0000000000408904                strncmp
-                0x0000000000408967                memset
-                0x00000000004089ae                memoryZeroMemory
-                0x00000000004089d5                memcpy
-                0x0000000000408a12                strcpy
-                0x0000000000408a46                strcat
-                0x0000000000408a75                bcopy
-                0x0000000000408aa1                bzero
-                0x0000000000408ac1                strlen
-                0x0000000000408aef                strnlen
-                0x0000000000408b23                strcspn
-                0x0000000000408bc2                strspn
-                0x0000000000408c61                strtok_r
-                0x0000000000408d48                strtok
-                0x0000000000408d60                strchr
-                0x0000000000408d8c                strstr
- .text          0x0000000000408dec       0x89 conio.o
-                0x0000000000408dec                putch
-                0x0000000000408e10                cputs
-                0x0000000000408e45                getch
-                0x0000000000408e5d                getche
- .text          0x0000000000408e75       0x49 socket.o
-                0x0000000000408e75                listen
-                0x0000000000408e7f                recv
-                0x0000000000408e89                send
-                0x0000000000408e93                shutdown
-                0x0000000000408e9d                socket
- .text          0x0000000000408ebe       0x12 signal.o
-                0x0000000000408ebe                signal
-                0x0000000000408ec6                sigaction
- .text          0x0000000000408ed0      0x301 unistd.o
-                0x0000000000408ed0                execve
-                0x0000000000408f2f                exit
-                0x0000000000408f4f                fork
-                0x0000000000408f85                sys_fork
-                0x0000000000408fbb                fast_fork
-                0x0000000000408fe3                setuid
-                0x0000000000408ffe                getuid
-                0x0000000000409019                geteuid
-                0x0000000000409023                getpid
-                0x000000000040903b                getppid
-                0x0000000000409053                getgid
-                0x000000000040906e                dup
-                0x0000000000409088                dup2
-                0x00000000004090a4                dup3
-                0x00000000004090c2                fcntl
-                0x00000000004090cc                nice
-                0x00000000004090d6                pause
-                0x00000000004090e0                mkdir
-                0x00000000004090f4                rmdir
-                0x00000000004090fe                link
-                0x0000000000409108                mlock
-                0x0000000000409112                munlock
-                0x000000000040911c                mlockall
-                0x0000000000409126                munlockall
-                0x0000000000409130                sysconf
-                0x000000000040913a                fsync
-                0x0000000000409144                fdatasync
-                0x000000000040914e                fpathconf
-                0x0000000000409158                pathconf
-                0x0000000000409162                ioctl
-                0x000000000040916c                open
-                0x0000000000409192                close
-                0x00000000004091b0                pipe
- .text          0x00000000004091d1     0x215c api.o
-                0x00000000004091d1                system_call
-                0x00000000004091f9                apiSystem
-                0x0000000000409601                system1
-                0x0000000000409622                system2
-                0x0000000000409643                system3
-                0x0000000000409664                system4
-                0x0000000000409685                system5
-                0x00000000004096a6                system6
-                0x00000000004096c7                system7
-                0x00000000004096e8                system8
-                0x0000000000409709                system9
-                0x000000000040972a                system10
-                0x000000000040974b                system11
-                0x000000000040976c                system12
-                0x000000000040978d                system13
-                0x00000000004097ae                system14
-                0x00000000004097cf                system15
-                0x00000000004097f0                refresh_buffer
-                0x00000000004098cc                print_string
-                0x00000000004098d2                vsync
-                0x00000000004098e7                edit_box
-                0x00000000004098fe                gde_system_procedure
-                0x0000000000409934                SetNextWindowProcedure
-                0x000000000040993e                set_cursor
-                0x0000000000409955                put_char
-                0x000000000040995b                gde_load_bitmap_16x16
-                0x0000000000409974                apiShutDown
-                0x000000000040998b                apiInitBackground
-                0x0000000000409991                MessageBox
-                0x0000000000409f1f                mbProcedure
-                0x0000000000409f8d                DialogBox
-                0x000000000040a33f                dbProcedure
-                0x000000000040a3ad                call_kernel
-                0x000000000040a528                call_gui
-                0x000000000040a5b4                gde_create_window
-                0x000000000040a62d                gde_register_window
-                0x000000000040a655                gde_close_window
-                0x000000000040a67d                gde_set_focus
-                0x000000000040a6a5                gde_get_focus
-                0x000000000040a6ba                APIKillFocus
-                0x000000000040a6e2                APISetActiveWindow
-                0x000000000040a70a                APIGetActiveWindow
-                0x000000000040a71f                APIShowCurrentProcessInfo
-                0x000000000040a735                APIresize_window
-                0x000000000040a74f                APIredraw_window
-                0x000000000040a769                APIreplace_window
-                0x000000000040a783                APImaximize_window
-                0x000000000040a79f                APIminimize_window
-                0x000000000040a7bb                APIupdate_window
-                0x000000000040a7d7                APIget_foregroung_window
-                0x000000000040a7ed                APIset_foregroung_window
-                0x000000000040a809                apiExit
-                0x000000000040a826                kill
-                0x000000000040a82c                dead_thread_collector
-                0x000000000040a842                api_strncmp
-                0x000000000040a8a5                refresh_screen
-                0x000000000040a8bb                api_refresh_screen
-                0x000000000040a8c6                apiReboot
-                0x000000000040a8dc                apiSetCursor
-                0x000000000040a8f4                apiGetCursorX
-                0x000000000040a90c                apiGetCursorY
-                0x000000000040a924                apiGetClientAreaRect
-                0x000000000040a93c                apiSetClientAreaRect
-                0x000000000040a95b                gde_create_process
-                0x000000000040a974                gde_create_thread
-                0x000000000040a98d                apiStartThread
-                0x000000000040a9a9                apiFOpen
-                0x000000000040a9d5                gde_save_file
-                0x000000000040aa28                apiDown
-                0x000000000040aa7d                apiUp
-                0x000000000040aad2                enterCriticalSection
-                0x000000000040ab0d                exitCriticalSection
-                0x000000000040ab26                initializeCriticalSection
-                0x000000000040ab3f                gde_begin_paint
-                0x000000000040ab4a                gde_end_paint
-                0x000000000040ab55                apiPutChar
-                0x000000000040ab71                apiDefDialog
-                0x000000000040ab7b                apiGetSystemMetrics
-                0x000000000040ab99                api_set_current_keyboard_responder
-                0x000000000040abb8                api_get_current_keyboard_responder
-                0x000000000040abd0                api_set_current_mouse_responder
-                0x000000000040abef                api_get_current_mouse_responder
-                0x000000000040ac07                api_set_window_with_text_input
-                0x000000000040ac49                api_get_window_with_text_input
-                0x000000000040ac61                gramadocore_init_execve
-                0x000000000040ac6b                apiDialog
-                0x000000000040acfa                api_getchar
-                0x000000000040ad12                apiDisplayBMP
-                0x000000000040b119                apiSendMessageToProcess
-                0x000000000040b15c                apiSendMessageToThread
-                0x000000000040b19f                apiSendMessage
-                0x000000000040b1d5                apiDrawText
-                0x000000000040b214                apiGetWSScreenWindow
-                0x000000000040b22c                apiGetWSMainWindow
-                0x000000000040b244                apiCreateTimer
-                0x000000000040b261                apiGetSysTimeInfo
-                0x000000000040b27f                apiShowWindow
-                0x000000000040b29b                apiStartTerminal
-                0x000000000040b30f                apiUpdateStatusBar
- .text          0x000000000040b32d      0x1a5 builtins.o
-                0x000000000040b32d                cd_buitins
-                0x000000000040b346                cls_builtins
-                0x000000000040b354                copy_builtins
-                0x000000000040b35a                date_builtins
-                0x000000000040b360                del_builtins
-                0x000000000040b366                dir_builtins
-                0x000000000040b3a2                echo_builtins
-                0x000000000040b3be                exec_builtins
-                0x000000000040b3d7                exit_builtins
-                0x000000000040b3fd                getpid_builtins
-                0x000000000040b40f                getppid_builtins
-                0x000000000040b421                getuid_builtins
-                0x000000000040b433                getgid_builtins
-                0x000000000040b445                help_builtins
-                0x000000000040b4b6                pwd_builtins
- .text          0x000000000040b4d2       0x8d desktop.o
-                0x000000000040b4d2                desktopInitialize
-                0x000000000040b51b                desktopProcedure
-                0x000000000040b538                shellStartDesktopMode
- .text          0x000000000040b55f      0x44d login.o
-                0x000000000040b55f                loginCheckPassword
- .text          0x000000000040b9ac      0x18f tests.o
-                0x000000000040b9ac                testsTimerUpdateObject
-                0x000000000040ba84                testsInitTimer
-                0x000000000040bb06                testScrollChar
- .text          0x000000000040bb3b      0xa00 cmdline.o
-                0x000000000040bb3b                shellShowPID
-                0x000000000040bb65                shellShowPPID
-                0x000000000040bb8f                shellShowUID
-                0x000000000040bbbc                shellShowGID
-                0x000000000040bbe9                shellShowUserSessionID
-                0x000000000040bc16                shellShowWindowStationID
-                0x000000000040bc43                shellShowDesktopID
-                0x000000000040bc70                shellShowProcessHeapPointer
-                0x000000000040bcb7                shellShowKernelHeapPointer
-                0x000000000040bcf2                shellShowDiskInfo
-                0x000000000040bd0e                shellShowVolumeInfo
-                0x000000000040bd2a                shellShowMemoryInfo
-                0x000000000040bd46                shellShowPCIInfo
-                0x000000000040bd62                shellShowKernelInfo
-                0x000000000040bd7e                shellExecuteThisScript
-                0x000000000040be2b                absolute_pathname
-                0x000000000040bf91                shellInitPathname
-                0x000000000040bfe1                shellInitFilename
-                0x000000000040c031                shell_pathname_backup
-                0x000000000040c0a8                shell_print_tokenList
-                0x000000000040c14c                is_bin
-                0x000000000040c1bd                is_sh1
-                0x000000000040c22e                shellCheckPassword
-                0x000000000040c238                shellPrompt
-                0x000000000040c2c1                shellShowExperienceMenu
-                0x000000000040c2da                shellShowTestsMenu
-                0x000000000040c2f3                shellTree
-                0x000000000040c30c                shellThread
-                0x000000000040c38b                shellPipeTest
-                0x000000000040c3d0                shellSocketTest
- .text          0x000000000040c53b       0x43 input.o
-                0x000000000040c53b                host_get_message
- .text          0x000000000040c57e       0x1b pixel.o
-                0x000000000040c57e                gws_backbuffer_putpixel
- .text          0x000000000040c599       0x2b line.o
-                0x000000000040c599                my_buffer_horizontal_line
- .text          0x000000000040c5c4       0x86 rect.o
-                0x000000000040c5c4                drawDataRectangle
- .text          0x000000000040c64a      0x1c7 char.o
-                0x000000000040c64a                my_buffer_char_blt
-                0x000000000040c667                set_char_width
-                0x000000000040c675                set_char_height
-                0x000000000040c683                get_char_width
-                0x000000000040c68d                get_char_height
-                0x000000000040c697                gws_drawchar_transparent
-                0x000000000040c751                gws_draw_char
- .text          0x000000000040c811      0x1f3 gws.o
-                0x000000000040c811                gws_init
-                0x000000000040c843                serverInit
-                0x000000000040c860                serverDialog
- .text          0x000000000040ca04      0x90f terminal.o
-                0x000000000040ca04                terminalInsertNextChar
-                0x000000000040ca32                terminalInsertNullTerminator
-                0x000000000040ca42                terminalInsertLF
-                0x000000000040ca52                terminalInsertCR
-                0x000000000040cad8                terminalGetCharXY
-                0x000000000040cb0b                terminalInsertCharXY
-                0x000000000040cb94                terminalRefreshCurrentChar2
-                0x000000000040cc3d                terminalRefreshCurrentChar
-                0x000000000040cce6                terminalRefreshChar
-                0x000000000040cd42                terminalRefreshLine
-                0x000000000040cdb8                terminalRefreshScreen
-                0x000000000040ce5a                terminalClearScreen
-                0x000000000040ced3                terminalSetCursor
-                0x000000000040cf0e                terminalClearBuffer
-                0x000000000040cfb7                terminalShowScreenBuffer
-                0x000000000040cfc5                terminalRefreshVisibleArea
-                0x000000000040d09d                updateVisibleArea
-                0x000000000040d100                testChangeVisibleArea
-                0x000000000040d12a                testShowLines
-                0x000000000040d1c7                clearLine
-                0x000000000040d235                textSetTopRow
-                0x000000000040d243                textGetTopRow
-                0x000000000040d24d                textSetBottomRow
-                0x000000000040d25b                textGetBottomRow
-                0x000000000040d265                textSetCurrentRow
-                0x000000000040d273                textGetCurrentRow
-                0x000000000040d27d                textSetCurrentCol
-                0x000000000040d28b                textGetCurrentCol
-                0x000000000040d295                move_to
-                0x000000000040d2c1                pad_to
- .text          0x000000000040d313      0x877 termui.o
-                0x000000000040d313                termui_fntos
-                0x000000000040d42d                terminalTopbarProcedure
-                0x000000000040d586                terminalCreateEditBox
-                0x000000000040d5f4                terminalCreateMainWindow
-                0x000000000040d6b0                terminalCreateWindow
-                0x000000000040d742                terminalDisplayBMP
-                0x000000000040d7b6                terminalDisplayBMPEx
-                0x000000000040d842                terminalTestDisplayBMP
-                0x000000000040d8a4                bmpDisplayBMP
-                0x000000000040d8c1                terminalCreateTaskBar
-                0x000000000040d9fc                terminalTestButtons
+                0x00000000004013a1                initialize_buffer
+                0x00000000004013e9                noratermProcedure
+                0x0000000000401a3d                shellWaitCmd
+                0x0000000000401a57                shellCompare
+                0x0000000000403a1c                terminalInitSystemMetrics
+                0x0000000000403ab5                terminalInitWindowLimits
+                0x0000000000403b73                terminalInitWindowSizes
+                0x0000000000403bbf                terminalInitWindowPosition
+                0x0000000000403bd9                terminalTerminal
+                0x0000000000403d60                terminalInit
+                0x0000000000403e5c                shellTestLoadFile
+                0x0000000000403ec8                shellTestThreads
+                0x0000000000403f76                shellScroll
+                0x0000000000403f89                shellTestMBR
+                0x0000000000403fe4                shellShowInfo
+                0x0000000000404091                shellShowMetrics
+                0x0000000000404143                shellShowSystemInfo
+                0x00000000004041be                terminalShowWindowInfo
+                0x000000000040426f                shellSendMessage
+                0x000000000040428b                shell_memcpy_bytes
+                0x00000000004042b7                shellExit
+                0x00000000004042ce                shellUpdateWorkingDiretoryString
+                0x000000000040432d                shellInitializeWorkingDiretoryString
+                0x00000000004043b7                shellUpdateCurrentDirectoryID
+                0x00000000004043c5                shellTaskList
+                0x00000000004044e8                shell_fntos
+                0x0000000000404602                shell_gramado_core_init_execve
+                0x000000000040466d                feedterminalDialog
+                0x00000000004046f1                die
+                0x0000000000404733                concat
+                0x00000000004047e9                error
+                0x000000000040483d                fatal
+                0x0000000000404867                save_string
+                0x00000000004048a3                shell_save_file
+                0x0000000000404a18                save_string2
+                0x0000000000404b29                show_shell_version
+                0x0000000000404b53                terminal_write_char
+                0x0000000000404b73                main
+ .text          0x0000000000405096       0x28 stubs.o
+                0x0000000000405096                gramado_system_call
+ .text          0x00000000004050be        0x0 ctype.o
+ .text          0x00000000004050be     0x25c4 stdio.o
+                0x0000000000405106                stdio_atoi
+                0x00000000004051cd                stdio_fntos
+                0x00000000004052f7                fclose
+                0x0000000000405318                fopen
+                0x0000000000405339                scroll
+                0x0000000000405406                puts
+                0x0000000000405421                fread
+                0x0000000000405442                fwrite
+                0x0000000000405824                printf3
+                0x0000000000405841                printf_atoi
+                0x0000000000405931                printf_i2hex
+                0x0000000000405993                printf2
+                0x0000000000405b18                sprintf
+                0x0000000000405b6d                putchar
+                0x0000000000405b8e                outbyte
+                0x0000000000405d4c                _outbyte
+                0x0000000000405d7b                input
+                0x0000000000405ecf                getchar
+                0x0000000000405efd                stdioInitialize
+                0x00000000004060ff                fflush
+                0x0000000000406120                fprintf
+                0x0000000000406141                fputs
+                0x0000000000406162                gets
+                0x00000000004061ed                ungetc
+                0x00000000004061f7                ftell
+                0x0000000000406218                fileno
+                0x0000000000406222                fgetc
+                0x0000000000406243                feof
+                0x0000000000406264                ferror
+                0x0000000000406285                fseek
+                0x00000000004062a6                fputc
+                0x00000000004062c7                stdioSetCursor
+                0x00000000004062e2                stdioGetCursorX
+                0x00000000004062fd                stdioGetCursorY
+                0x0000000000406318                scanf
+                0x00000000004064b2                sscanf
+                0x000000000040666d                kvprintf
+                0x00000000004074d7                printf
+                0x0000000000407501                vfprintf
+                0x0000000000407579                vprintf
+                0x0000000000407598                stdout_printf
+                0x00000000004075c4                stderr_printf
+                0x00000000004075f0                perror
+                0x0000000000407607                rewind
+                0x0000000000407643                snprintf
+                0x0000000000407657                stdio_initialize_standard_streams
+ .text          0x0000000000407682     0x105e stdlib.o
+                0x000000000040769f                rtGetHeapStart
+                0x00000000004076a9                rtGetHeapEnd
+                0x00000000004076b3                rtGetHeapPointer
+                0x00000000004076bd                rtGetAvailableHeap
+                0x00000000004076c7                heapSetLibcHeap
+                0x000000000040777a                heapAllocateMemory
+                0x00000000004079ac                FreeHeap
+                0x00000000004079b6                heapInit
+                0x0000000000407b49                stdlibInitMM
+                0x0000000000407bac                libcInitRT
+                0x0000000000407bce                rand
+                0x0000000000407beb                srand
+                0x0000000000407bf9                xmalloc
+                0x0000000000407c2b                stdlib_die
+                0x0000000000407c61                malloc
+                0x0000000000407c9d                realloc
+                0x0000000000407cda                free
+                0x0000000000407ce0                calloc
+                0x0000000000407d26                zmalloc
+                0x0000000000407d62                system
+                0x0000000000408126                stdlib_strncmp
+                0x0000000000408189                __findenv
+                0x0000000000408254                getenv
+                0x0000000000408281                atoi
+                0x0000000000408348                reverse
+                0x00000000004083af                itoa
+                0x000000000040845d                abs
+                0x000000000040846d                strtod
+                0x000000000040869f                strtof
+                0x00000000004086bb                strtold
+                0x00000000004086ce                atof
+ .text          0x00000000004086e0      0x772 string.o
+                0x00000000004086e0                memcmp
+                0x0000000000408745                strdup
+                0x0000000000408797                strndup
+                0x00000000004087f8                strrchr
+                0x0000000000408833                strtoimax
+                0x000000000040883d                strtoumax
+                0x0000000000408847                strcasecmp
+                0x00000000004088af                strncpy
+                0x0000000000408905                strcmp
+                0x000000000040896a                strncmp
+                0x00000000004089cd                memset
+                0x0000000000408a14                memoryZeroMemory
+                0x0000000000408a3b                memcpy
+                0x0000000000408a78                strcpy
+                0x0000000000408aac                strcat
+                0x0000000000408adb                bcopy
+                0x0000000000408b07                bzero
+                0x0000000000408b27                strlen
+                0x0000000000408b55                strnlen
+                0x0000000000408b89                strcspn
+                0x0000000000408c28                strspn
+                0x0000000000408cc7                strtok_r
+                0x0000000000408dae                strtok
+                0x0000000000408dc6                strchr
+                0x0000000000408df2                strstr
+ .text          0x0000000000408e52       0x89 conio.o
+                0x0000000000408e52                putch
+                0x0000000000408e76                cputs
+                0x0000000000408eab                getch
+                0x0000000000408ec3                getche
+ .text          0x0000000000408edb       0x49 socket.o
+                0x0000000000408edb                listen
+                0x0000000000408ee5                recv
+                0x0000000000408eef                send
+                0x0000000000408ef9                shutdown
+                0x0000000000408f03                socket
+ .text          0x0000000000408f24       0x12 signal.o
+                0x0000000000408f24                signal
+                0x0000000000408f2c                sigaction
+ .text          0x0000000000408f36      0x301 unistd.o
+                0x0000000000408f36                execve
+                0x0000000000408f95                exit
+                0x0000000000408fb5                fork
+                0x0000000000408feb                sys_fork
+                0x0000000000409021                fast_fork
+                0x0000000000409049                setuid
+                0x0000000000409064                getuid
+                0x000000000040907f                geteuid
+                0x0000000000409089                getpid
+                0x00000000004090a1                getppid
+                0x00000000004090b9                getgid
+                0x00000000004090d4                dup
+                0x00000000004090ee                dup2
+                0x000000000040910a                dup3
+                0x0000000000409128                fcntl
+                0x0000000000409132                nice
+                0x000000000040913c                pause
+                0x0000000000409146                mkdir
+                0x000000000040915a                rmdir
+                0x0000000000409164                link
+                0x000000000040916e                mlock
+                0x0000000000409178                munlock
+                0x0000000000409182                mlockall
+                0x000000000040918c                munlockall
+                0x0000000000409196                sysconf
+                0x00000000004091a0                fsync
+                0x00000000004091aa                fdatasync
+                0x00000000004091b4                fpathconf
+                0x00000000004091be                pathconf
+                0x00000000004091c8                ioctl
+                0x00000000004091d2                open
+                0x00000000004091f8                close
+                0x0000000000409216                pipe
+ .text          0x0000000000409237     0x215c api.o
+                0x0000000000409237                system_call
+                0x000000000040925f                apiSystem
+                0x0000000000409667                system1
+                0x0000000000409688                system2
+                0x00000000004096a9                system3
+                0x00000000004096ca                system4
+                0x00000000004096eb                system5
+                0x000000000040970c                system6
+                0x000000000040972d                system7
+                0x000000000040974e                system8
+                0x000000000040976f                system9
+                0x0000000000409790                system10
+                0x00000000004097b1                system11
+                0x00000000004097d2                system12
+                0x00000000004097f3                system13
+                0x0000000000409814                system14
+                0x0000000000409835                system15
+                0x0000000000409856                refresh_buffer
+                0x0000000000409932                print_string
+                0x0000000000409938                vsync
+                0x000000000040994d                edit_box
+                0x0000000000409964                gde_system_procedure
+                0x000000000040999a                SetNextWindowProcedure
+                0x00000000004099a4                set_cursor
+                0x00000000004099bb                put_char
+                0x00000000004099c1                gde_load_bitmap_16x16
+                0x00000000004099da                apiShutDown
+                0x00000000004099f1                apiInitBackground
+                0x00000000004099f7                MessageBox
+                0x0000000000409f85                mbProcedure
+                0x0000000000409ff3                DialogBox
+                0x000000000040a3a5                dbProcedure
+                0x000000000040a413                call_kernel
+                0x000000000040a58e                call_gui
+                0x000000000040a61a                gde_create_window
+                0x000000000040a693                gde_register_window
+                0x000000000040a6bb                gde_close_window
+                0x000000000040a6e3                gde_set_focus
+                0x000000000040a70b                gde_get_focus
+                0x000000000040a720                APIKillFocus
+                0x000000000040a748                APISetActiveWindow
+                0x000000000040a770                APIGetActiveWindow
+                0x000000000040a785                APIShowCurrentProcessInfo
+                0x000000000040a79b                APIresize_window
+                0x000000000040a7b5                APIredraw_window
+                0x000000000040a7cf                APIreplace_window
+                0x000000000040a7e9                APImaximize_window
+                0x000000000040a805                APIminimize_window
+                0x000000000040a821                APIupdate_window
+                0x000000000040a83d                APIget_foregroung_window
+                0x000000000040a853                APIset_foregroung_window
+                0x000000000040a86f                apiExit
+                0x000000000040a88c                kill
+                0x000000000040a892                dead_thread_collector
+                0x000000000040a8a8                api_strncmp
+                0x000000000040a90b                refresh_screen
+                0x000000000040a921                api_refresh_screen
+                0x000000000040a92c                apiReboot
+                0x000000000040a942                apiSetCursor
+                0x000000000040a95a                apiGetCursorX
+                0x000000000040a972                apiGetCursorY
+                0x000000000040a98a                apiGetClientAreaRect
+                0x000000000040a9a2                apiSetClientAreaRect
+                0x000000000040a9c1                gde_create_process
+                0x000000000040a9da                gde_create_thread
+                0x000000000040a9f3                apiStartThread
+                0x000000000040aa0f                apiFOpen
+                0x000000000040aa3b                gde_save_file
+                0x000000000040aa8e                apiDown
+                0x000000000040aae3                apiUp
+                0x000000000040ab38                enterCriticalSection
+                0x000000000040ab73                exitCriticalSection
+                0x000000000040ab8c                initializeCriticalSection
+                0x000000000040aba5                gde_begin_paint
+                0x000000000040abb0                gde_end_paint
+                0x000000000040abbb                apiPutChar
+                0x000000000040abd7                apiDefDialog
+                0x000000000040abe1                apiGetSystemMetrics
+                0x000000000040abff                api_set_current_keyboard_responder
+                0x000000000040ac1e                api_get_current_keyboard_responder
+                0x000000000040ac36                api_set_current_mouse_responder
+                0x000000000040ac55                api_get_current_mouse_responder
+                0x000000000040ac6d                api_set_window_with_text_input
+                0x000000000040acaf                api_get_window_with_text_input
+                0x000000000040acc7                gramadocore_init_execve
+                0x000000000040acd1                apiDialog
+                0x000000000040ad60                api_getchar
+                0x000000000040ad78                apiDisplayBMP
+                0x000000000040b17f                apiSendMessageToProcess
+                0x000000000040b1c2                apiSendMessageToThread
+                0x000000000040b205                apiSendMessage
+                0x000000000040b23b                apiDrawText
+                0x000000000040b27a                apiGetWSScreenWindow
+                0x000000000040b292                apiGetWSMainWindow
+                0x000000000040b2aa                apiCreateTimer
+                0x000000000040b2c7                apiGetSysTimeInfo
+                0x000000000040b2e5                apiShowWindow
+                0x000000000040b301                apiStartTerminal
+                0x000000000040b375                apiUpdateStatusBar
+ .text          0x000000000040b393      0x1a5 builtins.o
+                0x000000000040b393                cd_buitins
+                0x000000000040b3ac                cls_builtins
+                0x000000000040b3ba                copy_builtins
+                0x000000000040b3c0                date_builtins
+                0x000000000040b3c6                del_builtins
+                0x000000000040b3cc                dir_builtins
+                0x000000000040b408                echo_builtins
+                0x000000000040b424                exec_builtins
+                0x000000000040b43d                exit_builtins
+                0x000000000040b463                getpid_builtins
+                0x000000000040b475                getppid_builtins
+                0x000000000040b487                getuid_builtins
+                0x000000000040b499                getgid_builtins
+                0x000000000040b4ab                help_builtins
+                0x000000000040b51c                pwd_builtins
+ .text          0x000000000040b538       0x8d desktop.o
+                0x000000000040b538                desktopInitialize
+                0x000000000040b581                desktopProcedure
+                0x000000000040b59e                shellStartDesktopMode
+ .text          0x000000000040b5c5      0x44d login.o
+                0x000000000040b5c5                loginCheckPassword
+ .text          0x000000000040ba12      0x18f tests.o
+                0x000000000040ba12                testsTimerUpdateObject
+                0x000000000040baea                testsInitTimer
+                0x000000000040bb6c                testScrollChar
+ .text          0x000000000040bba1      0xa00 cmdline.o
+                0x000000000040bba1                shellShowPID
+                0x000000000040bbcb                shellShowPPID
+                0x000000000040bbf5                shellShowUID
+                0x000000000040bc22                shellShowGID
+                0x000000000040bc4f                shellShowUserSessionID
+                0x000000000040bc7c                shellShowWindowStationID
+                0x000000000040bca9                shellShowDesktopID
+                0x000000000040bcd6                shellShowProcessHeapPointer
+                0x000000000040bd1d                shellShowKernelHeapPointer
+                0x000000000040bd58                shellShowDiskInfo
+                0x000000000040bd74                shellShowVolumeInfo
+                0x000000000040bd90                shellShowMemoryInfo
+                0x000000000040bdac                shellShowPCIInfo
+                0x000000000040bdc8                shellShowKernelInfo
+                0x000000000040bde4                shellExecuteThisScript
+                0x000000000040be91                absolute_pathname
+                0x000000000040bff7                shellInitPathname
+                0x000000000040c047                shellInitFilename
+                0x000000000040c097                shell_pathname_backup
+                0x000000000040c10e                shell_print_tokenList
+                0x000000000040c1b2                is_bin
+                0x000000000040c223                is_sh1
+                0x000000000040c294                shellCheckPassword
+                0x000000000040c29e                shellPrompt
+                0x000000000040c327                shellShowExperienceMenu
+                0x000000000040c340                shellShowTestsMenu
+                0x000000000040c359                shellTree
+                0x000000000040c372                shellThread
+                0x000000000040c3f1                shellPipeTest
+                0x000000000040c436                shellSocketTest
+ .text          0x000000000040c5a1       0x43 input.o
+                0x000000000040c5a1                host_get_message
+ .text          0x000000000040c5e4       0x1b pixel.o
+                0x000000000040c5e4                gws_backbuffer_putpixel
+ .text          0x000000000040c5ff       0x2b line.o
+                0x000000000040c5ff                my_buffer_horizontal_line
+ .text          0x000000000040c62a       0x86 rect.o
+                0x000000000040c62a                drawDataRectangle
+ .text          0x000000000040c6b0      0x1c7 char.o
+                0x000000000040c6b0                my_buffer_char_blt
+                0x000000000040c6cd                set_char_width
+                0x000000000040c6db                set_char_height
+                0x000000000040c6e9                get_char_width
+                0x000000000040c6f3                get_char_height
+                0x000000000040c6fd                gws_drawchar_transparent
+                0x000000000040c7b7                gws_draw_char
+ .text          0x000000000040c877      0x1f3 gws.o
+                0x000000000040c877                gws_init
+                0x000000000040c8a9                serverInit
+                0x000000000040c8c6                serverDialog
+ .text          0x000000000040ca6a      0x90f terminal.o
+                0x000000000040ca6a                terminalInsertNextChar
+                0x000000000040ca98                terminalInsertNullTerminator
+                0x000000000040caa8                terminalInsertLF
+                0x000000000040cab8                terminalInsertCR
+                0x000000000040cb3e                terminalGetCharXY
+                0x000000000040cb71                terminalInsertCharXY
+                0x000000000040cbfa                terminalRefreshCurrentChar2
+                0x000000000040cca3                terminalRefreshCurrentChar
+                0x000000000040cd4c                terminalRefreshChar
+                0x000000000040cda8                terminalRefreshLine
+                0x000000000040ce1e                terminalRefreshScreen
+                0x000000000040cec0                terminalClearScreen
+                0x000000000040cf39                terminalSetCursor
+                0x000000000040cf74                terminalClearBuffer
+                0x000000000040d01d                terminalShowScreenBuffer
+                0x000000000040d02b                terminalRefreshVisibleArea
+                0x000000000040d103                updateVisibleArea
+                0x000000000040d166                testChangeVisibleArea
+                0x000000000040d190                testShowLines
+                0x000000000040d22d                clearLine
+                0x000000000040d29b                textSetTopRow
+                0x000000000040d2a9                textGetTopRow
+                0x000000000040d2b3                textSetBottomRow
+                0x000000000040d2c1                textGetBottomRow
+                0x000000000040d2cb                textSetCurrentRow
+                0x000000000040d2d9                textGetCurrentRow
+                0x000000000040d2e3                textSetCurrentCol
+                0x000000000040d2f1                textGetCurrentCol
+                0x000000000040d2fb                move_to
+                0x000000000040d327                pad_to
+ .text          0x000000000040d379      0x877 termui.o
+                0x000000000040d379                termui_fntos
+                0x000000000040d493                terminalTopbarProcedure
+                0x000000000040d5ec                terminalCreateEditBox
+                0x000000000040d65a                terminalCreateMainWindow
+                0x000000000040d716                terminalCreateWindow
+                0x000000000040d7a8                terminalDisplayBMP
+                0x000000000040d81c                terminalDisplayBMPEx
+                0x000000000040d8a8                terminalTestDisplayBMP
+                0x000000000040d90a                bmpDisplayBMP
+                0x000000000040d927                terminalCreateTaskBar
+                0x000000000040da62                terminalTestButtons
                 0x000000000040e000                . = ALIGN (0x1000)
- *fill*         0x000000000040db8a      0x476 
+ *fill*         0x000000000040dbf0      0x410 
 
 .iplt           0x000000000040e000        0x0
  .iplt          0x000000000040e000        0x0 crt0.o
@@ -606,8 +607,8 @@ Linker script and memory map
 .rodata         0x000000000040e000     0x7eac
  .rodata        0x000000000040e000      0x875 crt0.o
  *fill*         0x000000000040e875        0xb 
- .rodata        0x000000000040e880     0x2061 main.o
- *fill*         0x00000000004108e1       0x1f 
+ .rodata        0x000000000040e880     0x207d main.o
+ *fill*         0x00000000004108fd        0x3 
  .rodata        0x0000000000410900      0x100 ctype.o
                 0x0000000000410900                _ctype
  .rodata        0x0000000000410a00      0x2f4 stdio.o
@@ -638,113 +639,113 @@ Linker script and memory map
  *fill*         0x0000000000415341       0x1f 
  .rodata        0x0000000000415360      0xb4c termui.o
 
-.eh_frame       0x0000000000415eac     0x34cc
+.eh_frame       0x0000000000415eac     0x34ec
  .eh_frame      0x0000000000415eac       0x34 crt0.o
- .eh_frame      0x0000000000415ee0      0x5c8 main.o
-                                        0x5e0 (size before relaxing)
- .eh_frame      0x00000000004164a8       0x24 stubs.o
+ .eh_frame      0x0000000000415ee0      0x5e8 main.o
+                                        0x600 (size before relaxing)
+ .eh_frame      0x00000000004164c8       0x24 stubs.o
                                          0x3c (size before relaxing)
- .eh_frame      0x00000000004164cc      0x710 stdio.o
+ .eh_frame      0x00000000004164ec      0x710 stdio.o
                                         0x728 (size before relaxing)
- .eh_frame      0x0000000000416bdc      0x400 stdlib.o
+ .eh_frame      0x0000000000416bfc      0x400 stdlib.o
                                         0x418 (size before relaxing)
- .eh_frame      0x0000000000416fdc      0x320 string.o
+ .eh_frame      0x0000000000416ffc      0x320 string.o
                                         0x338 (size before relaxing)
- .eh_frame      0x00000000004172fc       0xa0 conio.o
+ .eh_frame      0x000000000041731c       0xa0 conio.o
                                          0xb8 (size before relaxing)
- .eh_frame      0x000000000041739c       0xa0 socket.o
+ .eh_frame      0x00000000004173bc       0xa0 socket.o
                                          0xb8 (size before relaxing)
- .eh_frame      0x000000000041743c       0x40 signal.o
+ .eh_frame      0x000000000041745c       0x40 signal.o
                                          0x58 (size before relaxing)
- .eh_frame      0x000000000041747c      0x420 unistd.o
+ .eh_frame      0x000000000041749c      0x420 unistd.o
                                         0x438 (size before relaxing)
- .eh_frame      0x000000000041789c      0xcac api.o
+ .eh_frame      0x00000000004178bc      0xcac api.o
                                         0xcc4 (size before relaxing)
- .eh_frame      0x0000000000418548      0x1e0 builtins.o
+ .eh_frame      0x0000000000418568      0x1e0 builtins.o
                                         0x1f8 (size before relaxing)
- .eh_frame      0x0000000000418728       0x60 desktop.o
+ .eh_frame      0x0000000000418748       0x60 desktop.o
                                          0x78 (size before relaxing)
- .eh_frame      0x0000000000418788       0x20 login.o
+ .eh_frame      0x00000000004187a8       0x20 login.o
                                          0x38 (size before relaxing)
- .eh_frame      0x00000000004187a8       0x68 tests.o
+ .eh_frame      0x00000000004187c8       0x68 tests.o
                                          0x80 (size before relaxing)
- .eh_frame      0x0000000000418810      0x3c4 cmdline.o
+ .eh_frame      0x0000000000418830      0x3c4 cmdline.o
                                         0x3dc (size before relaxing)
- .eh_frame      0x0000000000418bd4       0x20 input.o
+ .eh_frame      0x0000000000418bf4       0x20 input.o
                                          0x38 (size before relaxing)
- .eh_frame      0x0000000000418bf4       0x20 pixel.o
+ .eh_frame      0x0000000000418c14       0x20 pixel.o
                                          0x38 (size before relaxing)
- .eh_frame      0x0000000000418c14       0x20 line.o
+ .eh_frame      0x0000000000418c34       0x20 line.o
                                          0x38 (size before relaxing)
- .eh_frame      0x0000000000418c34       0x20 rect.o
+ .eh_frame      0x0000000000418c54       0x20 rect.o
                                          0x38 (size before relaxing)
- .eh_frame      0x0000000000418c54       0xe0 char.o
+ .eh_frame      0x0000000000418c74       0xe0 char.o
                                          0xf8 (size before relaxing)
- .eh_frame      0x0000000000418d34       0x60 gws.o
+ .eh_frame      0x0000000000418d54       0x60 gws.o
                                          0x78 (size before relaxing)
- .eh_frame      0x0000000000418d94      0x484 terminal.o
+ .eh_frame      0x0000000000418db4      0x484 terminal.o
                                         0x49c (size before relaxing)
- .eh_frame      0x0000000000419218      0x160 termui.o
+ .eh_frame      0x0000000000419238      0x160 termui.o
                                         0x178 (size before relaxing)
 
-.rel.dyn        0x0000000000419378        0x0
- .rel.got       0x0000000000419378        0x0 crt0.o
- .rel.iplt      0x0000000000419378        0x0 crt0.o
- .rel.text      0x0000000000419378        0x0 crt0.o
+.rel.dyn        0x0000000000419398        0x0
+ .rel.got       0x0000000000419398        0x0 crt0.o
+ .rel.iplt      0x0000000000419398        0x0 crt0.o
+ .rel.text      0x0000000000419398        0x0 crt0.o
 
-.data           0x0000000000419380     0x5c80
-                0x0000000000419380                data = .
-                0x0000000000419380                _data = .
-                0x0000000000419380                __data = .
+.data           0x00000000004193a0     0x5c60
+                0x00000000004193a0                data = .
+                0x00000000004193a0                _data = .
+                0x00000000004193a0                __data = .
  *(.data)
- .data          0x0000000000419380      0x4c8 crt0.o
- *fill*         0x0000000000419848       0x18 
- .data          0x0000000000419860      0x538 main.o
-                0x0000000000419cf4                running
-                0x0000000000419cf8                primary_prompt
-                0x0000000000419cfc                secondary_prompt
-                0x0000000000419d00                mainwindow_used
-                0x0000000000419d04                remember_on_history
-                0x0000000000419d08                current_command_number
-                0x0000000000419d0c                bashrc_file
-                0x0000000000419d10                shell_config_file
-                0x0000000000419d20                long_args
- .data          0x0000000000419d98        0x0 stubs.o
- .data          0x0000000000419d98        0x0 ctype.o
- .data          0x0000000000419d98        0x0 stdio.o
- .data          0x0000000000419d98        0x8 stdlib.o
-                0x0000000000419d98                _infinity
- .data          0x0000000000419da0        0x0 string.o
- .data          0x0000000000419da0        0x0 conio.o
- .data          0x0000000000419da0        0x0 socket.o
- .data          0x0000000000419da0        0x0 signal.o
- .data          0x0000000000419da0        0x0 unistd.o
- .data          0x0000000000419da0      0x440 api.o
- .data          0x000000000041a1e0      0x492 builtins.o
- *fill*         0x000000000041a672        0xe 
- .data          0x000000000041a680      0x49c desktop.o
-                0x000000000041ab14                primary_desktop_folder
-                0x000000000041ab18                secondary_desktop_folder
- *fill*         0x000000000041ab1c        0x4 
- .data          0x000000000041ab20      0x492 login.o
- *fill*         0x000000000041afb2        0xe 
- .data          0x000000000041afc0      0x498 tests.o
-                0x000000000041b454                deltaValue
- *fill*         0x000000000041b458        0x8 
- .data          0x000000000041b460      0x492 cmdline.o
- *fill*         0x000000000041b8f2        0xe 
- .data          0x000000000041b900      0x492 input.o
- *fill*         0x000000000041bd92        0xe 
- .data          0x000000000041bda0      0x440 pixel.o
- .data          0x000000000041c1e0      0x440 line.o
- .data          0x000000000041c620      0x440 rect.o
- .data          0x000000000041ca60      0x440 char.o
- .data          0x000000000041cea0      0x840 gws.o
- .data          0x000000000041d6e0      0x492 terminal.o
- *fill*         0x000000000041db72        0xe 
- .data          0x000000000041db80      0x492 termui.o
+ .data          0x00000000004193a0      0x4c8 crt0.o
+ *fill*         0x0000000000419868       0x18 
+ .data          0x0000000000419880      0x538 main.o
+                0x0000000000419d14                running
+                0x0000000000419d18                primary_prompt
+                0x0000000000419d1c                secondary_prompt
+                0x0000000000419d20                mainwindow_used
+                0x0000000000419d24                remember_on_history
+                0x0000000000419d28                current_command_number
+                0x0000000000419d2c                bashrc_file
+                0x0000000000419d30                shell_config_file
+                0x0000000000419d40                long_args
+ .data          0x0000000000419db8        0x0 stubs.o
+ .data          0x0000000000419db8        0x0 ctype.o
+ .data          0x0000000000419db8        0x0 stdio.o
+ .data          0x0000000000419db8        0x8 stdlib.o
+                0x0000000000419db8                _infinity
+ .data          0x0000000000419dc0        0x0 string.o
+ .data          0x0000000000419dc0        0x0 conio.o
+ .data          0x0000000000419dc0        0x0 socket.o
+ .data          0x0000000000419dc0        0x0 signal.o
+ .data          0x0000000000419dc0        0x0 unistd.o
+ .data          0x0000000000419dc0      0x440 api.o
+ .data          0x000000000041a200      0x492 builtins.o
+ *fill*         0x000000000041a692        0xe 
+ .data          0x000000000041a6a0      0x49c desktop.o
+                0x000000000041ab34                primary_desktop_folder
+                0x000000000041ab38                secondary_desktop_folder
+ *fill*         0x000000000041ab3c        0x4 
+ .data          0x000000000041ab40      0x492 login.o
+ *fill*         0x000000000041afd2        0xe 
+ .data          0x000000000041afe0      0x498 tests.o
+                0x000000000041b474                deltaValue
+ *fill*         0x000000000041b478        0x8 
+ .data          0x000000000041b480      0x492 cmdline.o
+ *fill*         0x000000000041b912        0xe 
+ .data          0x000000000041b920      0x492 input.o
+ *fill*         0x000000000041bdb2        0xe 
+ .data          0x000000000041bdc0      0x440 pixel.o
+ .data          0x000000000041c200      0x440 line.o
+ .data          0x000000000041c640      0x440 rect.o
+ .data          0x000000000041ca80      0x440 char.o
+ .data          0x000000000041cec0      0x840 gws.o
+ .data          0x000000000041d700      0x492 terminal.o
+ *fill*         0x000000000041db92        0xe 
+ .data          0x000000000041dba0      0x492 termui.o
                 0x000000000041f000                . = ALIGN (0x1000)
- *fill*         0x000000000041e012      0xfee 
+ *fill*         0x000000000041e032      0xfce 
 
 .got            0x000000000041f000        0x0
  .got           0x000000000041f000        0x0 crt0.o
@@ -761,7 +762,7 @@ Linker script and memory map
                 0x000000000041f000                __bss = .
  *(.bss)
  .bss           0x000000000041f000        0x8 crt0.o
- .bss           0x000000000041f008       0x84 main.o
+ .bss           0x000000000041f008       0x88 main.o
                 0x000000000041f008                _init_app
                 0x000000000041f00c                ShellFlag
                 0x000000000041f010                shellStatus
@@ -792,10 +793,10 @@ Linker script and memory map
                 0x000000000041f074                no_line_editing
                 0x000000000041f078                no_brace_expansion
                 0x000000000041f07c                __sequence_status
- .bss           0x000000000041f08c        0x0 stubs.o
- .bss           0x000000000041f08c        0x0 ctype.o
- .bss           0x000000000041f08c        0x1 stdio.o
- *fill*         0x000000000041f08d       0x13 
+ .bss           0x000000000041f090        0x0 stubs.o
+ .bss           0x000000000041f090        0x0 ctype.o
+ .bss           0x000000000041f090        0x1 stdio.o
+ *fill*         0x000000000041f091        0xf 
  .bss           0x000000000041f0a0     0x8020 stdlib.o
                 0x000000000041f0a0                environ
  .bss           0x00000000004270c0        0x4 string.o

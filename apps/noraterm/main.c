@@ -166,7 +166,22 @@ and are themselves never placed in the input queue.
 //#importante
 //vamos tentar copiar as estruturas usadas pelo terminal gramado/st
 
-
+enum term_mode {
+	MODE_WRAP	 = 1,
+	MODE_INSERT      = 2,
+	MODE_APPKEYPAD   = 4,
+	MODE_ALTSCREEN   = 8,
+	MODE_CRLF	 = 16,
+	MODE_MOUSEBTN    = 32,
+	MODE_MOUSEMOTION = 64,
+	MODE_MOUSE       = 32|64,
+	MODE_REVERSE     = 128,
+	MODE_KBDLOCK     = 256,
+	MODE_HIDE	 = 512,
+	MODE_ECHO	 = 1024,
+	MODE_APPCURSOR	 = 2048,
+	MODE_MOUSESGR    = 4096,
+};
 
 enum escape_state {
 	
@@ -195,7 +210,7 @@ typedef struct {
 	//TCursor c;	/* cursor */
 	//int top;	/* top    scroll limit */
 	//int bot;	/* bottom scroll limit */
-	//int mode;	/* terminal mode flags */
+	int mode;	/* terminal mode flags */
 	int esc;	/* escape state flags */
 	//bool numlock;	/* lock numbers in keyboard */
 	//bool *tabs;
@@ -205,11 +220,32 @@ typedef struct {
 static Term term;
 
 
+#define ESC_BUF_SIZ 32 //(128*UTF_SIZ)
+#define ESC_ARG_SIZ 16
+#define STR_BUF_SIZ   ESC_BUF_SIZ
+#define STR_ARG_SIZ ESC_ARG_SIZ
+
+/* CSI Escape sequence structs */
+/* ESC '[' [[ [<priv>] <arg> [;]] <mode>] */
+typedef struct {
+	char buf[ESC_BUF_SIZ]; /* raw string */
+	int len;	       /* raw string length */
+	char priv;
+	int arg[ESC_ARG_SIZ];
+	int narg;	       /* nb of args */
+	char mode;
+} CSIEscape;
 
 
-
-
-
+/* STR Escape sequence structs */
+/* ESC type [[ [<priv>] <arg> [;]] <mode>] ESC '\' */
+typedef struct {
+	char type;	     /* ESC type ... */
+	char buf[STR_BUF_SIZ]; /* raw string */
+	int len;	       /* raw string length */
+	char *args[STR_ARG_SIZ];
+	int narg;	      /* nb of args */
+} STREscape;
 
 #define VT102_ID "\033[?6c"
 
@@ -570,7 +606,7 @@ void terminalInitWindowPosition ();
 
 void tputc (char *c, int len);
 int print_buffer (void);
-
+void initialize_buffer();
 
 // #todo:
 // Se possível, colocar essas rotinas em tests;c
@@ -981,8 +1017,9 @@ void tputc (char *c, int len){
 int print_buffer (void){
 	
 	int c;
+	int i;
 	
-	int sequence_status = 0;
+	//int sequence_status = 0;
 	
 	int charsize = 1; /* size of utf8 char in bytes */
 	
@@ -991,53 +1028,45 @@ int print_buffer (void){
     
     size_t len = strlen (LINE_BUFFER);
     
-    
-    
+   
     //#todo limits
-    //LINE_BUFFER_SIZE
     
-    int i;
+    if ( len >= LINE_BUFFER_SIZE )
+    {
+		printf ( "print_buffer: buffer limit\n");
+		return -1;
+	}
+    
+
     
     for (i=0; i<len; i++)
     {
 	    //tputc (char *c, int len);
 	      tputc ( (char *) &LINE_BUFFER[i], (int) 1 );	
 	}
+	 
+	 
+	//depois de lido o buffer podemos reinicali-lo 
 	
-    /*
-    for (i=0; i<len; i++)
-    {
-		c = LINE_BUFFER[i];
-		
-	    switch (c)
-	    {
-			//case '\033':
-		    case '\x1b':
-		        sequence_status = 1;
-		        //printf ("{#debug:ESCAPE FOUND!}\n");
-		        break;	
-		     
-		    case 'm':
-		        if (sequence_status == 1 || sequence_status == 2) 
-		            sequence_status = 0;
-		        break;
-		        
-		    case '[':
-		        sequence_status = 2;
-		        break;
-		    
-		     //case ''       
-		
-		    //...
-		    
-		    default:
-		       printf ("%c",c);
-		       break;
-		}	
-	}
-	*/
-    
+    initialize_buffer();
+	    
     return 0;	
+}
+
+
+void initialize_buffer(){
+	
+	int i;
+	
+	for (i=0; i<=LINE_BUFFER_SIZE; i++)
+	{
+		LINE_BUFFER[i] = 0;
+	}
+	
+    line_buffer_tail = 0;  //entrada.
+    line_buffer_head = 0;  //saída.
+    
+    line_buffer_buffersize = LINE_BUFFER_SIZE;	
 }
 
 
@@ -1299,7 +1328,13 @@ void *noratermProcedure ( struct window_d *window,
 					
 				int xxx_ch;
 				case 2008:
-					line_buffer_buffersize = 1024; //configurando tamanho do buffer.
+					
+					//#importante: testar isso.
+					//initialize_buffer();
+					
+					//line_buffer_buffersize = 1024; //configurando tamanho do buffer.
+					line_buffer_buffersize = LINE_BUFFER_SIZE;
+					
 					//fprintf (stdout,"noraterm: This is a string ..."); //#bugbug
 					//printf ("MSG_TERMINALCOMMAND.2008 pode pegar, coloca no buffer >> \n");
 					printf ("MSG_TERMINALCOMMAND.2008\n");
@@ -1319,10 +1354,6 @@ void *noratermProcedure ( struct window_d *window,
 						{
 							printf ("noraterm: EOL, flush me\n");
 							print_buffer ();
-							
-							//#todo: É nessa hora que temos que tratar
-							//as escape sequencies.
-							//printf (LINE_BUFFER); //provisorio
 							break;
 						}else{
 							
@@ -1334,12 +1365,8 @@ void *noratermProcedure ( struct window_d *window,
 							    LINE_BUFFER[line_buffer_tail] = 0; //FINALIZA;
 							    line_buffer_tail = 0;
 							    
-							    printf ("noraterm: buffer limits, flush me\n");
-							    
+							    printf ("noraterm: buffer limits, flush me\n");							    
 							    print_buffer ();
-							    //#todo: É nessa hora que temos que tratar
-							    //as escape sequencies.							    
-							    //printf (LINE_BUFFER); //provisorio
 							    break;
 						    }							
 						};
@@ -1349,11 +1376,7 @@ void *noratermProcedure ( struct window_d *window,
 				
 				//flush buffer	
 				case 2009:
-					//#todo: É nessa hora que temos que tratar
-					//as escape sequencies.	
-					//provisorio
 					print_buffer ();
-					//printf (LINE_BUFFER);
 					break;
 					
 				// #importante	
