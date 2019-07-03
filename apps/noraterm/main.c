@@ -159,6 +159,58 @@ and are themselves never placed in the input queue.
 //...
 
 
+//
+// Structures
+//
+
+//#importante
+//vamos tentar copiar as estruturas usadas pelo terminal gramado/st
+
+
+
+enum escape_state {
+	
+	ESC_START = 1,
+	ESC_CSI	= 2,
+	ESC_STR	= 4,         /* DSC, OSC, PM, APC */
+	ESC_ALTCHARSET = 8,
+	ESC_STR_END = 16,    /* a final string was encountered */
+	ESC_TEST = 32,       /* Enter in test mode */
+	
+};
+
+
+
+// #importante
+// Colocaremos aqui dentro elementos que apontem para
+//variáveis que já usavamos antes de criarmos essa estrutura.
+/* Internal representation of the screen */
+typedef struct {
+	
+	//int row;	/* nb row */
+	//int col;	/* nb col */
+	//Line *line;	/* screen */
+	//Line *alt;	/* alternate screen */
+	//bool *dirty;	/* dirtyness of lines */
+	//TCursor c;	/* cursor */
+	//int top;	/* top    scroll limit */
+	//int bot;	/* bottom scroll limit */
+	//int mode;	/* terminal mode flags */
+	int esc;	/* escape state flags */
+	//bool numlock;	/* lock numbers in keyboard */
+	//bool *tabs;
+} Term;
+
+//Sem ponteiro.
+static Term term;
+
+
+
+
+
+
+
+
 #define VT102_ID "\033[?6c"
 
 struct window_d *main_window;
@@ -699,6 +751,7 @@ void tputc (char *c, int len){
 	 //if(iofd != -1) {}
 	 
 	 //string normal
+	 //if(term.esc & ESC_STR) 
 	 if(__sequence_status == 0)
 	 {
 		 switch (ascii)
@@ -707,6 +760,7 @@ void tputc (char *c, int len){
 			 //entramos em uma sequência
 			 //logo abaixo esse char será tratado novamente.
 		     case '\033':
+		         term.esc = ESC_START;
                  __sequence_status = 1;
                  break;
              
@@ -740,6 +794,7 @@ void tputc (char *c, int len){
 		    
 			//case '\033':
 		    case '\x1b':
+		        term.esc = ESC_START;
 		        __sequence_status = 1;
 		        printf (" {ESCAPE} ");
 		        return;
@@ -771,22 +826,147 @@ void tputc (char *c, int len){
 		 
 	 // 1b	 
 	 //se iniciamos uma escape sequence
-	 //} else if(term.esc & ESC_START) {
-	 }else if(__sequence_status == 1) {		 
+	 } else if(term.esc & ESC_START) {
+	 //}else if(__sequence_status == 1) {	
 	 
-	     switch(ascii)
-	     {
+	 
+	     //[ aberto.
+	     //analizamos o que vem dpois do [
+	     //#bugbug: Isso pode impedir que
+	     //rode o tratamento do else mais abaixo??
+	     if(term.esc & ESC_CSI){
+		
+		      //csiparse();
+		      switch(ascii)
+		      {
+		     	//quando acaba a sequencia.
+		     	case 'm':
+		     	    term.esc = 0;
+			        __sequence_status = 0;
+			        printf (" {m} ");
+			        return;
+			        break;  
+			     
+		         default:
+		              return;
+		              break;
+		      }
+		 
+		 } else if(term.esc & ESC_STR_END) { 
+	 
+	     } else if(term.esc & ESC_ALTCHARSET) {
+			 
+			 switch(ascii)
+			 {
+			      case 'A': /* UK (IGNORED) */
+			      case '<': /* multinational charset (IGNORED) */
+			      case '5': /* Finnish (IGNORED) */
+			      case 'C': /* Finnish (IGNORED) */
+			      case 'K': /* German (IGNORED) */
+                      break;
+			 }
+			 
+	     } else if(term.esc & ESC_TEST) {
+			 
+			 
+		 }else{
+			
+		   switch(ascii)
+		   {
 			 case '[':
+			     term.esc |= ESC_CSI;
 			     printf (" {CSI} ");
 			     return;
+			     break; 
+			       
+			 case '#':
+			     term.esc |= ESC_TEST;
 			     break;
+			
+			//case 'P': /* DCS -- Device Control String */
+			//case '_': /* APC -- Application Program Command */
+			//case '^': /* PM -- Privacy Message */
+			//case ']': /* OSC -- Operating System Command */
+            //case 'k': /* old title set compatibility */
+			     //term.esc |= ESC_STR;
+			     //break; 
 			     
-			 case 'm':
-			     __sequence_status = 0;
-			     printf (" {m} ");
-			     return;
-			     break;
-		 }
+			case '(': /* set primary charset G0 */  
+			    term.esc |= ESC_ALTCHARSET;
+			    break;    
+			    
+			case ')': /* set secondary charset G1 (IGNORED) */
+			case '*': /* set tertiary charset G2 (IGNORED) */
+			case '+': /* set quaternary charset G3 (IGNORED) */
+				term.esc = 0;
+                __sequence_status = 0;
+                break;  
+                
+                
+             //case 'D': /* IND -- Linefeed */
+                 //term.esc = 0;
+                 //break;
+                 
+             //case 'E': /* NEL -- Next line */
+                 //term.esc = 0;
+                 //break;
+                        			
+			   
+			 //case 'H': /* HTS -- Horizontal tab stop */  
+                 //term.esc = 0;
+                 //break;
+                 
+ 			 //case 'M': /* RI -- Reverse index */    
+                 //term.esc = 0;
+                 //break;
+                 
+                 			     
+			  //case 'Z': /* DECID -- Identify Terminal */   
+                 //term.esc = 0;
+                 //break;
+                 
+                 			 
+			 //case 'c': /* RIS -- Reset to inital state */
+                 //term.esc = 0;
+                 //break; 
+                 
+			 //case '=': /* DECPAM -- Application keypad */
+                 //term.esc = 0;
+                 //break;
+                 			 
+			 //case '>': /* DECPNM -- Normal keypad */
+                 //term.esc = 0;
+                 //break;
+                 			 
+			 //case '7': /* DECSC -- Save Cursor */    
+                 //term.esc = 0;
+                 //break;
+                 			   
+			 //case '8': /* DECRC -- Restore Cursor */
+                 //term.esc = 0;
+                 //break;
+                 
+			 
+			 //case '\\': /* ST -- Stop */  
+                 //term.esc = 0;
+                 //break;	
+                 
+             //#bugbug
+             //precisamos encontrar o lugar certo pra isso
+             //see: gramado/st    
+			 //case 'm':
+			     //__sequence_status = 0;
+			     //printf (" {m} ");
+			     //return;
+			     //break;               
+  
+  			 //erro    
+			 //default:
+			     //break;               
+			     			   
+		   }
+		};	 
+	    
 	     //...
 	     
 	     return;
