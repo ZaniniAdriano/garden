@@ -1175,12 +1175,15 @@ shellProcedure( struct window_d *window,
 		            while (1)
 		            {					
 		                xxx_ch = (int) system_call ( 1002, 0, 0, 0 );
-
+                        
+                        if (xxx_ch == '\0')
+                            break;
+                            
 						if (xxx_ch == '\n')
 						{
-							printf ("noraterm: EOL, flush me\n");
+							printf ("gdeterm: EOL, flush me\n");
 							print_buffer ();
-							break;
+							initialize_buffer ();
 						}else{
 							
 						    //Colocar o char no buffer
@@ -1191,9 +1194,9 @@ shellProcedure( struct window_d *window,
 							    LINE_BUFFER[line_buffer_tail] = 0; //FINALIZA;
 							    line_buffer_tail = 0;
 							    
-							    printf ("noraterm: buffer limits, flush me\n");							    
+							    printf ("gdeterm: buffer limits, flush me\n");							    
 							    print_buffer ();
-							    break;
+							    initialize_buffer ();
 						    }							
 						};
 	                };					

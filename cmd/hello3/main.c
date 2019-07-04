@@ -207,7 +207,11 @@ int main ( int argc, char *argv[] ){
 	//fim.
 	printf ("*fim-do-test\n");
 	
-	
+	//testando o segundo \n
+	//precisaremos renovar o buffer la no terminal?
+	printf("Hello again. *hang\n");  
+		
+		
 	//#bugbug
 	//Esse segundo teste não funcionou.
 	//depois do \n a libc não se comportou como esperado.

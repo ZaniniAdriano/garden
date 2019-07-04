@@ -1309,14 +1309,22 @@ void *noratermProcedure ( struct window_d *window,
 					// mostrando ele na tela e colocando nos buffers do terminal.
 						
 		            while (1)
-		            {					
+		            {	
+						// ?? Como isso funciona ?				
 		                xxx_ch = (int) system_call ( 1002, 0, 0, 0 );
 
+						if (xxx_ch == '\0')
+						    break;
+						    
 						if (xxx_ch == '\n')
 						{
 							printf ("noraterm: EOL, flush me\n");
 							print_buffer ();
-							break;
+							
+							//#test
+							initialize_buffer ();
+							//break;
+							
 						}else{
 							
 						    //Colocar o char no buffer
@@ -1329,7 +1337,10 @@ void *noratermProcedure ( struct window_d *window,
 							    
 							    printf ("noraterm: buffer limits, flush me\n");							    
 							    print_buffer ();
-							    break;
+							    
+							    //#test
+							    initialize_buffer ();
+							    //break;
 						    }							
 						};
 	                };					
