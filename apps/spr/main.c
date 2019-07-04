@@ -3693,12 +3693,13 @@ done:
        em seguida trablharemos nesse input  também
        Esse input é o input usado pela libc.
      */
-	   
-	if ( shellCheckPassword() != 1 ){
-		
+	 
+	 /*  
+	if ( shellCheckPassword() != 1 )
+	{	
 	    printf("shellCheckPassword FAIL \n");		
 	}
-
+     */
 
 	// @todo:
 	// Gerenciamento do heap do processo. ??
@@ -3753,9 +3754,8 @@ done:
 	//>>vamos tentar sem isso e confiarmos na função printf.
 	//apiShowWindow(window);
 	
-    return (int) 0;
-};
-
+    return 0;
+}
 
 
 int shellCheckPassword (){
@@ -3925,7 +3925,7 @@ int shellCheckPassword (){
 #endif
 	
 	return (int) login_status;
-};
+}
 
 
 /*
@@ -3938,6 +3938,7 @@ int shellCheckPassword (){
  * escrever corretamente dentro dela.
  * e isso se faz através de uma chamada ao kernel.
  */
+ 
 void shellSetCursor ( unsigned long x, unsigned long y ){
 	
     //
@@ -3958,7 +3959,7 @@ void shellSetCursor ( unsigned long x, unsigned long y ){
 	//
     
 	move_to ( x, y);
-};
+}
 
 
 /*
@@ -4003,23 +4004,23 @@ void shellHelp (){
 void shellTree (){
 	
     printf (tree_banner);	
-};
+}
 
 
 /*
  **************************************************
  * shellPrompt:
  *     Inicializa o prompt.
- *     Na inicialização de stdio, 
- * prompt foi definido como stdin->_base.
- *
+ *     Na inicialização de stdio, prompt foi definido como stdin
  */
+ 
 void shellPrompt (){
 	
 	int i;
 	
-	//Linpando o buffer de entrada.
-	for ( i=0; i<PROMPT_MAX_DEFAULT; i++ ){
+	//Limpando o buffer de entrada.
+	for ( i=0; i<PROMPT_MAX_DEFAULT; i++ )
+	{
 		prompt[i] = (char) '\0';
 	}
 	
@@ -4031,7 +4032,7 @@ void shellPrompt (){
     printf("\n");
     printf("[%s]", current_workingdiretory_string );	
 	printf("%s", SHELL_PROMPT );
-};
+}
 
 
 /*
@@ -6568,10 +6569,19 @@ noArgs:
 	
 	printf ("Creating window ...\n");
 	
+	//cria, registra e mostra;
 	enterCriticalSection ();    
     hWindow = shellCreateMainWindow (1);
 	exitCriticalSection ();
 	//goto again;
+	
+	if ( (void *) hWindow == NULL )
+	{
+		printf ("FAIL!");
+		while (1){}	
+		//die ("shell.bin: hWindow fail");
+	}	
+	
 	
 	//#bugbug
 	//falha quando chamamos a rotina de pintura da janela.
@@ -6723,24 +6733,11 @@ noArgs:
     //                            10, 10, 200, 200,
     //                            0, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
 
+ 
 
-	//printf("HOLAMBRA KERNEL SHELL\n");	
-    //printf("#debug breakpoint");	
-	//while(1){} 
-
-
-	if ( (void *) hWindow == NULL )
-	{
-		printf ("FAIL!");
-		while (1){}	
-		//die ("shell.bin: hWindow fail");
-	}
 	
 	
-	//printf("HOLAMBRA KERNEL SHELL\n");	
-    //printf("#debug breakpoint");	
-	//while(1){} 
-	
+ 
 	/*
 	 Imprimindo o ponteiro para a estrutura da janela criada 
 	 Estamos testando se o retorno está funcionando nesse caso.
@@ -6927,9 +6924,24 @@ noArgs:
 	//wsWindowWidth = 600;
 	//wsWindowHeight = 480;
 	
+	   //#test
+      struct window_d *w_navbar; //todo; criar global.
+      w_navbar = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "navbar",     
+                                wpWindowLeft +1, wpWindowTop +40, 
+                                wsWindowWidth -38, 24,    
+                                0, 0, COLOR_GRAY, COLOR_GRAY );	
+	
+	APIRegisterWindow (w_navbar);
+	apiShowWindow (w_navbar);
+	  
+	  //#TODO
+	  //validation. register ,,,
+	  
+	
 	//#test - provisorio
 	editboxWindow = (void *) APICreateWindow ( WT_EDITBOX, 1, 1, "editbox-navbar",     
-                                wpWindowLeft +8, wpWindowTop +40, wsWindowWidth -80, 24,    
+                                wpWindowLeft +8, wpWindowTop +40, 
+                                wsWindowWidth -100, 24,    
                                 0, 0, COLOR_WINDOW, COLOR_WINDOW );
 	if ( (void *) editboxWindow == NULL)
 	{	
@@ -6942,27 +6954,61 @@ noArgs:
 	APIRegisterWindow (editboxWindow);
 	apiShowWindow (editboxWindow);
 	
+	
+	
+    struct window_d *navbar_button;
+	navbar_button = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "[>]",     
+                                wsWindowWidth -40, wpWindowTop +40, 
+                                32, 24,    
+                                0, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
+								
+    APIRegisterWindow (navbar_button);
+	apiShowWindow (navbar_button);
+	
 	//===========================================================
 
+    
+    //#test
+	//++
+	void *b = (void *) malloc (1024*100); 	 
+    
+	if ( (void *) b == NULL )
+	{
+		printf ("spr: allocation fail\n");
+		while(1){}
+		//goto fail;
+	}else{
+		
+        // @todo: 
+	    // Usar alguma rotina da API específica para carregar arquivo.
+	    // na verdade tem que fazer essas rotinas na API.
 	
+	    system_call ( SYSTEMCALL_READ_FILE, (unsigned long) "DENNIS  BMP", 
+		    (unsigned long) b, (unsigned long) b );	
+		
+		apiDisplayBMP ( (char *) b, 100, 200 ); 
+			
+		//#bugbug: isso é lento.
+		refresh_screen();	
+	};
+    //--
+    
+    
+	//===========================================================
+		
 	//
 	// Habilitando o cursor piscante de textos.
 	//
 	
 	shellSetCursor ( (terminal_rect.left / 8) , ( terminal_rect.top/8) );	
 	
-	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );
+	//system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );
 	
-    //Mensagem ...
-	//printf("Starting SHELL.BIN in Holambra Kernel ...\n");	
+
 	
     //printf("#debug breakpoint");
     //while(1){} 	
-	
-	
-	//printf("HOLAMBRA KERNEL SHELL\n");	
-   // printf("#debug breakpoint");
-   // while(1){} 		
+	 		
 	
 	//#bugbug
 	//janela usada para input de textos ...
@@ -7003,47 +7049,36 @@ noArgs:
 	// Init Shell:
 	//     Inicializa variáveis, buffers e estruturas. Atualiza a tela.
 	
+	
+	//#importante:
+	//Vamos cancelar a inicialização do shell (console)
+	
+	/*
 	enterCriticalSection();
-
-    //#BUGBUG
-    //Estamos passando um ponteiro que é uma variável local.
-	
-	//#atenção.
-	//mudamos a janela, para o prompt ficar dentro do edibox.
-	//isso pode dar problema.
-
-	//Status = (int) shellInit (hWindow);
 	Status = (int) shellInit (editboxWindow);
-	
-		
 	if ( Status != 0 ){
 		die ("spr: app_main: shellInit fail");
 	};
 	exitCriticalSection();     		
-	
-	//printf("HOLAMBRA KERNEL SHELL\n");	
-    //printf("#debug breakpoint");
-    //while(1){} 			
+    */	
 
-	
-	//
 	//#importante:
 	//Agora é a hora de pegar mensagens de input de teclado.
 	//Mas se o shell não for interativo, então não pegaremos 
 	//mensagens de input de teclado.
-	//
 	
-	if ( interactive != 1 ){
-		
-		//#debug
-        printf("shell is not interactive\n");
-		
+	/*
+	if ( interactive != 1 )
+	{
+        printf("shell is not interactive\n");	
 		goto skip_input;
 	};
+	*/
 	
+	// #test
+	// Desbilitando o cursor piscante.
 	
-	//@todo: Isso é um teste.
-	//system("reboot");
+	system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
 	
 	//
 	// Podemos tentar criar um processo.
@@ -7170,7 +7205,13 @@ skip_input:
 
     shellExecuteThisScript ( argv[3] );
 
+
+    //
+    // End.
+    //
+
 	// Exit process.
+	
 end:
 
     // Desabilitando o cursor de texto.
@@ -7180,7 +7221,7 @@ end:
     system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
 
 #ifdef SHELL_VERBOSE		
-    printf("SHELL.BIN: exiting code '0' ...\n");
+    printf ("spr: exiting code '0' ...\n");
 #endif 
 	
 	return 0;

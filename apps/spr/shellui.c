@@ -509,17 +509,11 @@ void shellCreateEditBox (){
 
 /*
  ******************** 
- * shellCreateTaskBar:
- *
- *     CRIANDO A TOP BAR.
- *     Obs: Essa é uma janela filha.
- *     @todo: ?? e o procedimento de janela ?? e as mensagens ??
- *     Obs: É uma janela simples e limpa, feita para dispositivos IOT 
- * com resolução 800x600.
+ * shellCreateMainWindow:
  *
  */
  
-struct window_d *shellCreateMainWindow( int status ){
+struct window_d *shellCreateMainWindow ( int status ){
 	
 	// #todo:
 	// Precisamos registrar no kernel que essa janela corresponde 
@@ -579,29 +573,25 @@ struct window_d *shellCreateMainWindow( int status ){
     //                            left, top, width, height,    
     //                            0, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
 
-	w = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, "sprinkler",     
+	w = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, "Sprinkler",     
                                 left, top, width, height,    
-                                0, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
-
+                                0, 0, xCOLOR_GRAY2, xCOLOR_GRAY2 );
 
 	if ( (void *) w == NULL )
 	{	
-		printf("shellCreateTaskBar: taskbar Window fail");
-		refresh_screen();
+		printf ("shellCreateMainWindow: main Window fail");
+		//refresh_screen();
 		
-		while (1){
-			asm("pause");
-		}
+		while (1){ asm("pause");}
 		//exit(0);
 	};
 	
 	//Registrar.
     APIRegisterWindow (w);
-	
 	apiShowWindow (w);
 	
 	return w;
-};
+}
 
 
 
