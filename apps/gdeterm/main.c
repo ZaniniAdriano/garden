@@ -101,6 +101,101 @@
 //...
 
 
+
+#define LINE_BUFFER_SIZE 1024
+char LINE_BUFFER[LINE_BUFFER_SIZE];
+int line_buffer_tail;  //entrada.
+int line_buffer_head;  //saída.
+int line_buffer_buffersize;
+//...
+
+int __sequence_status = 0;
+ 
+enum term_mode {
+	MODE_WRAP	     = 1,
+	MODE_INSERT      = 2,
+	MODE_APPKEYPAD   = 4,
+	MODE_ALTSCREEN   = 8,
+	MODE_CRLF	     = 16,
+	MODE_MOUSEBTN    = 32,
+	MODE_MOUSEMOTION = 64,
+	MODE_MOUSE       = 32|64,
+	MODE_REVERSE     = 128,
+	MODE_KBDLOCK     = 256,
+	MODE_HIDE	     = 512,
+	MODE_ECHO	     = 1024,
+	MODE_APPCURSOR	 = 2048,
+	MODE_MOUSESGR    = 4096,
+};
+
+enum escape_state {
+	
+	ESC_START = 1,
+	ESC_CSI	= 2,
+	ESC_STR	= 4,         /* DSC, OSC, PM, APC */
+	ESC_ALTCHARSET = 8,
+	ESC_STR_END = 16,    /* a final string was encountered */
+	ESC_TEST = 32,       /* Enter in test mode */
+	
+};
+
+// #importante
+// Colocaremos aqui dentro elementos que apontem para
+//variáveis que já usavamos antes de criarmos essa estrutura.
+/* Internal representation of the screen */
+typedef struct {
+	
+	//int row;	/* nb row */
+	//int col;	/* nb col */
+	//Line *line;	/* screen */
+	//Line *alt;	/* alternate screen */
+	//bool *dirty;	/* dirtyness of lines */
+	//TCursor c;	/* cursor */
+	//int top;	/* top    scroll limit */
+	//int bot;	/* bottom scroll limit */
+	int mode;	/* terminal mode flags */
+	int esc;	/* escape state flags */
+	//bool numlock;	/* lock numbers in keyboard */
+	//bool *tabs;
+} Term;
+
+//Sem ponteiro.
+static Term term;
+
+
+#define ESC_BUF_SIZ 32 //(128*UTF_SIZ)
+#define ESC_ARG_SIZ 16
+#define STR_BUF_SIZ   ESC_BUF_SIZ
+#define STR_ARG_SIZ ESC_ARG_SIZ
+
+/* CSI Escape sequence structs */
+/* ESC '[' [[ [<priv>] <arg> [;]] <mode>] */
+typedef struct {
+	char buf[ESC_BUF_SIZ]; /* raw string */
+	int len;	       /* raw string length */
+	char priv;
+	int arg[ESC_ARG_SIZ];
+	int narg;	       /* nb of args */
+	char mode;
+} CSIEscape;
+static CSIEscape csiescseq;
+
+
+/* STR Escape sequence structs */
+/* ESC type [[ [<priv>] <arg> [;]] <mode>] ESC '\' */
+typedef struct {
+	char type;	     /* ESC type ... */
+	char buf[STR_BUF_SIZ]; /* raw string */
+	int len;	       /* raw string length */
+	char *args[STR_ARG_SIZ]; // ponteiro duplo.
+	int narg;	      /* nb of args */
+} STREscape;
+static STREscape strescseq;
+
+
+#define VT102_ID "\033[?6c"
+
+
 /*
 
  //para ficar igual a do Nelson;
@@ -509,6 +604,10 @@ void shellRefreshVisibleArea ();
 void shellSocketTest ();
 
 
+void tputc (char *c, int len);
+int print_buffer (void);
+void initialize_buffer (void);
+
 //
 // Internas.
 //
@@ -565,6 +664,308 @@ void quit ( int status ){
 
     running = 0;
 }
+
+
+
+// #todo
+// See: https://github.com/gramado/st/blob/tlvince/st.c
+void tputc (char *c, int len){
+	
+	 //int c = (int) *c;
+	 unsigned char ascii = *c;
+	 
+	 //control codes
+	 //bool control = ascii < '\x20' || ascii == 0177;
+     int control = ascii < '\x20' || ascii == 0177;
+	 
+	 
+	 //
+	 // #importante
+	 // Se não é controle é string ou escape sequence.
+	 //
+	 
+	 //??
+	 //if(iofd != -1) {}
+	 
+	 //string normal
+	 //if(term.esc & ESC_STR) 
+	 if(__sequence_status == 0)
+	 {
+		 switch (ascii)
+		 {
+			 //deixou de ser string normal e
+			 //entramos em uma sequência
+			 //logo abaixo esse char será tratado novamente.
+		     case '\033':
+		         term.esc = ESC_START;
+                 __sequence_status = 1;
+                 break;
+             
+             //Imprimindo caracteres normais.
+             //#todo: talvez possamos usar a API para isso.
+             //como acontece nos caracteres digitados no shell interno.
+             default:
+                 printf ("%c",ascii);
+                 return;			          
+         }
+	 }		 
+	 
+	 //control codes. (dentro de um range)
+	 if(control){
+		 
+		 switch(ascii)
+		 {
+
+		    //case '\v': /* VT */
+		    //case '\a': /* BEL */    
+		    		    		    
+		    case '\t': /* HT */
+		    case '\b': /* BS */
+		    case '\r': /* CR */
+		    case '\f': /* LF */
+            case '\n': /* LF */
+                //#deixa o kernel lidar com isso por enquanto.
+                printf ("%c",ascii);
+                return;	
+                break;
+		    
+			//case '\033':
+		    case '\x1b':
+		        term.esc = ESC_START;
+		        __sequence_status = 1;
+		        printf (" {ESCAPE} ");
+		        return;
+		        break;
+		        
+		    case '\016':	/* SO */
+            case '\017': /* SI */
+		        return;
+		        break;
+		        
+		    case '\032':	/* SUB */
+		    case '\030':	/* CAN */
+			    //csireset ();
+                return;
+		        break;
+		            
+		    case '\005':	/* ENQ (IGNORED) */
+		    case '\000':	/* NUL (IGNORED) */
+		    case '\021':	/* XON (IGNORED) */
+		    case '\023':	/* XOFF (IGNORED) */
+		    //case 0177:	/* DEL (IGNORED) */
+                //Nothing;
+                return;
+                
+            //...    
+		 }
+		        
+		 //...	 
+		 
+	 // Um 1b já foi encontrado.
+	 } else if(term.esc & ESC_START) {
+	 
+	     // Um [ já foi encontrado.
+	     //#todo parse csi
+	     if(term.esc & ESC_CSI){
+		      
+		      switch(ascii)
+		      {
+		     	//quando acaba a sequencia.
+		     	case 'm':
+		     	    term.esc = 0;
+			        __sequence_status = 0;
+			        printf (" {m} ");
+			        return;
+			        break;  
+			     
+		         default:
+		              return;
+		              break;
+		      }
+		 
+		 } else if(term.esc & ESC_STR_END) { 
+	 
+	     } else if(term.esc & ESC_ALTCHARSET) {
+			 
+			 switch(ascii)
+			 {
+			      case 'A': /* UK (IGNORED) */
+			      case '<': /* multinational charset (IGNORED) */
+			      case '5': /* Finnish (IGNORED) */
+			      case 'C': /* Finnish (IGNORED) */
+			      case 'K': /* German (IGNORED) */
+                      break;
+			 }
+			 
+	     } else if(term.esc & ESC_TEST) {
+			 
+			 
+		 }else{
+			
+		   switch(ascii)
+		   {
+			 case '[':
+			     term.esc |= ESC_CSI;
+			     printf (" {CSI} ");
+			     return;
+			     break; 
+			       
+			 case '#':
+			     term.esc |= ESC_TEST;
+			     break;
+			
+			//case 'P': /* DCS -- Device Control String */
+			//case '_': /* APC -- Application Program Command */
+			//case '^': /* PM -- Privacy Message */
+			//case ']': /* OSC -- Operating System Command */
+            //case 'k': /* old title set compatibility */
+			     //term.esc |= ESC_STR;
+			     //break; 
+			     
+			case '(': /* set primary charset G0 */  
+			    term.esc |= ESC_ALTCHARSET;
+			    break;    
+			    
+			case ')': /* set secondary charset G1 (IGNORED) */
+			case '*': /* set tertiary charset G2 (IGNORED) */
+			case '+': /* set quaternary charset G3 (IGNORED) */
+				term.esc = 0;
+                __sequence_status = 0;
+                break;  
+                
+                
+             //case 'D': /* IND -- Linefeed */
+                 //term.esc = 0;
+                 //break;
+                 
+             //case 'E': /* NEL -- Next line */
+                 //term.esc = 0;
+                 //break;
+                        			
+			   
+			 //case 'H': /* HTS -- Horizontal tab stop */  
+                 //term.esc = 0;
+                 //break;
+                 
+ 			 //case 'M': /* RI -- Reverse index */    
+                 //term.esc = 0;
+                 //break;
+                 
+                 			     
+			  //case 'Z': /* DECID -- Identify Terminal */   
+                 //term.esc = 0;
+                 //break;
+                 
+                 			 
+			 //case 'c': /* RIS -- Reset to inital state */
+                 //term.esc = 0;
+                 //break; 
+                 
+			 //case '=': /* DECPAM -- Application keypad */
+                 //term.esc = 0;
+                 //break;
+                 			 
+			 //case '>': /* DECPNM -- Normal keypad */
+                 //term.esc = 0;
+                 //break;
+                 			 
+			 //case '7': /* DECSC -- Save Cursor */    
+                 //term.esc = 0;
+                 //break;
+                 			   
+			 //case '8': /* DECRC -- Restore Cursor */
+                 //term.esc = 0;
+                 //break;
+                 
+			 
+			 //case '\\': /* ST -- Stop */  
+                 //term.esc = 0;
+                 //break;	
+                 
+             //#bugbug
+             //precisamos encontrar o lugar certo pra isso
+             //see: gramado/st    
+			 //case 'm':
+			     //__sequence_status = 0;
+			     //printf (" {m} ");
+			     //return;
+			     //break;               
+  
+  			 //erro    
+			 //default:
+			     //break;               
+			     			   
+		   }
+		};	 
+	    
+	     //...
+	     
+	     return;
+	 };	 
+	 
+	 //...
+}
+	
+
+	
+//O buffer está cheio.
+//vamos mostrar na tela.
+
+int print_buffer (void){
+	
+	int c;
+	int i;
+	
+	//int sequence_status = 0;
+	
+	int charsize = 1; /* size of utf8 char in bytes */
+	
+	//provisorio
+    //printf (LINE_BUFFER); 
+    
+    size_t len = strlen (LINE_BUFFER);
+    
+   
+    //#todo limits
+    
+    if ( len >= LINE_BUFFER_SIZE )
+    {
+		printf ( "print_buffer: buffer limit\n");
+		return -1;
+	}
+    
+
+    
+    for (i=0; i<len; i++)
+    {
+	    //tputc (char *c, int len);
+	      tputc ( (char *) &LINE_BUFFER[i], (int) 1 );	
+	}
+	 
+	 
+	//depois de lido o buffer podemos reinicali-lo 
+	
+    initialize_buffer();
+	    
+    return 0;	
+}
+
+
+void initialize_buffer (void){
+	
+	int i;
+	
+	for (i=0; i<=LINE_BUFFER_SIZE; i++)
+	{
+		LINE_BUFFER[i] = 0;
+	}
+	
+    line_buffer_tail = 0;  //entrada.
+    line_buffer_head = 0;  //saída.
+    
+    line_buffer_buffersize = LINE_BUFFER_SIZE;	
+}
+
 
 
 
@@ -747,6 +1148,60 @@ shellProcedure( struct window_d *window,
 				    MessageBox ( 1, "gdeterm", "VK_APPS Context Menu" );
 					break;
 			}		
+		    break;
+		
+		case MSG_TERMINALCOMMAND:
+		    switch (long1)
+		    {
+				int xxx_ch;
+				case 2008:
+					//#importante: testar isso.
+					//initialize_buffer();
+					
+					//line_buffer_buffersize = 1024; //configurando tamanho do buffer.
+					line_buffer_buffersize = LINE_BUFFER_SIZE;
+					
+					//fprintf (stdout,"noraterm: This is a string ..."); //#bugbug
+					//printf ("MSG_TERMINALCOMMAND.2008 pode pegar, coloca no buffer >> \n");
+					printf ("MSG_TERMINALCOMMAND.2008\n");
+					//#suspenso.
+					//break;
+					
+					// pegando chars.
+		            // #importante
+					// Se for \n sifnifica que temos que efetuar o flush do buffer
+					// mostrando ele na tela e colocando nos buffers do terminal.
+						
+		            while (1)
+		            {					
+		                xxx_ch = (int) system_call ( 1002, 0, 0, 0 );
+
+						if (xxx_ch == '\n')
+						{
+							printf ("noraterm: EOL, flush me\n");
+							print_buffer ();
+							break;
+						}else{
+							
+						    //Colocar o char no buffer
+						    LINE_BUFFER[line_buffer_tail++] = (char) xxx_ch;							
+							
+						    if ( line_buffer_tail >= line_buffer_buffersize )
+						    {
+							    LINE_BUFFER[line_buffer_tail] = 0; //FINALIZA;
+							    line_buffer_tail = 0;
+							    
+							    printf ("noraterm: buffer limits, flush me\n");							    
+							    print_buffer ();
+							    break;
+						    }							
+						};
+	                };					
+				    break;
+				    
+				default:
+				    break;
+			}
 		    break;
 		
 
@@ -2615,6 +3070,31 @@ do_compare:
 		
 		goto exit_cmp;
 	}
+	
+	
+	// ...
+	
+	// t21
+	// Se registra como terminal
+	if ( strncmp ( prompt, "t21", 3 ) == 0 )
+	{
+		// Isso já foi feito na inicialização do terminal.
+		//printf ("t21: registrando terminal e criando shell como processo filho\n");
+		
+		printf ("t21: Executing child process ...\n");
+		
+		// registrando teminal.
+		system_call ( 1003, getpid(), 0, 0 );
+		
+		//>>> clona e executa o filho dado o nome do filho.
+		system_call ( 900, (unsigned long) "hello3.bin", 0, 0 );		
+		//system_call ( 900, (unsigned long) "gdeshell.bin", 0, 0 );
+		//system_call ( 900, (unsigned long) "gramcode.bin", 0, 0 );
+         
+        printf ("t21: done\n"); 
+		goto exit_cmp;
+	}
+	
 	
 	//flush stdout
 	if ( strncmp( prompt, "flush-stdout", 12 ) == 0 )
@@ -6967,6 +7447,25 @@ noArgs:
 	
 	if ( _init_app == 1 )
 	{
+		// registrando terminal e criando shell como processo filho
+				
+		printf ("Executing child process ...\n");
+		
+		// registrando teminal.
+		system_call ( 1003, getpid(), 0, 0 );
+		
+		//>>> clona e executa o filho dado o nome do filho.
+		system_call ( 900, (unsigned long) "hello3.bin", 0, 0 );		
+        printf ("done: initializing internal shell\n"); 
+	}
+	
+	
+	// #todo
+	// Testando fork()
+	
+	/*
+	if ( _init_app == 1 )
+	{
 		printf ("gdeterm: Tentando executar um aplicativo\n");
 		
 		int pidFORK = (int) fork ();
@@ -7004,7 +7503,7 @@ noArgs:
 			goto do_run_internal_shell;
 		}	
 	};
-	
+	*/
 	
 	//
 	// Internal shell
@@ -7026,7 +7525,7 @@ do_run_internal_shell:
 
     //Mensagem ...
 	//printf ("\n");
-	//printf ("Starting GDESHELL.BIN ... \n\n");	
+
 	
     //printf("#debug breakpoint");
     //while(1){} 	
@@ -7036,11 +7535,7 @@ do_run_internal_shell:
 	//
 	// @todo: Apenas registrar o procedimento dessa janela na sua estrutura no kernel..
     // 
-	
-	
-	//printf("HOLAMBRA KERNEL SHELL\n");	
-    //printf("#debug breakpoint");
-    //while(1){} 	
+
 	
 	
 	//===========================

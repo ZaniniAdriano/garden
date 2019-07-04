@@ -3,62 +3,9 @@
  *
  * Client side terminal app for gde project.
  *
- *  --- cut here ---
- * Gramado Core Shell.
- * A shell to run only on Gramado Core environment. 
- *
- * GWM - Gramado Window Manager.
- * deve se comunicar com o GWS, Gramado Window Server. /gramado
- * General purpose application.
- *
- * #importante 
- * Observar o conceito de fluxo padrão e o fato de printf enviar conteúdo 
- * para o buffer stdout. Depois é só imprimir o que está em stdout.
- * Talvez isso implique em midanças na libc pra ficar parecido com a 
- * implementação UNIX de output. E o refresh do buffer de saída?
- * O lado bom é que o buffer de saída poderá ser usado no PIPE.
- *
- *     SHELL.BIN é um aplicativo de próposito geral. Desenvolvido como 
- * ferramenta do desenvolvedor para prover varios tipos de testes de recursos do sistema.
- *
- * Ok, isso é um program do tipo 'janela', o pequeno terminal 
- * que roda em uma janela filha será gerenciado pelo próprio aplicativo.
- * Isso é diferente de um programa feito para rodar em um terminal, onde o kernel 
- * gerenciará a janela usada pelo programa. 
- *
- * Podemos usar esse terminal na janela filha para interpretar linguagem basic.
- *
- * Descrição:
- * Shell do sistema. (SHELL.BIN)
- * Arquivo principal do Shell.
- * É um aplicativo de 32bit em user mode. 
- * P3 - Processos em ring3, User Mode.
- * O Programa recebe comandos do usuário e envia os comandos para o núcleo 
- * através de chamadas ao sistema. 
- *
- * (@todo: envio de mensagens) A idéia é que cada comando chame um processo 
- * diferente, mas existem serviços internos que o próprio Shell ofereçe
- * fazendo uso dos recursos do Kernel ou próprios.
- *     	
- * É o console, um terminal virtual em user mode.    
- *
- * Obs: O Shell é o aplicativo apropriado para o desenvolvedor criar e testar 
- * as chamadas ao Kernel via interrupção e para ver as mensagens do compilador.
- *      O programa que executa aplicações em lote deve enviar os outputs para 
- * a tela do Shell. 
- *
- * Obs: O entry point está em head.s
- *      @todo: Não usar o arquivo head em assembly efeito de portabilidade.
- * Obs: O prompt e cursor estão definidos em stdio.h
- *
- * * IMPORTANTE: O FOCO DO INTERPRETADOR DE COMANDOS DO SHELL APP DEVE SER
- * A GERÊNCIA DE ARQUIVOS E DISPOSITIVOS DE ARMAZENAMENTO, EM SEGUNDO LUGAR
- * A GERENCIA DOS RECURSOS DO SISTEMA, POIS ISSO É ATRIBUIÇÃO DO APP TASKMAN.
- *
- *
  * History:
  *     2016 - Created by Fred Nora.
- *     2018 - More commands.
+ *     2019 - .
  */
  
 
@@ -143,10 +90,12 @@ and are themselves never placed in the input queue.
 //as coisas do terminal, então ele pode abortar a criação de liberar os recursos.
 
 
+
 // #bugbug
 // O header principal não deve ser esse. deve ser noraterm.h.
 
 #include "noraterm.h" 
+
 
 
 //
@@ -158,6 +107,8 @@ and are themselves never placed in the input queue.
 //int __keypad_mode = 0;
 //...
 
+//#todo: fazer estrutura para gerenciar a sequencia.
+int __sequence_status = 0;
 
 //
 // Structures
@@ -167,18 +118,18 @@ and are themselves never placed in the input queue.
 //vamos tentar copiar as estruturas usadas pelo terminal gramado/st
 
 enum term_mode {
-	MODE_WRAP	 = 1,
+	MODE_WRAP	     = 1,
 	MODE_INSERT      = 2,
 	MODE_APPKEYPAD   = 4,
 	MODE_ALTSCREEN   = 8,
-	MODE_CRLF	 = 16,
+	MODE_CRLF	     = 16,
 	MODE_MOUSEBTN    = 32,
 	MODE_MOUSEMOTION = 64,
 	MODE_MOUSE       = 32|64,
 	MODE_REVERSE     = 128,
 	MODE_KBDLOCK     = 256,
-	MODE_HIDE	 = 512,
-	MODE_ECHO	 = 1024,
+	MODE_HIDE	     = 512,
+	MODE_ECHO	     = 1024,
 	MODE_APPCURSOR	 = 2048,
 	MODE_MOUSESGR    = 4096,
 };
@@ -235,6 +186,7 @@ typedef struct {
 	int narg;	       /* nb of args */
 	char mode;
 } CSIEscape;
+static CSIEscape csiescseq;
 
 
 /* STR Escape sequence structs */
@@ -243,9 +195,11 @@ typedef struct {
 	char type;	     /* ESC type ... */
 	char buf[STR_BUF_SIZ]; /* raw string */
 	int len;	       /* raw string length */
-	char *args[STR_ARG_SIZ];
+	char *args[STR_ARG_SIZ]; // ponteiro duplo.
 	int narg;	      /* nb of args */
 } STREscape;
+static STREscape strescseq;
+
 
 #define VT102_ID "\033[?6c"
 
@@ -591,6 +545,8 @@ int argbuf_index;
 //
 
 
+
+
 // escreve um char no backbuffer e exibe na tela
 // usando o cursor gerenciado pelo sistema,
 void terminal_write_char ( int c);
@@ -604,9 +560,12 @@ void terminalInitWindowSizes ();
 void terminalInitWindowPosition ();
 
 
+void csireset (void);
+void strreset (void);
+
 void tputc (char *c, int len);
 int print_buffer (void);
-void initialize_buffer();
+void initialize_buffer (void);
 
 // #todo:
 // Se possível, colocar essas rotinas em tests;c
@@ -763,8 +722,16 @@ int process_input (){
 }
 
 
-//#todo: fazer estrutura para gerenciar a sequencia.
-int __sequence_status = 0;
+void csireset (void){
+    
+    memset(&csiescseq, 0, sizeof(csiescseq));	
+}
+
+
+void strreset (void){
+    
+    memset(&strescseq, 0, sizeof(strescseq));	
+}
 
 // #todo
 // See: https://github.com/gramado/st/blob/tlvince/st.c
@@ -843,7 +810,7 @@ void tputc (char *c, int len){
 		        
 		    case '\032':	/* SUB */
 		    case '\030':	/* CAN */
-			    //csireset();
+			    //csireset ();
                 return;
 		        break;
 		            
@@ -860,19 +827,13 @@ void tputc (char *c, int len){
 		        
 		 //...	 
 		 
-	 // 1b	 
-	 //se iniciamos uma escape sequence
+	 // Um 1b já foi encontrado.
 	 } else if(term.esc & ESC_START) {
-	 //}else if(__sequence_status == 1) {	
 	 
-	 
-	     //[ aberto.
-	     //analizamos o que vem dpois do [
-	     //#bugbug: Isso pode impedir que
-	     //rode o tratamento do else mais abaixo??
+	     // Um [ já foi encontrado.
+	     //#todo parse csi
 	     if(term.esc & ESC_CSI){
-		
-		      //csiparse();
+		      
 		      switch(ascii)
 		      {
 		     	//quando acaba a sequencia.
@@ -1009,7 +970,8 @@ void tputc (char *c, int len){
 	 };	 
 	 
 	 //...
-}	
+}
+	
 	
 //O buffer está cheio.
 //vamos mostrar na tela.
@@ -1054,7 +1016,7 @@ int print_buffer (void){
 }
 
 
-void initialize_buffer(){
+void initialize_buffer (void){
 	
 	int i;
 	
@@ -1261,7 +1223,7 @@ void *noratermProcedure ( struct window_d *window,
 			}		
 		    break;
 		
-		//TERMINAL COMMUNICATION
+		//Terminal communication
 		case MSG_TERMINALCOMMAND:
 			switch (long1)
 			{
