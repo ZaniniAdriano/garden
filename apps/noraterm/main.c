@@ -3776,6 +3776,26 @@ doexec_first_command:
         buffer[z] = (unsigned long) tokenList[z];
     }
 
+    //
+    //  #test
+    //  Testando novo jeito.
+    //
+
+    /*
+    printf ("=======================\n"); 
+	printf ("Executing child process ...\n");
+	// registrando teminal.
+	system_call ( 1003, getpid(), 0, 0 );
+	//>>> clona e executa o filho dado o nome do filho.
+	system_call ( 900, (unsigned long) &tokenList[0], 0, 0 );		         
+    printf ("done\n"); 
+    goto exit_cmp;	
+    //goto fail;    
+    printf ("=======================\n"); 
+    */
+
+ 
+
 	// ## ISSO DEU CERTO ## 	
 	// Passamos anteriormente a linha de comandos via memória compartilhada,
 	// agora então precisamos passar somente o nome do arquivo.	
