@@ -23,16 +23,19 @@
  * C function to demonstrate the working of arithmetic operators 
  */
 
-//void _main (){
 int main (int argc, char *argv[] ){
 	
     unsigned char count;
 	unsigned char standard_ascii_max = STANDARD_ASCII_MAX;
 	
+	libc_set_output_mode (LIBC_DRAW_MODE);
 	printf ("\n");
 	printf ("ASCII.BIN:\n");
 	printf ("Show ascii table ...\n");
 	printf ("\n");
+	
+	
+	//libc_set_output_mode (LIBC_NORMAL_MODE);
 	
     for ( count=0; count<standard_ascii_max; count++ )
     {
@@ -47,13 +50,10 @@ int main (int argc, char *argv[] ){
 	printf ("\n");
 	printf ("Done!\n");
 	
-	//exit 9 é o código do reaproveitamento.
-	//é excepcional.
+	// #bugbug
+	// Falha ao sair. Talvez falte o crt0.o
+	//while (1){}
 	
-	exit (9);
-	 
-	while (1){ asm("pause"); };
-    
     return 0;
 }
 

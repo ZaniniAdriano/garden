@@ -37,18 +37,10 @@ CFLAGS = -m32 \
 #	-s
 
 
-#LIBC    = ../../lib/gdelibs/libc02/include/
-#LIBCOBJ = ../../lib/gdelibs/libc02/obj
 LIBC    = ../../lib/libc03/include/
 LIBCOBJ = ../../lib/libc03/obj
-
-
-#API   = ../../lib/gdelibs/api01/include/
-#APIOBJ  = ../../lib/gdelibs/api01/obj
 API     = ../../lib/api02/include/
 APIOBJ  = ../../lib/api02/obj
-
-
 
 
 
@@ -81,6 +73,7 @@ all: crt0.o main.o all-c shell-link finalize clean
 #head.o:
 #	nasm  head.s  -felf -o head.o
 
+#nao compilar, pegar compilado. tem que ajustar os argumentos recebidos por main.
 crt0.o:
 	gcc  -c  crt0.c  $(CFLAGS) -I $(LIBC) -I $(API) -o crt0.o
 
@@ -97,7 +90,6 @@ all-c:
 #	gcc  -c  net.c       -I ../../../lib/libc01/include/ -I ../../../lib/api01/include/ $(CFLAGS) -o net.o
 #	gcc  -c  terminal.c  -I ../../../lib/libc01/include/ -I ../../../lib/api01/include/ $(CFLAGS) -o terminal.o
 
-	cp $(APIOBJ)/api.o      .
 	
 	cp $(LIBCOBJ)/ctype.o   .
 	cp $(LIBCOBJ)/stdio.o .
@@ -108,7 +100,9 @@ all-c:
 	cp $(LIBCOBJ)/unistd.o .
 	cp $(LIBCOBJ)/stubs.o .	
 	
-
+	cp $(APIOBJ)/api.o      .
+	
+	
 shell-link:
 	ld -m elf_i386 -T link.ld -o SHELL2.BIN $(myObjects) -Map shell_map.s
 

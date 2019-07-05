@@ -1,7 +1,13 @@
 /* 
  * SHELL2.BIN
- *  >>>> #todo: retirar o suporte a janelas desse shell e transforma-lo 
+ * 
+ *  >>>> #todo: 
+ *  Retirar o suporte a janelas desse shell e transforma-lo 
  * em um shell para rodar no terminal.
+ * 
+ * 
+ * 
+ * 
  * 
  * File: main.c - gdeshell - bash 1.05 clone. (baseado no bash)
  * #todo Para esse aplicativo vou usar o prompt: [username@hostname] $

@@ -36,18 +36,17 @@ CFLAGS = -m32 \
 #	-s
 
 
-LIBC    = ../../lib/libc01/include/
-LIBCOBJ = ../../lib/libc01/obj
-
-API01   = ../../lib/api01/include/
-APIOBJ  = ../../lib/api01/obj
+LIBC    = ../../lib/libc03/include/
+LIBCOBJ = ../../lib/libc03/obj
+API     = ../../lib/api02/include/
+APIOBJ  = ../../lib/api02/obj
 
 
 	##
 	## Objects
 	##
 
-myObjects = main.o \
+myObjects = crt0.o main.o \
 ctype.o \
 stdio.o \
 stdlib.o \
@@ -66,10 +65,13 @@ all: main.o all-c tascii-link finalize clean
 	@echo "Ok?"
 
 main.o:
-	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API01) -o main.o
+	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API) -o main.o
 
 all-c:
-	cp $(APIOBJ)/api.o      .
+
+	cp $(LIBCOBJ)/crt0.o  .
+	
+	cp $(LIBCOBJ)/stubs.o  .
 	
 	cp $(LIBCOBJ)/ctype.o   .
 	cp $(LIBCOBJ)/stdio.o .
@@ -77,8 +79,8 @@ all-c:
 	cp $(LIBCOBJ)/string.o .
 	cp $(LIBCOBJ)/time.o    .
 	cp $(LIBCOBJ)/unistd.o  .
-	cp $(LIBCOBJ)/stubs.o  .
-	
+
+	cp $(APIOBJ)/api.o      .	
 
 tascii-link:
 	ld -m elf_i386 -T link.ld -o TASCII.BIN $(myObjects) -Map app_map.s

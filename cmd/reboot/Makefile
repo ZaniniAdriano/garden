@@ -36,11 +36,6 @@ CFLAGS = -m32 \
 #	-fno-stack-protector \
 #	-s
 	
-	
-#LIBC    = ../../lib/gdelibs/libc01/include/
-#LIBCOBJ = ../../lib/gdelibs/libc01/obj
-#API01   = ../../lib/gdelibs/api01/include/
-#APIOBJ  = ../../lib/gdelibs/api01/obj
 
 
 LIBC    = ../../lib/libc02/include/
@@ -53,8 +48,7 @@ APIOBJ  = ../../lib/api02/obj
 	## Objects
 	##
 
-myObjects = crt0.o \
-main.o \
+myObjects = crt0.o main.o \
 ctype.o \
 stdio.o \
 stdlib.o \
@@ -75,7 +69,10 @@ main.o:
 	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API02) -o main.o
 
 all-c:
-	cp $(APIOBJ)/api.o      .
+
+	cp $(LIBCOBJ)/crt0.o   .
+	
+	cp $(LIBCOBJ)/stubs.o  .
 	
 	cp $(LIBCOBJ)/ctype.o   .
 	cp $(LIBCOBJ)/stdio.o .
@@ -83,10 +80,8 @@ all-c:
 	cp $(LIBCOBJ)/string.o .
 	cp $(LIBCOBJ)/time.o    .
 	cp $(LIBCOBJ)/unistd.o  .
-	cp $(LIBCOBJ)/stubs.o  .
-	
-#test
-	cp $(LIBCOBJ)/crt0.o   .
+
+	cp $(APIOBJ)/api.o      .
 
 
 

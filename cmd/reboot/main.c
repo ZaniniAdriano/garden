@@ -1,11 +1,5 @@
 /*
- * # Jackpot Game #
- *
- * Portando para o sistema operacional Gramado 0.4
- * Portando para a linguagem C.
- * Original: Dev C++.
- * This version: Fred Nora.
- * 2018.
+ * reboot command for Gramado.
  */
  
  
@@ -16,9 +10,6 @@
 #include <string.h>
 #include <time.h>
 
-
- 
- 
 
 
 /*
