@@ -1,17 +1,8 @@
 // Suporte a top bar.
 
-#include <types.h>
 
-//#include "heap.h"
-//#include "api.h"
 
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-
-#include "status.h"
-#include "addrbar.h"
+#include "reboot2.h"
 
 
 /*
@@ -47,10 +38,6 @@ void topbarInitializeTopBar (){
 	apiSetCursor( 44, 0 );	
 	printf("|Application for testing system resources");
 	
-//done:
-    apiSetCursor(OldX,OldY);
-   // return;	
-};
-
-
+    apiSetCursor (OldX,OldY);
+}
 

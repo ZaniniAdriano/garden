@@ -1,12 +1,10 @@
 // main.c 
-// Arquivo principal do aplicativo teditor.bin
-// O aplicativo é usado para testes do sistema operacional 
-// Gramado 0.3.
-//
+// reboot2.
+// We click on a button to reboot the system.
 
 
 
-#include "gfe.h"
+#include "reboot2.h"
 
 
 
@@ -23,6 +21,7 @@ int running = 1;
 	// ## Janelas de teste ##
 	//
 	
+	//struct window_d *mainWindow;
     struct window_d *gWindow;  //grid 
 	struct window_d *mWindow;  //menu
     struct window_d *reboot_button; //reboot button;
@@ -34,7 +33,7 @@ int running = 1;
  
 
 int 
-gfeProcedure ( struct window_d *window, 
+reboot2Procedure ( struct window_d *window, 
                int msg, 
 			   unsigned long long1, 
 			   unsigned long long2 );
@@ -43,12 +42,12 @@ gfeProcedure ( struct window_d *window,
 
 /*
  * *********************************
- * gfeProcedure:
+ * reboot2Procedure:
  *     Procedimento de janela.
  */
  
 int 
-gfeProcedure ( struct window_d *window, 
+reboot2Procedure ( struct window_d *window, 
                int msg, 
 			   unsigned long long1, 
 			   unsigned long long2 )
@@ -425,7 +424,7 @@ Mainloop:
 			
 		if ( message_buffer[1] != 0 )
 		{
-	        gfeProcedure ( (struct window_d *) message_buffer[0], 
+	        reboot2Procedure ( (struct window_d *) message_buffer[0], 
 		        (int) message_buffer[1], 
 		        (unsigned long) message_buffer[2], 
 		        (unsigned long) message_buffer[3] );
@@ -438,23 +437,14 @@ Mainloop:
 	};	
 	
 	
+fail:
 	
-fail:	
     printf ("fail.\n");
 	
 done:
     
-	running = 0;
-   
-	// printf("#debug *hang\n");
-    // printf("done.\n");
-	
-	//*hang
-	//while (1){ asm ("pause"); };
+	//running = 0;
 	
 	return 0;
 }
-
-
-
 
