@@ -74,6 +74,14 @@
  less than console_loglevel. 
 */ 
 
+
+ 
+#include "spr.h"
+
+
+//Botão da barra de navegação.
+struct window_d *navbar_button;
+
 //# usado para teste 
 //divisível por 4 é mais lento.
 
@@ -81,9 +89,6 @@
 #define WINDOW_HEIGHT    600    //400
 #define WINDOW_LEFT      0      //10
 #define WINDOW_TOP       0      //10
-
- 
-#include "spr.h"
 
 
 // Input flags.
@@ -796,11 +801,16 @@ shellProcedure( struct window_d *window,
 				
 				    //#obs: No keydown a gente só abaixa o botão.
 					
-				    //#debug
-					//printf("button 1\n");     
+					
+					if ( window == navbar_button )
+					{
+						MessageBox ( 3, "Test","Button clicked!");
+						break;
+					}
 					
                     //cima
 					if ( window == app1_button )
+                    
                     {
 						updateVisibleArea( 0 );
 						shellRefreshVisibleArea(); 
@@ -6956,7 +6966,7 @@ noArgs:
 	
 	
 	
-    struct window_d *navbar_button;
+   
 	navbar_button = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "[>]",     
                                 wsWindowWidth -40, wpWindowTop +40, 
                                 32, 24,    
