@@ -1,12 +1,9 @@
 // main.c 
-// Arquivo principal do aplicativo teditor.bin
-// O aplicativo é usado para testes do sistema operacional 
-// Gramado 0.3.
-//
+// app launcher
 
 
 
-#include "gfe.h"
+#include "launcher.h"
 
 
 
@@ -36,7 +33,7 @@ int running = 1;
  
 
 int 
-gfeProcedure ( struct window_d *window, 
+launcherProcedure ( struct window_d *window, 
                int msg, 
 			   unsigned long long1, 
 			   unsigned long long2 );
@@ -45,12 +42,12 @@ gfeProcedure ( struct window_d *window,
 
 /*
  * *********************************
- * gfeProcedure:
+ * launcherProcedure:
  *     Procedimento de janela.
  */
  
 int 
-gfeProcedure ( struct window_d *window, 
+launcherProcedure ( struct window_d *window, 
                int msg, 
 			   unsigned long long1, 
 			   unsigned long long2 )
@@ -462,7 +459,7 @@ Mainloop:
 			
 		if ( message_buffer[1] != 0 )
 		{
-	        gfeProcedure ( (struct window_d *) message_buffer[0], 
+	        launcherProcedure ( (struct window_d *) message_buffer[0], 
 		        (int) message_buffer[1], 
 		        (unsigned long) message_buffer[2], 
 		        (unsigned long) message_buffer[3] );
@@ -481,13 +478,7 @@ fail:
 	
 done:
     
-	running = 0;
-   
-	// printf("#debug *hang\n");
-    // printf("done.\n");
-	
-	//*hang
-	//while (1){ asm ("pause"); };
+	//running = 0;
 	
 	return 0;
 }
