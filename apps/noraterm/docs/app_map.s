@@ -609,8 +609,8 @@ Linker script and memory map
 .rodata         0x000000000040e000     0x7f6c
  .rodata        0x000000000040e000      0x875 crt0.o
  *fill*         0x000000000040e875        0xb 
- .rodata        0x000000000040e880     0x20d5 main.o
- *fill*         0x0000000000410955        0xb 
+ .rodata        0x000000000040e880     0x20d9 main.o
+ *fill*         0x0000000000410959        0x7 
  .rodata        0x0000000000410960      0x100 ctype.o
                 0x0000000000410960                _ctype
  .rodata        0x0000000000410a60      0x2f4 stdio.o

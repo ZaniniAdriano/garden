@@ -93,13 +93,17 @@ launcherProcedure ( struct window_d *window,
 				    {
 						 execve ( (const char *) "noraterm.bin", 
                              (const char *) 0, (const char *) 0); 
-						break;
+						 // #todo:
+						 // Tentar enviar mensagens para o terminal 
+						 //libc_set_output_mode (LIBC_NORMAL_MODE);
+						 //printf ("launcher: Testing ...\n");
+						 break;
 					}				
 				    if ( window == launcher_button_2 )
 				    {
 						 execve ( (const char *) "gramcode.bin", 
                              (const char *) 0, (const char *) 0); 
-						break;
+						 break;
 					}						
 				
 				    if ( window == reboot_button )
@@ -179,7 +183,7 @@ int main ( int argc, char *argv[] ){
 	apiBeginPaint (); 
 	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, 
 	                       "App Launcher",
-	                       100, 100, 300, 300,    
+	                       600, 100, 320, 480,    
                            0, 0, 0xF5DEB3, 0x2d89ef);  
 
 	if ( (void *) hWindow == NULL )
@@ -216,6 +220,7 @@ int main ( int argc, char *argv[] ){
 	//
 	
 	//++
+	/*
 	void *b = (void *) malloc (1024*30); 	 
     
 	if ( (void *) b == NULL )
@@ -237,6 +242,7 @@ int main ( int argc, char *argv[] ){
 		//não sei se é necessário.
 		refresh_screen ();		
 	};
+	 */
     //--
 
 	
@@ -403,8 +409,8 @@ int main ( int argc, char *argv[] ){
 	//++
     enterCriticalSection (); 
 	launcher_button_1 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " Terminal ",     
-                                200, 250, 100, 24,    
-                                0, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
+                                100, 100, 100, 24,    
+                                hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
 	
 	if ( (void *) launcher_button_1 == NULL )
 	{
@@ -422,8 +428,8 @@ int main ( int argc, char *argv[] ){
 	//++
     enterCriticalSection (); 
 	launcher_button_2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "Text editor",     
-                                200, 280, 100, 24,    
-                                0, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
+                                100, 140, 100, 24,    
+                                hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
 	
 	if ( (void *) launcher_button_2 == NULL )
 	{
