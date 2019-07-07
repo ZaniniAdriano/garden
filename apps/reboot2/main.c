@@ -164,8 +164,8 @@ int main ( int argc, char *argv[] ){
 	apiBeginPaint (); 
 	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, 
 	                       "Reboot2",
-	                       100, 100, 300, 300,    
-                           0, 0, 0xF5DEB3, 0x2d89ef);  
+	                       600, 100, 320, 480,    
+                           0, 0, 0xF5DEB3, 0x2d89ef );  
 
 	if ( (void *) hWindow == NULL )
 	{	
@@ -201,6 +201,7 @@ int main ( int argc, char *argv[] ){
 	//
 	
 	//++
+	/*
 	void *b = (void *) malloc (1024*30); 	 
     
 	if ( (void *) b == NULL )
@@ -222,6 +223,7 @@ int main ( int argc, char *argv[] ){
 		//não sei se é necessário.
 		refresh_screen ();		
 	};
+	*/
     //--
 
 	
@@ -388,8 +390,8 @@ int main ( int argc, char *argv[] ){
 	//++
     enterCriticalSection (); 
 	reboot_button = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " Reboot ",     
-                                200, 250, 100, 24,    
-                                0, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
+                                100, 150, 100, 24,    
+                                hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
 	
 	if ( (void *) reboot_button == NULL )
 	{
