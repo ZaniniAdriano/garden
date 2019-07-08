@@ -6,7 +6,7 @@
  */
  
 
-#include  "c.h" 
+#include "gramc.h"
 
 
 //#### supensa ###
@@ -311,9 +311,14 @@ again:
     {
 		case 0:
 		case EOF:
+		    printf ("yylex: EOF\n");		
+            
             eofno++;  
             value = TOKENEOF;			
-		    printf ("yylex: EOF\n");
+
+		    //#test
+		    return (value);
+		    
 		    break;
 			
         case 'A':
@@ -944,8 +949,8 @@ int check_subseq ( int c, int a, int b )
 */
 
 
-void error ( char *msg )
-{
+void error (char *msg){
+	
     printf ("error: %s\n", msg );
 }
 

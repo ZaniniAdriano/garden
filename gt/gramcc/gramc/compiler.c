@@ -1,5 +1,4 @@
 
-
 //compiler.h 
 
 // aqui ficará o compilador, que transformará a linguagem intermediária 
@@ -9,13 +8,12 @@
 // lexer >> parser >> compiler
 
 
-#include "c.h"
+#include "gramc.h"
 
+//mover isso para o header.
 int compile();
-int compile()
-{
+int compile (){
 	
-	
-	
-	return (int) 0;
-};
+	return 0;
+}
+

@@ -98,7 +98,8 @@ launcherProcedure ( struct window_d *window,
 						 //libc_set_output_mode (LIBC_NORMAL_MODE);
 						 //printf ("launcher: Testing ...\n");
 						 break;
-					}				
+					}
+									
 				    if ( window == launcher_button_2 )
 				    {
 						 execve ( (const char *) "gramcode.bin", 

@@ -5,7 +5,8 @@
  * env: gramado 0.4
  */
 
-#include  "c.h"
+
+#include "gramc.h"
 
 
 #ifndef __COPYRIGHT__
@@ -58,26 +59,10 @@ void editorClearScreen();
 void debugShowStat();
 
 
-/*
- ************************************************************
- * mainGetMessage:
- *     Função principaL chamada pelo crt0.asm.
- *     Testando o recebimento de mensagens enviadas pelo shell.
- *
- * #importante:
- *	Recebendo mensagens via memória compartilhada.
- *	Obs: Esse não é o melhor endereço para se usar,
- *	mas isso é um teste por enquanto.
- * Origem: Provavelmente está dentro do backbuffer na parte não visível.	 
- *
- */
-
-
- 
-int gramc_main ()
-{
+/* Cancelada */
+int gramc_main (){
     //cancelada, foi para crt0.	
-};
+}
 
 
 
@@ -93,8 +78,8 @@ int gramc_main ()
 //#bugbug
 //vamos cancelar isso já que temos um main() 
  
-int mainTextEditor ( int argc, char *argv[] )
-{
+int mainTextEditor ( int argc, char *argv[] ){
+	
 	int ch;
 	FILE *fp;
     int char_count = 0;	
@@ -377,8 +362,7 @@ void fncc_print_tokenList ( char *token_list[], char *separator ){
 fail:
 done:
     return;	
-};
-
+}
 
 
 /*
@@ -571,7 +555,7 @@ void debugShowStat (){
     printf("outfile_size: %d bytes \n",outfile_size);	
 #endif	
 	
-};
+}
 
 
 /*

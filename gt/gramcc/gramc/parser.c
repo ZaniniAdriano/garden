@@ -4,8 +4,7 @@
  * 2018 - Created by Fred Nora.
  */
  
-
-#include  "c.h"  
+#include "gramc.h"
 
 
 
@@ -843,24 +842,24 @@ expression_exit:
 }
 
 
-int parse_asm ( int token ){
+int parse_asm (int token){
 	
 	int c;
-	
 	int running = 1;
-
 	int State = 1;	
+	
 	
 //#ifdef PARSER_ASM_VERBOSE	
 	//debug
 	//printf("parse_asm: Initializing ...\n");	
 //#endif	
 
+
 	//se entramos errado.
 	if ( token != TOKENKEYWORD)
 	{
-		printf("parse_asm: token error\n");
-		exit(1);
+		printf ("parse_asm: token error\n");
+		exit (1);
 	}
 	
     if ( token == TOKENKEYWORD )	
@@ -955,31 +954,33 @@ int parse_asm ( int token ){
 	}
 	
 
-    printf ("parse_asm: todo unexpected error in asm string");
+    printf ("parse_asm: todo unexpected error in asm string\n");
 	exit (1);		
 		   
 	return 0;
 }
 
 
-int parse_function ( int token ){
+int parse_function (int token){
 	
 	int c;
-	
 	int running = 1;
 	int State = 1;
+	
 	
 //#ifdef PARSER_FUNCTION_VERBOSE	
 	//debug
 	//printf("parse_function: Initializing ...\n");	
 //#endif	
 	
+	
 	//se entramos errado.
 	if ( token != TOKENIDENTIFIER )
 	{
-		printf("parse_function: Can't initialize function statement\n");
-		exit(1);
+		printf ("parse_function: Can't initialize function statement\n");
+		exit (1);
 	}
+	
 	
     if ( token == TOKENIDENTIFIER )	
 	{
@@ -1103,45 +1104,53 @@ int parse_function ( int token ){
 // return (int) function();
 //interna 
 
-int parse_return ( int token ){
-	
-	
+int parse_return (int token){
+		
 	int c;
-	
 	int running = 1;
 	int State = 1;
-	
 	int open = 0;
-	
+	unsigned long eval_ret;
+	char buffer[32];
+	//char *buffer;
+
 
 //#ifdef PARSER_RETURN_VERBOSE
 	//debug
-	printf("parse_return: Initializing ...\n");	
+	printf ("parse_return: Initializing ...\n");	
 //#endif	
+
 	
 	//se entramos errado.
 	if ( token != TOKENKEYWORD || keyword_found != KWRETURN )
 	{
-		printf("parse_return: Can't initialize return statement\n");
-		exit(1);
+		printf ("parse_return: Can't initialize return statement\n");
+		exit (1);
 	}
-	
-	unsigned long eval_ret;
-	//char buffer[20];
-	
-	   
+ 		
+    //
+    // Eval.
+    //
+    	   
 	eval_ret = (unsigned long) tree_eval ();
 	
-	//char *buffer;
-	char buffer[32];
-	
-	//buffer = (char *) itoa ( (int) eval_ret);
-	
+    //
+    // itoa
+    //
+
 	itoa ( (int) eval_ret, buffer );
-	
-	strcat( outfile,"  mov eax, ");
-	strcat( outfile, buffer );
-	strcat( outfile,"\n  ret \n\n");
+	    
+    // ??
+	//buffer = (char *) itoa ( (int) eval_ret);
+
+    //
+    // Output
+    //
+    	
+	strcat ( outfile,"  mov eax, ");
+	strcat ( outfile, buffer );
+	strcat ( outfile,"\n  ret \n\n");
+
 
 	//o ultimo token em um return statement foi ';'
 	//vamos conferir
@@ -1152,8 +1161,12 @@ int parse_return ( int token ){
 		return c;
 	}	
 
+    //
+    // ** Debug hang
+    //
+    
 	//#debug
-	printf("parse_return: debug *hang");
+	printf ("parse_return: debug *hang");
 	while(1){}
 	
 	//#obs 
@@ -1407,12 +1420,16 @@ int parse_if (int token){
 	//pega o próximo que deve ser um (
 	int c = yylex();
 	
-	
 	if ( c != TOKENSEPARATOR )
 	{
 		printf ("parse_if separator missed\n");
-		exit(1);
+		exit (1);
 	}
+	
+	//
+	// Expression.
+	//
+	
 	//testando chamar uma análise de expressão dentro do statement de if.
 	Exp_Result = parse_expression ( c );
 	
@@ -1495,12 +1512,13 @@ int parse_while (int token){
 	}
 	
 	printf ("EXP={%d}\n",Exp_Result);
+	
 	//exit(1);
     return (int) While_Result;	
 }
 
 
-int parse_do ( int token ){
+int parse_do (int token){
 	
 	printf("todo: parse_do in line %d\n ", lineno );
 	exit (1);
@@ -1526,53 +1544,17 @@ int parse_for ( int token ){
  */
  
 int parse (){
-	
+
+	int running = 1;	
 	register int c;
 	int i;
-	
 	char save_symbol[32];
-	
-	int running = 1;
-    
-    // #bugbug
-    // Não temos mais acesso a elementos da estrutura em user mode.
-    // Tem que usar outro recurso para encontrar o tamanho.
-    
 	size_t size;
 	
-	// # HACK HACK
-	//size =  128;
-	
-	//size_t size = (size_t) strlen ( (const char *) stdin->_base );
-
-    //Isso falhou;
-    fseek ( stdin, 0, SEEK_END); // seek to end of file
-    size = ftell (stdin); // get current file pointer
-    fseek (stdin, 0, SEEK_SET); // seek back to beginning of file
-    // proceed with allocating memory and reading the file	
-    
-    //size = (size_t) system_call ( 178, file_name, 0, 0, 0 );	
-	
-	//printf ("original ftell=%d\n", ftell (stdin)); 
-	
-	//fseek ( stdin, 0, SEEK_END);
-	//printf ("end ftell=%d\n", ftell (stdin)); 
-	
-	//fseek (stdin, 0, SEEK_SET);
-	//printf ("begin ftell=%d\n", ftell (stdin));
-	 		
-	//#debug
-	printf ("size=%d\n", size);
-	//while(1){}
-
-     
-	
-	//{([
-	//se entramos em um desses corpos.
+	//Se entramos em um desses corpos.
 	int braces_inside = 0;
 	int parentheses_inside = 0;
 	int square_brackets_inside = 0;
-	
 	
 	int If_Result = -1;
 	int While_Result = -1;
@@ -1580,17 +1562,36 @@ int parse (){
 	
 	//steps;
 	int State = 1;
-	
 
 	
-//#ifdef GRAMC_VERBOSE	
-    printf ("\n");
+	//
+	// size ??
+	//	
+    
+    // #bugbug
+    // Tentando encontrar o tamanho do arquivo via fseek/ftell.
+
+    // seek to end of file
+    fseek ( stdin, 0, SEEK_END);
+    
+    // get current file pointer 
+    size = ftell (stdin); 
+    
+    // seek back to beginning of file
+    fseek (stdin, 0, SEEK_SET); 
+    
+    	 		
+	//#debug
+	printf ("Size=%d\n", size);
+
+    //
+    // Initial message.
+    //
+    
     printf ("parse: Initializing ...\n");
-//#endif		
 	
 	
-	//#obs
-	//Aqui podemos usar um while(running) até que se encontre o fim do arquivo.
+	// Vamos usar um while até que se encontre o fim do arquivo.
 
 	while (running == 1)
 	{
@@ -1598,6 +1599,15 @@ int parse (){
 		//#todo: trocar c por TOKEN.
 		
 	    c = yylex ();
+	    
+		//O lexer nos disse que acabou.
+		if ( c == TOKENEOF )
+		{
+			printf ("parse: EOF\n");
+			running = 0;
+			break;
+		}	    
+	    
 		
 		again:
 		
@@ -2170,18 +2180,21 @@ int parse (){
 					    {
 						    printf("State3: bugbug searching for keyword inside parentheses \n");
 						    State = 1;
-						    //exit(1);
+						    exit(1);
 					    }
 					    if ( braces_inside > 0 )
 					    {
-						    printf("State3: bugbug searching for keyword inside braces \n");
+							//#obs: Não é errado procurar keywords dentro das chaves.
+							//Já que não encontramos então vamos fechar a chave se possível.
+						    printf("State3: Warning: searching for keyword inside braces \n");
 						    State = 1;
 						    //exit(1);
+						    break;
 					    }
 						//??em que momento espera-se por uma keyword e não encontra ??
-					    printf("State3: default. keyword expected in line %d",lineno);
+					    printf("State3: default. keyword expected in line %d\n",lineno);
 						State = 1;
-						//exit(1);
+						exit(1);
 						break;
 				};
                 break;	
@@ -2306,9 +2319,9 @@ int parserInit (){
 	register int i=0;
 	
 	
-#ifdef GRAMC_VERBOSE	
+//#ifdef GRAMC_VERBOSE	
     printf ("parserInit:\n");
-#endif		
+//#endif		
 	
 	//infile_size = 0;
 	//outfile_size = 0;

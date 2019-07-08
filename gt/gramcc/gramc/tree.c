@@ -11,7 +11,7 @@
 // 
  
 
-#include "c.h"
+#include "gramc.h"
 
 //#importante
 //#expressão em ordem!!!
