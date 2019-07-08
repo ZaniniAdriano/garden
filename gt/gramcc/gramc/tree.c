@@ -50,10 +50,10 @@ struct node
 }; 
 
 
-int my_isdigit(char ch){
+int my_isdigit (char ch){
 	
-    return(ch>='0' && ch<='9');
-};
+    return ( ch >= '0' && ch <= '9' );
+}
 
 
 // A utility function to create a new BST node 
@@ -461,9 +461,8 @@ int testtest_main (){
 	
 	*/
 	
-	//refresh_screen();
 	return 0;
-};
+}
 
 
 //calcula a expressão e retorna o valor;
@@ -496,15 +495,15 @@ unsigned long tree_eval (){
 	{
 	    c = yylex ();
 
-		if( c == TOKENEOF )
+		if ( c == TOKENEOF )
 		{
-            printf("tree_eval: #error EOF in line %d\n", lineno);
-            exit(1);			
+            printf ("tree_eval: #error EOF in line %d\n", lineno);
+            exit (1);			
 		}  
 		
-		if( c == TOKENSEPARATOR )
+		if ( c == TOKENSEPARATOR )
 		{
-			if ( strncmp( (char *) real_token_buffer, ";", 1 ) == 0  )
+			if ( strncmp ( (char *) real_token_buffer, ";", 1 ) == 0  )
 			{
 			    goto done;	
 			}

@@ -429,7 +429,7 @@ Linker script and memory map
                 0x000000000040817a                yylex
                 0x0000000000408a39                lexerInit
                 0x0000000000408ac8                error
- .text          0x0000000000408ae4     0x1207 parser.o
+ .text          0x0000000000408ae4     0x123d parser.o
                 0x0000000000408ae4                parse_sizeof
                 0x0000000000408ca7                parse_expression
                 0x0000000000408cfc                parse_asm
@@ -440,31 +440,31 @@ Linker script and memory map
                 0x0000000000409332                parse_do
                 0x0000000000409362                parse_for
                 0x0000000000409392                parse
-                0x0000000000409c18                parserInit
- .text          0x0000000000409ceb      0x8b1 tree.o
-                0x0000000000409ceb                my_isdigit
-                0x0000000000409d11                newNode
-                0x0000000000409d4a                inorder
-                0x0000000000409d93                exibirEmOrdem
-                0x0000000000409ddc                exibirPreOrdem
-                0x0000000000409e25                exibirPosOrdem
-                0x0000000000409eb7                insert
-                0x0000000000409f24                bst_main
-                0x000000000040a128                push
-                0x000000000040a168                pop
-                0x000000000040a1a5                oper
-                0x000000000040a20d                eval
-                0x000000000040a2f2                testtest_main
-                0x000000000040a30a                tree_eval
- .text          0x000000000040a59c       0x28 stubs.o
-                0x000000000040a59c                gramado_system_call
+                0x0000000000409c4e                parserInit
+ .text          0x0000000000409d21      0x8b1 tree.o
+                0x0000000000409d21                my_isdigit
+                0x0000000000409d47                newNode
+                0x0000000000409d80                inorder
+                0x0000000000409dc9                exibirEmOrdem
+                0x0000000000409e12                exibirPreOrdem
+                0x0000000000409e5b                exibirPosOrdem
+                0x0000000000409eed                insert
+                0x0000000000409f5a                bst_main
+                0x000000000040a15e                push
+                0x000000000040a19e                pop
+                0x000000000040a1db                oper
+                0x000000000040a243                eval
+                0x000000000040a328                testtest_main
+                0x000000000040a340                tree_eval
+ .text          0x000000000040a5d2       0x28 stubs.o
+                0x000000000040a5d2                gramado_system_call
                 0x000000000040b000                . = ALIGN (0x1000)
- *fill*         0x000000000040a5c4      0xa3c 
+ *fill*         0x000000000040a5fa      0xa06 
 
 .iplt           0x000000000040b000        0x0
  .iplt          0x000000000040b000        0x0 crt0.o
 
-.rodata         0x000000000040b000     0x24c4
+.rodata         0x000000000040b000     0x2528
  .rodata        0x000000000040b000       0x74 crt0.o
  .rodata        0x000000000040b074      0x475 main.o
  *fill*         0x000000000040b4e9       0x17 
@@ -481,65 +481,65 @@ Linker script and memory map
  *fill*         0x000000000040c2a5        0x3 
  .rodata        0x000000000040c2a8      0x5bf lexer.o
  *fill*         0x000000000040c867        0x1 
- .rodata        0x000000000040c868      0x8e1 parser.o
- *fill*         0x000000000040d149        0x3 
- .rodata        0x000000000040d14c      0x378 tree.o
+ .rodata        0x000000000040c868      0x945 parser.o
+ *fill*         0x000000000040d1ad        0x3 
+ .rodata        0x000000000040d1b0      0x378 tree.o
 
-.eh_frame       0x000000000040d4c4     0x25b4
- .eh_frame      0x000000000040d4c4       0x34 crt0.o
- .eh_frame      0x000000000040d4f8      0x11c main.o
+.eh_frame       0x000000000040d528     0x25b4
+ .eh_frame      0x000000000040d528       0x34 crt0.o
+ .eh_frame      0x000000000040d55c      0x11c main.o
                                         0x134 (size before relaxing)
- .eh_frame      0x000000000040d614      0x400 stdlib.o
+ .eh_frame      0x000000000040d678      0x400 stdlib.o
                                         0x418 (size before relaxing)
- .eh_frame      0x000000000040da14      0x7f0 stdio.o
+ .eh_frame      0x000000000040da78      0x7f0 stdio.o
                                         0x808 (size before relaxing)
- .eh_frame      0x000000000040e204      0x3a0 string.o
+ .eh_frame      0x000000000040e268      0x3a0 string.o
                                         0x3b8 (size before relaxing)
- .eh_frame      0x000000000040e5a4      0x420 unistd.o
+ .eh_frame      0x000000000040e608      0x420 unistd.o
                                         0x438 (size before relaxing)
- .eh_frame      0x000000000040e9c4      0xcac api.o
+ .eh_frame      0x000000000040ea28      0xcac api.o
                                         0xcc4 (size before relaxing)
- .eh_frame      0x000000000040f670       0xbc lexer.o
+ .eh_frame      0x000000000040f6d4       0xbc lexer.o
                                          0xd4 (size before relaxing)
- .eh_frame      0x000000000040f72c      0x168 parser.o
+ .eh_frame      0x000000000040f790      0x168 parser.o
                                         0x180 (size before relaxing)
- .eh_frame      0x000000000040f894      0x1c0 tree.o
+ .eh_frame      0x000000000040f8f8      0x1c0 tree.o
                                         0x1d8 (size before relaxing)
- .eh_frame      0x000000000040fa54       0x24 stubs.o
+ .eh_frame      0x000000000040fab8       0x24 stubs.o
                                          0x3c (size before relaxing)
 
-.rel.dyn        0x000000000040fa78        0x0
- .rel.got       0x000000000040fa78        0x0 crt0.o
- .rel.iplt      0x000000000040fa78        0x0 crt0.o
- .rel.text      0x000000000040fa78        0x0 crt0.o
+.rel.dyn        0x000000000040fadc        0x0
+ .rel.got       0x000000000040fadc        0x0 crt0.o
+ .rel.iplt      0x000000000040fadc        0x0 crt0.o
+ .rel.text      0x000000000040fadc        0x0 crt0.o
 
-.data           0x000000000040fa80     0x2580
-                0x000000000040fa80                data = .
-                0x000000000040fa80                _data = .
-                0x000000000040fa80                __data = .
+.data           0x000000000040fae0     0x2520
+                0x000000000040fae0                data = .
+                0x000000000040fae0                _data = .
+                0x000000000040fae0                __data = .
  *(.data)
- .data          0x000000000040fa80       0x14 crt0.o
- *fill*         0x000000000040fa94        0xc 
- .data          0x000000000040faa0      0x558 main.o
-                0x000000000040ffa0                copyright
-                0x000000000040ffd8                program_name
-                0x000000000040fff0                standard_spec
-                0x000000000040fff4                running
- .data          0x000000000040fff8        0x0 ctype.o
- .data          0x000000000040fff8        0x8 stdlib.o
-                0x000000000040fff8                _infinity
- .data          0x0000000000410000        0x0 stdio.o
- .data          0x0000000000410000        0x0 string.o
- .data          0x0000000000410000        0x0 unistd.o
- .data          0x0000000000410000      0x440 api.o
- .data          0x0000000000410440      0x4e4 lexer.o
- *fill*         0x0000000000410924       0x1c 
- .data          0x0000000000410940      0x4e4 parser.o
- *fill*         0x0000000000410e24       0x1c 
- .data          0x0000000000410e40      0x4e4 tree.o
- .data          0x0000000000411324        0x0 stubs.o
+ .data          0x000000000040fae0       0x14 crt0.o
+ *fill*         0x000000000040faf4        0xc 
+ .data          0x000000000040fb00      0x558 main.o
+                0x0000000000410000                copyright
+                0x0000000000410038                program_name
+                0x0000000000410050                standard_spec
+                0x0000000000410054                running
+ .data          0x0000000000410058        0x0 ctype.o
+ .data          0x0000000000410058        0x8 stdlib.o
+                0x0000000000410058                _infinity
+ .data          0x0000000000410060        0x0 stdio.o
+ .data          0x0000000000410060        0x0 string.o
+ .data          0x0000000000410060        0x0 unistd.o
+ .data          0x0000000000410060      0x440 api.o
+ .data          0x00000000004104a0      0x4e4 lexer.o
+ *fill*         0x0000000000410984       0x1c 
+ .data          0x00000000004109a0      0x4e4 parser.o
+ *fill*         0x0000000000410e84       0x1c 
+ .data          0x0000000000410ea0      0x4e4 tree.o
+ .data          0x0000000000411384        0x0 stubs.o
                 0x0000000000412000                . = ALIGN (0x1000)
- *fill*         0x0000000000411324      0xcdc 
+ *fill*         0x0000000000411384      0xc7c 
 
 .got            0x0000000000412000        0x0
  .got           0x0000000000412000        0x0 crt0.o

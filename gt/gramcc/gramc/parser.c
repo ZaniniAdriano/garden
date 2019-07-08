@@ -1115,11 +1115,8 @@ int parse_return (int token){
 	//char *buffer;
 
 
-//#ifdef PARSER_RETURN_VERBOSE
 	//debug
 	printf ("parse_return: Initializing ...\n");	
-//#endif	
-
 	
 	//se entramos errado.
 	if ( token != TOKENKEYWORD || keyword_found != KWRETURN )
@@ -1127,6 +1124,11 @@ int parse_return (int token){
 		printf ("parse_return: Can't initialize return statement\n");
 		exit (1);
 	}
+	
+	// #obs:
+	// Isso significa que o token atual é uma keyword 'return'.
+ 	// Se a próxima keyword for um ';' então não temos uma expressão.	
+ 		
  		
     //
     // Eval.
@@ -1608,12 +1610,7 @@ int parse (){
 			break;
 		}	    
 	    
-		
-		again:
-		
-		//#debug
-	    //printf("%c", c );
-		
+		again:		
 		
         //#importante		
         //Estamos começando um arquivo. No começo do arquivo 
@@ -1725,9 +1722,10 @@ int parse (){
                         //fechando UM corpo de função. 					
 				        if ( strncmp( (char *) real_token_buffer, "}", 1 ) == 0  )
                         {
+							printf ("[/BRACE] line %d\n", lineno);
+							
 						    if ( braces_inside > 0 )
-							{
-								printf("[/BRACE] line %d\n", lineno);
+							{	
 								braces_inside--;
                                 State = 1;
 								break;							
@@ -2081,31 +2079,31 @@ int parse (){
 						
 						// # return #
 						//return. Chamaremos o tratador do stmt parse_return() 
-				        if( keyword_found == KWRETURN )
+				        if ( keyword_found == KWRETURN )
 				        {
+						    printf ("State3: TOKENKEYWORD={%s} KWRETURN, line %d \n", 
+							    real_token_buffer, lineno );
+							    
+					        c = parse_return (TOKENKEYWORD);
+					        
+						    printf ("State3: after return. TOKENKEYWORD={%s}, line %d \n", 
+							    real_token_buffer, lineno );
 							
-//#ifdef PARSER_VERBOSE								
-	//				        printf("State3: TOKENKEYWORD={%s} KWRETURN line %d  \n", 
-	//						    real_token_buffer, lineno );
-//#endif					        
-							// parse deve retornar o '(', quando encontrá-lo faz o tratamento até chegar  no ';'
-						    // a função deve retornar o separador ';'
-				            //indicando que tudo deu certo no parser.
-						    //continuaremos nesse state até pegarmos o separador '}'.
-							//printf ("\n");
-					        c = parse_return ( TOKENKEYWORD );
-					        //printf ("\n");
+							//#debug
+							//while(1){}
 							
-							//esperávamos o separador ';', se não veio então falhou o parser.
+							//Esperávamos o separador ';', 
+							// se não veio então falhou o parser.
+							
 							if ( c != TOKENSEPARATOR )
 					        {
-							    printf("State3: TOKENKEYWORD TOKENSEPARATOR fail");
-                                exit(1);								
+							    printf ("State3: TOKENKEYWORD TOKENSEPARATOR fail");
+                                exit (1);								
 					        }
 							
-							//reinicia
-							//porque depois de um return podemos ter várias outras coisas.
-							//inclusive apenas terminarmos um corpo.
+							// Reinicia, porque depois de um return podemos ter 
+							// várias outras coisas, inclusive apenas 
+							// terminarmos um corpo.
 							State = 1;
 							break;
 				        }
