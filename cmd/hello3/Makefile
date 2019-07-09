@@ -2,15 +2,15 @@
 #history:
 #2019 - Created by Fred Nora.
 
-#testando a libc3
-#tentando colocar os caracteres em stdout ao invés d epintá-los na tela.
+# Testando a libc3
+# Tentando colocar os caracteres em stdout ao invés de pintá-los na tela.
 
 
 VERSION = 0
 PATCHLEVEL = 0
 SUBLEVEL = 0
 EXTRAVERSION =
-#NAME = tascii
+#NAME = 
 
 #todo:
 #We need to simplify these flags
@@ -34,11 +34,11 @@ CFLAGS = -m32 \
 #	-s
 
 
+
 LIBC    = ../../lib/libc03/include/
 LIBCOBJ = ../../lib/libc03/obj
-
-API01   = ../../lib/api01/include/
-APIOBJ  = ../../lib/api01/obj
+API01   = ../../lib/api02/include/
+APIOBJ  = ../../lib/api02/obj
 
 
 	##

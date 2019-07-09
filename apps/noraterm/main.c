@@ -113,6 +113,22 @@ int __sequence_status = 0;
 
 #define TAB_SIZE 8
 
+
+
+//
+// CSI support
+// 
+
+//#test
+//Control Sequence Introducer
+
+#define CSI_BUFFER_SIZE 128
+char CSI_BUFFER[ CSI_BUFFER_SIZE ];
+
+int __csi_buffer_tail = 0;
+int __csi_buffer_head = 0;
+
+
 //
 // Structures
 //
@@ -847,14 +863,32 @@ void tputc (char *c, int len){
 			        return;
 			        break;  
 			     
+			     //Nothing??
+			     //case ';':
+			         //return;
+			         //break;
+			         
+			     //Vamos apenas colocar no buffer
+			     //para analizarmos depois.
+			     //Colocamos no tail e retiramos no head.
 		         default:
+		              printf (" {.} ");
+		              CSI_BUFFER[__csi_buffer_tail] = ascii;
+		              __csi_buffer_tail++;
+		              if ( __csi_buffer_tail >= CSI_BUFFER_SIZE )
+		              {
+						  __csi_buffer_tail = 0;
+					  }
 		              return;
 		              break;
 		      }
 		 
-		 } else if(term.esc & ESC_STR_END) { 
+		 } else if(term.esc & ESC_STR_END){ 
+			 
+			 
+			 //...
 	 
-	     } else if(term.esc & ESC_ALTCHARSET) {
+	     } else if(term.esc & ESC_ALTCHARSET){
 			 
 			 switch(ascii)
 			 {
@@ -868,7 +902,8 @@ void tputc (char *c, int len){
 			 
 	     } else if(term.esc & ESC_TEST) {
 			 
-			 
+		    //...
+		    	 
 		 }else{
 			
 		   switch(ascii)

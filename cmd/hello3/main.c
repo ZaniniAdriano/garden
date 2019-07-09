@@ -1,24 +1,13 @@
 
 // hello3.
-// Nesse teste vamos tentar escrever exclusivamente em arquivos 
-// usando a libc03.
-// >> O terminal precisa chamar esse programa como child pra que o programa
-// pegue o stdout do terminal.
+//
+// Nesse teste vamos tentar escrever em arquivos usando a libc03. Para isso 
+// o terminal precisa estar rodando.
+// Como teste o terminal pode chamar esse programa como um processo filho dele.
+//
 
- 
 
-/*
- * main.c - TASCII.BIN
- *
- * Aplicativo de teste para o sistema operacional Gramado.
- * Exibe os acarteres da tabela ascii.
- * @todo: Pode haver alguma seleção, baseada em argumentos.
- * @todo: usar apenas a libC.
- *
- * 2018 - Fred Nora.
- */
- 
- 
+//#include <types.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -71,8 +60,7 @@ int main ( int argc, char *argv[] ){
     unsigned char count;
 	unsigned char standard_ascii_max = STANDARD_ASCII_MAX;
 	
-	char buffer[512];
-	
+	char buffer[512];	
 	char buffer2[] = "DURTY...........";
 	
 	// #IMPORTANTE:
@@ -171,8 +159,8 @@ int main ( int argc, char *argv[] ){
 	// Testando rotinas da libc
 	// Mostrando output no terminal noraterm.
 	
-	//ex:
-	//http://kirste.userpage.fu-berlin.de/chemnet/use/info/libc/libc_7.html#SEC80
+//ex:
+//http://kirste.userpage.fu-berlin.de/chemnet/use/info/libc/libc_7.html#SEC80
 	
 	//sprintf, snprintf, asprintf, obstack_printf 
 	//vprintf, vfprintf, vsprintf, vsnprintf, vasprintf  
@@ -202,7 +190,8 @@ int main ( int argc, char *argv[] ){
 	fputs("{fputs} ",stdout);	
 	
 	//testing scape s.
-	printf("\x1b[m");  
+	//printf("\x1b[m");  
+	printf("\x1b[1;2;3m");  
 	
 	//fim.
 	printf ("*fim-do-test\n");
@@ -222,7 +211,6 @@ int main ( int argc, char *argv[] ){
 	//printf ("{\x1b[0m} ");
 	//printf ("*fim-do-test\n");
 			    
-//done:    
     
     // Testando a saída normal.
     // Aqui retornamos para o crt0.o.
