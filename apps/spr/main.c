@@ -1,84 +1,21 @@
 /*
- * File: main.c spr - sprinkler web browser
- *
- * ------------------ cut ----------------
- * Essa é uma versão do shell apenas par ao kernel norax,
- * deve ser full screens sem frames. Só o suficiente para digitar
- * linhas de comando.
- *
- * Gramado Core Shell.
- * A shell to run only on Gramado Core environment. 
- *
- * GWM - Gramado Window Manager.
- * deve se comunicar com o GWS, Gramado Window Server. /gramado
- * General purpose application.
- *
- * #importante 
- * Observar o conceito de fluxo padrão e o fato de printf enviar conteúdo 
- * para o buffer stdout. Depois é só imprimir o que está em stdout.
- * Talvez isso implique em midanças na libc pra ficar parecido com a 
- * implementação UNIX de output. E o refresh do buffer de saída?
- * O lado bom é que o buffer de saída poderá ser usado no PIPE.
- *
- *     SHELL.BIN é um aplicativo de próposito geral. Desenvolvido como 
- * ferramenta do desenvolvedor para prover varios tipos de testes de recursos do sistema.
- *
- * Ok, isso é um program do tipo 'janela', o pequeno terminal 
- * que roda em uma janela filha será gerenciado pelo próprio aplicativo.
- * Isso é diferente de um programa feito para rodar em um terminal, onde o kernel 
- * gerenciará a janela usada pelo programa. 
- *
- * Podemos usar esse terminal na janela filha para interpretar linguagem basic.
- *
- * Descrição:
- * Shell do sistema. (SHELL.BIN)
- * Arquivo principal do Shell.
- * É um aplicativo de 32bit em user mode. 
- * P3 - Processos em ring3, User Mode.
- * O Programa recebe comandos do usuário e envia os comandos para o núcleo 
- * através de chamadas ao sistema. 
- *
- * (@todo: envio de mensagens) A idéia é que cada comando chame um processo 
- * diferente, mas existem serviços internos que o próprio Shell ofereçe
- * fazendo uso dos recursos do Kernel ou próprios.
- *     	
- * É o console, um terminal virtual em user mode.    
- *
- * Obs: O Shell é o aplicativo apropriado para o desenvolvedor criar e testar 
- * as chamadas ao Kernel via interrupção e para ver as mensagens do compilador.
- *      O programa que executa aplicações em lote deve enviar os outputs para 
- * a tela do Shell. 
- *
- * Obs: O entry point está em head.s
- *      @todo: Não usar o arquivo head em assembly efeito de portabilidade.
- * Obs: O prompt e cursor estão definidos em stdio.h
- *
- * * IMPORTANTE: O FOCO DO INTERPRETADOR DE COMANDOS DO SHELL APP DEVE SER
- * A GERÊNCIA DE ARQUIVOS E DISPOSITIVOS DE ARMAZENAMENTO, EM SEGUNDO LUGAR
- * A GERENCIA DOS RECURSOS DO SISTEMA, POIS ISSO É ATRIBUIÇÃO DO APP TASKMAN.
- *
+ * File: main.c 
+ * 
+ * spr - Sprinkler web browser.
  *
  * History:
  *     2016 - Created by Fred Nora.
- *     2018 - More commands.
  */
-
-/*
- Como o kernel envia mensagens para o terminal em user mode?
- 
- The mechanism for delivering messages to the console is implemented by the 
- printk function, defined in kernel/printk.c. 
- The function uses vsprintf (defined in lib/vsprintf.c) to create a message 
- string, places the string in the circular buffer of kernel messages and 
- passes it to all active console devices if the priority of the message is 
- less than console_loglevel. 
-*/ 
-
 
  
 #include "spr.h"
 
 
+// A janela principal do aplicativo.
+struct window_d *hWindow;    
+
+//#test
+struct window_d *w_navbar; //todo; criar global.
 //Botão da barra de navegação.
 struct window_d *navbar_button;
 
@@ -567,10 +504,10 @@ void quit ( int status ){
  */
 
 unsigned long 
-shellProcedure( struct window_d *window, 
-                int msg, 
-				unsigned long long1, 
-				unsigned long long2 )
+shellProcedure ( struct window_d *window, 
+                 int msg, 
+				 unsigned long long1, 
+				 unsigned long long2 )
 {
 	unsigned long input_ret;
     unsigned long compare_return;	
@@ -3324,9 +3261,7 @@ void shellShell (){
 	//@todo
 	//tentando posicionar o cursor dentro da janela
 	//shellSetCursor( (shell_info.main_window->left/8) , (shell_info.main_window->top/8));	
-	
-	//shellPrompt();
-};
+}
 
 
 /*
@@ -6437,8 +6372,7 @@ int main ( int argc, char *argv[] ){
 	//struct window_class_d *wc; 
 	
 	
-	// A janela principal do aplicativo.
-	struct window_d *hWindow;    
+
 
 	//JANELA CRIADA NA ÁREA DE CLIENTE DA JANELA PRINCIPAL.
     //struct window_d *hWindow2;       
@@ -6577,31 +6511,67 @@ noArgs:
     
 //again:	
 	
-	printf ("Creating window ...\n");
+	//
+	// Main window.
+	//
 	
+	
+	//++
 	//cria, registra e mostra;
 	enterCriticalSection ();    
-    hWindow = shellCreateMainWindow (1);
-	exitCriticalSection ();
-	//goto again;
+
+    printf ("Creating window ...\n");	
+	
+	wpWindowLeft = 40;
+	wpWindowTop = 40;
+	wsWindowWidth = 600;
+	wsWindowHeight = 480;
+		
+    //hWindow = shellCreateMainWindow (1);
+	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, "Sprinkler",     
+                                wpWindowLeft, wpWindowTop, 
+                                wsWindowWidth, wsWindowHeight,    
+                                0, 0, xCOLOR_GRAY2, xCOLOR_GRAY2 );	
 	
 	if ( (void *) hWindow == NULL )
 	{
 		printf ("FAIL!");
 		while (1){}	
-		//die ("shell.bin: hWindow fail");
+	}else{
+		
+		//Registrar e mostrar.
+        APIRegisterWindow (hWindow);
+	    apiShowWindow (hWindow);
 	}	
+	exitCriticalSection ();	
+	//--
+	
+	// #IMPORTANTE #IMPORTANTE #IMPORTANTE #IMPORTANTE#IMPORTANTE
+	
+	// #Debug
+	// Uma das janelas filhas cridas abaixo não está se regostrando direito,
+	// fica faltando parent window.
+	// Com isso a rotina scanWindow do kernel falha quando movemos o mouse.
+	// O problema não é grave.
+	// Vamos trabalhar nessas janelas até que funcionem. Registrando
+	// o ponteiro para a janela mãe. 
+	
+	//Debug:
+	printf ("     *hang debug breakpoint");
+	while(1){};
 	
 	
-	//#bugbug
-	//falha quando chamamos a rotina de pintura da janela.
+	
+	
+	
+	
+	
+	
 		
 	//
 	// @todo: Usar essa rotina para fazer testes de modo gráfico.
 	//	
 	
-	//Debug:
-	//while(1){};
 	
 	// @todo: 
 	//     Set priority.
@@ -6629,19 +6599,6 @@ noArgs:
 	// gráficos usou dimensões default. Provavelmente o Kernel não os 
 	// recepciona devidamente ainda.
 	// ...
-	
-	
-	//
-    // Create Window.
-	//
-	
-	//Debug:
-	//printf("\n\n Starting Shell Version ");
-	//printf(SHELL_VERSION);
-	//refresh_screen();	
-	
-	//Debug:
-	//while(1){}
 	
 	
 	//
@@ -6803,15 +6760,6 @@ noArgs:
 					
 		//janela, 100 ms, tipo 2= intermitente.
 	//system_call ( 222, (unsigned long) hWindow, 100, 2);		
-
-	
-	//printf("HOLAMBRA KERNEL SHELL\n");	
-    //printf("#debug breakpoint");
-    //while(1){} 	
-	
-	//#importante
-	//VAMOS EFETUAR ESSE REFRESH DEPOIS DE CRIARMOS OUTRA JANELA.
-	//refresh_screen ();
 	
 	
 	//
@@ -6934,25 +6882,33 @@ noArgs:
 	//wsWindowWidth = 600;
 	//wsWindowHeight = 480;
 	
-	   //#test
-      struct window_d *w_navbar; //todo; criar global.
+	//
+	// Navbar
+	//
+	
+
+      
+      enterCriticalSection ();  
       w_navbar = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "navbar",     
-                                wpWindowLeft +1, wpWindowTop +40, 
+                                1, 80, 
                                 wsWindowWidth -38, 24,    
-                                0, 0, COLOR_GRAY, COLOR_GRAY );	
+                                hWindow, 0, COLOR_GRAY, COLOR_GRAY );	
 	
 	APIRegisterWindow (w_navbar);
 	apiShowWindow (w_navbar);
+	exitCriticalSection ();  
+	
+	
 	  
 	  //#TODO
 	  //validation. register ,,,
 	  
 	
-	//#test - provisorio
+	enterCriticalSection ();  
 	editboxWindow = (void *) APICreateWindow ( WT_EDITBOX, 1, 1, "editbox-navbar",     
-                                wpWindowLeft +8, wpWindowTop +40, 
+                                8, 80, 
                                 wsWindowWidth -100, 24,    
-                                0, 0, COLOR_WINDOW, COLOR_WINDOW );
+                                hWindow, 0, COLOR_WINDOW, COLOR_WINDOW );
 	if ( (void *) editboxWindow == NULL)
 	{	
 		printf("edit box fail");
@@ -6963,22 +6919,23 @@ noArgs:
 	};
 	APIRegisterWindow (editboxWindow);
 	apiShowWindow (editboxWindow);
+	exitCriticalSection ();  
 	
 	
-	
-   
+   enterCriticalSection ();  
 	navbar_button = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "[>]",     
-                                wsWindowWidth -40, wpWindowTop +40, 
+                                wsWindowWidth -80, 40, 
                                 32, 24,    
-                                0, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
+                                hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
 								
     APIRegisterWindow (navbar_button);
 	apiShowWindow (navbar_button);
+	exitCriticalSection ();  
 	
 	//===========================================================
 
     
-    //#test
+    enterCriticalSection ();  
 	//++
 	void *b = (void *) malloc (1024*100); 	 
     
@@ -7002,7 +6959,7 @@ noArgs:
 		refresh_screen();	
 	};
     //--
-    
+    exitCriticalSection ();  
     
 	//===========================================================
 		
@@ -7012,11 +6969,15 @@ noArgs:
 	
 	shellSetCursor ( (terminal_rect.left / 8) , ( terminal_rect.top/8) );	
 	
-	//system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );
+	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );
 	
-
 	
-    //printf("#debug breakpoint");
+	// #bugbug
+	// Trava quando clicamos na janela para usarmos o mouse.
+	// Alguma coisa no kernel pegou um ponteiro inválido.
+	// provavelmente alguma janela.
+	
+    //printf ("#debug breakpoint");
     //while(1){} 	
 	 		
 	
@@ -7047,10 +7008,7 @@ noArgs:
 	// @todo: Apenas registrar o procedimento dessa janela na sua estrutura no kernel..
     // 
 	
-	
-	//printf("HOLAMBRA KERNEL SHELL\n");	
-    //printf("#debug breakpoint");
-    //while(1){} 		
+
 	
 	
 	//===========================
@@ -7063,14 +7021,14 @@ noArgs:
 	//#importante:
 	//Vamos cancelar a inicialização do shell (console)
 	
-	/*
+	
 	enterCriticalSection();
-	Status = (int) shellInit (editboxWindow);
+	Status = (int) shellInit (hWindow);
 	if ( Status != 0 ){
 		die ("spr: app_main: shellInit fail");
 	};
 	exitCriticalSection();     		
-    */	
+    	
 
 	//#importante:
 	//Agora é a hora de pegar mensagens de input de teclado.
@@ -7088,7 +7046,7 @@ noArgs:
 	// #test
 	// Desbilitando o cursor piscante.
 	
-	system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
+	//system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
 	
 	//
 	// Podemos tentar criar um processo.
