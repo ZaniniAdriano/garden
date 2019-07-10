@@ -6557,10 +6557,8 @@ noArgs:
 	// o ponteiro para a janela mãe. 
 	
 	//Debug:
-	printf ("     *hang debug breakpoint");
-	while(1){};
-	
-	
+	//printf ("     *hang debug breakpoint");
+	//while(1){};
 	
 	
 	
@@ -6886,8 +6884,8 @@ noArgs:
 	// Navbar
 	//
 	
-
-      
+      /*
+      //++
       enterCriticalSection ();  
       w_navbar = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "navbar",     
                                 1, 80, 
@@ -6897,13 +6895,14 @@ noArgs:
 	APIRegisterWindow (w_navbar);
 	apiShowWindow (w_navbar);
 	exitCriticalSection ();  
-	
+	//--
+	*/
 	
 	  
 	  //#TODO
 	  //validation. register ,,,
 	  
-	
+	//++
 	enterCriticalSection ();  
 	editboxWindow = (void *) APICreateWindow ( WT_EDITBOX, 1, 1, "editbox-navbar",     
                                 8, 80, 
@@ -6920,9 +6919,11 @@ noArgs:
 	APIRegisterWindow (editboxWindow);
 	apiShowWindow (editboxWindow);
 	exitCriticalSection ();  
+	//--
 	
 	
-   enterCriticalSection ();  
+	//++
+    enterCriticalSection ();  
 	navbar_button = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "[>]",     
                                 wsWindowWidth -80, 40, 
                                 32, 24,    
@@ -6931,12 +6932,13 @@ noArgs:
     APIRegisterWindow (navbar_button);
 	apiShowWindow (navbar_button);
 	exitCriticalSection ();  
+	//--
+	
 	
 	//===========================================================
 
-    
+    //++
     enterCriticalSection ();  
-	//++
 	void *b = (void *) malloc (1024*100); 	 
     
 	if ( (void *) b == NULL )
@@ -6958,8 +6960,8 @@ noArgs:
 		//#bugbug: isso é lento.
 		refresh_screen();	
 	};
-    //--
     exitCriticalSection ();  
+    //--
     
 	//===========================================================
 		
