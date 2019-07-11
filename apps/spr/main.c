@@ -6884,7 +6884,7 @@ noArgs:
 	// Navbar
 	//
 	
-      /*
+      
       //++
       enterCriticalSection ();  
       w_navbar = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "navbar",     
@@ -6896,7 +6896,7 @@ noArgs:
 	apiShowWindow (w_navbar);
 	exitCriticalSection ();  
 	//--
-	*/
+	
 	
 	  
 	  //#TODO
