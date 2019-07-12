@@ -117,6 +117,10 @@ typedef int gid_t;
 
 
 
+// #isso é um teste
+int execv (const char *path, char *const argv[] );
+
+
 // #todo:
 // Tem um monte de função pra fazer aqui.
 

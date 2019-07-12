@@ -84,13 +84,27 @@ void *unistd_system_call ( unsigned long ax,
 */
 
 
-/* linux klibc style*/
+
+ 
+
+
 /*
-int execv(const char *path, char * const * argv)
-{
-  return execve(path, argv, environ);
+ * execv:
+ * 
+ */
+ 
+// #todo: Trabalhar o environment.
+// #isso é um teste
+
+char *__execv_environ[] = { NULL, NULL, NULL };
+
+int execv (const char *path, char *const argv[] ){
+	
+    return execve ( path, (char **) argv, __execv_environ );
 }
-*/
+
+ 
+ 
  
 //padrão libc.
 //int execve ( const char *path, char *const argv[], char *const envp[] );  
@@ -647,9 +661,11 @@ int pipe ( int pipefd[2] ){
 				    (unsigned long) pipefd, (unsigned long) pipefd );	
 }
 
+
 long fpathconf (int fildes, int name){
     return -1;
 }
+
 
 long pathconf (const char *pathname, int name){
     return -1;	

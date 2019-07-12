@@ -43,6 +43,7 @@
 static int __libc_output_mode = 0;
 static int terminal___PID;
 
+
 /*
 int putchar(int c) {
   return fputc(c,stdout);
@@ -1376,11 +1377,11 @@ unsigned long input ( unsigned long ch ){
 		    prompt_pos++;
 			break;	
 	};
-	
-//input_more:	
+
 	return (unsigned long) 0;
 
-input_done:	
+input_done:
+	
     return VK_RETURN;	
 }
 
@@ -1461,6 +1462,9 @@ int getchar (void){
 	
 	int Ret = 0;
 	
+	// #todo: 
+	// ? Já temos uma função para essa chamada ? 137.
+	
 Loop:
 	
 	Ret = (int) gramado_system_call ( 137, 0, 0, 0 ); 
@@ -1480,6 +1484,10 @@ Loop:
  *     Inicializa stdio para usar o fluxo padrão.
  *     O retorno deve ser (int) e falhar caso dê algo errado.
  */
+
+// #bugbug
+// Essa estrutura lida com elementos de estrutura em ring3.
+// #atenção: Algumas rotinas importantes estão usando esses elementos.
 
 void stdioInitialize (){
 
@@ -1707,6 +1715,7 @@ int __fflush_stdout(void)
 }
 */
 
+
 /*
 int __fflush_stderr(void) 
 {
@@ -1904,6 +1913,7 @@ char *gets(char *str)
 }
 */
 
+
 /*uClib style*/
 /*
 char *fgets(char *s, int count, FILE *fp)
@@ -1943,7 +1953,6 @@ char *fgets(char *s, int count, FILE *fp)
 /*
  *********************************
  * gets:
- *
  *     gets() devolve um ponteiro para string
  */
  
@@ -3135,7 +3144,7 @@ int printf ( const char *fmt, ... ){
 	//__SendMessageToProcess ( terminal___PID, 0, 100, 2008, 2008 );
 	
 	// #todo
-	//return 0;
+	return 0;
 }
    
 //=============================================================
@@ -3186,7 +3195,7 @@ int printf_draw ( const char *fmt, ... ){
 	libc_set_output_mode ( LIBC_NORMAL_MODE );
 	
 	// #todo
-	//return 0;
+	return 0;
 }
 
 
@@ -3210,6 +3219,9 @@ extern __inline int vprintf (const char *__fmt, __gnuc_va_list __arg)
  **********************
  * vfprintf:
  */
+
+// #bugbug
+// Estamos em ring3, não devemos acessar os elementos da estrutura de stream.
 
 int vfprintf ( FILE *stream, const char *format, stdio_va_list argptr ){
  	
@@ -3294,15 +3306,14 @@ void perror (const char *str){
     stderr_printf (str);	
 }
 
+
 // O ponto de leitura e escrita volta a ser a base.
-void rewind ( FILE * stream ){
+void rewind (FILE *stream){
 
     if ( (void *) stream == NULL )
         return;
 
-    gramado_system_call ( 609, 
-        (unsigned long) stream, 
-        (unsigned long) stream, 
+    gramado_system_call ( 609, (unsigned long) stream, (unsigned long) stream, 
         (unsigned long) stream ); 
 }
 
@@ -3323,6 +3334,7 @@ int snprintf ( char *str, size_t count, const char *fmt, ... ){
     
 	return ret;
 }
+
 
 // inicializa o fluxo padrão para o processo.
 int stdio_initialize_standard_streams (void){
@@ -3518,10 +3530,8 @@ int libcStartTerminal (void){
 
 void setbuf (FILE *stream, char *buf){
 	
-    gramado_system_call ( 610, 
-        (unsigned long) stream, 
-        (unsigned long) buf, 
-        (unsigned long) buf ); 
+    gramado_system_call ( 610, (unsigned long) stream, 
+        (unsigned long) buf, (unsigned long) buf ); 
 }
 
 
@@ -3533,8 +3543,8 @@ void setbuf (FILE *stream, char *buf){
 
 void setbuffer (FILE *stream, char *buf, size_t size){
 	
-    gramado_system_call ( 611, (unsigned long) stream, (unsigned long) buf, 
-        (unsigned long) size ); 
+    gramado_system_call ( 611, (unsigned long) stream, 
+        (unsigned long) buf, (unsigned long) size ); 
 }
 
 
