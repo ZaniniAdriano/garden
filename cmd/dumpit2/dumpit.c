@@ -55,4 +55,14 @@ void dumpfile (const char * fname, int mode, FILE *path)
 	}
 	fclose(fd);
 	fprintf(OUTPUT,"\n");
+	
+	//
+	// Show OUTPUT file.
+	//
+	
+	//#test
+	int c;
+	while ( (c = fgetc(OUTPUT)) >= 0 )
+		printf ("%c", c);		
+	
 }
