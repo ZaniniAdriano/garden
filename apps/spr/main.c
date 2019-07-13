@@ -6822,9 +6822,6 @@ noArgs:
 			terminal_rect.height );	
 	   */
 	
-	//printf("HOLAMBRA KERNEL SHELL\n");	
-    //printf("#debug breakpoint");
-    //while(1){} 	
 	
 	//===============================
 	
@@ -6937,6 +6934,7 @@ noArgs:
 	
 	//===========================================================
 
+    /*
     //++
     enterCriticalSection ();  
 	void *b = (void *) malloc (1024*100); 	 
@@ -6962,7 +6960,15 @@ noArgs:
 	};
     exitCriticalSection ();  
     //--
+    */
     
+    // Carrega um bmp e decodifica diretamente na tela.
+    // O posicionamento é absoluto na tela e não relativo à janela.
+    //++
+    enterCriticalSection ();  
+	system_call ( 4001, (unsigned long) "dennis.bmp", 100, 100 );	    
+    exitCriticalSection ();  
+    //--    
 	//===========================================================
 		
 	//
