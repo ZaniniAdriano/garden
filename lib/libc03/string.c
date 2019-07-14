@@ -237,7 +237,7 @@ char *strrchr (const char *p, int ch){
 
 //#todo
 //definido em inttypes.h
-intmax_t strtoimax (const char* str, char** endptr, int base)
+intmax_t strtoimax (const char *str, char **endptr, int base)
 {
    return 0;
 }
@@ -245,7 +245,7 @@ intmax_t strtoimax (const char* str, char** endptr, int base)
 
 //#todo
 //definido em inttypes.h
-uintmax_t strtoumax (const char* str, char** endptr, int base)
+uintmax_t strtoumax (const char *str, char **endptr, int base)
 {
    return 0;
 }
@@ -260,7 +260,7 @@ uintmax_t strtoumax (const char* str, char** endptr, int base)
  * PUBLIC: #endif
  */
 
-int strcasecmp (const char *s1, const char*s2){
+int strcasecmp (const char *s1, const char *s2){
 	
 	unsigned char s1ch, s2ch;
 
@@ -269,10 +269,12 @@ int strcasecmp (const char *s1, const char*s2){
 		s1ch = *s1++;
 		s2ch = *s2++;
 		
-		if (s1ch >= 'A' && s1ch <= 'Z')		/* tolower() */
+		//tolower
+		
+		if (s1ch >= 'A' && s1ch <= 'Z')
 			s1ch += 32;
 		
-		if (s2ch >= 'A' && s2ch <= 'Z')		/* tolower() */
+		if (s2ch >= 'A' && s2ch <= 'Z')
 			s2ch += 32;
 		
 		if (s1ch != s2ch)
@@ -321,7 +323,7 @@ char *strncpy (char *s1, const char *s2, size_t n){
  *     Compara duas strings. 
  */
 
-int strcmp (char * s1, char * s2){
+int strcmp (char *s1, char *s2){
 	
 	int i;
 	
@@ -329,7 +331,7 @@ int strcmp (char * s1, char * s2){
 		
 		if ( s1[i] == '\0' ){ 
 		
-		    return (int) 0; 
+		    return 0; 
 		}
 	};
 	
@@ -365,7 +367,7 @@ int strncmp ( char *s1, char *s2, int len ){
 	    return (int) 2;
 	};
 	
-	return (int) 0;
+	return 0;
 }
 
 
@@ -406,7 +408,7 @@ void *memset ( void *ptr, int value, int size ){
 
 
 //#todo: mover para memory.c ??
-void *memoryZeroMemory ( void* ptr, size_t cnt ){
+void *memoryZeroMemory ( void *ptr, size_t cnt ){
 	
     volatile char *vptr = (volatile char *) ptr;
     
@@ -561,12 +563,16 @@ size_t strlcat(char *dst, const char *src, size_t size)
 
 
 
-char *strncat(char *dst, const char *src, size_t n)
-{
-	char *q = strchr(dst, '\0');
+char *strncat (char *dst, const char *src, size_t n){
+	
+	char *q = strchr (dst, '\0');
+	
 	const char *p = src;
+	
 	char ch;
-	while (n--) {
+	
+	while (n--)
+	{
 		*q++ = ch = *p++;
 		if (!ch)
 			return dst;
@@ -614,7 +620,7 @@ void  bzero ( char *cp, int len ){
  *     Tamanho de uma string.
  */ 
 
-size_t strlen ( const char *s ){
+size_t strlen (const char *s){
 	
     size_t i = 0;
 	
@@ -656,16 +662,19 @@ size_t strnlen ( const char *s, size_t maxlen ){
 }
 
 
-char * strpbrk(const char * cs,const char * ct)
-{
-	const char *sc1,*sc2;
+char *strpbrk (const char *cs, const char *ct){
+	
+	const char *sc1, *sc2;
 
-	for( sc1 = cs; *sc1 != '\0'; ++sc1) {
-		for( sc2 = ct; *sc2 != '\0'; ++sc2) {
+	for ( sc1 = cs; *sc1 != '\0'; ++sc1 )
+	{
+		for ( sc2 = ct; *sc2 != '\0'; ++sc2 )
+		{
 			if (*sc1 == *sc2)
 				return (char *) sc1;
 		}
 	}
+
 	return NULL;
 }
 
@@ -898,7 +907,7 @@ size_t strcspn ( const char *str, const char *reject ){
  * Copyright (c) 2011, 2012 Jonas 'Sortie' Termansen.
  */
  
-size_t strspn ( const char* str, const char* accept ){
+size_t strspn ( const char *str, const char *accept ){
 	
 	int result;
 	
@@ -965,9 +974,10 @@ cont:
     
 	c = *s++;
     
-	for ( spanp = (char *)delim; (sc = *spanp++) != 0; )
+	for ( spanp = (char *) delim; (sc = *spanp++) != 0; )
     {
-	    if (c == sc){
+	    if (c == sc)
+	    {
 	        goto cont;
 	    }
     };
@@ -1013,16 +1023,16 @@ cont:
         
 		//Nothing.
 		
-	};
-	
+	};	
     // NOTREACHED 
-};
+}
 
 
 /*
  *********************************************
  * strtok:
- *     Credits: Apple. (Open Source) */
+ *     Credits: Apple. (Open Source) 
+ */
 
 char *strtok ( char *s, const char *delim ){
 	
@@ -1053,7 +1063,7 @@ char *strchr(const char *s, int c)
 
 char *strchr (const char *s, int c){
 	
-	for (; *s != (char)c; ++s)
+	for (; *s != (char) c; ++s)
 		if (*s == '\0')
 			return NULL;
 	return (char *) s;
@@ -1062,8 +1072,8 @@ char *strchr (const char *s, int c){
 
 /*linux style*/
 
-void *memmove(void *dest, const void *src, size_t count)
-{
+void *memmove (void *dest, const void *src, size_t count){
+	
 	char *tmp;
 	const char *s;
 

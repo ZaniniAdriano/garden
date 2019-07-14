@@ -3290,6 +3290,7 @@ int stdout_printf (const char *format, ...){
 
 //printf que escreve no stderr. 
 int stderr_printf (const char *format, ... ){
+	
     va_list arg;
     int done;
 
@@ -3530,8 +3531,8 @@ int libcStartTerminal (void){
 
 void setbuf (FILE *stream, char *buf){
 	
-    gramado_system_call ( 610, (unsigned long) stream, 
-        (unsigned long) buf, (unsigned long) buf ); 
+    gramado_system_call ( 610, (unsigned long) stream, (unsigned long) buf, 
+        (unsigned long) buf ); 
 }
 
 
@@ -3543,8 +3544,8 @@ void setbuf (FILE *stream, char *buf){
 
 void setbuffer (FILE *stream, char *buf, size_t size){
 	
-    gramado_system_call ( 611, (unsigned long) stream, 
-        (unsigned long) buf, (unsigned long) size ); 
+    gramado_system_call ( 611, (unsigned long) stream, (unsigned long) buf, 
+        (unsigned long) size ); 
 }
 
 
@@ -3564,11 +3565,36 @@ void setlinebuf (FILE *stream){
 // precisamos do argumento size.
 int setvbuf (FILE *stream, char *buf, int mode, size_t size){
 	
-    return (int) gramado_system_call ( 613, 
-					(unsigned long) stream, 
-					(unsigned long) buf, 
-					(unsigned long) mode ); 	
+    return (int) gramado_system_call ( 613, (unsigned long) stream, 
+					(unsigned long) buf, (unsigned long) mode ); 	
 }
+
+
+
+//#todo
+/*
+unsigned int filesize(FILE * fp);
+unsigned int filesize(FILE * fp) {
+	if(!fp) return 0;
+	fseek(fp, 0, SEEK_END);
+	unsigned int ret = (unsigned int)ftell(fp);
+	rewind(fp);
+	return ret;
+}
+*/
+
+
+//#todo
+/*
+char * fileread(FILE * fp);
+char * fileread(FILE * fp) {
+	if(!fp) return 0;
+	unsigned int buffer_size = filesize(fp);
+	char * buff = (char*)malloc(buffer_size);
+	fread(buff, sizeof(char), buffer_size, fp);
+	return buff;
+}
+*/
 
 
 //

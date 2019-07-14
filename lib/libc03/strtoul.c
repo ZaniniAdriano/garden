@@ -82,7 +82,7 @@ strtoul(nptr, endptr, base)
 */	
 
 
-unsigned long strtoul ( const char *nptr, char **endptr, int base){
+unsigned long strtoul ( const char *nptr, char **endptr, int base ){
 	
 	register const char *s = nptr;
 	register unsigned long acc;

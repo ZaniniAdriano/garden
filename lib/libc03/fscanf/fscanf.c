@@ -13,12 +13,13 @@
 //==================
 //#include	"loc_incl.h"
 
-#define	io_testflag(p,x)	((p)->_flags & (x))
+#define	io_testflag(p,x)  ((p)->_flags & (x))
+
 
 //#ifdef _ANSI
 //int _doprnt(const char *format, va_list ap, FILE *stream);
 
-int _doscan(FILE * stream, const char *format, va_list ap);
+int _doscan (FILE * stream, const char *format, va_list ap);
 
 //char *_i_compute(unsigned long val, int base, char *s, int nrdigits);
 //char *_f_print(va_list *ap, int flags, char *s, char c, int precision);
@@ -205,9 +206,8 @@ f_collect(register int c, register FILE *stream, register unsigned int width)
  * the routine that does the scanning 
  */
 
-int
-_doscan(register FILE *stream, const char *format, va_list ap)
-{
+int _doscan (register FILE *stream, const char *format, va_list ap){
+	
 	int		done = 0;	/* number of items done */
 	int		nrchars = 0;	/* number of characters read */
 	int		conv = 0;	/* # of conversions */
@@ -485,8 +485,10 @@ _doscan(register FILE *stream, const char *format, va_list ap)
 		if (!(flags & FL_NOASSIGN) && kind != 'n') done++;
 		format++;
 	}
+
 	return conv || (ic != EOF) ? done : EOF;
 }
+
 
 //#test
 //ainda não foi testada
@@ -497,13 +499,11 @@ int fscanf (FILE *stream, const char *format, ...){
 
 	va_start(ap, format);
 
-	retval = _doscan(stream, format, ap);
+	retval = _doscan (stream, format, ap);
 
 	va_end(ap);
 
 	return retval;
 }
-
-
 
 
