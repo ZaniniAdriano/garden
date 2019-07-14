@@ -1,3 +1,3 @@
 
 
-   Aqui ficará a documentação para o GDE.
+ The docs for the GDE project.

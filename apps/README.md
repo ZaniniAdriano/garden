@@ -1,52 +1,69 @@
 # gde apps
 
 
-
-	/gde/apps
+ List of folders:
  
  
-<br>/3rdparty
+/gdeinit
+    A simple module for the initialization of the GDE.
      
-	 
-<br>/cmd
-<br>	Some terminal apps.
-	
-<br>/gfe
-<br>	Gramado File Explorer
-   
-<br>/gramcode
-<br>	Text editor for developers
-   
-<br>/gramtext
-<br>	Text editor. (notepad)
-   
-   
-<br>/gt
-<br>	Gramado Toolchain.
-	
-<br>/gwm
-<br>	Gramado Window Manager
-	
-	
-<br>/images
+/gdeshell
+    A simple shell implementation.
+     
+     
+/gdeterm
+    A virtual terminal.     
+    
 
+/gdetm
+    GDE Task Manager.    
+     
+     
+/gfe
+    GDE File Explorer.
+    Gramado File Explorer.
+    
+/gramcode
+    A text editor for source code development.
+    
+/gramtext
+    A simple text editor.
+    
+    
+/gws
+    Gramado Windpow Server.
+    A ring3 display server.
+    
+    
+/images
+    Images.
+    
+    
+/launcher
+    App launcher.
+    
+    
+/noraterm
+    A virtual terminal.
+    
 
-<br>/init
-<br>	Main process for initializing gde.
-<br>	gdeinit, gdeshell. gdetm
-	
-	
-<br>/lib
-<br>	gde libs
-	
-
-<br>/licenses
-
-
-<br>/scripts
-
-
-<br>//...
+/reboot2
+    A simple gui aplication to reboot the system.
+    
+    
+/scripts
+    Scrits for the GDE project.
+    
+    
+/spr
+    Sprinkler. A simple web browser.     
+    
+    
+    
+    
+    
+    
+    
 	
 	
 	

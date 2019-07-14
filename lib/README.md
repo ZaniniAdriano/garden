@@ -1,4 +1,4 @@
-# gdelibs
+# lib
 
  GDE libs for Gramado operating system.
 
@@ -19,5 +19,11 @@
 	
     /libc02 - C library version 0.2.
 	
-	
+    /libc03 - C library version 0.3.
+    
+    
+    
+    
+    
+    	
 	

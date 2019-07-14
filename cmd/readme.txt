@@ -1,5 +1,4 @@
 
+/cmd
 
-  /cmd
-
-  aplicativos feitos para rodar em interpretador de comandos.
+   Terminal  mode apps.
