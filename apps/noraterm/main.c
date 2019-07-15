@@ -16,11 +16,66 @@
 //https://en.wikipedia.org/wiki/C0_and_C1_control_codes
 //https://vt100.net/docs/vt220-rm/table2-4.html
 //http://notes.burke.libbey.me/ansi-escape-codes/
+//http://jafrog.com/2013/11/23/colors-in-terminal.html
+//https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
+//https://tforgione.fr/posts/ansi-escape-codes/
 
+
+/*
+Style	Code
+Bold	        \x1B[1m
+Faint	        \x1B[2m
+Italic	        \x1B[3m
+Underlined	    \x1B[4m
+Inverse	        \x1B[7m
+Strikethrough	\x1B[9m
+ */
+ 
+ 
+/*
+Effect	Code
+Goes back one character	\b
+Moves one line up	\x1B[A
+Moves n lines up (replace N by the number of lines)	\x1B[NA
+Goes back to the begining of the line	\r
+Goes back to the begining of the previous line	\x1B[F
+Goes back to the begining of the n-th previous line (replace N by the number of lines)	\x1B[NF
+Erases the whole line	\x1B[2K  
+ */ 
+ 
 
 // Iniciando sequências.
-//  \x1b[ 
-//  \033[
+//Shell 	    \e
+//ASCII Hex 	\0x1B
+//ASCII Oct 	\033
+
+#define __ESC "\x1b"
+#define __CSI "\x1b["
+
+
+/*
+ Numpad & Function Keys
+Key 	Sequence
+Backspace 	0x7f (DEL)
+Pause 	0x1a (SUB)
+Escape 	0x1b (ESC)
+Insert 	ESC [ 2 ~
+Delete 	ESC [ 3 ~
+Page Up 	ESC [ 5 ~
+Page Down 	ESC [ 6 ~
+F1 	ESC O P
+F2 	ESC O Q
+F3 	ESC O R
+F4 	ESC O S
+F5 	ESC [ 1 5 ~
+F6 	ESC [ 1 7 ~
+F7 	ESC [ 1 8 ~
+F8 	ESC [ 1 9 ~
+F9 	ESC [ 2 0 ~
+F10 	ESC [ 2 1 ~
+F11 	ESC [ 2 3 ~
+F12 	ESC [ 2 4 ~
+ */
 
  
 /* 
@@ -814,6 +869,8 @@ void tputc (char *c, int len){
                 return;	
                 break;
 		    
+		    //^[
+		    //case '\e':
 			//case '\033':
 		    case '\x1b':
 		        term.esc = ESC_START;
@@ -830,6 +887,7 @@ void tputc (char *c, int len){
 		    case '\032':	/* SUB */
 		    case '\030':	/* CAN */
 			    //csireset ();
+			    printf (" {reset?} ");
                 return;
 		        break;
 		            
@@ -918,13 +976,13 @@ void tputc (char *c, int len){
 			     term.esc |= ESC_TEST;
 			     break;
 			
-			//case 'P': /* DCS -- Device Control String */
-			//case '_': /* APC -- Application Program Command */
-			//case '^': /* PM -- Privacy Message */
-			//case ']': /* OSC -- Operating System Command */
-            //case 'k': /* old title set compatibility */
-			     //term.esc |= ESC_STR;
-			     //break; 
+			case 'P': /* DCS -- Device Control String */
+			case '_': /* APC -- Application Program Command */
+			case '^': /* PM -- Privacy Message */
+			case ']': /* OSC -- Operating System Command */
+            case 'k': /* old title set compatibility */
+			     term.esc |= ESC_STR;
+			     break; 
 			     
 			case '(': /* set primary charset G0 */  
 			    term.esc |= ESC_ALTCHARSET;
@@ -938,62 +996,61 @@ void tputc (char *c, int len){
                 break;  
                 
                 
-             //case 'D': /* IND -- Linefeed */
-                 //term.esc = 0;
-                 //break;
+             case 'D': /* IND -- Linefeed */
+                 term.esc = 0;
+                 printf (" {IND} ");
+                 break;
                  
-             //case 'E': /* NEL -- Next line */
-                 //term.esc = 0;
-                 //break;
+             case 'E': /* NEL -- Next line */
+                 term.esc = 0;
+                 printf (" {NEL} ");
+                 break;
                         			
 			   
-			 //case 'H': /* HTS -- Horizontal tab stop */  
-                 //term.esc = 0;
-                 //break;
+			 case 'H': /* HTS -- Horizontal tab stop */  
+                 term.esc = 0;
+                 printf (" {HTS} ");
+                 break;
                  
- 			 //case 'M': /* RI -- Reverse index */    
-                 //term.esc = 0;
-                 //break;
+ 			 case 'M': /* RI -- Reverse index */    
+                 term.esc = 0;
+                 printf (" {RI} ");
+                 break;
                  
                  			     
-			  //case 'Z': /* DECID -- Identify Terminal */   
-                 //term.esc = 0;
-                 //break;
+			  case 'Z': /* DECID -- Identify Terminal */   
+                 term.esc = 0;
+                 printf (" {DECID} ");
+                 break;
                  
                  			 
-			 //case 'c': /* RIS -- Reset to inital state */
-                 //term.esc = 0;
-                 //break; 
+			 case 'c': /* RIS -- Reset to inital state */
+                 term.esc = 0;
+                 printf (" {reset?} ");
+                 break; 
                  
-			 //case '=': /* DECPAM -- Application keypad */
-                 //term.esc = 0;
-                 //break;
+			 case '=': /* DECPAM -- Application keypad */
+                 term.esc = 0;
+                 printf (" {=} ");
+                 break;
                  			 
-			 //case '>': /* DECPNM -- Normal keypad */
-                 //term.esc = 0;
-                 //break;
+			 case '>': /* DECPNM -- Normal keypad */
+                 term.esc = 0;
+                 printf (" {>} ");
+                 break;
                  			 
 			 //case '7': /* DECSC -- Save Cursor */    
-                 //term.esc = 0;
-                 //break;
+               //  term.esc = 0;
+               //  break;
                  			   
 			 //case '8': /* DECRC -- Restore Cursor */
-                 //term.esc = 0;
-                 //break;
+               //  term.esc = 0;
+                // break;
                  
-			 
+			 //0x9C 	ST 	String Terminator ???
 			 //case '\\': /* ST -- Stop */  
                  //term.esc = 0;
-                 //break;	
-                 
-             //#bugbug
-             //precisamos encontrar o lugar certo pra isso
-             //see: gramado/st    
-			 //case 'm':
-			     //__sequence_status = 0;
-			     //printf (" {m} ");
-			     //return;
-			     //break;               
+                 //break;	           
   
   			 //erro    
 			 //default:
@@ -1192,8 +1249,7 @@ void *noratermProcedure ( struct window_d *window,
 		
 		case MSG_SYSKEYDOWN:
 		    switch (long1)
-			{
-		        
+			{	        
 				case VK_F1:  
 				     //MessageBox ( 1, "Noraterm", 
 				     //    "This is Noraterm!" );
@@ -1207,8 +1263,8 @@ void *noratermProcedure ( struct window_d *window,
 				case VK_F3:
 				    //testChangeVisibleArea();				
 				    //terminalRefreshVisibleArea();
-					//textSetCurrentRow ( (int) 0 );
-					//textSetCurrentCol ( (int) 0 );
+					textSetCurrentRow ( (int) 0 );
+					textSetCurrentCol ( (int) 0 );
 					//shellTestLoadFile ();
 					//inicializa a área visível.
 					//textTopRow = 0;
@@ -1337,7 +1393,7 @@ void *noratermProcedure ( struct window_d *window,
 					
 					//fprintf (stdout,"noraterm: This is a string ..."); //#bugbug
 					//printf ("MSG_TERMINALCOMMAND.2008 pode pegar, coloca no buffer >> \n");
-					printf ("MSG_TERMINALCOMMAND.2008\n");
+					//printf ("MSG_TERMINALCOMMAND.2008\n");
 					//#suspenso.
 					//break;
 					
@@ -1356,7 +1412,7 @@ void *noratermProcedure ( struct window_d *window,
 						    
 						if (xxx_ch == '\n')
 						{
-							printf ("noraterm: EOL, flush me\n");
+							//printf ("noraterm: EOL, flush me\n");
 							print_buffer ();
 							
 							//#test
@@ -1415,6 +1471,12 @@ void *noratermProcedure ( struct window_d *window,
 				case 2021:
 				    terminal_write_char ( (int) long2 );
 				    break;
+				    
+				//#todo:    
+				//case TERMINALCOMMAND_CLS:   
+				    //printf (" {CLS} \n");
+				    //break;
+				      
 					//...
 			}
 			break;
@@ -3523,8 +3585,7 @@ do_compare:
 	{
 		// Isso já foi feito na inicialização do terminal.
 		//printf ("t21: registrando terminal e criando shell como processo filho\n");
-		
-		printf ("t21: Executing child process ...\n");
+		//printf ("t21: Executing child process ...\n");
 		
 		// registrando teminal.
 		system_call ( 1003, getpid(), 0, 0 );
@@ -3534,7 +3595,7 @@ do_compare:
 		//system_call ( 900, (unsigned long) "gdeshell.bin", 0, 0 );
 		//system_call ( 900, (unsigned long) "gramcode.bin", 0, 0 );
          
-        printf ("t21: done\n"); 
+        //printf ("t21: done\n"); 
 		goto exit_cmp;
 	}
 	

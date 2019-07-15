@@ -7,11 +7,31 @@
 //
 
 
+//See:
+//https://solarianprogrammer.com/2019/04/08/c-programming-ansi-escape-codes-windows-macos-linux-terminals/
+
+/*
+export const reset = "\x1b[0m"
+export const bright = "\x1b[1m"
+export const dim = "\x1b[2m"
+export const underscore = "\x1b[4m"
+export const blink = "\x1b[5m"
+export const reverse = "\x1b[7m"
+export const hidden = "\x1b[8m" 
+ */
+
+
 //#include <types.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+
+#define __ESC "\x1b"
+#define __CSI "\x1b["
+
+//char pos [] = "\x1B[0;0H";
 
 
 #define STANDARD_ASCII_MAX 128
@@ -189,9 +209,26 @@ int main ( int argc, char *argv[] ){
 	putchar(' ');
 	fputs("{fputs} ",stdout);	
 	
+	//
+	// ESC tests
+	//
+	
 	//testing scape s.
 	//printf("\x1b[m");  
-	printf("\x1b[1;2;3m");  
+	//printf("\x1b[1;2;3m");  
+	
+   //  printf("\x1b[0m");	//Reset colors
+     
+  //printf("\x1b[2J");    // Clear the entire screen
+  //printf("\x1b[1J");    // Clear the screen from cursor to the beginning
+  //printf("\x1b[0J");    // Clear the screen from cursor to the end    
+    
+//printf("\x1b2dK");    // Clear the current line
+//printf("\x1b1dK");    // Clear the current line from cursor to left (beginning of the line)
+//printf("\x1b0dK");    // Clear the current line from cursor to right (end of the line) 
+	
+//printf("\x1b[6n");    // Print current cursor position	
+	
 	
 	//fim.
 	printf ("*fim-do-test\n");
