@@ -16,6 +16,11 @@
 
 
 
+int strcoll (const char *s1, const char *s2){
+	
+    return (int) strcmp ( (char *) s1, (char *) s2);
+}
+
 
 /**
  * linux style.

@@ -14,6 +14,8 @@ typedef	_BSD_SIZE_T_	size_t;
 #endif
 
 
+int strcoll (const char *s1, const char *s2);
+
 int memcmp (const void *s1, const void *s2, size_t n);
 
 void *memmove(void *dest, const void *src, size_t count);
