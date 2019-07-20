@@ -28,9 +28,12 @@ unsigned long infile_size;
 unsigned long outfile_size;
 
 
-//#importante
-//Esses dois buffers serão copiados no final do buffer outfile.
 
+
+// #importante
+// Esses dois buffers serão copiados no final do buffer outfile.
+
+char TEXT[512];
 char DATA[512];
 char BSS[512];
 

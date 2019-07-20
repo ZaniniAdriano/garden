@@ -1921,9 +1921,9 @@ int parse (){
 								//tentando mandar alguma coisa para o arquivo de output 
 						        //pra ter o que salvar, pra construir o assembly file;	
 						       // strcat( outfile,"\n segment .text \n");
-						        strcat( outfile,"_");
-						        strcat( outfile,save_symbol);
-						        strcat( outfile,":\n");
+						        strcat( TEXT,"_");
+						        strcat( TEXT,save_symbol);
+						        strcat( TEXT,":\n");
 								
 								//recomeçar.
 								State = 1;
@@ -1952,9 +1952,9 @@ int parse (){
 						        //tentando mandar alguma coisa para o arquivo de output 
 						        //pra ter o que salvar, pra construir o assembly file;	
 						       // strcat( outfile,"\n segment .text \n");
-						        strcat( outfile,"_");
-						        strcat( outfile,save_symbol);
-						        strcat( outfile,":\n");
+						        strcat( TEXT,"_");
+						        strcat( TEXT, save_symbol);
+						        strcat( TEXT,":\n");
 								
 								//recomeçar a lista. 
 								//#bugbug desconsiderando o modificador.
@@ -1989,7 +1989,7 @@ int parse (){
 							    //é bss porque não foi inicializada.
 								//strcat( BSS,"\n segment .bss \n");
 						        strcat( BSS,"_");
-						        strcat( BSS,save_symbol);
+						        strcat( BSS, save_symbol);
 						        strcat( BSS,": dd 0 \n");								
 						        
 								//?? depois de ) podemos ter o corpo da função.
@@ -2351,7 +2351,7 @@ debug_output:
     // Incluindo no arquivo de output os segmentos de dados.
 
 
- 
+    strcat ( outfile, TEXT );
     strcat ( outfile, DATA );
     strcat ( outfile, BSS );
 

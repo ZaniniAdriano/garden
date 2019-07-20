@@ -417,6 +417,11 @@ int gramcInitialize (){
     strcat(outfile,";; its an assembly file \n\n");	
     strcat( outfile,"\n segment .text \n");
 	
+
+    sprintf (TEXT, "\n;; initializing TEXT buffer \n" );
+    strcat (TEXT,";; its an assembly TEXT \n\n");	
+    strcat (TEXT,"\n segment .text \n");	
+	
     sprintf(DATA, "\n;; initializing DATA buffer \n" );
     strcat(DATA,";; its an assembly DATA \n\n");	
     strcat( DATA,"\n segment .data \n");
