@@ -742,8 +742,12 @@ int main ( int argc, char *argv[] ){
 	
 out:
     
-	if ( asm_flag == 1 )
+	//if ( asm_flag == 1 )
+	//{
+	    printf ("===============================\n");
 	    printf (" \n OUTPUT: \n%s\n\n", outfile );
+	    printf ("===============================\n");
+	//}
 	
     //printf("\n");	
 	//printf("*hang\n");
@@ -751,16 +755,9 @@ out:
 	//#debug suspensa por enquanto.
 	//debugShowStat();
 	
-    //printf("\n");	
+    printf("\n");	
 	printf ("main: DONE \n");	
-    
-	//while (1){ asm ("pause"); }
-
-//exit_success:	
-
-//#ifdef GRAMC_VERBOSE		
 	printf ("main: exit success \n");
-//#endif 
     
     return 0;
 }
