@@ -2439,6 +2439,21 @@ int parserInit (){
 	return 0;
 }
 
+
+int parser(){
+
+    int Status = -1;
+    
+    //initialize	
+    Status = (int) parserInit();
+    
+    //parse it
+    Status = (int) parse ();
+	printf ("parser: parse returned %d\n", Status); 
+    
+    return 0;
+}
+
 //
 // End.
 //

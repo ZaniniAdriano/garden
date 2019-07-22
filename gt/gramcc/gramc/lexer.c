@@ -887,10 +887,9 @@ done:
 
 int lexerInit (){
 	
-	
-#ifdef GRAMC_VERBOSE	
-    printf("lexerInit: Initializing ...\n");
-#endif		
+    int i;
+    	
+    printf ("lexerInit: Initializing ...\n");
 
 	//number_of_tokens = 0;
 	//current_token = 0;
@@ -909,8 +908,10 @@ int lexerInit (){
 
     lexer_code = 0;
 
-    int i;
+
 	maxtoken = MAXTOKEN;
+	
+	// Clear buffer.
 	
 	for ( i=0; i<MAXTOKEN; i++ )
 	{
@@ -923,8 +924,21 @@ int lexerInit (){
 
 	//...
 
+
+//done:
     return 0;
 }
+
+
+int lexer (){
+	
+    int Status = -1;
+    
+    Status = (int) lexerInit ();
+	
+	return Status;
+}
+
 
 
 /*

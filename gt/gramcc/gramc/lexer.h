@@ -141,6 +141,7 @@ int yylex ();
  // Vamos inicializar o lexer.
 int lexerInit ();
 
+int lexer ();
 
 //...
 

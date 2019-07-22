@@ -56,8 +56,8 @@ api.o \
 lexer.o \
 parser.o \
 tree.o \
-stubs.o    
-
+stubs.o \
+compiler.o    
 
 
 
@@ -69,12 +69,11 @@ all: main.o all-c gramcc-link finalize clean
 
 main.o:
 
-#	gcc  -c  crt0.c  $(CFLAGS) -I $(LIBC) -I $(API) -o crt0.o
-	gcc  -c  main.c  $(CFLAGS) -I $(LIBC) -I $(API) -o main.o
-	gcc  -c  lexer.c  -I $(LIBC) -I $(API) $(CFLAGS) -o lexer.o
-	gcc  -c  parser.c -I $(LIBC) -I $(API) $(CFLAGS) -o parser.o
-	gcc  -c  tree.c   -I $(LIBC) -I $(API) $(CFLAGS) -o tree.o
-#	gcc  -c  compiler.c -I $(LIBC) -I $(API) $(CFLAGS) -o compiler.o
+	gcc  -c  main.c      -I $(LIBC) -I $(API) $(CFLAGS) -o main.o
+	gcc  -c  lexer.c     -I $(LIBC) -I $(API) $(CFLAGS) -o lexer.o
+	gcc  -c  parser.c    -I $(LIBC) -I $(API) $(CFLAGS) -o parser.o
+	gcc  -c  tree.c      -I $(LIBC) -I $(API) $(CFLAGS) -o tree.o
+	gcc  -c  compiler.c  -I $(LIBC) -I $(API) $(CFLAGS) -o compiler.o
 
 
 all-c:

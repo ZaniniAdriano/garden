@@ -383,14 +383,11 @@ int is_letter(char c)
 
 int gramcInitialize (){
 	
-    int Status = 0;	
-	
+    int Status = 0;		
 	int i=0;
 	
 	
-//#ifdef GRAMC_VERBOSE	
-    printf("gramcInitialize: Initializing ...\n");
-//#endif	
+    printf ("gramcInitialize: Initializing ...\n");
 	
 	
 	// Clear buffers
@@ -409,26 +406,31 @@ int gramcInitialize (){
 	// Inicializamos o buffer do arquivo sujando ele.
     // Mas depois carregaremos um arquivo.	
 	
+	// input output
+	
     //sprintf ( infile, STRING_CFILE );
-	sprintf ( infile, "initializing infile " );
-    strcat(infile,"buffer");	
+	sprintf (infile, "initializing infile " );
+    strcat (infile,"buffer");	
 	
-    sprintf(outfile, "\n;; initializing outfile buffer \n" );
-    strcat(outfile,";; its an assembly file \n\n");	
-    strcat( outfile,"\n segment .text \n");
+    sprintf (outfile, "\n;; initializing outfile buffer \n" );
+    strcat (outfile,";; its an assembly file \n\n");	
+    strcat (outfile,"\n segment .text \n");
 	
+	
+	// text, data, bss
 
     sprintf (TEXT, "\n;; initializing TEXT buffer \n" );
     strcat (TEXT,";; its an assembly TEXT \n\n");	
     strcat (TEXT,"\n segment .text \n");	
 	
-    sprintf(DATA, "\n;; initializing DATA buffer \n" );
-    strcat(DATA,";; its an assembly DATA \n\n");	
-    strcat( DATA,"\n segment .data \n");
+    sprintf (DATA, "\n;; initializing DATA buffer \n" );
+    strcat (DATA,";; its an assembly DATA \n\n");	
+    strcat (DATA,"\n segment .data \n");
 	
-    sprintf(BSS, "\n;; initializing BSS buffer \n" );
-    strcat(BSS,";; its an assembly BSS \n\n");	
-	strcat( BSS,"\n segment .bss \n");
+    sprintf (BSS, "\n;; initializing BSS buffer \n" );
+    strcat (BSS,";; its an assembly BSS \n\n");	
+	strcat (BSS,"\n segment .bss \n");
+	
 	
 	//table.
 //contador para não estourar a lista. 
@@ -452,11 +454,6 @@ int gramcInitialize (){
     current_separator = 0; 
     current_special = 0;	
 	
-	//#imporante
-	//Inicializando lexer e parser.
-	
-	Status = (int) lexerInit();
-	Status = (int) parserInit();
 	
 	//
 	// ## program ##
@@ -469,9 +466,7 @@ int gramcInitialize (){
 	
 	//...
 	
-//#ifdef GRAMC_VERBOSE	
     printf ("gramcInitialize: done\n");
-//#endif		
 
     return (int) Status;	
 }
@@ -567,7 +562,7 @@ void debugShowStat (){
  ********************************
  * main:
  *     Main function. 
- *     The entry point is is crt0.c.
+ *     The entry point is is crt0.o.
  */
 
 int main ( int argc, char *argv[] ){
@@ -601,16 +596,13 @@ int main ( int argc, char *argv[] ){
 	int flagT = 0;
     
     
-	int parse_ret;
-	
 	
 	// Initializing.
     
-//#ifdef GRAMC_VERBOSE		
+
     printf ("\n");
-	printf ("gramc: Initializing ..\n");
-	//while (1){}
-//#endif 
+	printf ("main: Initializing ..\n");
+
    
     // Inicializa variáveis globais.
     
@@ -701,48 +693,29 @@ int main ( int argc, char *argv[] ){
 	
     //#debug
     //printf ("*breakpoint");
-    //while (1){}   
+    //while (1){} 
     
-	//
-	// ## Parse ##
-	//
     
-	parse_ret = (int) parse ();
-	
-	printf ("main: parse returned %d\n", parse_ret);
+    
+    //
+    // Compiler.
+    //
+    
+    FILE *____O;
+    ____O = (FILE *) compiler ();   
+    
 
     //#debug
     //printf ("*breakpoint");
     //while (1){} 
     
-	/*
-	//#todo parse return
-	switch (parse_ret)
-	{
-		case 0:
-		    //return 0;
-			//goto exit_success;
-		    break;
-			
-		case 1:
-		    //return 1;
-			//goto exit_error;
-		    break;
-			
-		default:
-		    //goto exit_default;
-		    break;
-	};
-	*/
-	
+    	
 //exit_default:	
 	
 	//#importante
 	//mostra o asm
 	//isso dependerá da flag -s
 	
-
-   
     // More ...   
 	
 out:
@@ -750,7 +723,7 @@ out:
 	//if ( asm_flag == 1 )
 	//{
 	    printf ("===============================\n");
-	    printf (" \n OUTPUT: \n%s\n\n", outfile );
+	    printf (" \n OUTPUT: \n%s\n\n", ____O );
 	    printf ("===============================\n");
 	//}
 	

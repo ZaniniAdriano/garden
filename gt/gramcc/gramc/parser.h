@@ -364,5 +364,5 @@ int parserInit();
 
 //int parserMain();
 
-
+int parser();
 
