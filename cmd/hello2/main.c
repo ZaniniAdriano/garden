@@ -62,11 +62,11 @@ __PostMessageToProcess ( int pid,
 
 int main (int argc, char *argv[] ){
 	
+	FILE *fp;		
     unsigned char count;
 	unsigned char standard_ascii_max = STANDARD_ASCII_MAX;
 	
 	char buffer[512];
-	
 	char buffer2[] = "DURTY...........";
 	
 	//nesse modo o terminal não será notificado.
@@ -83,9 +83,7 @@ int main (int argc, char *argv[] ){
 	
 	//#precisamos configurar stdout?
 	//ele pode ser fp??
-	
-	FILE *fp;	
-	
+		
     fp = fopen ("init.txt", "r");
     
     if (fp != NULL) 
@@ -134,8 +132,10 @@ int main (int argc, char *argv[] ){
 	//MSG_TERMINALCOMMAND
 	//__PostMessageToProcess ( terminal___PID, 0, 100 , 2021, 'X' );
 	
-	printf ("done: fim do teste do terminal *hang\n");	
-	while (1){}
+	printf ("done: fim do teste do terminal *exit\n");	
+	exit (0);
+	
+	//while (1){}
 	
 	//nesse momento printf notificar o terminal
 	//printf (">>>normal mode<<<\n");

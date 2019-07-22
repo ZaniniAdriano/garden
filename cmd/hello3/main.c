@@ -1,9 +1,8 @@
 
 // hello3.
 //
-// Nesse teste vamos tentar escrever em arquivos usando a libc03. Para isso 
-// o terminal precisa estar rodando.
-// Como teste o terminal pode chamar esse programa como um processo filho dele.
+// O terminal virtual noraterm está chamando esse programa para fazer
+// testes com a libc.
 //
 
 

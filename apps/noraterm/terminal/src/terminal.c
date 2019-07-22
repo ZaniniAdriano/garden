@@ -383,56 +383,65 @@ void terminalRefreshScreen (){
  *************************************
  * terminalClearScreen:
  *     Limpar a tela do shell.
- *     usada pelo comando 'cls'.
+ *     Usada pelo comando 'cls'.
  */
  
 void terminalClearScreen (){
 
-	struct window_d *w;
 	unsigned long left, top, right, bottom;
 	
-    //desabilita o cursor
-	system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);	
+    // Desabilita o cursor
+	system_call ( 245, (unsigned long) 0, (unsigned long) 0, 
+	    (unsigned long) 0);	
 	
-	terminalClearBuffer ();
 	
+	if ( (void *) shell_info.terminal_window != NULL )
+	{
+		//Limpa o buffer,
+		terminalClearBuffer ();
+		
+		//#todo:
+		//limpar a janela.
+		
+		//redraw window.
+		APIredraw_window ( shell_info.terminal_window, 1 );	
+		
+		// Cursor.
+        // Ajusta o cursor.
+        //left = (terminal_rect.left/8);
+        //top = (terminal_rect.top/8);
+        //terminalSetCursor ( left, top );
+        
+	    // Copiamos o conteúdo do screenbuffer para 
+	    // a área de cliente do shell.
+        //terminalRefreshScreen ();	
+	    //shellRefreshVisibleArea();			
+
+		// Cursor.
+        // Ajusta o cursor.
+        left = (terminal_rect.left/8);
+        top = (terminal_rect.top/8);
+        terminalSetCursor ( left, top );
+	    
+	    // show client window.
+	    apiShowWindow (shell_info.terminal_window);		
+	}
+
+
+    /* 
+	struct window_d *w;	
 	w = (void *) shell_info.terminal_window;
-	
 	if ( (void *) w != NULL )
 	{
-		//#bugbug
-		//redraw está falhando. 
-		
-		//#BUGBUG
-		//Isso está fazendo redraw da janela main inteira, com frame e tudo.
-		//sendo que deveríamos estar trabalhando somente com a área de cliente.
-		
-		//Para issp precisamos antes criar mais uma janela dentro da janela main
-		//como já fizemos antes.
-		
 		APIredraw_window ( w, 1 );
 	};
+	*/
 	
-	//printf("#breackpoint");
-	//while(1){}
-
+ 
 	
-    left = (terminal_rect.left/8);
-    top = (terminal_rect.top/8);
-	
-    terminalSetCursor ( left, top );
-
-
-	// Copiamos o conteúdo do screenbuffer para 
-	// a área de cliente do shell.
-	// obs: A outra opção seria repintarmos a janela.
-
-    //terminalRefreshScreen ();	
-	
-	//shellRefreshVisibleArea();
-	
-	//reabilita o cursor
-	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);	
+	// Reabilita o cursor
+	system_call ( 244, (unsigned long) 0, (unsigned long) 0, 
+	    (unsigned long) 0);	
 }
 
 
@@ -481,8 +490,8 @@ void terminalSetCursor ( unsigned long x, unsigned long y ){
 
 void terminalClearBuffer (){
 	
-	int i = 0;
-	int j = 0;	
+	int i=0;
+	int j=0;	
 
 	for ( i=0; i<32; i++ )
 	{

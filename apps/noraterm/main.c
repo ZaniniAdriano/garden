@@ -1317,6 +1317,8 @@ void *noratermProcedure ( struct window_d *window,
 			}		
 		    break;
 		
+		
+		
 		//Terminal communication
 		case MSG_TERMINALCOMMAND:
 			switch (long1)
@@ -1326,51 +1328,56 @@ void *noratermProcedure ( struct window_d *window,
 				// então ele deve pegar e exibir.
 				// Pega um char, mas não é o último que foi colocado, 
 				// é o que ainda não foi pego.	
+				
 				int x_ch;
 				case 2000:
-					printf ("MSG_TERMINALCOMMAND.2000 pode pegar >> \n");
 		            while (1)
 		            {
+						// Estudar isso.
+						// Isso pega char.
 		                x_ch = (int) system_call ( 1002, 0, 0, 0 );
-		                if (x_ch == '\n'){ break;};
-						
+		                
+		                if (x_ch == '\n')
+		                { 
+							break;
+						}
 						terminal_write_char ( (int) x_ch );
-			            //printf (" %c ",x_ch);
-	                }					
+	                };					
 					break;
 					
 					
-				//hello	
+					
+					
+				// Hello	
 				case 2001:
-					//printf ("MSG_TERMINALCOMMAND.2000 pode pegar >> \n");
-					apiDrawText ( NULL, 0, 0, COLOR_RED, 
-				         "HELLO FROM NORATERM" );
-					refresh_screen ();
-					break;
-				// #importante
-				// NÃO PODEMOS USAR A LIBC.
-				//Devemos usar os recursos do servido gráfico
-				//pois estamos pegando chars no arquivo de saída da libc.	
-				// >> a libc escreve nos arquivos e o terminal escreve na tela.
-				case TERMINALCOMMAND_PRINTCHAR:
-					 apiDrawText ( NULL, 0, 0, COLOR_RED, 
-				         "====(top)=============" );
-					 apiDrawText ( NULL, 0, 25*8, COLOR_RED, 
-				         "====(bottom)=============" );	
+					apiDrawText ( NULL, 0, 0, COLOR_RED, " # NORATERM # ");
 					refresh_screen ();
 					break;
 					
-				//select current row
+					
+				// #importante
+                // Vamos escrever na tela do terminal usando recursos da api
+                // e não da libc. 
+                // #obs: Aqui talvez possamos indicar o handle da janela.
+				case 2002:
+					apiDrawText ( (struct window_d *) shell_info.terminal_window, 
+					    0, 0, COLOR_RED, "==(top)==========" );
+					apiDrawText ( (struct window_d *) shell_info.terminal_window, 
+					    0, 25*8, COLOR_RED, "==(bottom)====" );	
+					apiShowWindow (shell_info.terminal_window);
+					break;
+					
+					
+				// Select current row
+				//#bugbug: isso gerencia somente internamente.
 				case 2005:
-				    //#bugbug: isso gerencia somente internamente.
-					//textSetCurrentRow ( (int) long2 );
 					terminalSetCursor ( long2, textCurrentCol );
 					break;
+				
 					
-				//select current col	
+				// Select current col	
+				//#bugbug: isso gerencia somente internamente.
 				case 2006:
-				    //#bugbug: isso gerencia somente internamente.
-					//textSetCurrentCol ( (int) long2 );
 					terminalSetCursor ( textCurrentRow, long2 );
 					break;
 						
@@ -1447,24 +1454,25 @@ void *noratermProcedure ( struct window_d *window,
 					break;
 					
 				// #importante	
-                // pegar mensagens no arquivo de entrada
-                // do terminal.
-                // bugbug: por enquanto vamos pegar no stdout.
+                // Pegando mensagens no arquivo stdout do terminal. Talvez 
+                // deva ser stdin.
+				// Isso imprime na posição x y. 2005 e 2006 gerenciam o 
+				// posicionamento atual                
                 // ver: https://github.com/skiftOS/skift/
                 //blob/6d7876bb95c160596c74f0ba4b011ede31429b1a/userspace/terminal.c
+                
                 #define READ_BUFFER_SIZE 512
                 char ___buffer[READ_BUFFER_SIZE];
 				int _i;
+				
 				case 2020:
 				    fread ( (void *) ___buffer, 1, READ_BUFFER_SIZE, stdout );
-					//printf ("buffer={%s}\n",___buffer);
 					for (_i=0; _i<50; _i++)
 					{
-						// isso imprime na posição x y.
-						// 2005 e 2006 gerenciam o posicionamento atual
 					    terminal_write_char ( (int) ___buffer[_i] );						
 					}
 					break;	
+					
 					
 				//#importante
 				// Write char on terminal x y.	
@@ -2577,13 +2585,14 @@ do_compare:
 	    goto exit_cmp;
 	}		
 
+
     // cls - Clear the screen.
 	if ( strncmp( prompt, "CLS", 3 ) == 0 || 
 	     strncmp( prompt, "cls", 3 ) == 0 )
 	{
-        cls_builtins();
+        cls_builtins ();
         goto exit_cmp;
-	};
+	}
 	
 	
 	// color
@@ -3506,8 +3515,8 @@ do_compare:
 
 		//Enviando uma mensagem para um processo.		
 		//__PostMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 
-		    //TERMINALCOMMAND_PRINTCHAR, TERMINALCOMMAND_PRINTCHAR );	
-		    
+		    //TERMINALCOMMAND_PRINTCHAR, TERMINALCOMMAND_PRINTCHAR );	 
+		       
 		// #Bugbug: A mensagem é postada na verdade e demora para ser lida,
 		//então teremos uma sobreposição, pois não temos fila ainda.
 		//__PostMessageToProcess ( PID, NULL, MSG_TERMINALCOMMAND, 2005, 4 );	
@@ -3535,12 +3544,10 @@ do_compare:
         goto exit_cmp;		
 	}
    
-	//t20
-	// OpenTTY.
+	//t20 OpenTTY.
 	FILE *opentty_fp;
 	FILE *terminal_opentty_fp;
 	int x_ch;
-	//int o;
 	if ( strncmp ( prompt, "t20", 3 ) == 0 )	
 	{
 		printf("t20: \n");
@@ -3550,14 +3557,10 @@ do_compare:
 		
 		stdout = opentty_fp;
 		
-		fprintf (stdout, "test1 ...\n");
-		fprintf (stdout, "test2 ...");   //sem \n
+		fprintf (stdout, "test1 ...");   //sem \n
+		fprintf (stdout, "test2 ...\n");   
 		
-		// #bugbug
-		// Essa rotina falha porque fread acusa que a estrutura nao foi 
-		// inicialziada corretamente.
-		
-		//vamos avisar o terminal que ele pode pegar os chars na stream do tty
+		//Vamos avisar o terminal que ele pode pegar os chars na stream do tty
 		//apiSendMessageToProcess ??
 		//__PostMessageToProcess ( getpid(), NULL, MSG_TERMINALCOMMAND, 2000, 2000 );
 	    __PostMessageToProcess ( getpid(), NULL, MSG_TERMINALCOMMAND, 2020, 2020 );
@@ -3579,8 +3582,8 @@ do_compare:
 		goto exit_cmp;
 	}
 	
-	// t21
-	// Se registra como terminal
+	
+	// t21 - Chama um programa.
 	if ( strncmp ( prompt, "t21", 3 ) == 0 )
 	{
 		// Isso já foi feito na inicialização do terminal.
@@ -3591,9 +3594,9 @@ do_compare:
 		system_call ( 1003, getpid(), 0, 0 );
 		
 		//>>> clona e executa o filho dado o nome do filho.
+		//system_call ( 900, (unsigned long) "hello.bin", 0, 0 );
 		system_call ( 900, (unsigned long) "hello3.bin", 0, 0 );		
 		//system_call ( 900, (unsigned long) "gdeshell.bin", 0, 0 );
-		//system_call ( 900, (unsigned long) "gramcode.bin", 0, 0 );
          
         //printf ("t21: done\n"); 
 		goto exit_cmp;
@@ -3623,6 +3626,18 @@ do_compare:
 		     "|new String 1", "|new String 2");	
         goto exit_cmp;		
 	}
+	
+	
+	
+	// t24 - test api, drawtext.
+	if ( strncmp ( prompt, "t24", 3 ) == 0 )
+	{
+	    __PostMessageToProcess ( getpid(), NULL, MSG_TERMINALCOMMAND, 
+	        2002, 2002 );		
+	    goto exit_cmp; 	
+	}    
+	
+	
 	
 	// setup-x
 	// setup x server PID
@@ -6543,6 +6558,10 @@ noArgs:
 	}	
      */ 
  	
+ 	
+ 	
+ 	
+ 	
 	
 	//
 	// Draw window.
@@ -6557,61 +6576,45 @@ noArgs:
 	
 	
 	//++
-    //apiBeginPaint();	
-	
+    //apiBeginPaint ();	
 	hWindow2 = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "NORATERM-CLIENT-WINDOW",
 	                        terminal_rect.left, terminal_rect.top, 
-					        (terminal_rect.width - 40), 
-					        (terminal_rect.height - 28),    
+					        (terminal_rect.width - 56), 
+					        (terminal_rect.height - 34),    
                             0, 0, COLOR_TERMINAL2, COLOR_TERMINAL2 );	   
 	
 	if ( (void *) hWindow2 == NULL )
 	{	
 		die ("NORATERM: hWindow2 \n");
-	}		
-	
-    APIRegisterWindow (hWindow2);
-
-	APISetFocus (hWindow2);	 
+	}else{
 		
-    //APISetActiveWindow (hWindow2);
-   
-	apiShowWindow (hWindow2);
-	
-	//apiEndPaint();
+        APIRegisterWindow (hWindow2);
+        //APISetActiveWindow (hWindow2);
+	    APISetFocus (hWindow2);	 
+	    apiShowWindow (hWindow2);		
+		
+		//janela usada para input de textos ...
+	    //o input de texto pode vir de várias fontes.
+	    //api_set_window_with_text_input(hWindow);
+	    
+	    //Terminal window.
+	    // #importante
+	    // Definindo a janela como sendo uma janela de terminal.
+	    // Isso faz com que as digitações tenham acesso ao 
+	    // procedimento de janela de terminal 
+	    // para essa janela e não apenas ao procedimento de janela do sistema.
+	    // # provavelmente isso marca os limites para a 
+	    // impressão de caractere em modo terminal 
+        
+        system_call ( SYSTEMCALL_SETTERMINALWINDOW, (unsigned long) hWindow2, 
+		    (unsigned long) hWindow2, (unsigned long) hWindow2 );
+		
+	    // Salva ponteiro da janela do terminal.  	
+	    shell_info.terminal_window = ( struct window_d * ) hWindow2;				
+		
+    };		
+	//apiEndPaint ();
 	//--
-	
-	
-	
-    //
-	// Terminal window.
-	//
-	
-	//#bugbug
-	//janela usada para input de textos ...
-	
-	//o input de texto pode vir de várias fontes.
-	//api_set_window_with_text_input(hWindow);
-	
-	//
-	// ++ terminal ++
-	//
-	
-	// #importante
-	// Definindo a janela como sendo uma janela de terminal.
-	// Isso faz com que as digitações tenham acesso ao procedimento de janela de terminal 
-	// para essa janela e não apenas ao procedimento de janela do sistema.
-	// # provavelmente isso marca os limites para a impressão de caractere em modo terminal 
-
-    system_call ( SYSTEMCALL_SETTERMINALWINDOW, 
-        (unsigned long) hWindow2, 
-		(unsigned long) hWindow2, 
-		(unsigned long) hWindow2 );
-	
-	
-	// Salva ponteiro da janela do terminal.  
-	
-	shell_info.terminal_window = ( struct window_d * ) hWindow2;		
 
 	
 	//
@@ -6672,6 +6675,9 @@ noArgs:
 			goto do_run_internal_shell;
 		}	
 	}
+	
+	
+	
 	
 	
 	//

@@ -12,24 +12,26 @@
 
 void cd_buitins (){
 	
-	printf("cd_buitins:\n");
+	printf ("cd_buitins:\n");
 }
 
 
-//cls
+// cls
 void cls_builtins (){
 	
     terminalClearScreen ();
 }
 
 
-void copy_builtins()
-{	
+void copy_builtins (){
+	
+	printf ("copy_builtins:\n");		
 }
 
 
-void date_builtins()
-{	
+void date_builtins (){
+
+	printf ("date_builtins:\n");				
 }
 
 
