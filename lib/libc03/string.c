@@ -1118,6 +1118,59 @@ char *strstr (const char *s1, const char *s2){
 }
 
 
+
+/*
+ ** Concatenate two given string, creating a mark space at the beginning.
+ ** Return the new string pointer.
+ */
+/*
+// It's a test.
+// Credits: lua 1.0.
+static char *__strconc (char *l, char *r);
+static char *__strconc (char *l, char *r){
+
+    char *s = calloc ( strlen(l) + strlen(r) +2, sizeof(char) );
+ 
+    if (s == NULL)
+    {
+        printf ("Not enough memory \n");
+        return NULL;
+    }
+
+    // Create mark space.
+    *s++ = 0; 			
+    
+    return strcat ( strcpy(s,l),r );
+}
+*/
+
+
+/*
+ ** Duplicate a string,  creating a mark space at the beginning.
+ ** Return the new string pointer.
+ */
+/*
+// Credits: lua 1.0.
+char *__strdup (char *l);
+char *__strdup (char *l){
+    
+    char *s = calloc ( strlen(l)+2, sizeof(char) );
+    
+    if (s == NULL)
+    {
+        printf ("Not enough memory \n");
+        return NULL;
+    }
+
+    //Create mark space.
+    *s++ = 0; 			
+    
+    return strcpy (s,l);
+}
+*/
+
+
+
 //
 // End.
 //
