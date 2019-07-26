@@ -17,14 +17,15 @@
 int running = 1;
 
 
-    //
+	//
 	// ## Janelas de teste ##
 	//
-	
+
 	//struct window_d *mainWindow;
-    struct window_d *gWindow;  //grid 
-	struct window_d *mWindow;  //menu
-    struct window_d *reboot_button; //reboot button;
+    struct window_d *gWindow;          //grid 
+    struct window_d *mWindow;          //menu
+    struct window_d *reboot_button;    //reboot button;
+
 
 //static char *dest_argv[] = { "-sujo0","-sujo1","-sujo2",NULL };
 //static unsigned char *dest_envp[] = { "-sujo", NULL };
@@ -34,9 +35,9 @@ int running = 1;
 
 int 
 reboot2Procedure ( struct window_d *window, 
-               int msg, 
-			   unsigned long long1, 
-			   unsigned long long2 );
+                   int msg, 
+                   unsigned long long1, 
+                   unsigned long long2 );
  
 
 
@@ -48,9 +49,9 @@ reboot2Procedure ( struct window_d *window,
  
 int 
 reboot2Procedure ( struct window_d *window, 
-               int msg, 
-			   unsigned long long1, 
-			   unsigned long long2 )
+                   int msg, 
+                   unsigned long long1, 
+                   unsigned long long2 )
 {
 	switch (msg)
 	{
@@ -73,7 +74,7 @@ reboot2Procedure ( struct window_d *window,
 				//...
 				
                 //full screen
-                //colocar em full screen somente a área de cliente. 				
+                //colocar em full screen somente a área de cliente. 
 		        case VK_F11:
 				    
 					break;
@@ -110,8 +111,9 @@ reboot2Procedure ( struct window_d *window,
 		default:
 		    break;
 	};
-	
-    return 0;	
+
+
+    return 0;
 }
 
 
@@ -125,17 +127,22 @@ int main ( int argc, char *argv[] ){
 	struct window_d *hWindow;
 	
 	FILE *fp;
-		
-	int ch;
+
+    int ch;
     int char_count = 0;	
-	
-	
-#ifdef TEDITOR_VERBOSE			
-	printf("\n");
-	printf("Initializing File explorer:\n");
-	printf("mainTextEditor: # argv={%s} # \n", &argv[0] );
-#endif	
-	
+
+    unsigned long left = 600;
+    unsigned long top = 100;
+    unsigned long width = 320;
+    unsigned long height = 480;
+
+//#ifdef TEDITOR_VERBOSE
+	//printf("\n");
+	//printf("Initializing File explorer:\n");
+	//printf("mainTextEditor: # argv={%s} # \n", &argv[0] );
+//#endif
+
+
 	//
 	// ## vamos repetir o que dá certo ...
 	//
@@ -156,19 +163,20 @@ int main ( int argc, char *argv[] ){
 	
 	//printf("argv={%s}\n", &argv[2] );
 
-    //
+
+	//
 	// ## app window ##
 	//
 
-    //++
-	apiBeginPaint (); 
-	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, 
-	                       "Reboot2",
-	                       600, 100, 320, 480,    
+	//++
+    apiBeginPaint (); 
+    hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, 
+                           "Reboot2",
+                           left, top, width, height,    
                            0, 0, 0xF5DEB3, 0x2d89ef );  
 
 	if ( (void *) hWindow == NULL )
-	{	
+	{
 		printf ("Reboot2: hWindow fail");
 		apiEndPaint ();
 		
@@ -176,15 +184,13 @@ int main ( int argc, char *argv[] ){
     }else{
 
         APIRegisterWindow (hWindow);
-
         APISetActiveWindow (hWindow);
-
         APISetFocus (hWindow);
-
         apiShowWindow (hWindow);
     };
-	apiEndPaint ();
+    apiEndPaint ();
     //--
+
 
 
 	//printf("Nothing for now! \n");
@@ -221,7 +227,7 @@ int main ( int argc, char *argv[] ){
 		apiDisplayBMP ( (char *) b, 200, 200 ); 
 		
 		//não sei se é necessário.
-		refresh_screen ();		
+		refresh_screen ();
 	};
 	*/
     //--
@@ -262,7 +268,7 @@ int main ( int argc, char *argv[] ){
 	    //#obs: Acho que isso cria grid.
 	    int s = (int) system_call ( 148, (unsigned long) gWindow, 
 	                      4, (unsigned long) GRID_VERTICAL );
-	                      //4, (unsigned long) GRID_HORIZONTAL );		
+	                      //4, (unsigned long) GRID_HORIZONTAL );
 	
         if (s == 1)	
         {
@@ -272,7 +278,7 @@ int main ( int argc, char *argv[] ){
 	        goto fail;
 	    }
 	    
-	    apiShowWindow (gWindow);	    			
+	    apiShowWindow (gWindow);
 	};
 	apiEndPaint ();
 	//--
@@ -376,54 +382,57 @@ int main ( int argc, char *argv[] ){
      //system_call ( 149, (unsigned long) hWindow, 
      //    (unsigned long) hWindow, (unsigned long) hWindow );    
 	
-			
+
 	//
 	// ## Refresh Window ##
 	//
-	
+
 	// #bugbug
 	// Talvez não precisemos disso.
 	//refresh_screen ();
-	
-	
-	
+
+
+
+
 	//++
     enterCriticalSection (); 
-	reboot_button = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " Reboot ",     
-                                100, 150, 100, 24,    
+    reboot_button = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " Reboot ",  
+                                (width/3), ((height/4)*2), 
+                                (width/3), (height/8),   
                                 hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
-	
-	if ( (void *) reboot_button == NULL )
-	{
-		printf ("Couldn't create save button\n");
+
+    if ( (void *) reboot_button == NULL )
+    {
+		printf ("Couldn't create button\n");
 		return 1;
-	}
-								
-    APIRegisterWindow (reboot_button);
-	apiShowWindow (reboot_button);	
+    }else{
+
+        APIRegisterWindow (reboot_button);
+        apiShowWindow (reboot_button);
+        refresh_screen ();
+    };
     exitCriticalSection (); 
-    refresh_screen ();	
 	//--
-	
-	
+
+
+
 	//
 	//  ## Loop ##
 	//
-	
-	
-    unsigned long message_buffer[5];	
 
-Mainloop:	
-	
+    unsigned long message_buffer[5];
+
+Mainloop:
+
 	while (running)
 	{
 		enterCriticalSection(); 
 		system_call ( 111,
-		    (unsigned long)&message_buffer[0],
-			(unsigned long)&message_buffer[0],
-			(unsigned long)&message_buffer[0] );
+		    (unsigned long) &message_buffer[0],
+			(unsigned long) &message_buffer[0],
+			(unsigned long) &message_buffer[0] );
 		exitCriticalSection(); 
-			
+
 		if ( message_buffer[1] != 0 )
 		{
 	        reboot2Procedure ( (struct window_d *) message_buffer[0], 

@@ -230,9 +230,10 @@ int deltaY;
 //int deltaValue = 4;
 int deltaValue = 1;
 
-//usdo para testar o timer.
-void updateObject ()
-{
+
+// Usado para testar o timer.
+void updateObject (){
+
    //RECT rc;
    //GetClientRect(hwnd, &rc);
 
@@ -245,11 +246,10 @@ void updateObject ()
       deltaX = deltaValue;
    }
    else if ( objectX > 78 ) {
-	   
+ 
       objectX = 78; 
       deltaX = -deltaValue;  //muda a direção.
    }
-   
    
    if (objectY < 2){
       objectY = 2;
@@ -260,7 +260,6 @@ void updateObject ()
       deltaY = -deltaValue;
    }
 
-    
 	//
 	// ## test ##
 	//
@@ -272,15 +271,17 @@ void updateObject ()
     //putchar.
 	//shellInsertNextChar ( (char) 'T' );  
 	
-	shellSetCursor ( objectX, objectY );	
-	
-	printf("%c",(char) 'X');
-	
-};
+	shellSetCursor ( objectX, objectY );
+
+	printf ("%c", (char) 'X');
+}
+
+
+
 
 /*
 struct {
-	
+
   char *word;
   int token;
   
@@ -304,6 +305,7 @@ struct {
   { (char *) NULL, 0 }
 };
 */
+
 
 //
 // ## Arguments support ##
@@ -448,18 +450,19 @@ void shellSocketTest();
 //
 
 static inline void pause (void){
-	
+
     asm volatile ("pause" ::: "memory"); 
-}; 
+}
 
 
-/* REP NOP (PAUSE) is a good thing to insert into busy-wait loops. */
+/* 
+ * REP NOP (PAUSE) is a good thing to insert into busy-wait loops. 
+ */
+ 
 static inline void rep_nop (void){
-	
-    __asm__ __volatile__ ("rep;nop": : :"memory");
-};
 
-
+    asm volatile ("rep;nop": : :"memory");
+}
 #define cpu_relax()  rep_nop()
 
 
@@ -471,28 +474,29 @@ static inline void rep_nop (void){
 unsigned long 
 shellProcedure ( struct window_d *window, 
                  int msg, 
- 			     unsigned long long1, 
-				 unsigned long long2 );
-				
-				
-//diálogo para alimentar o terminal usado pelos aplicativos.				
-int feedterminalDialog( struct window_d *window, 
-                      int msg, 
-				      unsigned long long1, 
-				      unsigned long long2 );
-							  
+                 unsigned long long1, 
+                 unsigned long long2 );
 
-// Procedimento de janela da topbar.							  
+
+// Diálogo para alimentar o terminal usado pelos aplicativos.
+int 
+feedterminalDialog ( struct window_d *window, 
+                     int msg, 
+                     unsigned long long1, 
+                     unsigned long long2 );
+
+
+// Procedimento de janela da topbar.
 unsigned long 
 shellTopbarProcedure ( struct window_d *window, 
                        int msg, 
-			           unsigned long long1, 
-					   unsigned long long2 );
-					  
+                       unsigned long long1, 
+                       unsigned long long2 );
+  
  
 void quit ( int status ){
-	
-	running = 0;
+
+    running = 0;
 }
  
  
@@ -506,11 +510,11 @@ void quit ( int status ){
 unsigned long 
 shellProcedure ( struct window_d *window, 
                  int msg, 
-				 unsigned long long1, 
-				 unsigned long long2 )
+                 unsigned long long1, 
+                 unsigned long long2 )
 {
-	unsigned long input_ret;
-    unsigned long compare_return;	
+    unsigned long input_ret;
+    unsigned long compare_return;
     int q;	
 	
 	//if( msg == COMMAND_INITIALIZE_SHELL ){

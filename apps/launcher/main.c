@@ -2,30 +2,32 @@
 // app launcher
 
 
-
 #include "launcher.h"
-
 
 
 //#define TEDITOR_VERBOSE 1
 
+
 #define GRID_HORIZONTAL 1000
 #define GRID_VERTICAL 2000
+
 
 //static int running = 1;
 int running = 1;
 
 
-    //
+	//
 	// ## Janelas de teste ##
 	//
-	
-    struct window_d *gWindow;  //grid 
-	struct window_d *mWindow;  //menu
-    struct window_d *reboot_button; //reboot button;
+
+    struct window_d *gWindow;          // grid 
+    struct window_d *mWindow;          // menu
+    struct window_d *reboot_button;    // reboot button;
     struct window_d *launcher_button_1;
     struct window_d *launcher_button_2;
-        
+
+
+
 //static char *dest_argv[] = { "-sujo0","-sujo1","-sujo2",NULL };
 //static unsigned char *dest_envp[] = { "-sujo", NULL };
 //static unsigned char dest_msg[512];
@@ -34,9 +36,9 @@ int running = 1;
 
 int 
 launcherProcedure ( struct window_d *window, 
-               int msg, 
-			   unsigned long long1, 
-			   unsigned long long2 );
+                    int msg, 
+                    unsigned long long1, 
+                    unsigned long long2 );
  
 
 
@@ -45,16 +47,16 @@ launcherProcedure ( struct window_d *window,
  * launcherProcedure:
  *     Procedimento de janela.
  */
- 
+
 int 
 launcherProcedure ( struct window_d *window, 
-               int msg, 
-			   unsigned long long1, 
-			   unsigned long long2 )
+                    int msg, 
+                    unsigned long long1, 
+                    unsigned long long2 )
 {
-	switch (msg)
-	{
-		
+    switch (msg)
+    {
+
 		case MSG_SYSKEYDOWN:
 		    switch (long1)
 			{  
@@ -129,9 +131,10 @@ launcherProcedure ( struct window_d *window,
 		
 		default:
 		    break;
-	};
-	
-    return 0;	
+    };
+
+
+    return 0;
 }
 
 
@@ -142,26 +145,31 @@ launcherProcedure ( struct window_d *window,
 
 int main ( int argc, char *argv[] ){
 
-	struct window_d *hWindow;
-	
-	FILE *fp;
-		
-	int ch;
-    int char_count = 0;	
-	
-	
-#ifdef TEDITOR_VERBOSE			
-	printf("\n");
-	printf("Initializing File explorer:\n");
-	printf("mainTextEditor: # argv={%s} # \n", &argv[0] );
-#endif	
-	
+    struct window_d *hWindow;
+
+    FILE *fp;
+
+    int ch;
+    int char_count = 0;
+
+
+    unsigned long left = 600;
+    unsigned long top = 100;
+    unsigned long width = 320;
+    unsigned long height = 480;
+
+//#ifdef TEDITOR_VERBOSE
+	//printf("\n");
+	//printf("Initializing File explorer:\n");
+	//printf("mainTextEditor: # argv={%s} # \n", &argv[0] );
+//#endif
+
 	//
 	// ## vamos repetir o que dá certo ...
 	//
-	
+
 	//vamos passar mais coisas via registrador.
-	
+
 	//ok
 	//foi passado ao crt0 via registrador
 	//printf("argc={%d}\n", argc ); 
@@ -176,7 +184,7 @@ int main ( int argc, char *argv[] ){
 	
 	//printf("argv={%s}\n", &argv[2] );
 
-    //
+	//
 	// ## app window ##
 	//
 
@@ -184,26 +192,23 @@ int main ( int argc, char *argv[] ){
 	apiBeginPaint (); 
 	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, 
 	                       "App Launcher",
-	                       600, 100, 320, 480,    
-                           0, 0, 0xF5DEB3, 0x2d89ef);  
+	                       left, top, width, height,    
+                           0, 0, 0xF5DEB3, 0x2d89ef );  
 
-	if ( (void *) hWindow == NULL )
-	{	
+    if ( (void *) hWindow == NULL )
+    {
 		printf ("Reboot2: hWindow fail");
 		apiEndPaint ();
-		
+
 		goto fail;
     }else{
 
         APIRegisterWindow (hWindow);
-
         APISetActiveWindow (hWindow);
-
         APISetFocus (hWindow);
-
         apiShowWindow (hWindow);
     };
-	apiEndPaint ();
+    apiEndPaint ();
     //--
 
 
@@ -292,7 +297,7 @@ int main ( int argc, char *argv[] ){
 	        goto fail;
 	    }
 	    
-	    apiShowWindow (gWindow);	    			
+	    apiShowWindow (gWindow);
 	};
 	apiEndPaint ();
 	//--
@@ -404,65 +409,71 @@ int main ( int argc, char *argv[] ){
 	// #bugbug
 	// Talvez não precisemos disso.
 	//refresh_screen ();
-	
-	
-	
+
+
+
+
 	//++
     enterCriticalSection (); 
-	launcher_button_1 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " Terminal ",     
-                                100, 100, 100, 24,    
-                                hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
-	
-	if ( (void *) launcher_button_1 == NULL )
-	{
-		printf ("Couldn't create save button\n");
+	launcher_button_1 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " Terminal ",  
+                                     (width/3), ((height/4)*2), 
+                                     (width/3), (height/8),    
+                                     hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
+
+    if ( (void *) launcher_button_1 == NULL )
+    {
+		printf ("Couldn't create button\n");
 		return 1;
-	}
-								
-    APIRegisterWindow (launcher_button_1);
-	apiShowWindow (launcher_button_1);	
+    }else{
+        APIRegisterWindow (launcher_button_1);
+        apiShowWindow (launcher_button_1);
+        refresh_screen ();
+    };
     exitCriticalSection (); 
-    refresh_screen ();	
 	//--
-	
-	
+
+
+
 	//++
     enterCriticalSection (); 
-	launcher_button_2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "Text editor",     
-                                100, 140, 100, 24,    
-                                hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
+	launcher_button_2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "Text editor", 
+                                     (width/3), ((height/4)*3), 
+                                     (width/3), (height/8),   
+                                     hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
 	
 	if ( (void *) launcher_button_2 == NULL )
 	{
-		printf ("Couldn't create save button\n");
+		printf ("Couldn't create button\n");
 		return 1;
-	}
-								
-    APIRegisterWindow (launcher_button_2);
-	apiShowWindow (launcher_button_2);	
+	}else{
+
+        APIRegisterWindow (launcher_button_2);
+        apiShowWindow (launcher_button_2);
+        refresh_screen ();
+	};
     exitCriticalSection (); 
-    refresh_screen ();	
 	//--
+
 
 
 
 	//
 	//  ## Loop ##
 	//
-	
-	
-    unsigned long message_buffer[5];	
 
-Mainloop:	
-	
-	while (running)
-	{
-		enterCriticalSection(); 
-		system_call ( 111,
-		    (unsigned long)&message_buffer[0],
-			(unsigned long)&message_buffer[0],
-			(unsigned long)&message_buffer[0] );
-		exitCriticalSection(); 
+
+    unsigned long message_buffer[5];
+
+Mainloop:
+
+    while (running)
+    {
+        enterCriticalSection (); 
+        system_call ( 111,
+		    (unsigned long) &message_buffer[0],
+			(unsigned long) &message_buffer[0],
+			(unsigned long) &message_buffer[0] );
+		exitCriticalSection (); 
 			
 		if ( message_buffer[1] != 0 )
 		{
@@ -470,24 +481,25 @@ Mainloop:
 		        (int) message_buffer[1], 
 		        (unsigned long) message_buffer[2], 
 		        (unsigned long) message_buffer[3] );
-			
-			message_buffer[0] = 0;
+
+            message_buffer[0] = 0;
             message_buffer[1] = 0;
             message_buffer[3] = 0;
-            message_buffer[4] = 0;	
-        };				
-	};	
-	
-	
-	
-fail:	
+            message_buffer[4] = 0;
+        };
+    };
+
+
+
+fail:
     printf ("fail.\n");
-	
+
+
 done:
     
 	//running = 0;
-	
-	return 0;
+
+    return 0;
 }
 
 
