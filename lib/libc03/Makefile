@@ -91,13 +91,13 @@ all-c:
 	gcc  -c  wait.c    $(CFLAGS) -I. -I include/ -o wait.o		
 	gcc  -c  math.c    $(CFLAGS) -I. -I include/ -o math.o			
 	
-	gcc  -c  strtoul.c    $(CFLAGS) -I. -I include/ -o strtoul.o			
+	gcc  -c  strtoul.c    $(CFLAGS) -I. -I include/ -o strtoul.o	
 	gcc  -c  strtol.c    $(CFLAGS) -I. -I include/ -o strtol.o			
 #...	
 
  
 #tests 
-	gcc  -c  tests/test1.c   $(CFLAGS) -I. -I include/ -o test1.o --save-temps
+	gcc  -c  tests/test1.c   $(CFLAGS) -I. -I include/ -o test1.o
  
 # test
 # entry point para a biblioteca compartilhada. .so

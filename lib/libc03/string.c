@@ -1170,6 +1170,89 @@ char *__strdup (char *l){
 */
 
 
+/*
+char *rindex (const char *s, int c);
+char *rindex (const char *s, int c)
+{
+    return (char *) strrchr (s, c);
+}
+*/
+
+
+/*
+char *index (const char *s, int ch);
+char *index (const char *s, int ch){
+	
+	for (;; ++p) {
+		if (*p == ch)
+			return ((char *)p);
+		if (!*p)
+			return ((char *)NULL);
+	}
+	//NOTREACHED
+}
+*/
+
+
+/*
+ * Transform src, storing the result in dst, such that
+ * strcmp() on transformed strings returns what strcoll()
+ * on the original untransformed strings would return.
+ */
+ 
+// Credits: apple open source 
+
+/*
+size_t strxfrm (char *dst, const char *src, size_t n);
+size_t strxfrm (char *dst, const char *src, size_t n){
+
+	size_t srclen, copysize;
+
+	//Since locales are unimplemented, this is just a copy.
+	* 
+	srclen = strlen (src);
+	if (n != 0) {
+		copysize = srclen < n ? srclen : n - 1;
+		(void)memcpy(dst, src, copysize);
+		dst[copysize] = 0;
+	}
+	return (srclen);
+}
+*/
+
+
+ 
+ /*
+ The swab() function copies n bytes from the array pointed to by from
+ to the array pointed to by to, exchanging adjacent even and odd
+ bytes.  This function is used to exchange data between machines that
+ have different low/high byte ordering.
+ See: http://man7.org/linux/man-pages/man3/swab.3.html
+ Credits: Apple open source.  
+ */
+/*
+void swab (const void *from, void *to, size_t len);
+void swab (const void *from, void *to, size_t len){
+	
+	register unsigned long temp;
+	register int n;
+	register char *fp, *tp;
+
+	n = (len >> 1) + 1;
+	fp = (char *)from;
+	tp = (char *)to;
+#define	STEP	temp = *fp++,*tp++ = *fp++,*tp++ = temp
+	//round to multiple of 8
+	while ((--n) & 07)
+		STEP;
+	n >>= 3;
+	while (--n >= 0) {
+		STEP; STEP; STEP; STEP;
+		STEP; STEP; STEP; STEP;
+	}
+}
+*/
+
 
 //
 // End.

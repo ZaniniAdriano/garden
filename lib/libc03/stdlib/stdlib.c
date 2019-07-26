@@ -1205,23 +1205,59 @@ int stdlib_strncmp ( char *s1, char *s2, int len ){
 	if ( *s1 != '\0' || *s2 != '\0' )
 	{	
 	    return (int) 2;
-	};		
-	
+	};
+
+
 //done:
 	return 0;
 }
 
 
-//interna de suporte à getenv.
+/*
+ * _simple_getenv:
+ *    Getenv stuff.
+ *    Credits: Apple open source.
+ */
+/*
+const char *_simple_getenv(const char *envp[], const char *var);
+const char *_simple_getenv(const char *envp[], const char *var){
+
+    const char **p;
+    size_t var_len;
+
+    var_len = strlen(var);
+
+    for (p = envp; p && *p; p++) {
+        size_t p_len = strlen(*p);
+
+        if (p_len >= var_len &&
+            memcmp(*p, var, var_len) == 0 &&
+            (*p)[var_len] == '=') {
+            return &(*p)[var_len + 1];
+        }
+    }
+    return NULL;
+}
+*/
+
+
+
+
+/*
+ * __findenv:
+ *     Interna de suporte à getenv. 
+ *     Credits: apple open source.
+ */
+
 char *__findenv ( const char *name, int *offset ){
-	
+
     size_t len;
 	const char *np;
 	char **p, *c;  //??
 
 	if (name == NULL || environ == NULL)
 	{	
-        return (char*) 0;
+        return (char *) 0;
         //return NULL;
 	}
 	
@@ -1243,13 +1279,19 @@ char *__findenv ( const char *name, int *offset ){
 	};
 	
 	*offset = p - environ;
-	
-//done:	
+
+
+//done:
     return (char *) 0;
 	//return NULL;
 }
 
 
+/*
+ * getenv:
+ *     Credits: Apple open source.
+ */
+ 
 char *getenv (const char *name){
 	
 	int offset;
@@ -1265,8 +1307,9 @@ char *getenv (const char *name){
 	//rwlock_rdlock(&__environ_lock);
 	result = __findenv(name, &offset);
 	//rwlock_unlock(&__environ_lock);
-	
-//done:	
+
+
+//done:
 	return (char *) result;
 }
 
@@ -1624,6 +1667,7 @@ double strtod(const char *str, char **endptr){
   return number;
 }
 
+
 float strtof(const char *str, char **endptr) {
   return (float) strtod(str, endptr);
 }
@@ -1633,11 +1677,35 @@ long double strtold(const char *str, char **endptr) {
   return strtod(str, endptr);
 }
 
+
 double atof(const char *str) {
   return strtod(str, NULL);
 }
 
 //================================================
+
+
+
+/*
+void abort();
+void abort()
+{
+    //#todo
+    exit (1);
+}
+*/
+
+
+/*
+long labs (long j);
+long labs (long j)
+{
+	return (j < 0 ? -j : j);
+}
+*/
+
+
+
 
 //
 // End.
