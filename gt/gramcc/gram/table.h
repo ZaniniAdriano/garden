@@ -82,7 +82,8 @@ typedef enum {
 	KWDEF,          //não faz parte da linguagem c
 	KWVAR,           //não faz parte da linguagem c 
 	KWPRINT,
-	KWEXIT    
+	KWEXIT, 
+	KWRUN        
 	//...
 }keywords_t;
 

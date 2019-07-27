@@ -9,6 +9,7 @@ void main(){
     print (" ==== 5 This is a string ! ==== ");  
     print (" ==== 7 This is a string ! ==== ");
 
+    run ("gramcode.bin");
 
     print ("Testing -- exit --- keyword "); 
     exit     

@@ -471,6 +471,12 @@ again:
 				keyword_found = KWEXIT;
 			}	
 			
+			if ( strncmp( real_token_buffer, "run", 3 ) == 0 )
+			{
+				value = TOKENKEYWORD;
+				keyword_found = KWRUN;
+			}	
+			
 			if ( strncmp( real_token_buffer, "goto", 4 ) == 0 )
 			{
 				value = TOKENKEYWORD;

@@ -23,6 +23,7 @@ int parse_function ( int token );
 
 int parse_asm ( int token );
 int parse_string (int token); //imprime a string.
+int parse_run (int token);
 int parse_do ( int token );
 int parse_for ( int token );
 int parse_if ( int token );
@@ -427,6 +428,140 @@ int parse_string (int token){
 }
 
 
+
+// Parse 
+int parse_run (int token){
+	
+	int c;
+	int running = 1;
+	int State = 1;	
+	
+	
+//#ifdef PARSER_ASM_VERBOSE	
+	//debug
+	//printf("parse_asm: Initializing ...\n");	
+//#endif	
+
+
+	//se entramos errado.
+	if ( token != TOKENKEYWORD)
+	{
+		printf ("parse_run: token error\n");
+		exit (1);
+	}
+	
+    if ( token == TOKENKEYWORD )	
+	{	
+		
+//#ifdef PARSER_ASM_VERBOSE	
+//		printf("parse_asm: TOKENKEYWORD={%s} in line %d\n", 
+//		    real_token_buffer, lineno );  
+//#endif	
+	
+	};
+
+	
+	int inside = 0;
+	
+	//
+	// (
+	//
+	
+	c = yylex ();
+	
+	if ( c == TOKENSEPARATOR )
+	{
+	    if ( strncmp( (char *) real_token_buffer, "(", 1 ) == 0  )
+        {
+			
+//#ifdef PARSER_ASM_VERBOSE				
+//			printf("parse_asm: TOKENKEYWORD={%s} in line %d\n", 
+//			    real_token_buffer, lineno ); 
+//#endif	
+		
+			//ok
+			inside = 1;
+			
+		} 
+		
+	}else{
+		//fail
+		printf("parse_run: expected (");
+		exit(1);
+	}
+	
+	//
+	// " .... "
+	//
+	
+	c = yylex ();
+	
+	if ( c == TOKENSTRING )
+	{
+	    //if ( strncmp( (char *) real_token_buffer, "\"", 1 ) == 0  )
+        //{
+			//ok
+			//inside = 1;
+		//} 
+		
+		//
+		// print
+		//
+		
+		//printf ("STRING={%s}\n",real_token_buffer);
+		//printf ("%s\n",real_token_buffer);
+
+
+        //
+        // run
+        //		
+        
+        system_call ( 900, (unsigned long) real_token_buffer, 0, 0 );		
+		
+		
+		//coloca a string no arquivo de saída.
+		strcat( outfile, real_token_buffer );
+		
+			//ao fim da string vamos para a próxima linha do output file
+		strcat( outfile,"\n");		
+		
+		c = yylex ();
+		
+		
+			//)
+		    if ( strncmp( (char *) real_token_buffer, ")", 1 ) == 0  )
+			{
+				inside = 0;
+				
+				c = yylex ();
+				
+				//;
+				if ( strncmp( (char *) real_token_buffer, ";", 1 ) == 0  )
+				{
+					//ok
+					return c;
+				}
+			    printf("parse_run: expected ; in asm string");
+			    exit(1);	
+			}
+			
+			printf("parse_run: expected ) in asm string");
+			exit(1);	
+			
+		
+		
+	}else{
+		//fail
+		printf("parse_run: expected string in asm("") ");
+		exit(1);
+	}
+	
+
+    printf ("parse_run: todo unexpected error in asm string\n");
+	exit (1);		
+		   
+	return 0;
+}
 
 
 // Parse do statement.
@@ -2281,6 +2416,14 @@ int parse (){
 						{
                             goto parse_exit;
 						}
+
+						if ( keyword_found == KWRUN )
+						{
+							parse_run (c);
+							State = 1;
+							break; 
+						}
+
 						 
 						// # return #
 						//return. Chamaremos o tratador do stmt parse_return() 
