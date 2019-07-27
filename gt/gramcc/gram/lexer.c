@@ -465,6 +465,12 @@ again:
 				keyword_found = KWPRINT;
 			}	
 			
+			if ( strncmp( real_token_buffer, "exit", 4 ) == 0 )
+			{
+				value = TOKENKEYWORD;
+				keyword_found = KWEXIT;
+			}	
+			
 			if ( strncmp( real_token_buffer, "goto", 4 ) == 0 )
 			{
 				value = TOKENKEYWORD;

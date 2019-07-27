@@ -2276,6 +2276,11 @@ int parse (){
 							State = 1;
 							break; 
 						}
+						
+						if ( keyword_found == KWEXIT )
+						{
+                            goto parse_exit;
+						}
 						 
 						// # return #
 						//return. Chamaremos o tratador do stmt parse_return() 

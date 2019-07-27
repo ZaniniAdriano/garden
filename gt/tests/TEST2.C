@@ -6,9 +6,14 @@ void main(){
     print (" ==== 3 This is a string ! ==== ");
     print (" ==== 3 This is a string ! ==== ");
     print (" ==== 5 This is a string ! ==== ");
-    print (" ==== 5 This is a string ! ==== ");
+    print (" ==== 5 This is a string ! ==== ");  
     print (" ==== 7 This is a string ! ==== ");
 
+
+    print ("Testing -- exit --- keyword "); 
+    exit     
+    print ("exit keyword fail"); 
+        
     return;   
 }    
 
