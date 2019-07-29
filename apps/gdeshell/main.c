@@ -2016,7 +2016,9 @@ do_compare:
 	
 	
 	// dir - Lista os arquivos no estilo DOS.
-	if ( strncmp ( prompt, "dir", 3 ) == 0 )
+	// ls  - Lista no estilu *NIX. Isso será um aplicativo.
+	if ( strncmp ( prompt, "dir", 3 ) == 0 || 
+	     strncmp ( prompt, "ls", 2 ) == 0 )
 	{
 		char dir_name[] = "volume1";
 		
