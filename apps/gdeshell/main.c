@@ -387,18 +387,102 @@ int wp_initialized = 0;
 // ===============================================================
 //
 
+// Prototypes.
+
+
+
+
+
+//Arg: Endereços dos buffers contendo os chars.
+int 
+SendARP ( unsigned long source_ip, 
+          unsigned long target_ip, 
+          unsigned long target_mac );
+
+
+void testSendARP ();
+
+
 int
 __SendMessageToProcess ( int pid, 
-                          struct window_d *window, 
-                          int message,
-                          unsigned long long1,
-                          unsigned long long2 );
+                         struct window_d *window, 
+                         int message,
+                         unsigned long long1,
+                         unsigned long long2 );
+
+
+//
+// ===============================================================
+//
+
+
+
+//Arg: Endereços dos buffers contendo os chars.
+
+int 
+SendARP ( unsigned long source_ip, 
+          unsigned long target_ip, 
+          unsigned long target_mac )
+{
+	//#todo:
+	//filtrar argumentos.
+
+    /*
+    return (int) system_call ( ? , 
+                    (unsigned long) source_ip, 
+                    (unsigned long) target_ip, 
+                    (unsigned long) target_mac );
+   */
+    return 0;
+}
+
+
+// testando o envio de um arp request usando os serviços do kernel.
+void testSendARP (){
+
+	uint8_t source_ip_address[4];
+	source_ip_address[0] = 192;
+	source_ip_address[1] = 168;
+	source_ip_address[2] = 1;   
+	source_ip_address[3] = 112; 
+
+	uint8_t target_ip_address[4];
+	target_ip_address[0] = 192;
+	target_ip_address[1] = 168;
+	target_ip_address[2] = 1; 
+	target_ip_address[3] = 111; 
+	
+	uint8_t target_mac_address[6];
+	target_mac_address[0] = 0xFF;
+	target_mac_address[1] = 0xFF;
+	target_mac_address[2] = 0xFF;
+	target_mac_address[3] = 0xFF;
+	target_mac_address[4] = 0xFF;
+	target_mac_address[5] = 0xFF;
+
+    int status = -1;
+
+    status = (int) SendARP ( (unsigned long) &source_ip_address[0], 
+                     (unsigned long) &target_ip_address[0], 
+                     (unsigned long) &target_mac_address[0] );
+
+    if (status != 0)
+    {
+
+    }
+
+    printf ("done\n");
+}
+
+
+
+
 int
 __SendMessageToProcess ( int pid, 
-                          struct window_d *window, 
-                          int message,
-                          unsigned long long1,
-                          unsigned long long2 )
+                         struct window_d *window, 
+                         int message,
+                         unsigned long long1,
+                         unsigned long long2 )
 {
 	unsigned long message_buffer[5];
 
@@ -1810,6 +1894,16 @@ do_compare:
 
         goto exit_cmp;
     };
+    
+
+    //arp-test
+    //chama a rotina que faz um teste de arp.
+    if ( strncmp( prompt, "arp-test", 8 ) == 0 )
+    {
+        testSendARP ();
+        goto exit_cmp;
+    };
+
 
 	
 	// Imprime a tabela ascii usando a fonte atual.
