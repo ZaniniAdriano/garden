@@ -158,6 +158,7 @@ int main ( int argc, char *argv[] ){
     unsigned long width = 320;
     unsigned long height = 480;
 
+
 //#ifdef TEDITOR_VERBOSE
 	//printf("\n");
 	//printf("Initializing File explorer:\n");
@@ -188,16 +189,22 @@ int main ( int argc, char *argv[] ){
 	// ## app window ##
 	//
 
+	//green crocodile = 0x44541C 
+	//orange royal = 0xF9812A
+	//window = 0xF5DEB3
+	//client window = 0x2d89ef 
+	//...
+
     //++
-	apiBeginPaint (); 
-	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, 
-	                       "App Launcher",
-	                       left, top, width, height,    
-                           0, 0, 0xF5DEB3, 0x2d89ef );  
+    apiBeginPaint (); 
+    hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, 
+                           "App Launcher",
+                           left, top, width, height,    
+                           0, 0, 0x44541C, 0xF9812A ); //0, 0, 0xF5DEB3, 0x2d89ef );  
 
     if ( (void *) hWindow == NULL )
     {
-		printf ("Reboot2: hWindow fail");
+		printf ("launcher: hWindow fail\n");
 		apiEndPaint ();
 
 		goto fail;

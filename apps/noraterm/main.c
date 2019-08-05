@@ -6471,7 +6471,7 @@ noArgs:
 	        //if ( (void *) hWindow == NULL )
 		    //{}
 		    
-		    shell_info.main_window = ( struct window_d * ) hWindow;			
+		    shell_info.main_window = ( struct window_d * ) hWindow;
 	    };	
 		
 	    // # Headless #
@@ -6576,23 +6576,23 @@ noArgs:
 	
 	
 	//++
-    //apiBeginPaint ();	
-	hWindow2 = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "NORATERM-CLIENT-WINDOW",
-	                        terminal_rect.left, terminal_rect.top, 
-					        (terminal_rect.width - 56), 
-					        (terminal_rect.height - 34),    
-                            0, 0, COLOR_TERMINAL2, COLOR_TERMINAL2 );	   
-	
+    //apiBeginPaint ();
+    hWindow2 = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "NORATERM-CLIENT-WINDOW",
+                            terminal_rect.left, terminal_rect.top, 
+                            (terminal_rect.width - 38), 
+                            (terminal_rect.height - 26), 
+                            0, 0, COLOR_TERMINAL2, COLOR_TERMINAL2 );
+
 	if ( (void *) hWindow2 == NULL )
-	{	
+	{
 		die ("NORATERM: hWindow2 \n");
 	}else{
-		
+
         APIRegisterWindow (hWindow2);
         //APISetActiveWindow (hWindow2);
-	    APISetFocus (hWindow2);	 
-	    apiShowWindow (hWindow2);		
-		
+        APISetFocus (hWindow2);
+        apiShowWindow (hWindow2);
+
 		//janela usada para input de textos ...
 	    //o input de texto pode vir de várias fontes.
 	    //api_set_window_with_text_input(hWindow);
