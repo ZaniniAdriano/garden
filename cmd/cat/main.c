@@ -1,3 +1,9 @@
+/*
+ * Fle: main.c
+ * 
+ * cat command for Gramado.
+ */
+
 
 #include <types.h>
 #include <stddef.h>
@@ -14,29 +20,37 @@
 
 //Talvez precisemos configurar o stdout.
  
+ 
 int main ( int argc, char *argv[] ){
-		
-	register int c;
 
-	FILE *fp;
+    register int c;
+    FILE *fp;
 
-    fp = fopen ( (char *) argv[1], "rb" );	
+
+    fp = fopen ( (char *) argv[1], "rb" );
 
     if ( (void *) fp == NULL )
         return -1;     
 
-	
-	libc_set_output_mode (LIBC_NORMAL_MODE);
-	
+
+    libc_set_output_mode (LIBC_NORMAL_MODE);
+
 	//get current tty stdou_ring0
-	stdout = (FILE *) system_call ( 1000, 0, 0, 0 );	
-	
-	while ( (c = fgetc(fp)) >= 0 )
-		printf ("%c", c);	
-	
-	
-	printf ("\n");
-	
+    stdout = (FILE *) system_call ( 1000, 0, 0, 0 );
+
+
+    while ( (c = fgetc(fp)) >= 0 )
+        printf ("%c", c);
+
+
+    printf ("\n");
+
+    //?? why -1?
     return -1;
 }
+
+//
+// End.
+//
+
 

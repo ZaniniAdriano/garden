@@ -203,10 +203,10 @@ int main ( int argc, char *argv[] ){
 	fputc ('X',stdout);
 	fputc (' ',stdout);
 	putc ('Y',stdout);
-	putc (' ',stdout);	
+	putc (' ',stdout);
 	putchar('Z');
 	putchar(' ');
-	fputs("{fputs} ",stdout);	
+	fputs("{fputs} ",stdout);
 	
 	//
 	// ESC tests

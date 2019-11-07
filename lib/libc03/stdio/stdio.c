@@ -14,7 +14,7 @@
  *
  * History:
  *     2015 - Created.
- *     2015~2018 - Revision. 
+ *     2015~2019 - Revision. 
  */
  
 // See:
@@ -125,39 +125,49 @@ __SendMessageToProcess ( int pid,
 // arquivo para servir mais funções.
 
 int stdio_atoi (char *s){
-	
+
     int rv=0; 
     char sign = 0;
 
     // Skip till we find either a digit or '+' or '-'.
     
     while (*s) 
-	{
-	    if (*s <= '9' && *s >= '0')
-		    break;
-        
-	    if (*s == '-' || *s == '+') 
-		    break;
-        
-	    s++;
-    }; 	  
+    {
+        if (*s <= '9' && *s >= '0')
+            break;
 
-    if (*s == '-')
-	    sign=1;
 
-    //     sign = (*s == '-');
-    if (*s == '-' || *s == '+') 
-	    s++;
+        if (*s == '-' || *s == '+') 
+            break;
 
-    while (*s && *s >= '0' && *s <= '9') 
-	{
-	    rv = (rv * 10) + (*s - '0');
+
         s++;
     };
 
-    if (sign) return (-rv);
-        else return (rv);
-     
+
+    if (*s == '-')
+        sign=1;
+
+
+    //     sign = (*s == '-');
+    if (*s == '-' || *s == '+') 
+        s++;
+
+
+    while (*s && *s >= '0' && *s <= '9') 
+    {
+        rv = (rv * 10) + (*s - '0');
+        s++;
+    };
+
+
+    if (sign)
+    { 
+        return (-rv);
+    }else{ 
+        return (rv);
+    };
+
     //     return (sign ? -rv : rv);
 }
 
@@ -169,21 +179,24 @@ int stdio_atoi (char *s){
 // Credits: Luiz Felipe
 
 void stdio_fntos (char *name){
-	
+
     int  i, ns = 0;
+
     char ext[4];
-	
-	ext[0] = 0;
-	ext[1] = 0;
-	ext[2] = 0;
-	ext[3] = 0;
-	
+
+
+    ext[0] = 0;
+    ext[1] = 0;
+    ext[2] = 0;
+    ext[3] = 0;
+
+
     //const char ext[4];
-	
+
     //Transforma em maiúscula enquanto não achar um ponto.
-	
-	while ( *name && *name != '.' )
-	{
+
+    while ( *name && *name != '.' )
+    {
         if ( *name >= 'a' && *name <= 'z' )
             *name -= 0x20;
 
@@ -191,40 +204,45 @@ void stdio_fntos (char *name){
         ns++;
     };
 
+
     // Aqui name[0] é o ponto.
-	// Então constrói a extensão.
-	
-	for ( i=0; i < 3 && name[i+1]; i++ )
-	{
-		//Transforma uma letra da extensão em maiúscula.
-        
-		//if (name[i+1] >= 'a' && name[i+1] <= 'z')
+    // Então constrói a extensão.
+
+    for ( i=0; i < 3 && name[i+1]; i++ )
+    {
+        //Transforma uma letra da extensão em maiúscula.
+
+        //if (name[i+1] >= 'a' && name[i+1] <= 'z')
         //    name[i+1] -= 0x20;
 
         //ext[i] = name[i+1];
-    
-	
-	    //#testando
-	    //Se não for letra então não colocamos no buffer de extensão;
-		if (name[i+1] >= 'a' && name[i+1] <= 'z')
-		{
-			name[i+1] -= 0x20;
-		    ext[i] = name[i+1];
-		}
-	};
 
-	//Acrescentamos ' ' até completarmos as oito letras do nome.
-	
+
+        // #testando
+        //Se não for letra então não colocamos no buffer de extensão;
+
+        if (name[i+1] >= 'a' && name[i+1] <= 'z')
+        {
+            name[i+1] -= 0x20;
+            ext[i] = name[i+1];
+        }
+    };
+
+
+	// Acrescentamos ' ' até completarmos as oito letras do nome.
+
+
     while (ns < 8)
-	{	
+    {
         *name++ = ' ';
         ns++;
     };
 
 	//Acrescentamos a extensão
-	
+
     for (i=0; i < 3; i++)
         *name++ = ext[i];
+
 
     *name = '\0';
 }
@@ -265,9 +283,11 @@ static __inline__ int fclose(FILE *__f)
   return close(fileno(__f));
 }
 */
-						 
+
+
+
 /*
- ************************************************
+ ****************************************
  * fclose:
  *     Close a file.
  *     If work, return 0. 
@@ -276,12 +296,12 @@ static __inline__ int fclose(FILE *__f)
 int fclose (FILE *stream){
 
     return (int) gramado_system_call ( 232, (unsigned long) stream, 
-					 (unsigned long) stream, (unsigned long) stream ); 
+                     (unsigned long) stream, (unsigned long) stream ); 
 }
 
 
 /*
- **************************************************************
+ ***************************************
  * fopen:
  *     Open a file.
  *     @todo: Abrir onde? saída padrão?
@@ -297,7 +317,7 @@ int fclose (FILE *stream){
 FILE *fopen ( const char *filename, const char *mode ){
 
     return (FILE *) gramado_system_call ( 246, (unsigned long) filename, 
-					 (unsigned long) mode, (unsigned long) mode ); 
+                        (unsigned long) mode, (unsigned long) mode ); 
 }
 
 
@@ -323,67 +343,72 @@ int creat(const char *pathname, mode_t mode)
  */
 
 void scroll (void){
-	
+
 	//Início da tela.
-	unsigned short *p1 = (unsigned short *) SCREEN_START;
-	
+    unsigned short *p1 = (unsigned short *) SCREEN_START;
+
 	//Início da segunda linha.
     unsigned short *p2 = (unsigned short *) (SCREEN_START + 2 * SCREEN_WIDTH);
     unsigned short i, j;
-	
+
+
 	// Linhas.
 	// Usa o valor default se passar dos limites.
-    
-	if ( g_rows == 0 || g_rows >= SCREEN_MAX_HEIGHT )
+
+    if ( g_rows == 0 || g_rows >= SCREEN_MAX_HEIGHT )
     {
-		g_rows = SCREEN_HEIGHT;
-	};
-	
+        g_rows = SCREEN_HEIGHT;
+    }
+
+
 	// 24 vezes.
-    
+
     for ( i=0; i < g_rows -1; i++ )
-	{
+    {
 	    //80 vezes.
 		
 		//Se a variável nao foi inicializada, usar valor default.
         
-		if (g_columns == 0 || g_columns >= SCREEN_MAX_WIDTH)
+        if (g_columns == 0 || g_columns >= SCREEN_MAX_WIDTH)
         { 
-		    g_columns = SCREEN_WIDTH;
-		};
-		
-        
+            g_columns = SCREEN_WIDTH;
+        }
+
 		//modo texto
-	    //if(g_using_gui == 0)
-		//{	
+		//if(g_using_gui == 0)
+		//{
 		//    for( j=0; j < g_columns; j++ ){
-        //        *p1++ = *p2++;
+		//        *p1++ = *p2++;
 		//    };
 		//};
-		
+
+
 		// modo gráfico.
-        
-	    if (g_using_gui == 1)	
-		{	
-		    for ( j=0; j < g_columns; j++ )
-			{
+
+        if (g_using_gui == 1)
+        {
+
+            for ( j=0; j < g_columns; j++ )
+            {
                 //*p1++ = *p2++;
-		        //@todo:
-			};
-		};
-	};
-	
+                //@todo:
+            };
+        }
+    };
+
+
 	// Limpando a última linha.
-	
-	//modo gráfico.
-	if (g_using_gui == 1)
-	{
-	    for ( i=0; i < g_columns; i++ )
-		{ 
-	        //*p1++ = 0x07*256 + ' ';
-			//@todo:	
-		};    
-	};
+
+	// modo gráfico.
+
+    if (g_using_gui == 1)
+    {
+        for ( i=0; i < g_columns; i++ )
+        { 
+            //*p1++ = 0x07*256 + ' ';
+            // @todo:
+        };    
+    }
 }
 
 
@@ -473,7 +498,7 @@ int puts(const char *str)
 */
 
 
-	
+
 /*
  ***********************
  * puts:
@@ -484,10 +509,10 @@ int puts(const char *str)
 // tudo em libc.
 
 int puts ( const char *str ){
-	
-	//provisório ...
-    
-	return (int) printf ("%s",str);
+
+	// provisório ...
+
+    return (int) printf ("%s",str);
 }
 
 
@@ -497,7 +522,7 @@ int puts ( const char *str ){
 
 /*linux klibc style*/
 /*
-size_t _fread(void *buf, size_t count, FILE *f)
+size_t _fread (void *buf, size_t count, FILE *f)
 {
   size_t bytes = 0;
   ssize_t rv;
@@ -530,11 +555,12 @@ size_t _fread(void *buf, size_t count, FILE *f)
 
 /*linux klibc style*/
 /*
-size_t fread(void *ptr, size_t size, size_t nmemb, FILE *f)
+size_t fread (void *ptr, size_t size, size_t nmemb, FILE *f)
 {
-  return _fread(ptr, size*nmemb, f)/size;
+    return _fread (ptr, size*nmemb, f)/size;
 }
 */
+
 
 
 /*
@@ -544,28 +570,29 @@ size_t fread(void *ptr, size_t size, size_t nmemb, FILE *f)
  */
 
 size_t fread (void *ptr, size_t size, size_t n, FILE *fp){
-	
+
     return (size_t) gramado_system_call ( 607, (unsigned long) ptr, 
-					 (unsigned long) n, (unsigned long) fp ); 
+                        (unsigned long) n, (unsigned long) fp ); 
 }
 
 
 /*
+ ************************
  * fwrite:
  *
  */
 
 size_t fwrite (const void *ptr, size_t size, size_t n, FILE *fp){
-	
+
     return (size_t) gramado_system_call ( 608, (unsigned long) ptr, 
-					 (unsigned long) n, (unsigned long) fp ); 
+                        (unsigned long) n, (unsigned long) fp ); 
 }
 
 
 /*
  ****************************************************************
  *    Construindo a função printf;
- *****************************************************************
+ ****************************************************************
  */
 
 
@@ -600,7 +627,8 @@ static int prints ( char **out, const char *string, int width, int pad ){
 		else width -= len;
 		if(pad & PAD_ZERO) padchar = '0';
 	};
-	
+
+
 	if ( !(pad & PAD_RIGHT) ) 
 	{
 		for ( ; width > 0; --width ){
@@ -608,16 +636,21 @@ static int prints ( char **out, const char *string, int width, int pad ){
 			++pc;
 		};
 	};
-	
-	for ( ; *string ; ++string ){
-		printchar(out, *string);
-		++pc;
-	};
-	
-	for ( ; width > 0; --width ){
-		printchar(out,padchar);
-		++pc;
-	};
+
+
+    for ( ; *string ; ++string )
+    {
+        printchar (out, *string);
+        ++pc;
+    };
+
+
+    for ( ; width > 0; --width )
+    {
+        printchar (out,padchar);
+        ++pc;
+    };
+
 
 	return pc;
 }
@@ -631,80 +664,90 @@ static int prints ( char **out, const char *string, int width, int pad ){
 
 static int printi ( char **out, 
                     int i, 
-					int b, 
-					int sg, 
-					int width, 
-					int pad, 
-					int letbase )
+                    int b, 
+                    int sg, 
+                    int width, 
+                    int pad, 
+                    int letbase )
 {
-	register char *s;
-	register int t, neg = 0, pc = 0;
-	register unsigned int u = i;
-	
-	char print_buf[PRINT_BUF_LEN];
-	
-	if (i == 0){
-		print_buf[0] = '0';
-		print_buf[1] = '\0';		
-		return prints (out, print_buf, width, pad);
-	};
-	
-	if ( sg && b == 10 && i < 0) 
-	{
-		neg = 1;
-		u = -i;
-	};
+    register char *s;
+    register int t, neg = 0, pc = 0;
+    register unsigned int u = i;
 
-	s = print_buf + PRINT_BUF_LEN-1;
-	*s = '\0';
+    char print_buf[PRINT_BUF_LEN];
 
-	while (u) 
-	{
-		t = u % b;
-		
-		if (t >= 10)
-		    t += letbase - '0' - 10;
-		    *--s = t + '0';
-		    u /= b;
-	};
 
-	if (neg) 
-	{
-		if ( width && (pad & PAD_ZERO) ) 
-		{
-		    printchar (out, '-');
-			++pc;
-			--width;
-		
-		}else{
-			*--s = '-';
-		};
-	};
-	
+    if (i == 0)
+    {
+        print_buf[0] = '0';
+        print_buf[1] = '\0';
+
+        return prints (out, print_buf, width, pad);
+    }
+
+
+    if ( sg && b == 10 && i < 0) 
+    {
+        neg = 1;
+        u = -i;
+    }
+
+    s = print_buf + PRINT_BUF_LEN-1;
+    *s = '\0';
+
+    while (u) 
+    {
+        t = u % b;
+
+        if (t >= 10)
+            t += letbase - '0' - 10;
+        *--s = t + '0';
+        u /= b;
+    };
+
+
+    if (neg) 
+    {
+        if ( width && (pad & PAD_ZERO) ) 
+        {
+            printchar (out, '-');
+            ++pc;
+            --width;
+
+        }else{
+            *--s = '-';
+        };
+    }
+
+
     // Done.
 
-	return pc + prints(out, s, width, pad);
+    return pc + prints(out, s, width, pad);
 }
 
 
 /*
- ************************************************
+ *****************************************
  * print:
  *     Used by printf.
  */
 
 static int print ( char **out, int *varg ){
-	
-	register int width, pad;
-	register int pc = 0;
-	register char *format = (char *) (*varg++);
-	char scr[2];
 
-	for ( ; *format != 0; format++ ) 
-	{
+    register int width, pad;
+    register int pc = 0;
+    register char *format = (char *) (*varg++);
+
+    char scr[2];
+
+
+    for ( ; *format != 0; format++ ) 
+    {
+
 		//switch.
-		if ( *format == '%' ) 
-		{
+        if ( *format == '%' ) 
+        {
+
 			++format;
 			width = pad = 0;
 			
@@ -777,18 +820,21 @@ static int print ( char **out, int *varg ){
 			    printchar ( out, *format );
 			    ++pc;
 		};
+
 		//Nothing.
 	};
-	
-	if (out) 
-	    **out = '\0';
-	
-	return (int) pc;
+
+
+    if (out) 
+        **out = '\0';
+
+
+    return (int) pc;
 }
 
 
 /* 
- ***********************************************************************
+ ****************************************************
  * printf:
  *     Imprime uma string formatada.
  *     Assuming sizeof(void *) == sizeof(int).
@@ -801,11 +847,11 @@ static int print ( char **out, int *varg ){
  
 // Padrão não tradicional, mas funciona. 
 
-int printf3 ( const char *format, ... ){	
-    
-	register int *varg = (int *)(&format);
-	
-	return (int) print ( 0, varg );
+int printf3 ( const char *format, ... ){
+
+    register int *varg = (int *)(&format);
+
+    return (int) print ( 0, varg );
 }
 
 
@@ -815,35 +861,41 @@ int printf3 ( const char *format, ... ){
 
 // usada na printf2
 void printf_atoi (int value, char* valuestring){
-    
-  int min_flag;
-  char swap, *p;
-  min_flag = 0;
 
-  if (0 > value)
-  {
-    *valuestring++ = '-';
-    value = -INT_MAX> value ? min_flag = INT_MAX : -value;
-  }
+    int min_flag;
+    char swap, *p;
 
-  p = valuestring;
+    min_flag = 0;
 
-  do {
+
+    if (0 > value)
+    {
+        *valuestring++ = '-';
+
+        value = -INT_MAX> value ? min_flag = INT_MAX : -value;
+    }
+
+    p = valuestring;
+
+
+    do {
+
+        *p++ = (char)(value % 10) + '0';
+
+        value /= 10;
       
-    *p++ = (char)(value % 10) + '0';
-    value /= 10;
-      
-  } while (value);
+    } while (value);
 
-    
-  if (min_flag != 0)
-  {
-    ++*valuestring;
-  }
-    
-  *p-- = '\0';
 
-    
+    if (min_flag != 0)
+    {
+        ++*valuestring;
+    }
+
+
+    *p-- = '\0';
+
+
     while (p > valuestring)
     {
         swap = *valuestring;
@@ -856,23 +908,24 @@ void printf_atoi (int value, char* valuestring){
 
 
 //usada na printf2
-void printf_i2hex (uint32_t val, char* dest, int len)
+void printf_i2hex (uint32_t val, char *dest, int len)
 {
-	char* cp;
-	char x;
-	
-	uint32_t n;
-	n = val;
-	
-	cp = &dest[len];
-	
-	while (cp > dest)
-	{
-		x = n & 0xF;
-		n >>= 4;
-		*--cp = x + ((x > 9) ? 'A' - 10 : '0');
-	}
-	
+    char *cp;
+    char x;
+    uint32_t n;
+
+    n = val;
+    cp = &dest[len];
+
+
+    while (cp > dest)
+    {
+        x = n & 0xF;
+        n >>= 4;
+
+        *--cp = x + ((x > 9) ? 'A' - 10 : '0');
+    };
+
     dest[len+1] = '\0';
 }
 
@@ -884,19 +937,20 @@ void printf_i2hex (uint32_t val, char* dest, int len)
 // estamo implementando
 
 int printf2 ( const char *format, ... ){
-    
-    char *ap;
-	va_start (ap,format);
-	
-	int index = 0;
-	uint8_t u;	
-	int d;
-	char c, *s;
-	
-	char buffer[256];
 
-	while ( format[index] )
-	{
+    char *ap;
+    va_start (ap,format);
+
+    int index = 0;
+    uint8_t u;
+    int d;
+    char c, *s;
+
+    char buffer[256];
+
+    while ( format[index] )
+    {
+
 		switch (format[index])
 		{
 		    case '%':
@@ -930,9 +984,9 @@ int printf2 ( const char *format, ... ){
 			        case 'u':
 				        u = va_arg (ap, uint32_t);
 				        //atoi(u, buffer);
-				        printf_atoi(u, buffer);
+				        printf_atoi (u, buffer);
 						//puts(buffer);
-				        printf2(buffer);
+				        printf2 (buffer);
 						break;
 
 			        case 'X':
@@ -941,12 +995,12 @@ int printf2 ( const char *format, ... ){
 				        //i2hex(d, buffer,8);
 						//printf_i2hex(d, buffer,8);
 				        //puts(buffer);
-				        printf("%x",d);
+				        printf ("%x",d);
 						break;
 			
 			        default:
-				        putchar('%');
-				        putchar('%');
+				        putchar ('%');
+				        putchar ('%');
 				        break;
 				
 			    }
@@ -955,11 +1009,12 @@ int printf2 ( const char *format, ... ){
 		    default:
 			    putchar ( format[index] );
 			    break;
-		};
-		
-		++index;
+        };
+
+        ++index;
     };
-	
+
+
     return 0;
 }
 
@@ -984,22 +1039,22 @@ int printf2 ( const char *format, ... ){
 //int sprintf(char *str, const char *format, ...) ?? 
 
 int sprintf ( char *out, const char *format, ... ){
-	
+
     register int *varg = (int *)(&format);
-	
-	return (int) print( &out, varg );
+
+    return (int) print( &out, varg );
 }
 
 
 static void printchar ( char **str, int c ){
-	
-	if (str) 
+
+    if (str) 
     {
 		**str = c;
 		
 		++(*str);
-	
-	} else (void) putchar (c);
+
+    } else (void) putchar (c);
 }
 
 
@@ -1025,8 +1080,9 @@ int putchar (int __c)
 }
 */
 
+
 /*
- **********
+ *******************************
  * putchar:
  *     Put a char in the screen.
  *     Obs: Isso funciona bem. 
@@ -1042,8 +1098,6 @@ int putchar (int __c)
 	// então devemos usar a opção que permite o kernel usar seu próprio cursor.
 	// Estamos deixando o kernel gerenciar as mensagens de digitação 
 	// usando seu próprio cursor.
-
-int putchar (int ch){
 
 	// 65 - kgws terminal put char.
 	// Esse é um serviço oferecido pelo kgws para imprimir caracteres
@@ -1061,14 +1115,17 @@ int putchar (int ch){
 	// outra funçao semelhante `a printf devepode ser criada para o modo draw
 	// esse nova printf ser'a s'o uma vers~ao diferente do wrapper da
 	// printf. todo o resto deve permanecer igual, mudando tamb'em 
-	// o final da funçao onde pintaremos o char na tela ao inv'es de colocar no arquivo.
-	
-	if ( __libc_output_mode == LIBC_DRAW_MODE ){
-	
+	// o final da funçao onde pintaremos o char na tela ao inv'es de 
+	// colocar no arquivo.
+
+int putchar (int ch){
+
+    if ( __libc_output_mode == LIBC_DRAW_MODE ){
+
         gramado_system_call ( 65, (unsigned long) ch, (unsigned long) ch, 
             (unsigned long) ch );
-		
-	} else if ( __libc_output_mode == LIBC_NORMAL_MODE ){
+
+    } else if ( __libc_output_mode == LIBC_NORMAL_MODE ){
 
 		// #bugbug
 		// Teremos problemas se stdout não for um ponteiro válido.
@@ -1076,22 +1133,23 @@ int putchar (int ch){
 		// #bugbug
 		// Não podemos chamar o terminal à cada char.
 		// Então é mehlor usar fputc e filtrar o char.
-	    
+
 		//vamos tentar outr pois putc chama fputc e não fprintf.
 		fputc ( ch, stdout );
 		//fprintf ( stdout, "%c", ch );
-	};
+    };
+
 
     return (int) ch;
 }
 
 
 
-//setup libc mode
+// Setup libc mode.
 void libc_set_output_mode ( int mode ){
-	
+
     switch (mode)
-	{ 
+    { 
 		case LIBC_DRAW_MODE:
 			__libc_output_mode = mode;
 			break;
@@ -1104,8 +1162,8 @@ void libc_set_output_mode ( int mode ){
 			__libc_output_mode = LIBC_DRAW_MODE;
 			printf ("libc_set_output_mode: fail");
 			break;
-	}
-}	
+    };
+}
 
 
 
@@ -1120,139 +1178,153 @@ void libc_set_output_mode ( int mode ){
  */
  
 void outbyte (int c){
-	
+
     static char prev = 0;
-        
-	// spaces.	
-    
-    if( c <  ' ' && 
-	    c != '\r' && 
-		c != '\n' && 
-		c != '\t' && 
-		c != '\b' )
-	{
+
+	// spaces.
+
+    if ( c <  ' ' && 
+        c != '\r' && 
+        c != '\n' && 
+        c != '\t' && 
+        c != '\b' )
+    {
         return;
-    };
-	
+    }
+
+
 	//#testando.
 	//nada para imprimir.
 	//?? onde fica o tratamento de backspace.??
 	//if( c == '\b' )
     //{
 	//	return;
-	//}		
-	
+	//}
+
+
 	// carriege return 
 	// Volta ao início da linha.
-	if ( c == '\r' )
-	{	
+    if ( c == '\r' )
+    {
         g_cursor_x = 0;
         prev = c;
         return;    
-    };        
-      
+    }
+
+
 	//Próxima linha e não início da linha.   
     if ( c == '\n' && prev != '\r' ) 
     {
-        g_cursor_y++;      
-        g_cursor_x = 0;    
+        g_cursor_y++; 
+        g_cursor_x = 0;  
         prev = c;
         return;
-    };
-       
+    }
+
+
     //Próxima linha e início da linha. 	   
     if ( c == '\n' && prev == '\r' ) 
     {
         g_cursor_y++;  
         prev = c;
         return;
-	};
+    }
 
-    //Tab.
+
+	//Tab.
 	//@todo: Criar a var -> 'g_tab_size'.
     if ( c == '\t' )  
     {
         g_cursor_x += (4);    
         prev = c;
         return;         
-    };
-        
-    //Space 
+    }
+
+
+	//Space 
 	//#todo:
 	// ?? talvez devêssemos imprimir o caractere espaço. ??    
-	if ( c == ' ' )  
+    if ( c == ' ' )  
     {
         g_cursor_x++; 
         prev = c;
-        return;         
-    };
-        
+        return; 
+    }
+
+
     //Delete. 
     if ( c == 8 )  
     {
-        g_cursor_x--;         
+        g_cursor_x--; 
         prev = c;
-        return;         
-    };
-        
+        return; 
+    }
+
+
     // Filtra as dimensões da janela onde esta pintando.
-//checkLimits:	
-	
+ 
+//checkLimits:
+
 	//
 	// Colunas.
 	//
-	
+
 	//Definindo a largura que usaremos.
 	//A largura precisa ser maior que '0' e menor que o limite máximo.
 	//Obs: @todo: Essa rotina de definição pode ir para o momento da inicialização
 	//da biblioteca. Ela contunua aqui porque está funcionando como um filtro.
-	//
-    if ( g_columns == 0 || g_columns >= SCREEN_MAX_WIDTH ){
-		g_columns = COLUMNS;
-	}
-	
+
+    if ( g_columns == 0 || g_columns >= SCREEN_MAX_WIDTH )
+    {
+        g_columns = COLUMNS;
+    }
+
+
 	//O cursor não pode ultrapassar a largura definida.
-	if ( g_cursor_x > g_columns )
-	{
+    if ( g_cursor_x > g_columns )
+    {
         g_cursor_x = 0;
         g_cursor_y++;  
     }else{
 		//Se não alcançamos o limite, apenas incrementa o x.
         g_cursor_x++;    
     };
-    
+
+
 	// Linhas.
 	
 	//Definindo a altura que usaremos.
 	//A altura precisa ser maior que '0' e menor que o limite máximo.
-	if ( g_rows == 0 || g_rows >= SCREEN_MAX_HEIGHT ){
-		g_rows = ROWS;
-	}
-	
-    //O cursor não pode ultrapassar a altura definida.	
+    if ( g_rows == 0 || g_rows >= SCREEN_MAX_HEIGHT )
+    {
+        g_rows = ROWS;
+    }
+
+    //O cursor não pode ultrapassar a altura definida.
 	//se ultrapassar, chamaremos o scroll.
 	//Obs: O scroll ainda não está implementado.
 	//O scroll será feito depois que implementarmos o array de ponteiros
 	//para estruturas de linha.
 	
-	if ( g_cursor_y > g_rows )
-	{ 
-	    scroll();
+    if ( g_cursor_y > g_rows )
+    { 
+        scroll ();
+
         g_cursor_x = 0;             //O cursor deve fica na primeira coluna.
 		g_cursor_y = (g_rows-1);    //O cursor deve ficar na última linha.
-    };
+    }
 
     // Imprime os caracteres normais.
 
-	_outbyte (c);
+    _outbyte (c);
 
 	//Atualisa o prev.
-    prev = c;     	
+    prev = c; 
 }
 
 
 /*
- ***********
+ ***********************************
  * _outbyte:
  *     Just output a byte on the screen.
  *
@@ -1264,18 +1336,18 @@ void outbyte (int c){
  * #importante: Não me lebro se o kernel efetua o refresh do char 
  * nesse caso.
  */
-  
-void _outbyte ( int c ){
-	
+
 	//#obs: Tamanho do char constante = 8. 
 	//o que queremos é usar uma variável.
-	
+
+void _outbyte ( int c ){
+
 	//#bugbug
 	//essa funçao nao 'e usada ... NAO funciona.
 	//printf usa outra coisa (65).
-	
+
 	gramado_system_call ( 7, 8*g_cursor_x,  8*g_cursor_y, (unsigned long) c ); 
-	
+
 	//#todo
 	//putc ( ch, stdout );
 }
@@ -1291,7 +1363,7 @@ void _outbyte ( int c ){
  */
 
 unsigned long input ( unsigned long ch ){
-	
+
 	//save cursor position.
 	unsigned long tmpX, tmpY;
 	
@@ -1306,19 +1378,21 @@ unsigned long input ( unsigned long ch ){
 	
 	//Filtra limite.
 	//retornar 1??
-	if ( prompt_pos > prompt_max ){
-		
-	    printf ("input: Full buffer!\n");	
-	    return (unsigned long) 0;   
-	};
- 
+    if ( prompt_pos > prompt_max )
+    {
+        printf ("input: Full buffer!\n");
+
+        return (unsigned long) 0;   
+    }
+
 	// Trata caractere digitado.
-	switch (c)
-	{
-	    //Enter.	
+
+    switch (c)
+    {
+       //Enter.
 		case VK_RETURN:
 		    prompt[prompt_pos] = (char ) '\0';
-            goto input_done;			
+            goto input_done;
 		    break;
 
 	    // Obs: O tab avança o cursor, mas precisamos 
@@ -1337,11 +1411,11 @@ unsigned long input ( unsigned long ch ){
 			//Se estamos no início da linha.
 			if(prompt_pos <= 0)
 			{
-                prompt_pos = 0; 				
+                prompt_pos = 0; 
 			    prompt[prompt_pos] = (char ) '\0';
 				break; 
 			};
-		    
+
 			//altera o buffer.
 			//Apaga o anterior.
 			prompt_pos--;                        //volta um no buffer.
@@ -1375,14 +1449,15 @@ unsigned long input ( unsigned long ch ){
 		default:
 		    prompt[prompt_pos] = c;
 		    prompt_pos++;
-			break;	
+			break;
 	};
 
-	return (unsigned long) 0;
+
+    return (unsigned long) 0;
 
 input_done:
-	
-    return VK_RETURN;	
+
+    return VK_RETURN;
 }
 
 
@@ -1407,20 +1482,21 @@ input_done:
 /*
 void *stdio_system_call ( unsigned long ax, 
                           unsigned long bx, 
-				          unsigned long cx, 
-				          unsigned long dx )
+                          unsigned long cx, 
+                          unsigned long dx )
 {
-    int Ret = 0;	
-	
-    //System interrupt.
- 	
-	asm volatile ( " int %1 \n"
-		           : "=a"(Ret)	
-		           : "i"(0x80), "a"(ax), "b"(bx), "c"(cx), "d"(dx) );
+    int Ret = 0;
 
-	return (void *) Ret; 
-};
+    //System interrupt.
+
+    asm volatile ( " int %1 \n"
+                   : "=a"(Ret)
+                   : "i"(0x80), "a"(ax), "b"(bx), "c"(cx), "d"(dx) );
+
+    return (void *) Ret; 
+}
 */
+
 
 /*
 // Return BUFFER_SIZE. 
@@ -1459,22 +1535,23 @@ int getchar(void)
  */
 
 int getchar (void){
-	
-	int Ret = 0;
-	
+
+    int Ret = 0;
+
 	// #todo: 
 	// ? Já temos uma função para essa chamada ? 137.
-	
+
 Loop:
-	
-	Ret = (int) gramado_system_call ( 137, 0, 0, 0 ); 
-	
-	if (Ret > 0)
-	{
-	    return (int) Ret;    
-	}
-	
-	goto Loop;
+
+    Ret = (int) gramado_system_call ( 137, 0, 0, 0 ); 
+
+    if (Ret > 0)
+    {
+        return (int) Ret;    
+    }
+
+
+    goto Loop;
 }
 
 
@@ -1492,7 +1569,7 @@ Loop:
 void stdioInitialize (){
 
 	//register int i;
-	int i;
+    int i;
 
 	// Buffers para as estruturas.
 	unsigned char buffer0[BUFSIZ];
@@ -1509,7 +1586,7 @@ void stdioInitialize (){
 	// Vamos usar o modo draw até implementarmos o modo normal.
 	
 	//Os caracteres são colocados em stdout.
-    //__libc_output_mode = LIBC_NORMAL_MODE;	
+    //__libc_output_mode = LIBC_NORMAL_MODE;
 	
 	//Os caracteres são pintados na tela.
 	__libc_output_mode = LIBC_DRAW_MODE;
@@ -1667,16 +1744,16 @@ void stdioInitialize (){
     
 	for ( i=0; i < BUFSIZ; i++ )
 	{
-	    stdin->_base[i] = (char) '\0';			
-	    //stdout->_base[i] = (char) '\0';	
-	    stderr->_base[i] = (char) '\0';	
-	}			
+	    stdin->_base[i] = (char) '\0';
+	    //stdout->_base[i] = (char) '\0';
+	    stderr->_base[i] = (char) '\0';
+	};
 	
     //stdin->_ptr = stdin->_base;	
     stdin->_p = stdin->_base;		
     
-	//stdin->_bufsiz = BUFSIZ; 		
-    stdin->_lbfsize = BUFSIZ; 			
+	//stdin->_bufsiz = BUFSIZ; 
+    stdin->_lbfsize = BUFSIZ; 
 	
 	
 	//stdin->_cnt = stdin->_bufsiz;
@@ -1684,19 +1761,19 @@ void stdioInitialize (){
 	
 
 	/*
-    stdout->_p = stdout->_base;		
+    stdout->_p = stdout->_base;
 	stdout->_lbfsize = BUFSIZ; 
 	stdout->_cnt = stdout->_lbfsize;
 	*/
 	
-    //stderr->_ptr = stderr->_base;	
-    stderr->_p = stderr->_base;		
-    //stderr->_bufsiz = BUFSIZ; 		
-    stderr->_lbfsize = BUFSIZ; 		
+    //stderr->_ptr = stderr->_base;
+    stderr->_p = stderr->_base;
+    //stderr->_bufsiz = BUFSIZ; 
+    stderr->_lbfsize = BUFSIZ; 
 	
 	
-	//stderr->_cnt = stderr->_bufsiz;			
-	stderr->_cnt = stderr->_lbfsize;				
+	//stderr->_cnt = stderr->_bufsiz;
+	stderr->_cnt = stderr->_lbfsize;
 }
 
 
@@ -1722,8 +1799,7 @@ int __fflush_stderr(void)
   return fflush(stderr);
 }
 */
-	
- 
+
 
 /* 
  ***********************************
@@ -1737,7 +1813,8 @@ int fflush ( FILE *stream ){
 
 	//fflush deve limpar o buffer agora.
     return (int) gramado_system_call ( 233, (unsigned long) stream, 
-					 (unsigned long) stream, (unsigned long) stream ); 
+                     (unsigned long) stream, (unsigned long) stream ); 
+
 
     /*
 	//fflush deve mostrar no terminal o conteúdo agora
@@ -1773,7 +1850,8 @@ int fflush ( FILE *stream ){
 	                 (unsigned long) terminal___PID, (unsigned long) terminal___PID );
 
         //#todo temos que usar essa chamada ao invés dessa rotina acima.
-	    // __SendMessageToProcess ( terminal___PID, NULL, MSG_TERMINALCOMMAND, 2008, 2008 );	//ok		
+        //ok
+	    // __SendMessageToProcess ( terminal___PID, NULL, MSG_TERMINALCOMMAND, 2008, 2008 );
 	}
 	*/
 }
@@ -1803,17 +1881,18 @@ int fprintf(FILE *fp, const char *fmt, ...)
  */
 
 int fprintf ( FILE *stream, const char *format, ... ){
-	
+
 	//
 	// Stream.
 	//
-	
+
+
 	// #obs:
 	// Talvez essa chamada devesse ela mesma notificar o terminal.
-	
+
     gramado_system_call ( 234, (unsigned long) stream, 
-					 (unsigned long) format, (unsigned long) format );
-	
+        (unsigned long) format, (unsigned long) format );
+
     //
     // Terminal.
     //
@@ -1852,10 +1931,12 @@ int fprintf ( FILE *stream, const char *format, ... ){
 	                 (unsigned long) terminal___PID, (unsigned long) terminal___PID );
 
         //#todo temos que usar essa chamada ao invés dessa rotina acima.
-	    // __SendMessageToProcess ( terminal___PID, NULL, MSG_TERMINALCOMMAND, 2008, 2008 );	//ok		
-	}
-	
-	return 0;
+        //ok
+	    // __SendMessageToProcess ( terminal___PID, NULL, MSG_TERMINALCOMMAND, 2008, 2008 );
+    }
+
+
+    return 0;
 }
 
 
@@ -1890,9 +1971,9 @@ int fputs(const char *str, FILE *fp)
  */
 
 int fputs ( const char *str, FILE *stream ){
-	
+
     return (int) gramado_system_call ( 235, (unsigned long) str, 
-					 (unsigned long) stream, (unsigned long) stream ); 
+                     (unsigned long) stream, (unsigned long) stream ); 
 }
 
 
@@ -1957,19 +2038,19 @@ char *fgets(char *s, int count, FILE *fp)
  */
  
 char *gets (char *s){
-	
+
     int ch;
-	
+
     int t = 0;
-	char *p;
-		
+    char *p;
+
 	//printf("gets:\n");
-	
+
     //salva
-	p = s; 	
-	
-	while (1)
-	{
+    p = s; 
+
+    while (1)
+    {
         ch = (int) getchar ();
 		
         if ( ch != -1 )
@@ -1997,19 +2078,20 @@ char *gets (char *s){
 					break;
             };
 			
-			printf("%c",ch);
+			printf ("%c",ch);
 			s[t] = (char) ch;
-			t++;			
+			t++;
 			
 		};
 		
 		asm ("pause");
     };
-	
+
+
 done:
-    
+
     //s[t] = (char) '\0';
-	
+
     return (char *) p;
 }
 
@@ -2065,7 +2147,7 @@ long ftell (FILE *stream){
 int fileno ( FILE *stream ){
 	
     return (int) system_call ( 605, (unsigned long) stream, 
-                      (unsigned long) stream, (unsigned long) stream );	
+                      (unsigned long) stream, (unsigned long) stream );
 }
 
 
@@ -2099,16 +2181,15 @@ int getc(FILE *stream)
 int fgetc ( FILE *stream ){
     
     return (int) gramado_system_call ( 136, (unsigned long) stream,  
-					 (unsigned long) stream,  (unsigned long) stream );
+                     (unsigned long) stream,  (unsigned long) stream );
 }
-
 
 
 
 /*
 int feof(FILE *fp)
 {
-  	return fp->mode & __MODE_EOF;
+    return fp->mode & __MODE_EOF;
 }
 */
 
@@ -2121,12 +2202,10 @@ int feof(FILE *fp)
 int feof ( FILE *stream ){
     
     return (int) gramado_system_call ( 193, (unsigned long) stream,  
-					(unsigned long) stream,  (unsigned long) stream );
+                     (unsigned long) stream,  (unsigned long) stream );
 }
 
 
-
-    
 /*
  //This function clears the end-of-file and error indicators for the stream stream. 
 void clearerr(FILE *fp)
@@ -2145,7 +2224,7 @@ void clearerr(FILE *fp)
 int ferror ( FILE *stream ){
     
     return (int) gramado_system_call ( 194, (unsigned long) stream,  
-					(unsigned long) stream,  (unsigned long) stream );    
+                     (unsigned long) stream,  (unsigned long) stream );    
 }
 
 
@@ -2171,7 +2250,7 @@ static __inline__ int fseek(FILE *__f, off_t __o, int __w)
 int fseek ( FILE *stream, long offset, int whence ){
     
      return (int) gramado_system_call ( 195, (unsigned long) stream, 
-						(unsigned long) offset,  (unsigned long) whence ); 
+                      (unsigned long) offset,  (unsigned long) whence ); 
 }
 
 
@@ -2229,18 +2308,19 @@ ssize_t getline (char **lineptr, size_t *n, FILE *stream)
  */
 
 int fputc ( int ch, FILE *stream ){
-    
-    
-    
+
+
      gramado_system_call ( 196, (unsigned long) ch,  
-	    (unsigned long) stream,  (unsigned long) stream );    
-	
+         (unsigned long) stream,  (unsigned long) stream );    
+
+
 	// se não for \n não precisa notificar o terminal
 	if ( ch != '\n')
 	{
 		return 0;
 	}
-	
+
+
 	// #bugbug
 	// ??
 	// Talvez aqui devéssemos apenas chamar o fflush
@@ -2298,9 +2378,10 @@ int fputc ( int ch, FILE *stream ){
 
         //#todo temos que usar essa chamada ao invés dessa rotina acima.
 	    // __SendMessageToProcess ( terminal___PID, NULL, MSG_TERMINALCOMMAND, 2008, 2008 );	//ok		
-	}
-	
-	return 0;			 			 
+    }
+
+
+    return 0;
 }
 
 
@@ -2332,7 +2413,7 @@ int fputc ( int ch, FILE *stream )
 
 void stdioSetCursor ( unsigned long x, unsigned long y ){
     
-    gramado_system_call ( 34, x, y, 0 );	
+    gramado_system_call ( 34, x, y, 0 );
 }
 
 
@@ -2368,35 +2449,37 @@ unsigned long stdioGetCursorY (){
 
 
 int scanf ( const char *fmt, ... ){
-	
+
     va_list ap;
-	va_start (ap, fmt);
-	
+    va_start (ap, fmt);
+
     int d;
     char *s;
 
 	//%c
     int ch;
-	
-	//usado em %d
-	int *i;
-	char tmp[80];
-	
-	
-	//o char.
-	int c;
-	
-	char *cp;
-	
-	char *t;
 
-	int nread;
-	int size = (int) stdio_strlen (fmt);
-	
+	//usado em %d
+    int *i;
+    char tmp[80];
+
+
+	//o char.
+    int c;
+
+    char *cp;
+
+    char *t;
+
+    int nread;
+    int size = (int) stdio_strlen (fmt);
+
+
 	nread = 0;
 	
     while (*fmt)
-	{
+    {
+
 		c = *fmt;
 		if (c == 0)
 			return (0); //erro
@@ -2424,7 +2507,7 @@ int scanf ( const char *fmt, ... ){
 				//usaremos esse ponteiro para colocar uma string digitada.
 				if ( (void *) s != NULL )
 				{
-				    gets (s);					
+				    gets (s);
 				}else{
 				    printf ("scanf: s null pointer\n");	
 				}
@@ -2471,7 +2554,7 @@ int scanf ( const char *fmt, ... ){
 						if ( ch != -1 )
 						{
 						    t[0] = ch;
-                            //printf("scanf ch={%c}",ch);							
+                            //printf("scanf ch={%c}",ch);
 						    break;	
 						}			
 					};	
@@ -2482,11 +2565,12 @@ int scanf ( const char *fmt, ... ){
                 break;
 				
 			//default:
-            //    break; 			
+            //    break; 
 				
         };//switch
-	};
-    
+    };
+
+
    //va_end (ap);
    
    return 0;
@@ -2510,14 +2594,16 @@ int scanf ( const char *fmt, ... ){
  */
 
 int sscanf ( const char *str, const char *format, ... ){
-	
-	const char *start = str;
-	va_list args;
-	
-	va_start(args, format);
-    
-	for ( ; *format != '\0'; format++ ){
-        
+
+    const char *start = str;
+    va_list args;
+
+    va_start(args, format);
+
+
+    for ( ; *format != '\0'; format++ )
+    {
+
 		if ( *format == '%' && format[1] == 'd' ){
 			
 			int positive;
@@ -2545,10 +2631,12 @@ int sscanf ( const char *str, const char *format, ... ){
 			str++;
 		} else
 			break;
-	}
-    
-	va_end (args);
-	
+	};
+
+
+    va_end (args);
+
+
     return str - start;
 }
 
@@ -2623,11 +2711,12 @@ char const hex2ascii_data[] = "0123456789abcdefghijklmnopqrstuvwxyz";
 //#define toupper(c)  ((c) - 0x20 * (((c) >= 'a') && ((c) <= 'z')))
 
 static size_t stdio_strlen (const char *s){
-	
-	size_t l = 0;
-	while (*s++)
-		l++;
-	return l;
+
+    size_t l = 0;
+
+    while (*s++)
+        l++;
+    return l;
 }
 
 
@@ -2644,28 +2733,30 @@ static size_t stdio_strlen (const char *s){
  
 static char *ksprintn ( char *nbuf, 
                         uintmax_t num, 
-						int base, 
-						int *lenp, 
-						int upper )
+                        int base, 
+                        int *lenp, 
+                        int upper )
 {
-	char *p, c;
+    char *p, c;
 
-	p = nbuf;
-	
+    p = nbuf;
+
 	//*p = ' ';
 	*p = 0;
-	
-	do {
-		
+
+
+    do {
+
 		c = hex2ascii (num % base);
 		
 		*++p = upper ? toupper(c) : c;
 		
-	} while (num /= base);
-	
-	if (lenp)
-		*lenp = p - nbuf;
-	return (p);
+    } while (num /= base);
+
+
+    if (lenp)
+        *lenp = p - nbuf;
+    return (p);
 }
 
 
@@ -2697,20 +2788,22 @@ static char *ksprintn ( char *nbuf,
  
 int 
 kvprintf ( char const *fmt, 
-           void (*func)( int, void* ), 
-		   void *arg, 
-		   int radix, 
-		   va_list ap )
+           void (*func)( int, void * ), 
+           void *arg, 
+           int radix, 
+           va_list ap )
 {
-    
+
+
 	//#define PCHAR(c) { int cc=(c); if(func) (*func)(cc,arg); else *d++ = cc; retval++; }
     #define PCHAR(c) { int cc=(c); if(func) (*func)(cc,arg); else *d++ = cc; retval++; }
-	
+
+
 	char nbuf[MAXNBUF];
 	char *d;
 	const char *p, *percent, *q;
 	u_char *up;
-	
+
 	int ch, n;
 	uintmax_t num;
 	int base, lflag, qflag, tmp, width, ladjust, sharpflag, neg, sign, dot;
@@ -2719,6 +2812,7 @@ kvprintf ( char const *fmt,
 	char padc;
 	int stop = 0, retval = 0;
 
+
 	num = 0;
 	
 	if (!func)
@@ -2726,16 +2820,20 @@ kvprintf ( char const *fmt,
 	else
 		d = NULL;
 
-	
+
+
 	if (fmt == NULL)
 		fmt = "(fmt null)n";
 
-	
+
+
 	if (radix < 2 || radix > 36)
 		radix = 10;
 
-	for (;;) {
-		
+
+    for (;;)
+    {
+
 		padc = ' ';
 		width = 0;
 		
@@ -3108,7 +3206,7 @@ static void xxxputchar ( int c, void *arg ){
 	/* add your putchar here */
 	
 	//printf("%c",c);
-	putchar ( (int) c );
+    putchar ( (int) c );
 }
 
 
@@ -3123,9 +3221,9 @@ int printf ( const char *fmt, ... ){
 	// #todo
 	// Talvez usar semáforo aqui.
 	
-	va_list ap;
-	va_start(ap, fmt);
-	
+    va_list ap;
+    va_start(ap, fmt);
+
 	//int 
 	//kvprintf ( char const *fmt, 
     //       void (*func)( int, void* ), 
@@ -3142,11 +3240,11 @@ int printf ( const char *fmt, ... ){
 	//vamos pedir pro terminal virtual imprimir o conteúdo do buffer. 
 	//MSG_TERMINALCOMMAND = 100
 	//__SendMessageToProcess ( terminal___PID, 0, 100, 2008, 2008 );
-	
-	// #todo
-	return 0;
+
+
+
+    return 0;
 }
-   
 //=============================================================
 // printf end
 //=============================================================
@@ -3193,9 +3291,10 @@ int printf_draw ( const char *fmt, ... ){
 	//reabilita o modo normal. Onde os caracteres serão colocados 
 	//no stdout.
 	libc_set_output_mode ( LIBC_NORMAL_MODE );
-	
-	// #todo
-	return 0;
+
+
+
+    return 0;
 }
 
 
@@ -3224,18 +3323,19 @@ extern __inline int vprintf (const char *__fmt, __gnuc_va_list __arg)
 // Estamos em ring3, não devemos acessar os elementos da estrutura de stream.
 
 int vfprintf ( FILE *stream, const char *format, stdio_va_list argptr ){
- 	
+
 	//#suspenso.
 	//return (int) kvprintf ( format, NULL, stream->_ptr, 10, argptr );
 	
-	int size;
-	
-	if ( (void *) stream == NULL )
-	{
+    int size;
+
+
+    if ( (void *) stream == NULL )
+    {
 		return (int) (-1);
 		
-	} else {
-		
+    } else {
+
 		size = (int) stdio_strlen (format);
 		
 		//Se a string for maior que o tanto de bytes
@@ -3259,24 +3359,25 @@ int vfprintf ( FILE *stream, const char *format, stdio_va_list argptr ){
 		//stream->_ptr = stream->_ptr + size;
 		stream->_p = stream->_p + size;
         
-		return 0;		
-	};
- 
-	return (int) (-1);	
+		return 0;
+    };
+
+
+    return (int) (-1);
 } 
 
 
 /* #bsd style */
 
 int vprintf (const char *fmt, va_list ap){
-    
-	return vfprintf (stdout, fmt, ap);
+
+    return vfprintf (stdout, fmt, ap);
 }
 
 
 //printf que escreve no stdout. 
 int stdout_printf (const char *format, ...){
-	
+
     va_list arg;
     int done;
 
@@ -3304,7 +3405,7 @@ int stderr_printf (const char *format, ... ){
  
 void perror (const char *str){
 	
-    stderr_printf (str);	
+    stderr_printf (str);
 }
 
 
@@ -3321,19 +3422,21 @@ void rewind (FILE *stream){
 
 //#todo
 int snprintf ( char *str, size_t count, const char *fmt, ... ){
-	
-	size_t ret;
-	va_list ap;
-    
-	va_start (ap, fmt);
-	
+
+    size_t ret;
+
+    va_list ap;
+    va_start (ap, fmt);
+
+
 	//#todo 
 	//Isso parece fácil
 	//ret = vsnprintf(str, count, fmt, ap);
-	
-	va_end (ap);
+
+
+    va_end (ap);
     
-	return ret;
+    return ret;
 }
 
 
@@ -3341,11 +3444,10 @@ int snprintf ( char *str, size_t count, const char *fmt, ... ){
 int stdio_initialize_standard_streams (void){
 
     return (int) gramado_system_call ( 700, 
-					(unsigned long) stdin, 
-					(unsigned long) stdout, 
-					(unsigned long) stderr ); 
+                     (unsigned long) stdin, 
+                     (unsigned long) stdout, 
+                     (unsigned long) stderr ); 
 }
-
 
 
 
@@ -3554,9 +3656,9 @@ void setbuffer (FILE *stream, char *buf, size_t size){
 //Use setvbuf instead. 
 
 void setlinebuf (FILE *stream){
-		
+
     gramado_system_call ( 612, (unsigned long) stream, (unsigned long) stream, 
-        (unsigned long) stream ); 	
+        (unsigned long) stream );
 }
 
 
@@ -3564,9 +3666,9 @@ void setlinebuf (FILE *stream){
 // #bugbug
 // precisamos do argumento size.
 int setvbuf (FILE *stream, char *buf, int mode, size_t size){
-	
+
     return (int) gramado_system_call ( 613, (unsigned long) stream, 
-					(unsigned long) buf, (unsigned long) mode ); 	
+                     (unsigned long) buf, (unsigned long) mode ); 
 }
 
 
