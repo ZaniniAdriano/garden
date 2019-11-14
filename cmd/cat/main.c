@@ -23,8 +23,8 @@
  
 int main ( int argc, char *argv[] ){
 
-    register int c;
     FILE *fp;
+    register int c;
 
 
     fp = fopen ( (char *) argv[1], "rb" );
@@ -46,7 +46,8 @@ int main ( int argc, char *argv[] ){
     printf ("\n");
 
     //?? why -1?
-    return -1;
+    //return -1;
+    return 0;
 }
 
 //

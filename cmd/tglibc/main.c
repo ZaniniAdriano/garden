@@ -28,49 +28,62 @@ int test1(void);
 
 void crt0()
 {
-	
-	unsigned long ch = '.';
-	unsigned long ch2 = '.';
-	unsigned long ch3 = '.';	
-	
 
-	gramado_system_call ( 65, (unsigned long) ch, (unsigned long) ch, 
-		(unsigned long) ch );
-	
-	gramado_system_call ( 65, (unsigned long) ch2, (unsigned long) ch2, 
-		(unsigned long) ch2 );	
-	
+    int value = 1234;
+
+    unsigned long ch = '.';
+    unsigned long ch2 = '.';
+    unsigned long ch3 = '.';
+
+    // Imprimeindo usando a systemcall do gramado.
+
+    gramado_system_call ( 65, (unsigned long) ch, (unsigned long) ch, 
+        (unsigned long) ch );
+
+    gramado_system_call ( 65, (unsigned long) ch2, (unsigned long) ch2, 
+        (unsigned long) ch2 );
+
+
+    // Imprimindo usando a biblioteca glibc
+
     putch ( (char) ch3 );
-	
-	puts ("  \n\n  Aplicativo com glibc 0.1.1 \n\n");
-	
-	int value = 1234;
-	
-	
+    puts ("  \n\n  Aplicativo com glibc 0.1.1 \n\n");
+
+
 	//#bugbug
 	/* STATE 3: AWAITING MODIFIER CHARS (FNlh) */
 	//aparece a mensagem nesse estagio da funçao >>> 'hee4'
-	
-	printf ("Testing printf ... value=%d  hex=%x \n", value, value);
-	
-	
-	test1 ();
-	
-	while(1){}
+
+    printf ("Testing printf ... value=%d  hex=%x \n", value, value );
+
+    //
+    // Test 1.
+    //
+
+    test1 ();
+
+    printf ("done. *hang");
+    while (1){}
+    //return 0;
 }
 
-int test1(void)
-{
-	char buf[64];
 
-	sprintf(buf, "%u score and %i years ago...\n", 4, -7);
-	puts(buf);
+int test1 (void){
 
-	sprintf(buf, "-1L == 0x%lX == octal %lo\n", -1L, -1L);
-	puts(buf);
+    char buf[64];
 
-	printf("<%-08s> and <%08s> justified strings\n", "left", "right");
-	return 0;
+    sprintf (buf, "%u score and %i years ago ... \n", 4, -7);
+    puts (buf);
+    printf ("\n");
+
+    sprintf (buf, "-1L == 0x%lX == octal %lo \n", -1L, -1L);
+    puts (buf);
+    printf ("\n");
+    
+    printf ("<%-08s> and <%08s> justified strings \n", "left", "right");
+    printf ("\n");
+
+    return 0;
 }
 
 /*

@@ -27,34 +27,34 @@ Linker script and memory map
                 0x0000000000401000                __code = .
  *(.head_x86)
  *(.text)
- .text          0x0000000000401000       0xf6 main.o
+ .text          0x0000000000401000      0x136 main.o
                 0x0000000000401000                crt0
-                0x0000000000401087                test1
- *fill*         0x00000000004010f6        0xa 
- .text          0x0000000000401100       0x15 stubs.o
-                0x0000000000401100                gramado_system_call
- *fill*         0x0000000000401115        0xb 
- .text          0x0000000000401120       0x23 putch.o
-                0x0000000000401120                putch
- *fill*         0x0000000000401143        0xd 
- .text          0x0000000000401150       0x82 puts.o
-                0x0000000000401150                puts_strlen
-                0x0000000000401180                puts
- *fill*         0x00000000004011d2        0xe 
- .text          0x00000000004011e0      0x5e0 doprintf.o
-                0x00000000004011e0                vsprintf_help
-                0x0000000000401200                do_printf
-                0x0000000000401790                vsprintf
- .text          0x00000000004017c0       0x21 strlen.o
-                0x00000000004017c0                strlen
- *fill*         0x00000000004017e1        0xf 
- .text          0x00000000004017f0       0x5b printf.o
-                0x0000000000401820                printf
- *fill*         0x000000000040184b        0x5 
- .text          0x0000000000401850       0x26 sprintf.o
-                0x0000000000401850                sprintf
+                0x0000000000401097                test1
+ *fill*         0x0000000000401136        0xa 
+ .text          0x0000000000401140       0x15 stubs.o
+                0x0000000000401140                gramado_system_call
+ *fill*         0x0000000000401155        0xb 
+ .text          0x0000000000401160       0x23 putch.o
+                0x0000000000401160                putch
+ *fill*         0x0000000000401183        0xd 
+ .text          0x0000000000401190       0x82 puts.o
+                0x0000000000401190                puts_strlen
+                0x00000000004011c0                puts
+ *fill*         0x0000000000401212        0xe 
+ .text          0x0000000000401220      0x5e0 doprintf.o
+                0x0000000000401220                vsprintf_help
+                0x0000000000401240                do_printf
+                0x00000000004017d0                vsprintf
+ .text          0x0000000000401800       0x21 strlen.o
+                0x0000000000401800                strlen
+ *fill*         0x0000000000401821        0xf 
+ .text          0x0000000000401830       0x5b printf.o
+                0x0000000000401860                printf
+ *fill*         0x000000000040188b        0x5 
+ .text          0x0000000000401890       0x26 sprintf.o
+                0x0000000000401890                sprintf
                 0x0000000000402000                . = ALIGN (0x1000)
- *fill*         0x0000000000401876      0x78a 
+ *fill*         0x00000000004018b6      0x74a 
 
 .iplt           0x0000000000402000        0x0
  .iplt          0x0000000000402000        0x0 main.o
@@ -71,47 +71,47 @@ Linker script and memory map
                 0x0000000000402004        0x4 doprintf.o
                 0x0000000000402004                __x86.get_pc_thunk.ax
 
-.rodata         0x0000000000402008      0x13c
- .rodata        0x0000000000402008       0xb6 main.o
- *fill*         0x00000000004020be        0x2 
- .rodata        0x00000000004020c0       0x84 doprintf.o
+.rodata         0x0000000000402008      0x150
+ .rodata        0x0000000000402008       0xcb main.o
+ *fill*         0x00000000004020d3        0x1 
+ .rodata        0x00000000004020d4       0x84 doprintf.o
 
-.eh_frame       0x0000000000402144      0x294
- .eh_frame      0x0000000000402144       0x54 main.o
- .eh_frame      0x0000000000402198       0x1c stubs.o
+.eh_frame       0x0000000000402158      0x294
+ .eh_frame      0x0000000000402158       0x54 main.o
+ .eh_frame      0x00000000004021ac       0x1c stubs.o
                                          0x34 (size before relaxing)
- .eh_frame      0x00000000004021b4       0x40 putch.o
+ .eh_frame      0x00000000004021c8       0x40 putch.o
                                          0x58 (size before relaxing)
- .eh_frame      0x00000000004021f4       0x4c puts.o
+ .eh_frame      0x0000000000402208       0x4c puts.o
                                          0x78 (size before relaxing)
- .eh_frame      0x0000000000402240      0x108 doprintf.o
+ .eh_frame      0x0000000000402254      0x108 doprintf.o
                                         0x120 (size before relaxing)
- .eh_frame      0x0000000000402348       0x14 strlen.o
+ .eh_frame      0x000000000040235c       0x14 strlen.o
                                          0x2c (size before relaxing)
- .eh_frame      0x000000000040235c       0x50 printf.o
+ .eh_frame      0x0000000000402370       0x50 printf.o
                                          0x7c (size before relaxing)
- .eh_frame      0x00000000004023ac       0x2c sprintf.o
+ .eh_frame      0x00000000004023c0       0x2c sprintf.o
                                          0x58 (size before relaxing)
 
-.rel.dyn        0x00000000004023d8        0x0
- .rel.got       0x00000000004023d8        0x0 main.o
- .rel.iplt      0x00000000004023d8        0x0 main.o
+.rel.dyn        0x00000000004023ec        0x0
+ .rel.got       0x00000000004023ec        0x0 main.o
+ .rel.iplt      0x00000000004023ec        0x0 main.o
 
-.data           0x00000000004023d8      0xc28
-                0x00000000004023d8                data = .
-                0x00000000004023d8                _data = .
-                0x00000000004023d8                __data = .
+.data           0x00000000004023ec      0xc14
+                0x00000000004023ec                data = .
+                0x00000000004023ec                _data = .
+                0x00000000004023ec                __data = .
  *(.data)
- .data          0x00000000004023d8        0x0 main.o
- .data          0x00000000004023d8        0x0 stubs.o
- .data          0x00000000004023d8        0x0 putch.o
- .data          0x00000000004023d8        0x0 puts.o
- .data          0x00000000004023d8        0x0 doprintf.o
- .data          0x00000000004023d8        0x0 strlen.o
- .data          0x00000000004023d8        0x0 printf.o
- .data          0x00000000004023d8        0x0 sprintf.o
+ .data          0x00000000004023ec        0x0 main.o
+ .data          0x00000000004023ec        0x0 stubs.o
+ .data          0x00000000004023ec        0x0 putch.o
+ .data          0x00000000004023ec        0x0 puts.o
+ .data          0x00000000004023ec        0x0 doprintf.o
+ .data          0x00000000004023ec        0x0 strlen.o
+ .data          0x00000000004023ec        0x0 printf.o
+ .data          0x00000000004023ec        0x0 sprintf.o
                 0x0000000000403000                . = ALIGN (0x1000)
- *fill*         0x00000000004023d8      0xc28 
+ *fill*         0x00000000004023ec      0xc14 
 
 .got            0x0000000000403000        0x0
  .got           0x0000000000403000        0x0 main.o
@@ -151,16 +151,17 @@ LOAD printf.o
 LOAD sprintf.o
 OUTPUT(GLIBCT1.BIN elf32-i386)
 
-.comment        0x0000000000000000       0x11
+.comment        0x0000000000000000       0x22
  .comment       0x0000000000000000       0x11 main.o
                                          0x12 (size before relaxing)
- .comment       0x0000000000000011       0x12 stubs.o
- .comment       0x0000000000000011       0x12 putch.o
- .comment       0x0000000000000011       0x12 puts.o
- .comment       0x0000000000000011       0x12 doprintf.o
- .comment       0x0000000000000011       0x12 strlen.o
- .comment       0x0000000000000011       0x12 printf.o
- .comment       0x0000000000000011       0x12 sprintf.o
+ .comment       0x0000000000000011       0x11 stubs.o
+                                         0x12 (size before relaxing)
+ .comment       0x0000000000000022       0x12 putch.o
+ .comment       0x0000000000000022       0x12 puts.o
+ .comment       0x0000000000000022       0x12 doprintf.o
+ .comment       0x0000000000000022       0x12 strlen.o
+ .comment       0x0000000000000022       0x12 printf.o
+ .comment       0x0000000000000022       0x12 sprintf.o
 
 .note.GNU-stack
                 0x0000000000000000        0x0

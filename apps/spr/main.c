@@ -6530,13 +6530,15 @@ noArgs:
 	wpWindowTop = 40;
 	wsWindowWidth = 600;
 	wsWindowHeight = 480;
-		
+
+
     //hWindow = shellCreateMainWindow (1);
-	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, "Sprinkler",     
-                                wpWindowLeft, wpWindowTop, 
-                                wsWindowWidth, wsWindowHeight,    
-                                0, 0, xCOLOR_GRAY2, xCOLOR_GRAY2 );	
-	
+	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, "Sprinkler", 
+                           wpWindowLeft, wpWindowTop, 
+                           wsWindowWidth, wsWindowHeight, 
+                           0, 0, xCOLOR_GRAY2, xCOLOR_GRAY2 );
+
+
 	if ( (void *) hWindow == NULL )
 	{
 		printf ("FAIL!");
@@ -6546,8 +6548,8 @@ noArgs:
 		//Registrar e mostrar.
         APIRegisterWindow (hWindow);
 	    apiShowWindow (hWindow);
-	}	
-	exitCriticalSection ();	
+	}
+	exitCriticalSection ();
 	//--
 	
 	// #IMPORTANTE #IMPORTANTE #IMPORTANTE #IMPORTANTE#IMPORTANTE
@@ -6884,15 +6886,19 @@ noArgs:
 	//
 	// Navbar
 	//
-	
-      
+
+
+      // Criando o bg da barra de endereços.
+      // #bugbug: O left deve ser em relação à janela mãe. E no momento
+      // está sendo em relação à tela.
+
       //++
       enterCriticalSection ();  
       w_navbar = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "navbar",     
-                                1, 80, 
-                                wsWindowWidth -38, 24,    
-                                hWindow, 0, COLOR_GRAY, COLOR_GRAY );	
-	
+                              1, 80, 
+                              wsWindowWidth -38, 24,    
+                              hWindow, 0, COLOR_GRAY, COLOR_GRAY );
+
 	APIRegisterWindow (w_navbar);
 	apiShowWindow (w_navbar);
 	exitCriticalSection ();  
@@ -6902,7 +6908,12 @@ noArgs:
 	  
 	  //#TODO
 	  //validation. register ,,,
-	  
+
+
+    // Criando o editbox da barra de endereço.
+    // #bugbug: O left deve ser em relação à janela mãe. E no momento
+    // está sendo em relação à tela.
+
 	//++
 	enterCriticalSection ();  
 	editboxWindow = (void *) APICreateWindow ( WT_EDITBOX, 1, 1, "editbox-navbar",     
@@ -6921,21 +6932,26 @@ noArgs:
 	apiShowWindow (editboxWindow);
 	exitCriticalSection ();  
 	//--
-	
-	
+
+
+    //Criando o botão da barra de endereço.
+    // #bugbug: O left deve ser em relação à janela mãe. E no momento
+    // está sendo em relação à tela.
+      
 	//++
     enterCriticalSection ();  
 	navbar_button = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "[>]",     
                                 wsWindowWidth -80, 40, 
                                 32, 24,    
                                 hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
-								
+
     APIRegisterWindow (navbar_button);
 	apiShowWindow (navbar_button);
 	exitCriticalSection ();  
 	//--
 	
-	
+
+
 	//===========================================================
 
     /*
@@ -6960,7 +6976,7 @@ noArgs:
 		apiDisplayBMP ( (char *) b, 100, 200 ); 
 			
 		//#bugbug: isso é lento.
-		refresh_screen();	
+		refresh_screen();
 	};
     exitCriticalSection ();  
     //--
@@ -6970,11 +6986,14 @@ noArgs:
     // O posicionamento é absoluto na tela e não relativo à janela.
     //++
     enterCriticalSection ();  
-	system_call ( 4001, (unsigned long) "dennis.bmp", 100, 100 );	    
+    //system_call ( 4001, (unsigned long) "dennis.bmp", 100, 100 );
+    system_call ( 4001, (unsigned long) "dennis.bmp", 100, 100 );
     exitCriticalSection ();  
     //--    
 	//===========================================================
-		
+
+
+
 	//
 	// Habilitando o cursor piscante de textos.
 	//
@@ -7010,19 +7029,18 @@ noArgs:
 
 	system_call ( SYSTEMCALL_SETTERMINALWINDOW, (unsigned long) hWindow, 
 		(unsigned long) hWindow, (unsigned long) hWindow );
-		
-				 
+
+
 	//salva ponteiro da janela principal e da janela do terminal. 
-	shell_info.main_window = ( struct window_d * ) hWindow;			 
-	shell_info.terminal_window = ( struct window_d * ) hWindow;		
+	shell_info.main_window = ( struct window_d * ) hWindow;
+	shell_info.terminal_window = ( struct window_d * ) hWindow;
 	
 	//
 	// @todo: Apenas registrar o procedimento dessa janela na sua estrutura no kernel..
     // 
-	
 
-	
-	
+
+
 	//===========================
 	
 	
@@ -7039,8 +7057,8 @@ noArgs:
 	if ( Status != 0 ){
 		die ("spr: app_main: shellInit fail");
 	};
-	exitCriticalSection();     		
-    	
+	exitCriticalSection();
+
 
 	//#importante:
 	//Agora é a hora de pegar mensagens de input de teclado.
@@ -7134,7 +7152,7 @@ Mainloop:
 			
 		if ( message_buffer[1] != 0 )
         {
-            //printf(".");			
+            //printf(".");
 		}	
 		
 		if ( message_buffer[1] != 0 )
@@ -7144,13 +7162,14 @@ Mainloop:
 		        (unsigned long) message_buffer[2], 
 		        (unsigned long) message_buffer[3] );
 			
-			message_buffer[0] = 0;
+            message_buffer[0] = 0;
             message_buffer[1] = 0;
             message_buffer[3] = 0;
-            message_buffer[4] = 0;	
-        };				
+            message_buffer[4] = 0;
+        };
 	};
-	
+
+
 	//
 	// Entramos aqui se running for igual a 0.
 	//
@@ -7181,7 +7200,7 @@ Mainloop:
 // # RunScript #	
 //
 
-skip_input:	
+skip_input:
 
     shellExecuteThisScript ( argv[3] );
 
@@ -7203,8 +7222,8 @@ end:
 #ifdef SHELL_VERBOSE		
     printf ("spr: exiting code '0' ...\n");
 #endif 
-	
-	return 0;
+
+    return 0;
 }
 
 
