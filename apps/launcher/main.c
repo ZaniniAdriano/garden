@@ -93,12 +93,15 @@ launcherProcedure ( struct window_d *window,
 				case 1:
 				    if ( window == launcher_button_1 )
 				    {
-						 execve ( (const char *) "noraterm.bin", 
-                             (const char *) 0, (const char *) 0); 
+						
+						execve ( (const char *) "noraterm.bin", 
+                            (const char *) 0, (const char *) 0); 
+						 
 						 // #todo:
 						 // Tentar enviar mensagens para o terminal 
 						 //libc_set_output_mode (LIBC_NORMAL_MODE);
 						 //printf ("launcher: Testing ...\n");
+						 
 						 break;
 					}
 									

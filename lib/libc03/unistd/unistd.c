@@ -613,20 +613,37 @@ int fdatasync (int fd){
 }
 
 
- 
 
 /*
+ *************************************************
  * ioctl:
  *     #importante.
  */
 
-int ioctl ( int d, int request, ... ){
-	
-	return -1; //#todo
+int ioctl ( int d, int request, ... )
+{
+	//printf ("ioctl: todo\n");
+    return -1;    //#todo
 }
 
 
 /*
+ * Credits: Serenity OS;
+int ioctl(int fd, unsigned request, ...);
+int ioctl(int fd, unsigned request, ...)
+{
+    va_list ap;
+    va_start(ap, request);
+    unsigned arg = va_arg(ap, unsigned);
+    int rc = syscall(SC_ioctl, fd, request, arg);
+    __RETURN_WITH_ERRNO(rc, rc, -1);
+}
+*/
+
+
+
+/*
+ **********************
  * open:
  *
  */
@@ -634,41 +651,45 @@ int ioctl ( int d, int request, ... ){
 int open (const char *pathname, int flags, mode_t mode){
 
     return (int) gramado_system_call ( 16, (unsigned long) pathname, 
-				     (unsigned long) flags, (unsigned long) mode );
+                     (unsigned long) flags, (unsigned long) mode );
 }
 
 
 /*
+ *****************************************
  * close:
  *    SVr4, 4.3BSD, POSIX.1-2001.
  */
 
 int close (int fd){
-	
+
     return (int) gramado_system_call ( 17, (unsigned long) fd, 
-				     (unsigned long) fd, (unsigned long) fd );
+                     (unsigned long) fd, (unsigned long) fd );
 }
 
 
 /*
+ **************************************************
  * pipe:
  *
  */
 
 int pipe ( int pipefd[2] ){
-	
+
     return (int) gramado_system_call ( 247, (unsigned long) pipefd, 
-				    (unsigned long) pipefd, (unsigned long) pipefd );	
+                     (unsigned long) pipefd, (unsigned long) pipefd );
 }
 
 
-long fpathconf (int fildes, int name){
+long fpathconf (int fildes, int name)
+{
     return -1;
 }
 
 
-long pathconf (const char *pathname, int name){
-    return -1;	
+long pathconf (const char *pathname, int name)
+{
+    return -1;
 } 
 
 

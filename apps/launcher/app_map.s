@@ -520,7 +520,7 @@ LOAD addrbar.o
 LOAD stubs.o
 OUTPUT(LAUNCHER.BIN elf32-i386)
 
-.comment        0x0000000000000000       0x11
+.comment        0x0000000000000000       0x22
  .comment       0x0000000000000000       0x11 crt0.o
                                          0x12 (size before relaxing)
  .comment       0x0000000000000011       0x12 main.o
@@ -529,10 +529,11 @@ OUTPUT(LAUNCHER.BIN elf32-i386)
  .comment       0x0000000000000011       0x12 stdio.o
  .comment       0x0000000000000011       0x12 string.o
  .comment       0x0000000000000011       0x12 unistd.o
- .comment       0x0000000000000011       0x12 api.o
- .comment       0x0000000000000011       0x12 status.o
- .comment       0x0000000000000011       0x12 addrbar.o
- .comment       0x0000000000000011       0x12 stubs.o
+ .comment       0x0000000000000011       0x11 api.o
+                                         0x12 (size before relaxing)
+ .comment       0x0000000000000022       0x12 status.o
+ .comment       0x0000000000000022       0x12 addrbar.o
+ .comment       0x0000000000000022       0x12 stubs.o
 
 .note.GNU-stack
                 0x0000000000000000        0x0

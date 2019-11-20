@@ -16,10 +16,11 @@
 
 
 
-int strcoll (const char *s1, const char *s2){
-
+int strcoll (const char *s1, const char *s2)
+{
     return (int) strcmp ( (char *) s1, (char *) s2);
 }
+
 
 
 /**
@@ -244,6 +245,54 @@ uintmax_t strtoumax (const char *str, char **endptr, int base)
 
 
 /*
+ * credits: Serenity OS
+static char foldcase(char ch);
+static char foldcase(char ch)
+{
+    if (isalpha(ch))
+        return tolower(ch);
+    return ch;
+}
+*/
+
+
+/*
+ * credits: Serenity OS
+int strcasecmp2(const char* s1, const char* s2);
+int strcasecmp2(const char* s1, const char* s2)
+{
+    for (; foldcase(*s1) == foldcase(*s2); ++s1, ++s2) {
+        if (*s1 == 0)
+            return 0;
+    }
+    return foldcase(*(const unsigned char*)s1) < foldcase(*(const unsigned char*)s2) ? -1 : 1;
+}
+*/
+
+
+/*
+ * credits: Serenity OS
+int strncasecmp(const char* s1, const char* s2, size_t n);
+int strncasecmp(const char* s1, const char* s2, size_t n)
+{
+    if (!n)
+        return 0;
+    do {
+        if (foldcase(*s1) != foldcase(*s2++))
+            return foldcase(*(const unsigned char*)s1) - foldcase(*(const unsigned char*)--s2);
+        if (*s1++ == 0)
+            break;
+    } while (--n);
+    return 0;
+}
+*/
+
+
+
+
+
+/*
+ *********************************************************
  * strcasecmp:
  *     Do strcmp(3) in a case-insensitive manner.
  *
@@ -1219,6 +1268,22 @@ size_t strxfrm (char *dst, const char *src, size_t n){
 	return (srclen);
 }
 */
+
+
+/*
+ * credits: Serenity OS.
+size_t strxfrm(char* dest, const char* src, size_t n);
+size_t strxfrm(char* dest, const char* src, size_t n)
+{
+    size_t i;
+    for (i = 0; i < n && src[i] != '\0'; ++i)
+        dest[i] = src[i];
+    for (; i < n; ++i)
+        dest[i] = '\0';
+    return i;
+}
+*/
+
 
 
  

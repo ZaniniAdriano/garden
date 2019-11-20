@@ -16,14 +16,18 @@
 #ifndef _TERMIOS_H
 #define _TERMIOS_H
 
+
+
+
 // tipos
 typedef unsigned short tcflag_t;
 typedef unsigned int speed_t;
 typedef unsigned char cc_t;
 
+
 /* size of cc_c array, some extra space for extensions. */
 #define NCCS		   20
-
+//#define NCCS 32
 
 
 /*

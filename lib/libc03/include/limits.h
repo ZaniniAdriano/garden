@@ -116,6 +116,8 @@ or provides its own editing facilities.
 
 
 
+//#define PTHREAD_STACK_MIN 65536
+
 //
 // End.
 //

@@ -45,3 +45,26 @@ void cfmakeraw (struct termios *termios_p)
 */
 
 
+/*
+speed_t cfgetispeed(const struct termios* tp);
+speed_t cfgetispeed(const struct termios* tp)
+{
+    return tp->c_ispeed;
+}
+*/
+
+/*
+speed_t cfgetospeed(const struct termios* tp);
+speed_t cfgetospeed(const struct termios* tp)
+{
+    return tp->c_ospeed;
+}
+*/
+
+
+
+
+
+
+
+

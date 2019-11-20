@@ -46,6 +46,41 @@
 /* Mask for use with file access modes.  POSIX Table 6-7. */
 #define O_ACCMODE         03	/* mask for file access modes */
 
+
+
+/*
+  Credits: Serenity OS.
+ 
+#define S_IFMT 0170000
+#define S_IFDIR 0040000
+#define S_IFCHR 0020000
+#define S_IFBLK 0060000
+#define S_IFREG 0100000
+#define S_IFIFO 0010000
+#define S_IFLNK 0120000
+#define S_IFSOCK 0140000
+#define S_ISUID 04000
+#define S_ISGID 02000
+#define S_ISVTX 01000
+#define S_IRUSR 0400
+#define S_IWUSR 0200
+#define S_IXUSR 0100
+#define S_IRGRP 0040
+#define S_IWGRP 0020
+#define S_IXGRP 0010
+#define S_IROTH 0004
+#define S_IWOTH 0002
+#define S_IXOTH 0001
+#define S_IRWXU (S_IRUSR | S_IWUSR | S_IXUSR)
+#define S_IRWXG (S_IRWXU >> 3)
+#define S_IRWXO (S_IRWXG >> 3) 
+*/
+
+
+
+
+
+
 /* Struct used for locking.  POSIX Table 6-8. */
 /*
 struct flock {
