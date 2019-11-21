@@ -4,7 +4,7 @@
 
 
 
-#include "reboot2.h"
+#include "wintest.h"
 
 
 
@@ -25,8 +25,9 @@ int running = 1;
     struct window_d *gWindow;          //grid 
     struct window_d *mWindow;          //menu
     struct window_d *reboot_button;    //reboot button;
-
-
+    struct window_d *button1;          //button1;
+    struct window_d *button2;          //button2;
+ 
 //static char *dest_argv[] = { "-sujo0","-sujo1","-sujo2",NULL };
 //static unsigned char *dest_envp[] = { "-sujo", NULL };
 //static unsigned char dest_msg[512];
@@ -55,7 +56,31 @@ reboot2Procedure ( struct window_d *window,
 {
 	switch (msg)
 	{
-		
+		case MSG_CREATE:
+		    //printf ("MSG_PAINT:\n");
+		    
+	    //++
+        enterCriticalSection (); 
+        button2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " REBOOT ",  
+                                (50), (50), 
+                                (100), (100),   
+                                NULL, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
+
+        if ( (void *) button2 == NULL )
+        {
+            printf ("Couldn't create button\n");
+            return 1;
+        }else{
+
+           APIRegisterWindow (button2);
+           apiShowWindow (button2);
+           refresh_screen ();
+        };
+        exitCriticalSection (); 
+	    //--		    
+		    
+		    break;
+
 		case MSG_SYSKEYDOWN:
 		    switch (long1)
 			{  
@@ -64,35 +89,69 @@ reboot2Procedure ( struct window_d *window,
 					break;
 					
 				case VK_F2:
- 
 					break;
 					
 				case VK_F3:
- 
 					break;
 					
 				//...
 				
                 //full screen
                 //colocar em full screen somente a área de cliente. 
-		        case VK_F11:
-				    
+		        case VK_F11:    
 					break;
 					
 				//...
 
 			};
-			break;		
+			break;
 		
-		// MSG_MOUSEKEYDOWN	
+		// MSG_MOUSEKEYDOWN
 		case 30:
 		    switch (long1)
 			{
 				//botão 1.
 				case 1:
-				    if ( window == reboot_button )
+				    //#test
+				    //printf ("x=%d y=%d \n",apiGetCursorX (), apiGetCursorY ());
+				    //refresh_screen();
+				    if ( window == button2 )
 				    {
-						apiReboot ();
+						apiReboot();
+					}
+					
+				    if ( window == button1 )
+				    {
+						//ok
+						//apiSendMessageToProcess ( getpid(), NULL, MSG_CREATE, 0, 0 );
+						
+						//#TODO: TESTAR
+						//apiSendMessageToProcess ( getpid(), NULL, MSG_PAINT, 0, 0 );
+
+
+						//ok
+						//gde_set_focus (button1);
+						//apiShowWindow (button1);
+						//refresh_screen();
+						
+						//ok. a margem falhou.
+						//apiSetCursor (50,50);
+						
+						//apiReboot();
+						
+						//ok
+						//APIresize_window (button1, 10, 10);
+						//APIredraw_window (button1, 1);
+						//apiShowWindow (button1);
+						//refresh_screen();
+
+
+						//APIreplace_window (button1, apiGetCursorX (), apiGetCursorY ());
+						//APIredraw_window (button1, 1);
+						//apiShowWindow (button1);
+						//refresh_screen();
+
+						
 						break;
 					}
 				    if ( window == gWindow )
@@ -103,6 +162,9 @@ reboot2Procedure ( struct window_d *window,
 					{
 						printf("menu window\n");
 					}
+					
+					//para uma janela default.
+                    gde_set_focus (window);
 
 					break;
 			};
@@ -172,13 +234,13 @@ int main ( int argc, char *argv[] ){
 	//++
     apiBeginPaint (); 
     hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, 
-                           "Reboot2",
+                           "Wintest",
                            left, top, width, height,    
                            0, 0, 0xF5DEB3, 0x2d89ef );  
 
     if ( (void *) hWindow == NULL )
     {
-        printf ("Reboot2: hWindow fail");
+        printf ("Wintest: hWindow fail");
         apiEndPaint ();
         goto fail;
     }else{
@@ -397,19 +459,19 @@ int main ( int argc, char *argv[] ){
 
 	//++
     enterCriticalSection (); 
-    reboot_button = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " Reboot ",  
+    button1 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " Click ",  
                                 (width/3), ((height/4)*2), 
                                 (width/3), (height/8),   
                                 hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
 
-    if ( (void *) reboot_button == NULL )
+    if ( (void *) button1 == NULL )
     {
         printf ("Couldn't create button\n");
         return 1;
     }else{
 
-        APIRegisterWindow (reboot_button);
-        apiShowWindow (reboot_button);
+        APIRegisterWindow (button1);
+        apiShowWindow (button1);
         refresh_screen ();
     };
     exitCriticalSection (); 

@@ -3285,7 +3285,7 @@ void APIresize_window ( struct window_d *window,
 #define gde_resize_window APIresize_window
 
 
-//redraw					   
+//redraw
 void APIredraw_window ( struct window_d *window, 
                         unsigned long flags );
 #define gde_redraw_window APIredraw_window
@@ -3299,7 +3299,7 @@ void APIreplace_window ( struct window_d *window,
 	
 
 //torna visível uma janela.
-//refresh	
+//refresh
 void apiShowWindow (struct window_d *window);
 #define gde_show_window apiShowWindow
 
@@ -3431,8 +3431,8 @@ void apiSetCursor ( unsigned long x, unsigned long y);
 
 //Create process.
 void *gde_create_process ( unsigned long process_eip, 
-                        unsigned long process_priority, 
-						char *name );
+                           unsigned long process_priority, 
+                           char *name );
 
 #define apiCreateProcess gde_create_process 
 
@@ -3450,7 +3450,7 @@ void *gde_create_thread ( unsigned long init_eip,
 
 
 
-//Mostra informações sobre o processo atual.	
+//Mostra informações sobre o processo atual.
 void APIShowCurrentProcessInfo ();
 #define gde_show_current_process_info APIShowCurrentProcessInfo
 
@@ -3462,19 +3462,18 @@ void APIShowCurrentProcessInfo ();
 //#bugbug: O lugar dessa função é na stdlib, então mudaremos de nome aqui.
 //void exit(int exit_code);
 
-void apiExit (int exit_code);	
+void apiExit (int exit_code);
 #define gde_exit apiExit
 
 
 //Destrói a thread atual.
-void kill (int exit_code);	
-#define gde_kill kill	
+void kill (int exit_code);
+#define gde_kill kill
 
 
-//coloca no estado standby para executar pela primeira vez.					   
+//coloca no estado standby para executar pela primeira vez.
 void apiStartThread (void *Thread); 
 #define gde_start_thread apiStartThread
-
 
 
 //
@@ -3553,11 +3552,11 @@ void apiPutChar (int c);
 unsigned long 
 apiDefDialog ( struct window_d *window, 
               int msg, 
-			  unsigned long long1, 
-			  unsigned long long2 );
+              unsigned long long1, 
+              unsigned long long2 );
 #define gde_def_dialog apiDefDialog
 
-			  
+
 unsigned long apiGetSystemMetrics ( int index );
 #define gde_get_system_metrics apiGetSystemMetrics
 
@@ -3622,7 +3621,7 @@ apiDisplayBMP ( char *address,
 // Envia uma mensagem para a thread de controle de um dado processo.
 int 
 apiSendMessageToProcess ( int pid, 
-						  struct window_d *window, 
+                          struct window_d *window, 
                           int message,
                           unsigned long long1,
                           unsigned long long2 );
@@ -3633,7 +3632,7 @@ apiSendMessageToProcess ( int pid,
 // Envia uma mensagem para uma thread.
 int 
 apiSendMessageToThread ( int tid, 
-					     struct window_d *window, 
+                         struct window_d *window, 
                          int message,
                          unsigned long long1,
                          unsigned long long2 );
@@ -3641,7 +3640,7 @@ apiSendMessageToThread ( int tid,
 #define gde_send_message_to_thread apiSendMessageToThread
 
 
-//Envia uma mensagem para a thread atual.					   
+//Envia uma mensagem para a thread atual.  
 unsigned long 
 apiSendMessage ( struct window_d *window, 
                  int message,
