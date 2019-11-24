@@ -75,7 +75,7 @@ launcherProcedure ( struct window_d *window,
 				//...
 				
                 //full screen
-                //colocar em full screen somente a área de cliente. 				
+                //colocar em full screen somente a área de cliente. 
 		        case VK_F11:
 				    
 					break;
@@ -83,7 +83,7 @@ launcherProcedure ( struct window_d *window,
 				//...
 
 			};
-			break;		
+			break;
 		
 		// MSG_MOUSEKEYDOWN	
 		case 30:
@@ -104,13 +104,13 @@ launcherProcedure ( struct window_d *window,
 						 
 						 break;
 					}
-									
+
 				    if ( window == launcher_button_2 )
 				    {
 						 execve ( (const char *) "gramcode.bin", 
                              (const char *) 0, (const char *) 0); 
 						 break;
-					}						
+					}
 				
 				    if ( window == reboot_button )
 				    {
@@ -155,11 +155,41 @@ int main ( int argc, char *argv[] ){
     int ch;
     int char_count = 0;
 
+    //#bugbug
+    //Ele falha se a largura for pouco.
 
-    unsigned long left = 600;
-    unsigned long top = 100;
-    unsigned long width = 320;
-    unsigned long height = 480;
+    //unsigned long left = 600;
+    //unsigned long top = 100;
+    //unsigned long width = 320;
+    //unsigned long height = 480;
+    
+    unsigned long left;
+    unsigned long top;
+    unsigned long width;
+    unsigned long height;
+    
+
+    unsigned long deviceWidth = apiGetSystemMetrics (1); 
+    unsigned long deviceHeight = apiGetSystemMetrics (2);
+
+    left = deviceWidth/2;
+    //top = deviceHeight/3;
+    top = 10;
+
+    /*
+    if (deviceWidth > 600)
+    {
+        width = 300;
+    }else{
+        width = deviceWidth;
+    }
+    */
+    
+    width = 320;
+    height = 480;
+    
+    //width = deviceWidth/3;
+    //height = deviceHeight/3;
 
 
 //#ifdef TEDITOR_VERBOSE
@@ -200,7 +230,8 @@ int main ( int argc, char *argv[] ){
 
     //++
     apiBeginPaint (); 
-    hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, 
+    //hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, 
+    hWindow = (void *) APICreateWindow (  WT_OVERLAPPED, 1, 1, 
                            "App Launcher",
                            left, top, width, height,    
                            0, 0, 0x44541C, 0xF9812A ); //0, 0, 0xF5DEB3, 0x2d89ef );  

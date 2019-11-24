@@ -18,11 +18,16 @@
 
 
 //# usado para teste 
-#define WINDOW_WIDTH     430//400 //640 
-#define WINDOW_HEIGHT    400 //480
-#define WINDOW_LEFT      4   //10
-#define WINDOW_TOP       4   //10
+//#define WINDOW_WIDTH     430  //400 //640 
+//#define WINDOW_HEIGHT    400  //480
+//#define WINDOW_LEFT      4   //10
+//#define WINDOW_TOP       4   //10
 
+
+#define WINDOW_WIDTH   480  //320  
+#define WINDOW_HEIGHT  480  //280
+#define WINDOW_LEFT     10   
+#define WINDOW_TOP      10   
 
 
 //static int running = 1;
@@ -211,10 +216,10 @@ int editor_save_file (){
 	//name, number of sectors, size in bytes, address, flag.
 	
     //Ret = (int) apiSaveFile ( file_1_name, number_of_sectors, len,            
-    //                file_1, 0x20 );       		
+    //                file_1, 0x20 );     
 
     Ret = (int) apiSaveFile ( file_1_name, number_of_sectors, len,            
-                    &RAW_TEXT[0], 0x20 );       		
+                    &RAW_TEXT[0], 0x20 );    
 					
 	//if (Ret == 0)
 	
@@ -450,13 +455,18 @@ void shellInitWindowLimits (){
     wlFullScreenTop = 0;
     wlFullScreenWidth = smScreenWidth;
     wlFullScreenHeight = smScreenHeight;
-	
+
+
+
     //limite de tamanho da janela.
-    wlMinWindowWidth = smCharWidth * 80;
-    wlMinWindowHeight = smCharWidth * 25;
+    wlMinWindowWidth = smCharWidth * 10;
+    wlMinWindowHeight = smCharWidth * 10;
+    //wlMinWindowWidth = smCharWidth * 80;
+    //wlMinWindowHeight = smCharWidth * 25;
     wlMaxWindowWidth = wlFullScreenWidth;
-    wlMaxWindowHeight = wlFullScreenHeight;	
-	
+    wlMaxWindowHeight = wlFullScreenHeight;
+
+
     //quantidade de linhas e colunas na área de cliente.
     wlMinColumns = 80;
     wlMinRows = 1;
@@ -479,7 +489,7 @@ void shellInitWindowSizes (){
     //
 
     //wsWindowWidth = wlMinWindowWidth;
-    //wsWindowHeight = wlMinWindowHeight;	
+    //wsWindowHeight = wlMinWindowHeight;
 	
 	//Tamanho da janela do shell com base nos limites 
     //que ja foram configurados.	
@@ -495,7 +505,7 @@ void shellInitWindowSizes (){
 	
 	if ( wsWindowHeight < wlMinWindowHeight )
 	{
-	    wsWindowHeight = wlMinWindowHeight;	
+	    wsWindowHeight = wlMinWindowHeight;
 	}
 };
 
@@ -754,7 +764,7 @@ skip_test:
 #ifdef TEDITOR_VERBOSE			
 	printf("\n");
 	printf("Initializing Text Editor:\n");
-	printf("mainTextEditor: # argv0={%s} # \n", argv[0] );	
+	printf("mainTextEditor: # argv0={%s} # \n", argv[0] );
 	printf("mainTextEditor: # argv1={%s} # \n", argv[1] );
 #endif	
 
@@ -820,7 +830,7 @@ skip_test:
 	    //set focus efetua um redraw ...
 	    //isso parece ser redundante na inicialização do 
 	    //programa. Talvez o certo seria desenhar a janela ja setando o foco.
-	    APISetFocus (hWindow);	    		
+	    APISetFocus (hWindow);
     	
 	    
 	    // Mostra na tela apenas a janela.
@@ -902,9 +912,9 @@ skip_test:
 		
 		//Mostrando o arquivo.
 		
-//#ifdef TEDITOR_VERBOSE			
-        printf(".\n");		
-        printf("..\n");		
+//#ifdef TEDITOR_VERBOSE
+        printf(".\n");
+        printf("..\n");
         //printf("...\n");
 //#endif 
 	
@@ -937,14 +947,14 @@ skip_test:
 				
 			    printf ("%c", ch_test);	
 			};
-		};	
+		};
 
 out:
-			
-//#ifdef TEDITOR_VERBOSE	        
+
+//#ifdef TEDITOR_VERBOSE
 		//printf("...\n");
-        printf("..\n");		
-        printf(".\n");		
+        printf("..\n");
+        printf(".\n");
 //#endif
 
 startTyping:
@@ -969,13 +979,13 @@ startTyping:
 
 
 	// Habilitando o cursor.
-	
-	system_call ( 244, (unsigned long) 0, (unsigned long) 0, 
-	    (unsigned long) 0 );	
+
+    system_call ( 244, (unsigned long) 0, (unsigned long) 0, 
+        (unsigned long) 0 );
 
 		//saiu.
-        printf(".\n");		
-        printf(".\n");		
+        printf(".\n");
+        printf(".\n");
         printf(".\n");
 	};
 
@@ -989,7 +999,7 @@ startTyping:
 	
 	unsigned long message_buffer[5];	
 	
-Mainloop:		    
+Mainloop:
 
 	while (running)
 	{
@@ -1026,8 +1036,9 @@ done:
 	
 	// #debug
 	exit (0);
-			
-	return 0;
+
+
+    return 0;
 }
 
 

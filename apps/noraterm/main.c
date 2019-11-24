@@ -4166,15 +4166,15 @@ done:
 void terminalInitSystemMetrics (){
 	
 	
-	// Tamanho da tela.	
-	smScreenWidth = apiGetSystemMetrics(1);
-    smScreenHeight = apiGetSystemMetrics(2); 
+	// Tamanho da tela.
+	smScreenWidth = apiGetSystemMetrics (1);
+	smScreenHeight = apiGetSystemMetrics (2); 
 	smCursorWidth = apiGetSystemMetrics(3);
 	smCursorHeight = apiGetSystemMetrics(4);
 	smMousePointerWidth = apiGetSystemMetrics(5);
 	smMousePointerHeight = apiGetSystemMetrics(6);
 	smCharWidth = apiGetSystemMetrics(7);
-	smCharHeight = apiGetSystemMetrics(8);	
+	smCharHeight = apiGetSystemMetrics(8);
 	
 	
 	//#importante

@@ -68,30 +68,32 @@ __PostMessageToProcess ( int pid,
 
 
 /*
+ *********************************
  * main:
  * 
  */
 
 int main ( int argc, char *argv[] ){
-	
-	FILE *fp;	
-    
+
+    FILE *fp;
+
     unsigned char count;
-	unsigned char standard_ascii_max = STANDARD_ASCII_MAX;
-	
-	char buffer[512];	
-	char buffer2[] = "DURTY...........";
+    unsigned char standard_ascii_max = STANDARD_ASCII_MAX;
+
+    char buffer[512];
+    char buffer2[] = "DURTY...........";
 	
 	// #IMPORTANTE:
-	// Apenas uma função de interodução usando o modo draw.
+	// Apenas uma função de introdução usando o modo draw.
 	// Depois todas as outras devem usar o modo NORMAL.
 	// Nesse modo o terminal não será notificado.
-	
-	libc_set_output_mode (LIBC_DRAW_MODE);
-	
-	printf ("hello3: Testing libc in NORMAL MODE ...\n"); 
-	
-	
+
+    libc_set_output_mode (LIBC_DRAW_MODE);
+
+
+    printf ("hello3: Testing libc in NORMAL MODE ...\n"); 
+
+
 	//#Opção: 
 	// Ao fim, isso habilita o modo normal.
 	// printf_draw ("hello2:printf_draw test\n"); 

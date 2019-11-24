@@ -107,9 +107,10 @@ int main ( int argc, char *argv[] ){
 	
 	__SendMessageToProcess ( terminal_PID, 0, MSG_TERMINALCOMMAND, 2000, 2000 );
 	
-	printf ("hello.bin: done *hang");
-	while (1){}
+	printf ("hello.bin: done\n");
+	//while (1){}
 
+/*
 	int code = 0;
 	
 	printf ("\n");
@@ -134,6 +135,9 @@ int main ( int argc, char *argv[] ){
 	};
 	
 	return -1;
+	*/
+	
+	return 0;
 }
 
 

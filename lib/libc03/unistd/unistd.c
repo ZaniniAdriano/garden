@@ -288,84 +288,112 @@ void exit (int status){
 	
 	// Wait forever.
 	
-    while (1){ asm ("pause"); };	
+    while (1){ asm ("pause"); };
 }
+
 
 
 /*
- **************
- * fork:
- *     fork() stub.
- *     #todo
+ **************************
+ * fast_fork:
+ *     Isso é uma systemcall especial usada somente para a
+ * função fork(). Ela tem sua própria interrupção.
+ * 
  */
 
-pid_t fork (void){
-	
-    pid_t ret;
-
-	// chamando uma interrupção só para o fast fork
-	ret = (pid_t) fast_fork (0,0,0,0);
-	
-	if ( ret == -1 )
-	{
-		//#todo: configurar o errno.
-		return (pid_t) ret;
-	}
-	
-	if (ret == 0)
-	{
-		// We're the child in this part.
-		return 0;
-	}
-	
-    // Estamos no pai. Vamos retornar o PID do filho.
-	return (pid_t) ret;
-}
-
-
-// usando a chamada padrão do sistema.
-pid_t sys_fork (void){
-	
-    pid_t ret;
-
-    ret = (int) gramado_system_call ( UNISTD_SYSTEMCALL_FORK, (unsigned long) 0, 
-					(unsigned long) 0, (unsigned long) 0 ); 
-	
-	if ( ret == -1 )
-	{
-		//#todo: configurar o errno.
-		return (pid_t) ret;
-	}
-	
-	if (ret == 0)
-	{
-		// We're the child in this part.
-		return 0;
-	}
-	
-    // Estamos no pai. Vamos retornar o PID do filho.
-	return (pid_t) ret;
-}
-
-
-
-
-// chamando uma interrupção só para o fast fork
-// #importante: Esse trem tem sua própria interrupção.
 pid_t 
 fast_fork ( unsigned long ax, 
             unsigned long bx, 
             unsigned long cx, 
             unsigned long dx )
 {
-	
     pid_t Ret = 0;
-	
+
+
     asm volatile ( " int %1 \n"
-                 : "=a"(Ret)	
+                 : "=a"(Ret)
                  : "i"(133), "a"(ax), "b"(bx), "c"(cx), "d"(dx) );
-	
-	return (pid_t) Ret;
+
+    return (pid_t) Ret;
+}
+
+
+/*
+ **************
+ * fork:
+ *     Essa implementação de fork() usa uma systemcall especial, usada 
+ * somente na função fork. Essa systemcall tem sua própria interrupção.
+ *
+ */
+
+pid_t fork (void){
+
+    pid_t ret;
+
+
+    ret = (pid_t) fast_fork (0,0,0,0);
+
+    if ( ret == -1 )
+    {
+		// #todo: 
+		// Configurar o errno.
+
+        return (pid_t) ret;
+    }
+
+
+    if (ret == 0)
+    {
+		// We're the child in this part.
+
+        return 0;
+    }
+
+
+	// Estamos no pai. 
+	// Vamos retornar o PID do filho.
+
+    return (pid_t) ret;
+}
+
+
+/*
+ ****************************** 
+ * sys_fork:
+ *     Essa é uma implementação da função fork() usando
+ * a systemcall padrão com a interrupção do sistema.
+ */
+
+pid_t sys_fork (void){
+
+    pid_t ret;
+
+    ret = (int) gramado_system_call ( UNISTD_SYSTEMCALL_FORK, 
+                    (unsigned long) 0, 
+                    (unsigned long) 0, 
+                    (unsigned long) 0 ); 
+
+
+    if ( ret == -1 )
+    {
+		// #todo: 
+		// Configurar o errno.
+
+        return (pid_t) ret;
+    }
+
+
+	// We're the child in this part.
+    if (ret == 0)
+    {
+        return 0;
+    }
+
+
+    // Estamos no pai. 
+    // Vamos retornar o PID do filho.
+
+    return (pid_t) ret;
 }
 
 
@@ -389,7 +417,7 @@ int setuid ( uid_t uid ){
 
 uid_t getuid (void){
 	
-	return (uid_t) gramado_system_call ( 152, 0, 0, 0 );	
+	return (uid_t) gramado_system_call ( 152, 0, 0, 0 );
 }
 
 

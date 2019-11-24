@@ -16,6 +16,21 @@
 
 
 
+/*
+ Credits: Apple chameleon 
+void * stosl(void * dst, long val, long len);
+void * stosl(void * dst, long val, long len)
+{
+    asm volatile ( "rep; stosl"
+       : "=c" (len), "=D" (dst)
+       : "0" (len), "1" (dst), "a" (val)
+       : "memory" );
+
+    return dst;
+}
+*/
+
+
 int strcoll (const char *s1, const char *s2)
 {
     return (int) strcmp ( (char *) s1, (char *) s2);
