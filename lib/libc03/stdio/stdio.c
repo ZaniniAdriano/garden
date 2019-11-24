@@ -275,6 +275,17 @@ void *stdio_system_call ( unsigned long ax,
 
 
 
+
+
+
+//#todo
+//https://linux.die.net/man/3/remove
+int remove (const char *pathname)
+{
+    return (int) (-1);
+}
+
+
 /*linux klibc style*/
 /*
 static __inline__ int fclose(FILE *__f)

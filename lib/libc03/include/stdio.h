@@ -644,6 +644,12 @@ zzz __putc (c, stream)
 // ## Protótipos do padrão C. ##
 //===========================================
 
+// remove - remove a file or directory 
+// On success, zero is returned. On error, -1 is returned, and 
+// errno is set appropriately. 
+// C89, C99, 4.3BSD, POSIX.1-2001. 
+int remove (const char *pathname); 
+
 
 int fileno ( FILE *stream );
  
