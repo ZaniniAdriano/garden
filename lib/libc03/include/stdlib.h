@@ -117,13 +117,25 @@ void *stdlib_system_call ( unsigned long ax,
 
 void stdlib_die (char *str);
 
-int atoi (const char *str);	
-
+int atoi (const char *str);
 
 void itoa (int n, char s[]);
-		   
 
 char *getenv (const char *name);
+
+//setenv - change or add an environment variable
+//POSIX.1-2001, POSIX.1-2008, 4.3BSD.
+// RETURN VALUE:
+// The setenv() function returns zero on success, or -1 on error, with
+// errno set to indicate the cause of the error.
+int setenv (const char *name, const char *value, int overwrite);
+
+
+//POSIX.1-2001, POSIX.1-2008, 4.3BSD.
+// RETURN VALUE:
+// The unsetenv() function returns zero on success, or -1 on error, with
+// errno set to indicate the cause of the error.
+int unsetenv (const char *name);
 
 
 /*

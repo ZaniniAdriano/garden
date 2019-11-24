@@ -3857,7 +3857,7 @@ void shellShell (){
     
 	//@todo
 	//tentando posicionar o cursor dentro da janela
-	//shellSetCursor( (shell_info.main_window->left/8) , (shell_info.main_window->top/8));	
+	//shellSetCursor( (shell_info.main_window->left/8) , (shell_info.main_window->top/8));
 	
 	//shellPrompt();
 }
@@ -3877,30 +3877,30 @@ void shellShell (){
  */
  
 int shellInit ( struct window_d *window ){
-	
+
 	//#bugbug 
 	//o ponteiro do argumento pode ser inválido, pois 
 	//é uma variável local.
-	
-	int PID;
-	int PPID;
-	int ActiveWindowId = 0;
-	int WindowWithFocusId = 0;
-	void *P;
+
+    int PID;
+    int PPID;
+
+    int ActiveWindowId = 0;
+    int WindowWithFocusId = 0;
+
+    void *P;
 	//int CurrentVolumeID = 0;
 		
-	char buffer[512];
+    char buffer[512];
 	
-	
-	// #bugbug:
-    //     Esse ponteiro de estrutura está em kernel mode. 
-	//     Não podemos usá-lo.
-	
+
+
 	//??
 	//stream status
 	shell_info.stream_status = 0;
 	
-		
+
+
 	//
 	// ## buffer support ##
 	//
@@ -3950,76 +3950,80 @@ int shellInit ( struct window_d *window ){
 	//
 
 	// Testando a validade do ponteiro da janela.
-	// #importante: A estrutura está em kernel mode 
-	// e não podemos acessa-la.
-	
-	if ( (void *) window == NULL )
-	{
-	    printf("shellInit: window fail.\n"); 
-		
-	} else {
-		
-		// #importante:
-		// #bugbug Cuidado;
-		// Nesse momento temos um ponteiro válido,
-		// mas infelismente não podemos testar outros elementos 
-		// da estrutura.
-		
-		APISetFocus ( window );
-		
-		// mensagens !!
-		
-#ifdef SHELL_VERBOSE		
-		printf ("shellInit: Starting gdeshell.bin ...\n");
-		printf ("shellInit: Running tests ...\n");
+	// Recebido via argumento.
+	// #importante: 
+	// A estrutura está em kernel mode e não podemos acessa-la.
+
+    if ( (void *) window == NULL )
+    {
+        printf ("shellInit: window fail.\n"); 
+
+    } else {
+
+        APISetFocus ( window );
+
+		// Welcome messages.
+
+#ifdef SHELL_VERBOSE
+        printf ("Starting gdeshell ...\n");
 #endif
-		
-	};
-	
-	
+
+    };
+    
+    
+    // #tests
+    // Getting the IDs for active window and window woth focus.
+
+
 	//
-	// Obtendo informações sobre a janela ativa.
+	// Active window.
 	//
-	
+
+
 	//Active window
 	ActiveWindowId = (int) APIGetActiveWindow ();
 	
 	//valor de erro
-	if ( ActiveWindowId == (-1) ){
-		
-	    printf("shellInit: ERROR getting Active window ID\n");	
-	}	
-	
-#ifdef SHELL_VERBOSE			
-	printf("ActiveWindowId={%d}\n", ActiveWindowId );
+    if ( ActiveWindowId == (-1) )
+    {
+        printf ("shellInit: ERROR getting Active window ID\n");	
+    }
+
+#ifdef SHELL_VERBOSE
+    printf ("ActiveWindowId={%d}\n", ActiveWindowId );
 #endif
-	
+
+    //
+    // Window with focus
+    //
+
 	// Obtendo informações sobre a janela com o foco de entrada.
 
 	// Focus.
-	WindowWithFocusId = (int) APIGetFocus ();
-	
+    WindowWithFocusId = (int) APIGetFocus ();
+
 	//valor de erro
-	if ( WindowWithFocusId == (-1) ){
-	    printf("shellInit: ERROR getting Window With Focus ID\n");	
-	}	
-	
-#ifdef SHELL_VERBOSE			
-	printf("WindowWithFocusId={%d}\n", WindowWithFocusId );	
+    if ( WindowWithFocusId == (-1) )
+    {
+        printf ("shellInit: ERROR getting Window With Focus ID\n");
+    }
+
+#ifdef SHELL_VERBOSE
+    printf ("WindowWithFocusId={%d}\n", WindowWithFocusId );
 #endif
-	
+
+
 	//
-	// Obetendo informações sobre linhas e colunas do shell.
+	// Obtendo informações sobre linhas e colunas do shell.
 	//
-	
-	
-#ifdef SHELL_VERBOSE		
+
+#ifdef SHELL_VERBOSE
 	//columns and rows
-	printf("wlMaxColumns={%d} \n", wlMaxColumns );
-	printf("wlMaxRows={%d} \n", wlMaxRows );	
+    printf ("wlMaxColumns={%d} \n", wlMaxColumns );
+    printf ("wlMaxRows={%d} \n", wlMaxRows );
 #endif
-	
-	
+
+
 	//
 	// Process support.
 	//
@@ -4042,23 +4046,26 @@ int shellInit ( struct window_d *window ){
 	// e coloca-las na tela.
 	
 
-	// @todo: Criar na API uma rotina de inteface que use essa chamada.
+	// #todo: 
+	// Criar na API uma rotina de inteface que use essa chamada.
 	// ex: APIGetPID().
 
-	
+
 	//PID = (int) APIGetPID();
-	
+
     PID = (int) system_call( SYSTEMCALL_GETPID, 0, 0, 0 );
-	if ( PID == (-1) ){
-	    printf("ERROR getting PID\n");	
-	}
-  
+    if ( PID == (-1) )
+    {
+        printf ("ERROR getting PID\n");
+    }
+
     PPID = (int) system_call( SYSTEMCALL_GETPPID, 0, 0, 0 );
-	if ( PPID == (-1) ){
-	    printf("ERROR getting PPID\n");	
-	}
-  
-    //Mensagem ...
+    if ( PPID == (-1) )
+    {
+        printf ("ERROR getting PPID\n");
+    }
+
+	//Mensagem ...
 	//printf("Starting SHELL.BIN ... PID={%d} PPID={%d} \n", PID, PPID );
 	
 	
@@ -4066,21 +4073,25 @@ int shellInit ( struct window_d *window ){
 	//     E.BIN, F.BIN, G.BIN, A.BIN, B.BIN, C.BIN, D.BIN
  	//     (Mermaids) Usados para testes.
 
-//#ifdef SHELL_VERBOSE			
+//#ifdef SHELL_VERBOSE
 //	printf("Creating processes ...\n");
 //#endif
 
+
+
+//#test
 /*
-    printf("Creating process ...\n");	
+    printf("Creating process ...\n");
 	//D.:)
 	P = (void *) apiCreateProcess ( 0x400000, PRIORITY_HIGH, "NEW-PROCESS");
 	if ( (void *) P==NULL )
 	{
 		printf ("Fail creating process D :)\n");
 	};
-*/	
-	
+*/
 
+
+//#test
 /*
 #ifdef SHELL_VERBOSE
     
@@ -4112,18 +4123,25 @@ int shellInit ( struct window_d *window ){
 #endif	
 */
 
-	
-	//
-	//@todo: 
+
+
+
+	// #todo: 
 	// Devemos implementar uma rotina de inicialização dessas threads 
 	// criadas através de chamadas ao sistema.
-	//
+
 	
 	//printf("Initializing a thread...\n");
 	//...
-	
+
+
+	//
+	// # Testing LIBC #
+	//
+
+
 	//Testando bibliotecas.
-	//printf("Testing libraries:\n");	
+	//printf("Testing libraries:\n");
 	
 	//stdio.h
 	//printf("Testing stdio:\n");
@@ -4131,33 +4149,31 @@ int shellInit ( struct window_d *window ){
     //...
 
 	//stdlib.h
-#ifdef SHELL_VERBOSE			
-	printf("Testing stdlib:\n");
+#ifdef SHELL_VERBOSE
+    printf ("Testing stdlib:\n");
 #endif
-	
-	//
-	// *Importante:
-	//     Isso inicializa o gerenciamento de memória oferecido pela 
+
+
+	// #Importante:
+	// Isso inicializa o gerenciamento de memória oferecido pela 
 	// biblioteca C99 em user mode. Coisas como inicializar o 'heap'
 	// oferecido pela biblioteca.
 	// Agora poderemos alocar memória dentro do heap oferecido pela biblioteca.
-	//
-	
-//initRT:	
+
 	//libcInitRT(); 
-	
-	
-#ifdef SHELL_VERBOSE			
+
+
+#ifdef SHELL_VERBOSE
 	//Obs: Sempre inicia com o mesmo número.
 	int rand_value;
 	rand_value = (int) rand();
-	printf("RandValue1={%d}\n", rand_value);
+	printf ("RandValue1={%d}\n", rand_value);
 	//rand_value = (int) rand();
 	//printf("RandValue2={%d}\n", rand_value);
     //rand_value = (int) rand();
 	//printf("RandValue3={%d}\n", rand_value);
 	//...
-#endif	
+#endif
 
 	//stddef.h
 	//printf("Testing stddef:\n");	
@@ -4165,7 +4181,6 @@ int shellInit ( struct window_d *window ){
 	//Testing COLUMNS
 	
 	//Testing ROWS
-	
 	
 	//testando api.h
 	//...
@@ -4185,47 +4200,44 @@ int shellInit ( struct window_d *window ){
 	// Get thread info.
 	//
 	
-	
+
 	//
 	// Testing commands.
 	//
-#ifdef SHELL_VERBOSE		
+
+#ifdef SHELL_VERBOSE
 	//Lib C.
 	//libC. (stdlib.c)
-	system("test");       
-	system("ls");
-	system("start");
-	//system("xxfailxx");
+	system ("test");       
+	system ("ls");
+	system ("start");
+	//system ("xxfailxx");
 	//...
 #endif
-	
-	
-#ifdef SHELL_VERBOSE			
+
+#ifdef SHELL_VERBOSE
 	//API.
-	apiSystem("test");    
-    apiSystem("ls");
-	apiSystem("start");
-	//apiSystem("xxfailxx");
+	apiSystem ("test");    
+    apiSystem ("ls");
+	apiSystem ("start");
+	//apiSystem ("xxfailxx");
 	//...
 #endif
-	
-	//Ok funcionando ...
-	//@todo: Testar outros comandos.
-	//...
-	
-	
+
+
+
 	//Testing message box.
 	//MessageBox(3, "Shell message box","Testing message box...");
-	
-	//
-	// @todo: Clear client area.
-	//        System call redraw client area.
-	
-	
-	// ## prompt string support ##
-	shellInitializeWorkingDiretoryString ();
 
-	
+
+	//
+	// # PWD #
+	//
+
+	// Prompt string support
+    shellInitializeWorkingDiretoryString ();
+
+
 // Done.
 	
 done:
@@ -5457,19 +5469,21 @@ void shellUpdateWorkingDiretoryString ( char *string ){
 		    //strcat( current_workingdiretory_string, 
 			//    SHELL_PATHNAME_SEPARATOR );		
 		
-	        // ## separador ##		
-		    strcat ( current_workingdiretory_string, string );	
+            // ## separador ##
+            strcat ( current_workingdiretory_string, string );
 
-		    strcat( current_workingdiretory_string, 
-			    SHELL_PATHNAME_SEPARATOR );				
-		
+            strcat( current_workingdiretory_string, 
+                SHELL_PATHNAME_SEPARATOR );
+
             //Atualizar no gerenciamento feito pelo kernel.
-	        system_call( 175, (unsigned long) string,
-		        (unsigned long) string, (unsigned long) string );		
-		};
-	};
+            system_call( 175, (unsigned long) string,
+                (unsigned long) string, (unsigned long) string );
+        };
+    };
+
 	//...
-fail:	
+fail:
+
 done:
     return;
 }
@@ -5520,16 +5534,27 @@ void shellInitializeWorkingDiretoryString (){
 
 	//root:/volumex/
 	strcat ( current_workingdiretory_string, SHELL_PATHNAME_SEPARATOR );
+
+	// #ps:
+	// In this moment cwd string is initialized.
+	// Let's setup environment variables for that.
+
+	// #todo: Isso é um teste ainda.
+	// #todo: Implementar isso na libc.
+	//int setenv(const char *name, const char *value, int overwrite);
+	//setenv ("PWD", (const char *) current_workingdiretory_string, 1);
 	
+    // Flag.
     pwd_initialized = 1;
 }
 
 
-// atualiza a variável global para id de diretório atual de trabalho.
 
-void shellUpdateCurrentDirectoryID ( int id ){
-	
-	g_current_workingdirectory_id = (id);
+// Atualiza a variável global para id de diretório atual de trabalho.
+
+void shellUpdateCurrentDirectoryID ( int id )
+{
+    g_current_workingdirectory_id = (id);
 }
 
 
@@ -5561,7 +5586,7 @@ void shellTaskList (){
 	
 	Y++;
 	X=0;
-	shellSetCursor(X,Y);	
+	shellSetCursor(X,Y);
     printf("PID ");
 	X=8;
 	shellSetCursor(X,Y);
@@ -5577,91 +5602,97 @@ void shellTaskList (){
 
 	Y++;
 	X=0;
-	shellSetCursor(X,Y);	
+	shellSetCursor(X,Y);
     printf("%d",PID);
 	X=8;
 	shellSetCursor(X,Y);
 	printf("...");
 	
-    //...		
+    //...
 }
 
 
-void shellShowPID (){
-
-	printf (" ~ Current PID %d\n", (int) getpid () );	
+void shellShowPID ()
+{
+    printf (" ~ Current PID %d\n", (int) getpid () );
 }
 
 
-void shellShowPPID (){
-
-	printf (" ~ Current PPID %d\n", (int) getppid () );
+void shellShowPPID ()
+{
+    printf (" ~ Current PPID %d\n", (int) getppid () );
 }
 
 
-void shellShowUID (){
-	
-	printf (" ~ Current UID %d\n", (int) getuid () );
+void shellShowUID ()
+{
+    printf (" ~ Current UID %d\n", (int) getuid () );
 }
 
 
-void shellShowGID (){
-
-	printf (" ~ Current GID %d\n", (int) getgid () );
+void shellShowGID ()
+{
+    printf (" ~ Current GID %d\n", (int) getgid () );
 }
 
 
-void shellShowUserSessionID (){
-	
-	printf ("Current user session %d\n", 
-	    (int) system_call( SYSTEMCALL_GETCURRENTUSERSESSION, 0, 0, 0) );
+void shellShowUserSessionID ()
+{
+    printf ("Current user session %d\n", 
+        (int) system_call( SYSTEMCALL_GETCURRENTUSERSESSION, 0, 0, 0) );
 }
 
 
-void shellShowWindowStationID (){
-	
-	printf ("Current room %d\n", 
-	    (int) system_call( SYSTEMCALL_GETCURRENTWINDOWSTATION, 0, 0, 0) );
+void shellShowWindowStationID ()
+{
+    printf ("Current room %d\n", 
+        (int) system_call( SYSTEMCALL_GETCURRENTWINDOWSTATION, 0, 0, 0) );
 }
 
 
-void shellShowDesktopID (){
-	
-	printf ("Current desktop %d\n", 
-	    (int) system_call( SYSTEMCALL_GETCURRENTDESKTOP, 0, 0, 0) );
+void shellShowDesktopID ()
+{
+    printf ("Current desktop %d\n", 
+        (int) system_call( SYSTEMCALL_GETCURRENTDESKTOP, 0, 0, 0) );
 }
+
 
 void shellShowProcessHeapPointer (){
-	
+
+    unsigned long heap_pointer;
+    
 	//int id = (int) system_call ( SYSTEMCALL_GETPID, 0, 0, 0); 
-	int id = (int) getpid(); 
-	
-	unsigned long heap_pointer = (unsigned long) system_call( SYSTEMCALL_GETPROCESSHEAPPOINTER, 
-	                                                id, 0, 0 );
-	printf ("Current Process heap pointer address %x\n", 
-	    (unsigned long) heap_pointer );
+    int id = (int) getpid(); 
+
+    heap_pointer = (unsigned long) system_call( SYSTEMCALL_GETPROCESSHEAPPOINTER, 
+                                       id, 0, 0 );
+
+    printf ("Current Process heap pointer address %x\n", 
+        (unsigned long) heap_pointer );
 }
 
 
 void shellShowKernelHeapPointer (){
-	
+
+    unsigned long heap_pointer;
+
 	//??
 	//Id do processo kernel.
-	int id = 0;   
-	
-	unsigned long heap_pointer = (unsigned long) system_call( SYSTEMCALL_GETPROCESSHEAPPOINTER, 
-	                                                id, 0, 0 );
-	
-	printf ("Current Process heap pointer address %x\n", 
-	    (unsigned long) heap_pointer );
+    int id = 0;   
+
+    heap_pointer = (unsigned long) system_call( SYSTEMCALL_GETPROCESSHEAPPOINTER, 
+                                       id, 0, 0 );
+
+    printf ("Current Process heap pointer address %x\n", 
+        (unsigned long) heap_pointer );
 }
 
 
 //mostra informações sobre o disco atual.
-void shellShowDiskInfo (){
-	
+void shellShowDiskInfo ()
+{
 	//@todo: atualizar api.h
-	system_call ( 251, 0, 0, 0 );
+    system_call ( 251, 0, 0, 0 );
 }
 
 
@@ -5674,70 +5705,76 @@ void shellShowVolumeInfo (){
 
 
 //mostrar informações gerais sobre a memória.
-void shellShowMemoryInfo (){
-	
-	system_call ( SYSTEMCALL_MEMORYINFO, 0, 0, 0 );
+void shellShowMemoryInfo ()
+{
+    system_call ( SYSTEMCALL_MEMORYINFO, 0, 0, 0 );
 }
 
 
 //mostrar informações gerais sobre a memória.
-void shellShowPCIInfo (){
-	
-    system_call ( SYSTEMCALL_SHOWPCIINFO, 0, 0, 0 );	
+void shellShowPCIInfo ()
+{
+    system_call ( SYSTEMCALL_SHOWPCIINFO, 0, 0, 0 );
 }
 
 
 //mostrar informações gerais sobre a memória.
-void shellShowKernelInfo (){
-	
-	system_call ( SYSTEMCALL_SHOWKERNELINFO, 0, 0, 0 );
+void shellShowKernelInfo ()
+{
+    system_call ( SYSTEMCALL_SHOWKERNELINFO, 0, 0, 0 );
 }
 
 
 
 /*
- ***************************************************
+ **********************************************
  * shell_fntos:
  *     Rotina interna de support.
- * isso deve ir para bibliotecas depois.
- * não tem protótipo ainda.
+ *     Isso deve ir para bibliotecas depois.
+ *     Não tem protótipo ainda.
+ *
  * Credits: Luiz Felipe
  */
 
 void shell_fntos (char *name){
-	
+
     int  i, ns = 0;
     char ext[4];
     //const char ext[4];
-	
+
+
     //transforma em maiúscula
-	while ( *name && *name != '.' )
-	{
+   while ( *name && *name != '.' )
+    {
         if(*name >= 'a' && *name <= 'z')
             *name -= 0x20;
 
         name++;
         ns++;
-    }
+    };
+
 
     // aqui name[0] é o ponto.
-	// então constroi a extensão.
-	for ( i=0; i < 3 && name[i+1]; i++ )
-	{
+    // então constroi a extensão.
+    for ( i=0; i < 3 && name[i+1]; i++ )
+    {
         if(name[i+1] >= 'a' && name[i+1] <= 'z')
             name[i+1] -= 0x20;
 
         ext[i] = name[i+1];
     };
 
+
     while (ns < 8)
-	{
+    {
         *name++ = ' ';
         ns++;
     };
 
+
     for ( i=0; i < 3; i++ )
         *name++ = ext[i];
+
 
     *name = '\0';
 }
@@ -5749,7 +5786,7 @@ void shell_fntos (char *name){
  *
  *     Essa é uma rotina alternativa que roda um processo usando os recursos 
  * do processo init.
- */									 
+ */
 
 int 
 shell_gramado_core_init_execve ( const char *arg1,     // nome
@@ -5860,7 +5897,7 @@ execve:
 		//Saída elegante, retornando para o crt0.
 		ShellFlag = SHELLFLAG_EXIT;
 		
-		//ShellFlag = SHELLFLAG_FEEDTERMINAL;		
+		//ShellFlag = SHELLFLAG_FEEDTERMINAL;
 		goto done;
 	}else{
 		
@@ -5947,7 +5984,7 @@ feedterminalDialog ( struct window_d *window,
                 //colocar em full screen somente a área de cliente. 				
 		        case VK_F2:
 				    //APISetFocus(i2Window);
-					//APIredraw_window(i2Window);				
+					//APIredraw_window(i2Window);
 				    MessageBox( 1, "feedterminalDialog","F2: ");
 					//ShellFlag = SHELLFLAG_COMMANDLINE;
 					break;
@@ -5970,21 +6007,25 @@ feedterminalDialog ( struct window_d *window,
 }
 
 
-// #atenção
-// A função fprintf está emd esenvolvimento. Pode falhar.
 
+
+/*
+ **************
+ * die:
+ */
+ 
 void die (char *str){
-	
-	printf ("die: %s",str);
-	
-	fprintf ( stderr, "%s\n", str );
-	
-	exit (1);
+
+    printf ("die: %s",str);
+    fprintf ( stderr, "%s\n", str );
+
+    exit (1);
 }
 
 
 /*
-//isso foi para stdlib.c
+// Isso foi para stdlib.c
+// #todo: Conferir e deletar essa aqui.
 void *xmalloc( int size){
 	
     register int value = (int) malloc(size);
@@ -5992,13 +6033,16 @@ void *xmalloc( int size){
         die ("xmalloc fail.\n");
 //done:  
     return (void *) value;
-};
+}
 */
 
 
+
 /*
+ ***********************************
  * concat:
  *     Concatena strings.
+ *     #todo: Isso pode ir para a libc.
  */
 
 char *concat ( char *s1, char *s2, char *s3 ){
@@ -6062,8 +6106,7 @@ reader_loop()
 		//...
 		
 	};
-	
-};
+}
 */
 
  
@@ -6085,33 +6128,33 @@ reader_loop()
  */
  
 int shellExecuteThisScript ( char *script_name ){
-	
-    
- 	//#todo:
+
+	//#todo:
 	//Essa função deve chamar o interpretador de script	
 	
-	FILE *script_file;	
-	int i;
+    FILE *script_file;
+    int i;
 	
 	// Aqui temos que carregar o arquivo de script indicado 
 	// nos argumentos.
 	
-	printf("shellExecuteThisScript:\n");	
-	printf("Initializing script ...\n");
-    printf("CurrentFile={%s}\n",script_name);
-	
+    printf ("shellExecuteThisScript:\n");
+    printf ("Initializing script ...\n");
+    printf ("CurrentFile={%s}\n",script_name);
+
 	
 	// #ok 
     // Carregaremos o arquivo com o nome passado por argumento.	
 	
     script_file = fopen (script_name,"rw");
-	
-	if ( (void *) script_file == NULL )
-	{	
-		printf ("shellExecuteThisScript: Can't open script file!\n");
-		die ("*");
-	};
-	
+
+    if ( (void *) script_file == NULL )
+    {
+        printf ("shellExecuteThisScript: Can't open script file!\n");
+        die ("*");
+    }
+
+
 	//#Ok
 	//atualizando a linha de comandos no prompt[], stdin.
 	
@@ -6122,13 +6165,17 @@ int shellExecuteThisScript ( char *script_name ){
     //#todo 	
 	//Fazer isso ao invés de copiar.
 	//stdin = script_file;
-	
-	for ( i=0; i< 128; i++ )
-	{	
-		stdin->_base[i] = script_file->_base[i];
-	}
-	
-	
+
+	// #bugbug
+	// Não podemos acessar elementos da estrutura de arquivo.
+
+
+    for ( i=0; i< 128; i++ )
+    {
+        stdin->_base[i] = script_file->_base[i];
+    };
+
+
 	//
 	// ## parser ##
 	//
@@ -6138,17 +6185,16 @@ int shellExecuteThisScript ( char *script_name ){
 	
 	//parser();
 	
-	
+
 	//EOF_Reached = EOF;
 
-    return 0;		
+    return 0;
 }
 
 
 /*
-char **
-array_of_strings()
-{
+char **array_of_strings (){
+
 	char **a;
 	
 	a[0] = "test0";
@@ -6156,37 +6202,36 @@ array_of_strings()
 	a[2] = NULL;
 	
 	return (a);
-};
+}
 */
 
 
 /*
 //retorna o pool de strings contendo os nomes dos arquivos
 //em um diretório que está no buffer.
-char **
-get_dir_files( char *buffer )
-{
+char **get_dir_files ( char *buffer ){
+
     char **poll;	
 	
 	// ...
 	
-	
-    return (poll);	
+    return (poll);
 }
 */
+
+
 
 /*
 //coloca no pool de strings passado por argumento 
 //as strings que correspondem  aos nomes 
 // dos arquivos encontrados no diretório 
 //indicado pelo buffer.
-int set_dir_files( char **poll, char *buffer )
-{
+int set_dir_files ( char **poll, char *buffer ){
 	
 	//...
-	
+
     return (0);
-};
+}
 */
 
 
@@ -6215,12 +6260,13 @@ int set_dir_files( char **poll, char *buffer )
 	// $/ é o diretório raiz do volume do sistema.
 	// $v/ é o diretório raiz do vfs.
 
+// #bugbug
 // #todo
 // rever isso.
-// absoluto é o que começa no diretório raiz '/' ou 'root:/'	
+// absoluto é o que começa no diretório raiz '/' ou 'root:/'
 
 int absolute_pathname ( char *string ){
-	
+
 	// Checar nulidade.
     if( !string || !strlen(string) )
         return (0);
@@ -6231,136 +6277,136 @@ int absolute_pathname ( char *string ){
     if( *string == '/' )
         return (1);
 
-	
+
 	// .
-    // É absoluto, pois estamos determinando o diretório.
+	// É absoluto, pois estamos determinando o diretório.
 	// Se for ponto, avança em seguida.
-	if( *string++ == '.' )
+    if ( *string++ == '.' )
     {
         // ./
 		// Significa que se trata do diretório atual
-		if( (!*string) || *string == '/' )
-	        return (1);
+        if ( (!*string) || *string == '/' )
+            return (1);
 
-        // ..
+		// ..
 		// ../
 		// Significa que se trata do diretório pai.
 		// Se for ponto, avança em seguida.
 		// se for barra ou nada é absoluto.
 		//obs: o nada nesse caso significa que foi digitado apenas '..'
-		if( *string++ == '.' )
-	        if( !*string || *string == '/' )  
-	            return (1);
-		
+        if ( *string++ == '.' )
+            if( !*string || *string == '/' )  
+                return (1);
+
 		// ?? Continua ...
 		// Se estamos aqui, significa que é um ponto que não é seguido 
 		// de outro ponto ou barra.
 		//?? deveríamos falhar com a opção 2. 
-		return (2);
+        return (2);
     }
-	
+
+
 	// root:/
-	if ( *string == 'r' )
-	{
-	    if ( string[0] == 'r' &&
+    if ( *string == 'r' )
+    {
+        if ( string[0] == 'r' &&
              string[1] == 'o' &&
              string[2] == 'o' &&
              string[3] == 't' &&
              string[4] == ':' &&
              string[5] == '/' )
-	    {
-		    return (1);		 
-		}
+        {
+            return (1);
+        }
+
+        return (2);
+    }
 
 
-        return (2);		
-	};
-	
 	// #teste:
 	// invendando esquema.
 	// Volume do sistema.
 	// O número do volume do sistema é um padrão.
-	if ( *string == '$' )
-	{
-		
-	    // root:/volume1/ = $/ (volume do sistema)	    
-		if ( string[0] == '$' && 		
-		     string[1] == '/' )
-	    {
-		    return (1);		 
-		}
-		
-	    // root:/volume1/ = $v/ (vfs)
-		if ( string[0] == '$' &&
-             string[1] == 'v' && 		
-		     string[2] == '/' )
-	    {
-		    return (1);		 
-		}
+    if ( *string == '$' )
+    {
 
-        return (2);		
-	};	
-	
+        // root:/volume1/ = $/ (volume do sistema)
+        if ( string[0] == '$' &&  string[1] == '/' )
+        {
+            return (1); 
+        }
+
+		// root:/volume1/ = $v/ (vfs)
+        if ( string[0] == '$' &&
+             string[1] == 'v' && 
+             string[2] == '/' )
+        {
+            return (1);
+        }
+
+        return (2);
+    }
+
+
 //fail:
 //Não é absoluto.
-	
+
     return 0;
 }
 
 
 //inicializaremos o supporte a pathname
 int shellInitPathname (){
-	
-	int i;
-	
-	if (pathname_initilized == 1)
-	{
-		return 0;
-		//goto done;
-	}
-	
-	for ( i=0; i<PATHNAME_LENGHT; i++ ){
-		
+
+    int i;
+
+    if (pathname_initilized == 1)
+    {
+        return 0;
+    }
+
+
+    for ( i=0; i<PATHNAME_LENGHT; i++ )
+    {
 		pathname_buffer[i] = (char) '\0';
-	}
-	
-	pathname_lenght = 0;
-	
+    };
+
+
+    pathname_lenght = 0;
+
 	//...
-	
-//done:	
 
     pathname_initilized = 1;
-	return 0;
+
+    return 0;
 }
 
  
 //inicializaremos o supporte a filename
 int shellInitFilename (){
-	
-	int i;
-	
-	if (filename_initilized == 1)
-	{	
-		return 0;
-		//goto done;
-	}
-	
+
+    int i;
+
+    if (filename_initilized == 1)
+    {
+        return 0;
+    }
+
+
 	for ( i=0; i<FILENAME_LENGHT; i++ )
 	{
 		filename_buffer[i] = (char) '\0';
-	}
-	
-	filename_lenght = 0;
-	
-    	
+	};
+
+
+    filename_lenght = 0;
+
 	//...
-	
-//done:
-	
+
+
     filename_initilized = 1;
-	
-	return 0;
+
+    return 0;
 }
 
 
@@ -6374,34 +6420,37 @@ int shellInitFilename (){
 //#obs: This is a cool thing!
 
 void shell_pathname_backup ( char *path, int n ){
-	
+
     register char *p = path + strlen(path);
-	
-	unsigned long saveN = (unsigned long) n;
+
+    unsigned long saveN = (unsigned long) n;
 
     //#debug 
 	//printf("%s", path);
 	
-	if (*path)
+    if (*path)
         p--;
 
     while (n--)
     {
         while(*p == '/')
-	        p--;
+            p--;
 
         while(*p != '/')
-	        p--;
+            p--;
 
         *++p = '\0';
     };
-	
-	//@todo: Criar em kernelmode uma roptina que 
-	//que faça o mesmo que a shell_pathname_backup 	
-    //Atualizar no gerenciamento feito pelo kernel.
-	
-	system_call ( 176, (unsigned long) saveN, (unsigned long) saveN, 
-        (unsigned long) saveN );			   	
+
+
+	// #todo: 
+	// Criar em kernelmode uma roptina que faça o mesmo que 
+	// a shell_pathname_backup 	
+	// Atualizar no gerenciamento feito pelo kernel.
+
+
+    system_call ( 176, 
+        (unsigned long) saveN, (unsigned long) saveN, (unsigned long) saveN );
 }
 
 
@@ -6410,29 +6459,27 @@ void shell_pathname_backup ( char *path, int n ){
 // Isso vai ser usado pelo echo.
 
 void shell_print_tokenList ( char *token_list[], char *separator ){
-	
-	int i;
-	char *token;
-	
-	token = (char *) token_list[0];
-	
-	if ( token == NULL )
-	    return;
-	    //goto fail;
-	
-	
+
+    int i;
+    char *token;
+
+    token = (char *) token_list[0];
+
+    if ( token == NULL )
+        return;
+
+
 	//token = (char *) tokenList[i];
-		
 	//	if( token == NULL ){
-		
-    //#todo: Limits.		
-    
-	for ( i=0; i,128; i++ )
+
+    //#todo: Limits.
+
+    for ( i=0; i,128; i++ )
     {
 		token = (char *) token_list[i];
 
-	    if ( token == NULL )
-	        return;
+        if ( token == NULL )
+            return;
 		
 		if ( strncmp ( (char *) token_list[i], "echo", 4 ) == 0 )
 		    continue;	
@@ -6504,24 +6551,27 @@ decrement_variable( int *var )
 
 /* Check if it's a .bin file */
 int is_bin ( char *cmd ){
-	
+
     char *p;
-	
-	p = cmd;
-	
-	int len = strlen (p);
-    
-	if( len <= 4 ) 
-		return 0;
-	
+
+    p = cmd;
+
+    int len = strlen (p);
+
+    if ( len <= 4 ) 
+        return 0;
+
+
     p += len - 4;
     
-	if ( *p++ != '.' ) 
-		return 0;
-	
-    if ( strncmp ( (char *) p, "bin", 3 ) == 0 ){
-	    return 1;	
-	}
+    if ( *p++ != '.' ) 
+        return 0;
+
+
+    if ( strncmp ( (char *) p, "bin", 3 ) == 0 )
+    {
+        return 1;
+    }
 
     return 0;
 }
@@ -6529,25 +6579,32 @@ int is_bin ( char *cmd ){
 
 /* Check if it's a .sh1 file */
 int is_sh1 ( char *cmd ){
-	
+
     char *p;
-	
-	p = cmd;
-	
-	int len = strlen (p);
-    
-	if ( len <= 4 ) 
-		return 0;
-	
+
+    p = cmd;
+
+
+    int len = strlen (p);
+
+
+    if ( len <= 4 ) 
+        return 0;
+
+
     p += len - 4;
-    
-	if ( *p++ != '.' ) 
-		return 0;
-	
-    if ( strncmp ( (char *) p, "sh1", 3 ) == 0 ){
-	    return 1;	
-	}
-	
+
+
+    if ( *p++ != '.' ) 
+        return 0;
+
+
+    if ( strncmp ( (char *) p, "sh1", 3 ) == 0 )
+    {
+        return 1;
+    }
+
+
     return 0;
 }
 
@@ -6556,10 +6613,10 @@ int is_sh1 ( char *cmd ){
  * Give version information about this shell. 
  */
 
-void show_shell_version (){
-	
+void show_shell_version ()
+{
     printf ("%s, version %s.%s \n", 
-	    shell_name, dist_version, build_version );
+        shell_name, dist_version, build_version );
 }
 
 
@@ -6586,7 +6643,7 @@ int shell_save_file (){
     size_t len = 0;
 	
 	
-	printf ("shell_save_file: Salvando um arquivo ...\n");	
+	printf ("shell_save_file: Salvando um arquivo ...\n");
 	
 	//
 	// Lenght in bytes.
@@ -6597,13 +6654,13 @@ int shell_save_file (){
 	if (len <= 0)
 	{
 	    printf ("shell_save_file:  Fail. Empty file.\n");
-        return (int) 1;		
+        return (int) 1;
 	}
 	
 	if (len > 2048)
 	{
 	    printf ("shell_save_file:  Limit Fail. The  file is too long.\n");
-        return (int) 1;		
+        return (int) 1;
 	}
 	
     //
@@ -6612,37 +6669,38 @@ int shell_save_file (){
 	
 	number_of_sectors = (unsigned long) ( len / 512 );
 	
-	if ( len > 0 && len < 512 ){
-	    number_of_sectors = 1; 
-    }		
-	
-	if ( number_of_sectors == 0 )
-	{
-	    printf ("shell_save_file:  Limit Fail. (0) sectors so save.\n");
-        return (int) 1;				
-	}
-	
+    if ( len > 0 && len < 512 )
+    {
+        number_of_sectors = 1; 
+    }
+
+    if ( number_of_sectors == 0 )
+    {
+        printf ("shell_save_file:  Limit Fail. (0) sectors so save.\n");
+        return (int) 1;
+    }
+
 	//limite de teste.
 	//Se tivermos que salvar mais que 4 setores.
-	if ( number_of_sectors > 4 )
-	{
+    if ( number_of_sectors > 4 )
+    {
 	    printf ("shell_save_file:  Limit Fail. (%d) sectors so save.\n",
 		    number_of_sectors );
-        return (int) 1;				
-	}
+        return (int) 1;
+    }
 	
 	
     Ret = (int) apiSaveFile ( file_1_name,  // name 
                     number_of_sectors,      // number of sectors.
-                    len,                    // size in bytes			
+                    len,                    // size in bytes
                     file_1,                 // address
-                    0x20 );                 // flag		
-				
+                    0x20 );                 // flag
+
 	//if (Ret == 0)
-	
-	printf ("shell_save_file: done\n");	
-	
-	return (int) Ret;
+
+    printf ("shell_save_file: done\n");
+
+    return (int) Ret;
 }
 
 
@@ -6688,8 +6746,9 @@ read_skip_spaces (infile)
                       else break;
     }
     return c;
-};
+}
 */
+
 
 
 /* 
@@ -6731,26 +6790,26 @@ read_name (str, infile)
 //Qual será a linha que estará no topo da janela.
 void textSetTopRow ( int number )
 {
-    textTopRow = (int) number; 	
+    textTopRow = (int) number; 
 }
 
 
 int textGetTopRow ()
 {
-    return (int) textTopRow; 	
+    return (int) textTopRow; 
 }
 
 
 //Qual será a linha que estará na parte de baixo da janela.
 void textSetBottomRow ( int number )
 {
-    textBottomRow = (int) number; 	
+    textBottomRow = (int) number; 
 }
 
 
 int textGetBottomRow ()
 {
-    return (int) textBottomRow; 	
+    return (int) textBottomRow; 
 }
 
 
@@ -6787,13 +6846,15 @@ void clearLine ( int line_number ){
 void testShowLines (){
 	
 	//desabilita o cursor
-	system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
-	
-	int i=0;
-	int j=0;
-	
-	for ( i=0; i<32; i++ )
-	{
+    system_call ( 245, 
+        (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
+
+    int i=0;
+    int j=0;
+
+
+    for ( i=0; i<32; i++ )
+    {
 		for ( j=0; j<80; j++ )
 		{
 		    //LINES[i].CHARS[j] = (char) 'x';
@@ -6802,10 +6863,11 @@ void testShowLines (){
 			printf ("%c", LINES[i].CHARS[j] );
 		}
 		printf ("\n");
-	};
+    };
 
 	//reabilita o cursor
-	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);	
+    system_call ( 244, 
+        (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
 }
 
 
@@ -6813,7 +6875,8 @@ void testShowLines (){
 void shellRefreshVisibleArea (){
 	
 	//desabilita o cursor
-	system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
+    system_call ( 245, 
+        (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
 	
 	
 	//
@@ -6851,19 +6914,20 @@ void shellRefreshVisibleArea (){
 		for ( j=0; j<80; j++ )
 		{	
 	        //refresh
-            printf ("%c", LINES[i].CHARS[j] );						
+            printf ("%c", LINES[i].CHARS[j] );
 		}
 	};
 
 	//reabilita o cursor
-	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);	
+    system_call ( 244, 
+        (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);	
 }
 
 
-void testChangeVisibleArea()
-{
-	textTopRow += textWheelDelta;
-	textBottomRow += textWheelDelta;	
+void testChangeVisibleArea (){
+
+    textTopRow += textWheelDelta;
+    textBottomRow += textWheelDelta;
 }
 
 
@@ -6873,21 +6937,21 @@ void updateVisibleArea( int direction )
     {
 	    case 0:
 	        textTopRow += textWheelDelta;
-	        textBottomRow += textWheelDelta;			
-            break; 		
-			
+	        textBottomRow += textWheelDelta;
+            break; 
+
 	    case 1:
 	        textTopRow -= textWheelDelta;
-	        textBottomRow -= textWheelDelta;					
-            break; 		
-	}	
+	        textBottomRow -= textWheelDelta;
+            break; 
+    };
 }
 
 
 
 //rotina de testes de socket
-void shellSocketTest()
-{
+void shellSocketTest (){
+
 	//#todo: isso precisa ser um porteiro de estrutura.
 	void *socketHandle;
 	
@@ -6904,50 +6968,63 @@ void shellSocketTest()
 	// Creating socket
 	//
 	
-	printf("Creating socket ...\n");
-	socketHandle = (void *) system_call ( 160, (unsigned long) 0xC0A80164, (unsigned long) 0, (unsigned long) 0x22C3 );
+    printf ("Creating socket ...\n");
+    socketHandle = (void *) system_call ( 160, 
+	                            (unsigned long) 0xC0A80164, 
+	                            (unsigned long) 0, 
+	                            (unsigned long) 0x22C3 );
+
+    printf ("Updating socket ...\n");
+    system_call ( 163, 
+	    (unsigned long) socketHandle, 
+	    (unsigned long) 0xC0A80165, 
+	    (unsigned long) 0x22C2 );
 	
-	printf("Updating socket ...\n");
-	system_call ( 163, (unsigned long) socketHandle, (unsigned long) 0xC0A80165, (unsigned long) 0x22C2 );
+    printf ("Getting ip from socket ...\n");
+    iplong = (unsigned long) system_call ( 161, 
+	                             (unsigned long) socketHandle, 
+	                             (unsigned long) socketHandle, 
+	                             (unsigned long) socketHandle );
 	
-	printf("Getting ip from socket ...\n");
-	iplong = (unsigned long) system_call ( 161, (unsigned long) socketHandle, (unsigned long) socketHandle, (unsigned long) socketHandle);
-	
-	printf("Getting port from socket ...\n");
-	port = (unsigned long) system_call ( 162, (unsigned long) socketHandle, (unsigned long) socketHandle, (unsigned long) socketHandle);
-	
+    printf ("Getting port from socket ...\n");
+    port = (unsigned long) system_call ( 162, 
+	                           (unsigned long) socketHandle, 
+	                           (unsigned long) socketHandle, 
+	                           (unsigned long) socketHandle );
+
 	//
 	// output
 	//
-	unsigned long tmp;
-	
+
+    unsigned long tmp = 0;
+
 	tmp = iplong;
 	ip[3] = (char) ( tmp & 0x000000FF ); 
-	
+
 	tmp = iplong;
 	tmp = (tmp >> 8);
 	ip[2] = (char) ( tmp & 0x000000FF );
-	
+
 	tmp = iplong;
 	tmp = (tmp >> 16);
 	ip[1] = (char) ( tmp & 0x000000FF );
-	
+
 	tmp = iplong;
 	tmp = (tmp >> 24);
 	ip[0] = (char) ( tmp & 0x000000FF );
-	
-	printf("\n");
+
+
+    printf ("\n");
+    printf ("Socket: ( %d.%d.%d.%d:%d )\n", 
+        ip[0], ip[1], ip[2], ip[3], port );
 	//printf("iplong=%x\n",iplong);
-	printf ("Socket: ( %d.%d.%d.%d:%d )\n", 
-		ip[0], ip[1], ip[2], ip[3], port );
-	
-	printf ("done\n");
+    printf ("Done.\n");
 }
 
 
 
 /*
- **************************************************************
+ *********************************************************
  * main: 
  *     Função principal.
  *     The Application Entry Point.
@@ -7556,7 +7633,7 @@ noArgs:
 	// Temos que usar as configurações do terminal que o gdeshell está rodando.
 	// Então não podemos simplesmente criar uma janela do tamanho que quisermos.
 	
-	shellShell (); 	
+	shellShell ();
 	
 	// Apenas inicialize. 
 	// Continuaremos com o procedimento do shell e não o da barra,	
@@ -7585,7 +7662,7 @@ noArgs:
 	
 	//#debug
 	//printf ("*breakpoint");
-	//while (1){}	
+	//while (1){}
     
  	//
 	// ++ terminal ++
@@ -7605,8 +7682,8 @@ noArgs:
 		
 				 
 	//salva ponteiro da janela principal e da janela do terminal. 
-	shell_info.main_window = ( struct window_d * ) hWindow;			 
-	shell_info.terminal_window = ( struct window_d * ) hWindow;		
+	shell_info.main_window = ( struct window_d * ) hWindow;
+	shell_info.terminal_window = ( struct window_d * ) hWindow;
  
  
 	
@@ -7619,25 +7696,23 @@ noArgs:
 	//
 	// ## Se der problema no tamanho da área de cliente ##
 	//
-	
-	if ( terminal_rect.left < wpWindowLeft ||
-         terminal_rect.top < wpWindowTop ||	
-	     terminal_rect.width > wsWindowWidth ||
-		 terminal_rect.height > wsWindowHeight )
-	{
+
+    if ( terminal_rect.left < wpWindowLeft ||
+         terminal_rect.top < wpWindowTop ||
+         terminal_rect.width > wsWindowWidth ||
+         terminal_rect.height > wsWindowHeight )
+    {
         //#debug
-		printf("## fail ## \n");
-	    printf("terminal_rect: 2\n");	
-        printf("l={%d} t={%d} w={%d} h={%d}\n", 
-	        terminal_rect.left, 
-			terminal_rect.top,
-		    terminal_rect.width, 
-			terminal_rect.height );
-		
-        while (1){ asm ("pause"); }			
+        printf ("## fail ## \n");
+        printf ("terminal_rect: 2\n");
+        printf ("l={%d} t={%d} w={%d} h={%d}\n", 
+            terminal_rect.left, terminal_rect.top,
+            terminal_rect.width, terminal_rect.height );
+        while (1){ asm ("pause"); }
 	}
-	
-	
+
+
+
         //#debug
 		/*
 	    printf("## debug ## \n");
@@ -7648,30 +7723,29 @@ noArgs:
 		    terminal_rect.width, 
 			terminal_rect.height );	
 	   */
-	
+
+
 	//printf("SHELL\n");	
     //printf("#debug breakpoint");
     //while(1){} 	
 	
 	//===============================
-	
- 
-	
-	
-	
+
+
+
+
+
 	//===========================================================
 
-	
 	//
 	// Habilitando o cursor piscante de textos.
 	//
 	
-	shellSetCursor ( (terminal_rect.left / 8) , ( terminal_rect.top/8) );	
-	
-	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );
-	
-    
+    shellSetCursor ( (terminal_rect.left / 8) , ( terminal_rect.top/8) );
+    system_call ( 244, 
+        (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 ); 
 	//===========================
+
 
 
 	// Init Shell:
@@ -7680,6 +7754,7 @@ noArgs:
 	// #BUGBUG
 	// Estamos passando um ponteiro que é uma variável local.
 
+    //++
     enterCriticalSection ();
 
     Status = (int) shellInit (hWindow); 
@@ -7690,6 +7765,8 @@ noArgs:
     };
 
     exitCriticalSection (); 
+    //--
+
 
 
 	// #importante:
@@ -7698,13 +7775,11 @@ noArgs:
 	// mensagens de input de teclado.
 
 
-    if ( interactive != 1 ){
-
-		//#debug
-        printf("shell is not interactive\n");
-
+    if ( interactive != 1 )
+    {
+        printf ("gdeshell is not interactive\n");
         goto skip_input;
-    };
+    }
 
 
 	//@todo: Isso é um teste.
@@ -7765,7 +7840,7 @@ noArgs:
 	// Na verdade essa rotina está pegando a mensagem na janela 
 	// com o foco de entrada. Esse argumento foi passado mas não foi usado.
 		
-	unsigned long message_buffer[5];	
+	unsigned long message_buffer[5];
 		
 	
 read_and_execute:

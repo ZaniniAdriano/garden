@@ -1288,34 +1288,50 @@ char *__findenv ( const char *name, int *offset ){
 
 
 /*
+ ***********************************
  * getenv:
  *     Credits: Apple open source.
  */
  
 char *getenv (const char *name){
-	
-	int offset;
-	char *result;
+
+    int offset;
+    char *result;
 
 	//_DIAGASSERT(name != NULL);
-    
-	if ( (void*) name == NULL )
-	{
-		return (char *) 0;
-	}
-	
+
+
+    if ( (void *) name == NULL )
+    {
+        return (char *) 0;
+    }
+
+
 	//rwlock_rdlock(&__environ_lock);
-	result = __findenv(name, &offset);
+    result = __findenv(name, &offset);
 	//rwlock_unlock(&__environ_lock);
 
 
-//done:
-	return (char *) result;
+    return (char *) result;
 }
 
 
+int setenv (const char *name, const char *value, int overwrite)
+{
+    return (int) (-1);
+}
+
+
+int unsetenv (const char *name)
+{
+    return (int) (-1);
+}
+
+
+
 /*
- * atoi: */
+ * atoi: 
+ */
 
 int atoi (const char *str){
 	
