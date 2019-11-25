@@ -177,6 +177,10 @@ int rmdir (const char *pathname);
 // SVr4, 4.3BSD, POSIX.1-2001 (but see NOTES).
 int link (const char *oldpath, const char *newpath);
 
+//unlink, unlinkat - delete a name and possibly the file it refers to
+// unlink(): SVr4, 4.3BSD, POSIX.1-2001, POSIX.1-2008.
+int unlink(const char *pathname);
+
 
 //sysconf - get configuration information at run time
 //  POSIX.1-2001.

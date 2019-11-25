@@ -564,6 +564,14 @@ int link (const char *oldpath, const char *newpath){
 	return -1; //#todo
 }
 
+
+//#todo.
+int unlink(const char *pathname)
+{
+    return (int) (-1);
+}
+
+
 /*
  * mlock:
  *

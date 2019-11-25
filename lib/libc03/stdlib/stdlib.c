@@ -671,12 +671,19 @@ int libcInitRT (){
 	return 0;
 }
 
-
 //
 // -----------------
 // Fim do Heap support.
 //
 
+
+//#todo
+char *mktemp (char *template)
+{
+	return (char *) 0;
+}
+  
+  
 
 /*
  *******

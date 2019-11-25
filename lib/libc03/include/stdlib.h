@@ -138,6 +138,11 @@ int setenv (const char *name, const char *value, int overwrite);
 int unsetenv (const char *name);
 
 
+// mktemp - make a unique temporary filename
+//4.3BSD, POSIX.1-2001.  POSIX.1-2008 removes the specification of mktemp().
+char *mktemp (char *template);
+
+
 /*
  * malloc:
  *    Allocates the requested memory and returns a pointer to it. */
