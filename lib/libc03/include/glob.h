@@ -2,6 +2,21 @@
 #define	_GLOB_H_
 
 
+/*
+#ifndef __gl_size_t
+#define __gl_size_t	size_t
+#endif
+#ifndef __gl_stat_t
+#define __gl_stat_t	struct stat
+#endif
+
+//#todo: The glob_t struct.
+*/
+
+
+
+
+
 #define	GLOB_APPEND	0x0001	/* Append to output from previous call. */
 #define	GLOB_DOOFFS	0x0002	/* Use gl_offs. */
 #define	GLOB_ERR	0x0004	/* Return on error. */
