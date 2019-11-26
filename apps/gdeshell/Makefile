@@ -37,14 +37,9 @@ CFLAGS = -m32 \
 #	-s
 
 
-#LIBC    = ../../lib/gdelibs/libc02/include/
-#LIBCOBJ = ../../lib/gdelibs/libc02/obj
+
 LIBC    = ../../lib/libc03/include/
 LIBCOBJ = ../../lib/libc03/obj
-
-
-#API   = ../../lib/gdelibs/api01/include/
-#APIOBJ  = ../../lib/gdelibs/api01/obj
 API     = ../../lib/api02/include/
 APIOBJ  = ../../lib/api02/obj
 
@@ -67,6 +62,7 @@ conio.o \
 builtins.o \
 desktop.o \
 unistd.o \
+socket.o \
 stubs.o    
 
 
@@ -108,6 +104,7 @@ all-c:
 	cp $(LIBCOBJ)/wait.o .
 	cp $(LIBCOBJ)/unistd.o .
 
+	cp $(LIBCOBJ)/socket.o .
 	
 	cp $(APIOBJ)/api.o      .
 shell-link:

@@ -16,6 +16,8 @@
 #include <string.h>
 
 
+#include <sys/socket.h>
+
 //shell stuff 
 #include "globals.h"
 #include "builtins.h"

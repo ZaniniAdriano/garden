@@ -2641,7 +2641,17 @@ do_compare:
         goto exit_cmp;
     };	
 	
-	
+
+	// socket
+	// testando socket da libc.
+    if ( strncmp( prompt, "socket", 6 ) == 0 )
+    {
+        printf ("Testing libc socket function ...\n");    
+        socket ( (int) AF_INET, (int) SOCK_STREAM, (int) 0);
+        printf ("Done\n");
+        goto exit_cmp;
+    };
+   
 	//socket-test
 	//rotina de teste de soquetes.
 	if ( strncmp( prompt, "socket-test", 11 ) == 0 )

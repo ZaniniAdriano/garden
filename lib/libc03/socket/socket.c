@@ -3,6 +3,8 @@
  *
  */
 
+// See: http://man7.org/linux/man-pages/man2/socket.2.html
+// 
 
 #include <sys/types.h>  
 #include <sys/socket.h>
@@ -49,21 +51,26 @@ int shutdown ( int	sockfd,	int how ){
 	return -1; //#todo
 }
 
-	
+
 /*
+ *****************************************************
  * socket:
  *     Create an endpoint for communication
  */
 
-//int socket ( int domain, int type, int protocol ){
+// Linux style.
+// See: http://man7.org/linux/man-pages/man2/socket.2.html
 
-int socket ( int family, int type, int protocol ){	
-    
-	// #test
+//int socket ( int family, int type, int protocol ){
+int socket ( int domain, int type, int protocol ){
+
+    // #test
     // serviço 7000.
-	
-	return (int) system_call ( 7000, (unsigned long) family, 
-				     (unsigned long) type, (unsigned long) protocol );
+
+    return (int) system_call ( 7000, 
+                     (unsigned long) domain, 
+                     (unsigned long) type, 
+                     (unsigned long) protocol );
 }
 
 
