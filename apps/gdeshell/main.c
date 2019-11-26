@@ -2644,10 +2644,14 @@ do_compare:
 
 	// socket
 	// testando socket da libc.
+	// Vai retornar um indice na lista de arquivos abertos do processo.
+	//um descritor de arquivos.
+	int socket_fd = -1;
     if ( strncmp( prompt, "socket", 6 ) == 0 )
     {
         printf ("Testing libc socket function ...\n");    
-        socket ( (int) AF_INET, (int) SOCK_STREAM, (int) 0);
+        socket_fd = (int) socket ( (int) AF_INET, (int) SOCK_STREAM, (int) 0);
+        printf ("socket_fd = %d\n",socket_fd);
         printf ("Done\n");
         goto exit_cmp;
     };
