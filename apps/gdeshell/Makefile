@@ -63,6 +63,7 @@ builtins.o \
 desktop.o \
 unistd.o \
 socket.o \
+wait.o \
 stubs.o    
 
 

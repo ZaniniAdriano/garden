@@ -3236,6 +3236,17 @@ do_compare:
     };
 
 
+	// waitpid
+	// vamos esperar por qualquer um dos filhos;
+	int ___wait_status;
+    if ( strncmp( prompt, "wait-test", 9 ) == 0 )
+    {
+        //wait (&___wait_status);
+        wait (-1,&___wait_status,0);
+        goto exit_cmp;
+    };
+
+
     // Se apertamos o enter e não encontramos um comando válido
     // então damos um aviso de comando inválido e reiniciamos o prompt 
     // na próxima linha.

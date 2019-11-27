@@ -27,26 +27,26 @@ int main ( int argc, char *argv[] ){
     register int c;
 
 
-    fp = fopen ( (char *) argv[1], "rb" );
+    printf ("cat: Initializing ...\n");
+
+    fp = fopen ( (char *) argv[1], "r+" );
 
     if ( (void *) fp == NULL )
         return -1;     
 
 
-    libc_set_output_mode (LIBC_NORMAL_MODE);
+    //libc_set_output_mode (LIBC_NORMAL_MODE);
 
 	//get current tty stdou_ring0
-    stdout = (FILE *) system_call ( 1000, 0, 0, 0 );
+    //stdout = (FILE *) system_call ( 1000, 0, 0, 0 );
 
 
     while ( (c = fgetc(fp)) >= 0 )
         printf ("%c", c);
 
 
-    printf ("\n");
+    printf ("cat: Done.\n");
 
-    //?? why -1?
-    //return -1;
     return 0;
 }
 
