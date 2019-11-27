@@ -11,6 +11,16 @@
 
 
 
+//sortix style;
+/*
+#define FLAGS_MASK (SOCK_NONBLOCK | SOCK_CLOEXEC | SOCK_CLOFORK)
+#define TYPE_MASK (~FLAGS_MASK)
+#define FLAGS(x) ((x) & FLAGS_MASK)
+#define TYPE(x) ((x) & TYPE_MASK)
+
+*/
+
+
 /*
  * listen:
  */
@@ -86,23 +96,33 @@ int socket_pipe ( int pipefd[2] ){
 
 int socketpair (int domain, int type, int protocol, int sv[2]){
 
-    int pipefd[2];
- 
     int fd = -1; 
+    int pipefd[2];
 
-    //podemos colocar sv diretamente.
-    fd = (int) socket_pipe (pipefd);
- 
-    if ( fd  == -1 ) 
-	{    
-		printf ("socketpair: fail\n");
-        return (int) (-1);
-    }else{
-        sv[0] = pipefd[1];
-        sv[1] = pipefd[1];
-        return 0;
-    };
-    
+
+
+    if ( domain == AF_UNSPEC || domain == AF_UNIX )
+    {
+        if ( protocol != 0 )
+            return (int) (-1);
+
+        //if ( type != SOCK_STREAM )
+            //return (int) (-1);
+
+        // Podemos colocar sv diretamente.
+        fd = (int) socket_pipe (pipefd);
+
+        if ( fd  == -1 ) 
+        {    
+            printf ("socketpair: fail\n");
+            return (int) (-1);
+        }else{
+            sv[0] = pipefd[1];
+            sv[1] = pipefd[1];
+            return 0;
+        };
+    }
+
 
     return (int) (-1);
 }

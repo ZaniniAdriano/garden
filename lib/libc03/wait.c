@@ -11,11 +11,7 @@
  
 //system calls.
 #include <stubs/gramado.h>  
-
-
-// #teste de compilação
-// deletar
-//#include <version.h>
+ 
  
  
 /*
@@ -25,55 +21,13 @@
  */
 
 pid_t wait ( int *status ){
-	
-	// #todo: 
-	// Criar o identificador da system call 43
-    //SYSTEMCALL_WAIT4PID 
-	
-	// #importante
-	// >>se o retorno indicar que já havia um processo filho no estado zombie 
-	// e retornou seu pid, então apenas retornamos o pid para o aplicativo que chamou wait.	
-	// >>se o retorno indicar que não há um processo filho terminado
-	// então devemos esperar até que algum processo filho termine.
-	
-    pid_t pid;
-	
-again:
 
-	pid = (pid_t) gramado_system_call ( 83, (unsigned long) status , 0, 0 );	
-
-    if ( pid > 0 )
-    {
-        return (pid_t) pid;
-    }
-	
-	//
-	// ## wait ##
-	//
-	
-	//#todo:
-	//devemos esperar até que um processo filho seja terminado,
-	//para depois checarmos novamente qual deles terminou e retornarmos 
-	//com seu pid
-	
-	//sleep()
-	//wait_for_a_reason(...)
-	
-	//#bugbug
-	//estamos retornando para não entrarmos no loop,
-	//depois que criarmos a rotina sleep, deletaremos esse retorno.
-	
-    return (pid_t) pid;
-
-    goto again;
-	
-//done:
-	
-    return (pid_t) pid;
+    return (pid_t) waitpid ( (pid_t) 0, (int *) status, (int) 0 );
 }
 
 
 /*
+ *********************************************
  * waitpid:
  *
  */
@@ -85,9 +39,51 @@ again:
 //> 0	meaning wait for the child whose process ID is equal to the value of pid.
 
 pid_t waitpid (pid_t pid, int *status, int options){
+	// #todo: 
+	// Criar o identificador da system call 43
+    //SYSTEMCALL_WAIT4PID 
 	
-	//#todo
-	return -1;
+	// #importante
+	// >>se o retorno indicar que já havia um processo filho no estado zombie 
+	// e retornou seu pid, então apenas retornamos o pid para o aplicativo que 
+	// chamou wait.
+	// >>se o retorno indicar que não há um processo filho terminado
+	// então devemos esperar até que algum processo filho termine.
+	
+    pid_t __pid;
+
+again:
+
+    __pid = (pid_t) gramado_system_call ( 83, (unsigned long) status , 0, 0 );
+
+    if ( __pid > 0 )
+    {
+        return (pid_t) __pid;
+    }
+
+	//
+	// ## wait ##
+	//
+
+	//#todo:
+	//devemos esperar até que um processo filho seja terminado,
+	//para depois checarmos novamente qual deles terminou e retornarmos 
+	//com seu pid
+
+	//sleep()
+	//wait_for_a_reason(...)
+
+	//#bugbug
+	//estamos retornando para não entrarmos no loop,
+	//depois que criarmos a rotina sleep, deletaremos esse retorno.
+	
+    return (pid_t) __pid;
+
+    goto again;
+	
+//done:
+	
+    return (pid_t) __pid;
 }
 
 

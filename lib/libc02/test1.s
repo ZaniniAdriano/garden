@@ -190,5 +190,5 @@ xxxtest3:
 	.cfi_endproc
 .LFE4:
 	.size	xxxtest3, .-xxxtest3
-	.ident	"GCC: (GNU) 9.1.0"
+	.ident	"GCC: (GNU) 9.2.0"
 	.section	.note.GNU-stack,"",@progbits

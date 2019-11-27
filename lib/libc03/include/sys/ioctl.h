@@ -5,7 +5,8 @@
 // model).	See ioctl_list(2) for a	list of	 many  of  the	known  ioctl()
 // calls.  The ioctl() function call appeared in Version 7 AT&T UNIX.
 // comments credits: freebsd.org	 
+//int ioctl ( int d, int request, ... );
 
-int ioctl ( int d, int request, ... );
-
+//linux style.
+int ioctl (int fd, unsigned long request, ...);
 

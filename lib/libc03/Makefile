@@ -64,6 +64,9 @@ all-c:
 #/fscanf
 	gcc  -c  fscanf/fscanf.c  $(CFLAGS) -I. -I include/ -o fscanf.o
 
+#/ioctl
+	gcc  -c  ioctl/ioctl.c  $(CFLAGS) -I. -I include/ -o ioctl.o
+
 #/signal
 	gcc  -c  signal/signal.c  $(CFLAGS) -I. -I include/ -o signal.o
 	
@@ -71,28 +74,28 @@ all-c:
 	gcc  -c  socket/socket.c  $(CFLAGS) -I. -I include/ -o socket.o
 
 #/stdio 
-	gcc  -c  stdio/stdio.c    $(CFLAGS) -I. -I include/ -o stdio.o	
+	gcc  -c  stdio/stdio.c    $(CFLAGS) -I. -I include/ -o stdio.o
 	
 #/stdlib
-	gcc  -c  stdlib/stdlib.c  $(CFLAGS) -I. -I include/ -o stdlib.o	
+	gcc  -c  stdlib/stdlib.c  $(CFLAGS) -I. -I include/ -o stdlib.o
 	
-#/stubs	
-	gcc  -c  stubs/stubs.c    $(CFLAGS) -I. -I include/ -o stubs.o		
+#/stubs
+	gcc  -c  stubs/stubs.c    $(CFLAGS) -I. -I include/ -o stubs.o
 	
 #/unistd
-	gcc  -c  unistd/unistd.c  $(CFLAGS) -I. -I include/ -o unistd.o	
+	gcc  -c  unistd/unistd.c  $(CFLAGS) -I. -I include/ -o unistd.o
 	
 	
 	
 # outros	
 	gcc  -c  conio.c   $(CFLAGS) -I. -I include/ -o conio.o
-	gcc  -c  string.c  $(CFLAGS) -I. -I include/ -o string.o	
-	gcc  -c  time.c    $(CFLAGS) -I. -I include/ -o time.o	
-	gcc  -c  wait.c    $(CFLAGS) -I. -I include/ -o wait.o		
-	gcc  -c  math.c    $(CFLAGS) -I. -I include/ -o math.o			
+	gcc  -c  string.c  $(CFLAGS) -I. -I include/ -o string.o
+	gcc  -c  time.c    $(CFLAGS) -I. -I include/ -o time.o
+	gcc  -c  wait.c    $(CFLAGS) -I. -I include/ -o wait.o
+	gcc  -c  math.c    $(CFLAGS) -I. -I include/ -o math.o
 	
-	gcc  -c  strtoul.c    $(CFLAGS) -I. -I include/ -o strtoul.o	
-	gcc  -c  strtol.c    $(CFLAGS) -I. -I include/ -o strtol.o			
+	gcc  -c  strtoul.c    $(CFLAGS) -I. -I include/ -o strtoul.o
+	gcc  -c  strtol.c    $(CFLAGS) -I. -I include/ -o strtol.o
 #...	
 
  
@@ -105,14 +108,14 @@ all-c:
 	gcc  -c  socrt0.c -fno-stack-protector -fpic -mno-red-zone  -DEFI_FUNCTION_WRAPPER  $(CFLAGS) -I. -I include/ -o socrt0.o	
 	gcc  -c  somain.c -fno-stack-protector -fpic -mno-red-zone  -DEFI_FUNCTION_WRAPPER  $(CFLAGS) -I. -I include/ -o somain.o	
 
-	
+
 #ifeq ($(TARGETOS),gramado)
-#	gcc  -c  sysdeps/gramado/gramado.c  $(CFLAGS) -I. -I include/ -o gramado.o			
+#	gcc  -c  sysdeps/gramado/gramado.c  $(CFLAGS) -I. -I include/ -o gramado.o
 #endif
 
 #ifeq ($(TARGETOS),linux)
-#	gcc  -c  sysdeps/gramado/linux.c  $(CFLAGS) -I. -I include/ -o linux.o	
-#endif	
+#	gcc  -c  sysdeps/gramado/linux.c  $(CFLAGS) -I. -I include/ -o linux.o
+#endif
 
 	
 
@@ -122,14 +125,13 @@ libc-link:
 	ld -m elf_i386 socrt0.o somain.o -nostdlib -T elf_ia32_efi.lds -shared -znocombreloc -Bsymbolic -L . -l:LIBC03.A -o LIBC03.SO -Map map.s
 
 finalize:
-#	cp JACKPOT.BIN  ../../../bin
 	-mkdir obj/
 	-cp *.o obj/
 	-cp LIBC03.A obj/
 	-cp LIBC03.SO obj/
 	
 	
-	
+
 clean:
 	-rm *.o
 	-rm *.A

@@ -4,9 +4,17 @@
 //#include <unistd.h>      //for pid_t
 
 
-//In wait.c
+/*
+#ifndef __pid_t_defined
+#define __pid_t_defined
+typedef __pid_t pid_t;
+#endif
+*/
+
+
 pid_t wait ( int *status );
-pid_t waitpid(pid_t pid, int *status, int options); 
+pid_t waitpid (pid_t pid, int *status, int options); 
+
 
 /*
  //BSD System Calls Manual        
@@ -14,16 +22,11 @@ pid_t waitpid(pid_t pid, int *status, int options);
 #include <sys/wait.h>
 
      pid_t wait(int *stat_loc);
-
      pid_t wait3(int *stat_loc, int options, struct rusage *rusage);
-
      pid_t wait4(pid_t pid, int *stat_loc, int options, struct rusage *rusage);
-
      pid_t waitpid(pid_t pid, int *stat_loc, int options);
-	 
-
-	 
 */
+
 
 /*
 
