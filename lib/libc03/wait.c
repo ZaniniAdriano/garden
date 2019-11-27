@@ -22,7 +22,7 @@
 
 pid_t wait ( int *status ){
 
-    return (pid_t) waitpid ( (pid_t) 0, (int *) status, (int) 0 );
+    return (pid_t) waitpid ( (pid_t) -1, (int *) status, (int) 0 );
 }
 
 
