@@ -74,6 +74,40 @@ int socket ( int domain, int type, int protocol ){
 }
 
 
+//interna
+//int socket_pipe ( int pipefd[2] );
+int socket_pipe ( int pipefd[2] ){
+
+    return (int) gramado_system_call ( 247, (unsigned long) pipefd, 
+                     (unsigned long) pipefd, (unsigned long) pipefd );
+}
+
+
+
+int socketpair (int domain, int type, int protocol, int sv[2]){
+
+    int pipefd[2];
+ 
+    int fd = -1; 
+
+    //podemos colocar sv diretamente.
+    fd = (int) socket_pipe (pipefd);
+ 
+    if ( fd  == -1 ) 
+	{    
+		printf ("socketpair: fail\n");
+        return (int) (-1);
+    }else{
+        sv[0] = pipefd[1];
+        sv[1] = pipefd[1];
+        return 0;
+    };
+    
+
+    return (int) (-1);
+}
+
+
 //
 // End.
 //

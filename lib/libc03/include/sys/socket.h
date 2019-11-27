@@ -275,8 +275,18 @@ int shutdown ( int	sockfd,	int how );
 int socket ( int domain, int type, int protocol );
 
 
+//socketpair - create a pair of connected sockets
+// On success, zero is returned.  
+// On error, -1 is returned, errno is set
+// appropriately, and sv is left unchanged
+//POSIX.1-2001, POSIX.1-2008, 4.4BSD. 
+int socketpair (int domain, int type, int protocol, int sv[2]);
 
-#endif
+
+
+#endif //socket.h
+
+
 
 
 

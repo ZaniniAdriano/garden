@@ -1015,33 +1015,34 @@ LOAD terminal.o
 LOAD termui.o
 OUTPUT(NORATERM.BIN elf32-i386)
 
-.comment        0x0000000000000000       0x11
+.comment        0x0000000000000000       0x22
  .comment       0x0000000000000000       0x11 crt0.o
                                          0x12 (size before relaxing)
  .comment       0x0000000000000011       0x12 main.o
- .comment       0x0000000000000011       0x12 stubs.o
- .comment       0x0000000000000011       0x12 ctype.o
- .comment       0x0000000000000011       0x12 stdio.o
- .comment       0x0000000000000011       0x12 stdlib.o
- .comment       0x0000000000000011       0x12 string.o
- .comment       0x0000000000000011       0x12 conio.o
- .comment       0x0000000000000011       0x12 socket.o
- .comment       0x0000000000000011       0x12 signal.o
- .comment       0x0000000000000011       0x12 unistd.o
- .comment       0x0000000000000011       0x12 api.o
- .comment       0x0000000000000011       0x12 builtins.o
- .comment       0x0000000000000011       0x12 desktop.o
- .comment       0x0000000000000011       0x12 login.o
- .comment       0x0000000000000011       0x12 tests.o
- .comment       0x0000000000000011       0x12 cmdline.o
- .comment       0x0000000000000011       0x12 input.o
- .comment       0x0000000000000011       0x12 pixel.o
- .comment       0x0000000000000011       0x12 line.o
- .comment       0x0000000000000011       0x12 rect.o
- .comment       0x0000000000000011       0x12 char.o
- .comment       0x0000000000000011       0x12 gws.o
- .comment       0x0000000000000011       0x12 terminal.o
- .comment       0x0000000000000011       0x12 termui.o
+ .comment       0x0000000000000011       0x11 stubs.o
+                                         0x12 (size before relaxing)
+ .comment       0x0000000000000022       0x12 ctype.o
+ .comment       0x0000000000000022       0x12 stdio.o
+ .comment       0x0000000000000022       0x12 stdlib.o
+ .comment       0x0000000000000022       0x12 string.o
+ .comment       0x0000000000000022       0x12 conio.o
+ .comment       0x0000000000000022       0x12 socket.o
+ .comment       0x0000000000000022       0x12 signal.o
+ .comment       0x0000000000000022       0x12 unistd.o
+ .comment       0x0000000000000022       0x12 api.o
+ .comment       0x0000000000000022       0x12 builtins.o
+ .comment       0x0000000000000022       0x12 desktop.o
+ .comment       0x0000000000000022       0x12 login.o
+ .comment       0x0000000000000022       0x12 tests.o
+ .comment       0x0000000000000022       0x12 cmdline.o
+ .comment       0x0000000000000022       0x12 input.o
+ .comment       0x0000000000000022       0x12 pixel.o
+ .comment       0x0000000000000022       0x12 line.o
+ .comment       0x0000000000000022       0x12 rect.o
+ .comment       0x0000000000000022       0x12 char.o
+ .comment       0x0000000000000022       0x12 gws.o
+ .comment       0x0000000000000022       0x12 terminal.o
+ .comment       0x0000000000000022       0x12 termui.o
 
 .note.GNU-stack
                 0x0000000000000000        0x0
