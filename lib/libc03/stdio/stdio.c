@@ -29,10 +29,15 @@
 #include <types.h> 
 #include <stdarg.h> 
 
+
 #include <stddef.h>
 //#include <stdlib.h> 
 
 #include <ctype.h>
+
+//#include <sys/types.h>
+//#include <sys/stat.h>
+#include <fcntl.h>
 
 //system calls.
 #include <stubs/gramado.h> 
@@ -332,13 +337,16 @@ FILE *fopen ( const char *filename, const char *mode ){
 }
 
 
-/*linux klibc style*/
 /*
+ * creat:
+ *     Linux klibc style.
+ */
+
 int creat (const char *pathname, mode_t mode)
 {
     return open (pathname, O_CREAT|O_WRONLY|O_TRUNC, mode);
 }
-*/
+
 
 
 /*

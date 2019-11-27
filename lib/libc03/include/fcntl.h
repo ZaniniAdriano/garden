@@ -93,13 +93,13 @@ struct flock {
 */
 
 
-int fcntl (int fd, int cmd, ... /* arg */ );
+int creat (const char *pathname, mode_t mode);
 
 
 //#test
 //int open (const char *pathname, int flags);
 int open (const char *pathname, int flags, mode_t mode);
-//int creat (const char *pathname, mode_t mode);
+int creat (const char *pathname, mode_t mode);
 
 
 #endif /* _FCNTL_H */
