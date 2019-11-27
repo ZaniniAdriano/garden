@@ -258,6 +258,31 @@ done:
 }
 
 
+//  write - write to a file descriptor
+ssize_t write (int fd, const void *buf, size_t count)
+{
+	//return __set_errno(syscall(__NR_write, fd, buf, count));
+
+    if (count == 0)
+        return 0;
+
+    if (fd < 0)
+    {
+        //__set_errno (EBADF);
+        return -1;
+    }
+    if (buf == NULL)
+    {
+        //__set_errno (EINVAL);
+        return -1;
+    }
+
+    return (ssize_t) gramado_system_call ( 614, 
+                        (unsigned long) fd,    
+                        (unsigned long) buf,         
+                        (unsigned long) count );       
+}
+
 
 /*
  *************************************

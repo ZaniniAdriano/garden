@@ -208,6 +208,8 @@ int pipe ( int pipefd[2] );
 
 
 
+ssize_t write(int fd, const void *buf, size_t count);
+
 
 /*
 //http://kirste.userpage.fu-berlin.de/chemnet/use/info/libc/libc_12.html

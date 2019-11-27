@@ -8,6 +8,7 @@
 #include <time.h>
 #include <types.h> 
 
+#include <sys/time.h>
 
 //system calls.
 #include <stubs/gramado.h> 
@@ -29,4 +30,13 @@ time_t time (time_t *timer){
 
     return (time_t) Ret;	
 }
+
+
+int gettimeofday(struct timeval *tv, struct timezone *tz)
+{
+	return -1;
+}
+
+
+
 
