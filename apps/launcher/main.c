@@ -87,7 +87,7 @@ launcherProcedure ( struct window_d *window,
 			};
 			break;
 		
-		// MSG_MOUSEKEYDOWN	
+		// MSG_MOUSEKEYDOWN
 		case 30:
 		    switch (long1)
 			{
@@ -95,10 +95,9 @@ launcherProcedure ( struct window_d *window,
 				case 1:
 				    if ( window == launcher_button_1 )
 				    {
-						
 						execve ( (const char *) "noraterm.bin", 
                             (const char *) 0, (const char *) 0); 
-						 
+
 						 // #todo:
 						 // Tentar enviar mensagens para o terminal 
 						 //libc_set_output_mode (LIBC_NORMAL_MODE);
@@ -109,8 +108,9 @@ launcherProcedure ( struct window_d *window,
 
 				    if ( window == launcher_button_2 )
 				    {
-						 execve ( (const char *) "gramcode.bin", 
-                             (const char *) 0, (const char *) 0); 
+						 //execve ( (const char *) "gramcode.bin", 
+						 execve ( (const char *) "gfe.bin", 
+                             (const char *) 0, (const char *) 0);
 						 break;
 					}
 				
@@ -494,7 +494,7 @@ int main ( int argc, char *argv[] ){
 
 	//++
     enterCriticalSection (); 
-	launcher_button_2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "Text editor", 
+	launcher_button_2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "File Explorer", 
                                      (width/3), ((height/4)*3), 
                                      (width/3), (height/8),   
                                      hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );

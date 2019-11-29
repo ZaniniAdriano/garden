@@ -351,73 +351,72 @@ Linker script and memory map
 .iplt           0x0000000000408000        0x0
  .iplt          0x0000000000408000        0x0 crt0.o
 
-.rodata         0x0000000000408000      0xeea
+.rodata         0x0000000000408000      0xeca
  .rodata        0x0000000000408000       0x74 crt0.o
- .rodata        0x0000000000408074       0x8f main.o
- *fill*         0x0000000000408103       0x1d 
- .rodata        0x0000000000408120      0x100 ctype.o
-                0x0000000000408120                _ctype
- .rodata        0x0000000000408220      0x510 stdlib.o
- *fill*         0x0000000000408730       0x10 
- .rodata        0x0000000000408740      0x329 stdio.o
-                0x00000000004088a0                hex2ascii_data
- *fill*         0x0000000000408a69        0x3 
- .rodata        0x0000000000408a6c       0x3a unistd.o
- *fill*         0x0000000000408aa6        0x2 
- .rodata        0x0000000000408aa8      0x3d5 api.o
- .rodata        0x0000000000408e7d       0x34 status.o
- *fill*         0x0000000000408eb1        0x3 
- .rodata        0x0000000000408eb4       0x36 addrbar.o
+ .rodata        0x0000000000408074       0x8c main.o
+ .rodata        0x0000000000408100      0x100 ctype.o
+                0x0000000000408100                _ctype
+ .rodata        0x0000000000408200      0x510 stdlib.o
+ *fill*         0x0000000000408710       0x10 
+ .rodata        0x0000000000408720      0x329 stdio.o
+                0x0000000000408880                hex2ascii_data
+ *fill*         0x0000000000408a49        0x3 
+ .rodata        0x0000000000408a4c       0x3a unistd.o
+ *fill*         0x0000000000408a86        0x2 
+ .rodata        0x0000000000408a88      0x3d5 api.o
+ .rodata        0x0000000000408e5d       0x34 status.o
+ *fill*         0x0000000000408e91        0x3 
+ .rodata        0x0000000000408e94       0x36 addrbar.o
 
-.eh_frame       0x0000000000408eec     0x22f0
- .eh_frame      0x0000000000408eec       0x34 crt0.o
- .eh_frame      0x0000000000408f20       0x5c main.o
+.eh_frame       0x0000000000408ecc     0x22f0
+ .eh_frame      0x0000000000408ecc       0x34 crt0.o
+ .eh_frame      0x0000000000408f00       0x5c main.o
                                          0x74 (size before relaxing)
- .eh_frame      0x0000000000408f7c      0x460 stdlib.o
+ .eh_frame      0x0000000000408f5c      0x460 stdlib.o
                                         0x478 (size before relaxing)
- .eh_frame      0x00000000004093dc      0x830 stdio.o
+ .eh_frame      0x00000000004093bc      0x830 stdio.o
                                         0x848 (size before relaxing)
- .eh_frame      0x0000000000409c0c      0x4c0 string.o
+ .eh_frame      0x0000000000409bec      0x4c0 string.o
                                         0x4d8 (size before relaxing)
- .eh_frame      0x000000000040a0cc      0x460 unistd.o
+ .eh_frame      0x000000000040a0ac      0x460 unistd.o
                                         0x478 (size before relaxing)
- .eh_frame      0x000000000040a52c      0xc2c api.o
+ .eh_frame      0x000000000040a50c      0xc2c api.o
                                         0xc44 (size before relaxing)
- .eh_frame      0x000000000040b158       0x40 status.o
+ .eh_frame      0x000000000040b138       0x40 status.o
                                          0x58 (size before relaxing)
- .eh_frame      0x000000000040b198       0x20 addrbar.o
+ .eh_frame      0x000000000040b178       0x20 addrbar.o
                                          0x38 (size before relaxing)
- .eh_frame      0x000000000040b1b8       0x24 stubs.o
+ .eh_frame      0x000000000040b198       0x24 stubs.o
                                          0x3c (size before relaxing)
 
-.rel.dyn        0x000000000040b1dc        0x0
- .rel.got       0x000000000040b1dc        0x0 crt0.o
- .rel.iplt      0x000000000040b1dc        0x0 crt0.o
- .rel.text      0x000000000040b1dc        0x0 crt0.o
+.rel.dyn        0x000000000040b1bc        0x0
+ .rel.got       0x000000000040b1bc        0x0 crt0.o
+ .rel.iplt      0x000000000040b1bc        0x0 crt0.o
+ .rel.text      0x000000000040b1bc        0x0 crt0.o
 
-.data           0x000000000040b1e0     0x1e20
-                0x000000000040b1e0                data = .
-                0x000000000040b1e0                _data = .
-                0x000000000040b1e0                __data = .
+.data           0x000000000040b1c0     0x1e40
+                0x000000000040b1c0                data = .
+                0x000000000040b1c0                _data = .
+                0x000000000040b1c0                __data = .
  *(.data)
- .data          0x000000000040b1e0       0x14 crt0.o
- *fill*         0x000000000040b1f4        0xc 
- .data          0x000000000040b200      0x444 main.o
-                0x000000000040b640                running
- .data          0x000000000040b644        0x0 ctype.o
- *fill*         0x000000000040b644        0x4 
- .data          0x000000000040b648        0x8 stdlib.o
-                0x000000000040b648                _infinity
- .data          0x000000000040b650        0x0 stdio.o
- .data          0x000000000040b650        0x0 string.o
- .data          0x000000000040b650        0x0 unistd.o
- *fill*         0x000000000040b650       0x10 
- .data          0x000000000040b660      0x440 api.o
- .data          0x000000000040baa0      0x440 status.o
- .data          0x000000000040bee0      0x440 addrbar.o
- .data          0x000000000040c320        0x0 stubs.o
+ .data          0x000000000040b1c0       0x14 crt0.o
+ *fill*         0x000000000040b1d4        0xc 
+ .data          0x000000000040b1e0      0x444 main.o
+                0x000000000040b620                running
+ .data          0x000000000040b624        0x0 ctype.o
+ *fill*         0x000000000040b624        0x4 
+ .data          0x000000000040b628        0x8 stdlib.o
+                0x000000000040b628                _infinity
+ .data          0x000000000040b630        0x0 stdio.o
+ .data          0x000000000040b630        0x0 string.o
+ .data          0x000000000040b630        0x0 unistd.o
+ *fill*         0x000000000040b630       0x10 
+ .data          0x000000000040b640      0x440 api.o
+ .data          0x000000000040ba80      0x440 status.o
+ .data          0x000000000040bec0      0x440 addrbar.o
+ .data          0x000000000040c300        0x0 stubs.o
                 0x000000000040d000                . = ALIGN (0x1000)
- *fill*         0x000000000040c320      0xce0 
+ *fill*         0x000000000040c300      0xd00 
 
 .got            0x000000000040d000        0x0
  .got           0x000000000040d000        0x0 crt0.o
