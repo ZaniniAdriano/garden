@@ -1195,10 +1195,29 @@ mbProcedure ( struct window_d *window,
 {
     switch (msg)
 	{
+		
+		// MSG_MOUSEKEYDOWN
+		case 30:
+		    switch (long1)
+		    {
+				case 1://botão 1
+					if ( window == messagebox_button1 )
+					{
+						return (unsigned long) 102;
+						break;
+					}	
+					if ( window == messagebox_button2 )
+					{
+						return (unsigned long) 0;
+						break;
+					}
+				   break;
+			}
+		    break;
         case MSG_KEYDOWN:
             switch(long1)
             {
-                case VK_ESCAPE:	
+                case VK_ESCAPE:
 				    printf ("scape\n");
                     return (unsigned long) 101;
 				    break;

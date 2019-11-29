@@ -95,8 +95,9 @@ launcherProcedure ( struct window_d *window,
 				case 1:
 				    if ( window == launcher_button_1 )
 				    {
-						execve ( (const char *) "noraterm.bin", 
-                            (const char *) 0, (const char *) 0); 
+						APISetFocus ( window );
+						//execve ( (const char *) "noraterm.bin", 
+                          //  (const char *) 0, (const char *) 0); 
 
 						 // #todo:
 						 // Tentar enviar mensagens para o terminal 
@@ -108,9 +109,10 @@ launcherProcedure ( struct window_d *window,
 
 				    if ( window == launcher_button_2 )
 				    {
-						 //execve ( (const char *) "gramcode.bin", 
-						 execve ( (const char *) "gfe.bin", 
-                             (const char *) 0, (const char *) 0);
+						APISetFocus ( window );
+						//execve ( (const char *) "gfe.bin", 
+						 //execve ( (const char *) "gramcode.bin",
+                           //  (const char *) 0, (const char *) 0);
 						 break;
 					}
 				
@@ -494,7 +496,7 @@ int main ( int argc, char *argv[] ){
 
 	//++
     enterCriticalSection (); 
-	launcher_button_2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "File Explorer", 
+	launcher_button_2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "Editor", 
                                      (width/3), ((height/4)*3), 
                                      (width/3), (height/8),   
                                      hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );

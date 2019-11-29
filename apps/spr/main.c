@@ -734,13 +734,19 @@ shellProcedure ( struct window_d *window,
 		    printf("SHELL.BIN: MSG_DESTROY\n");
 		    break;
 			
-		// MSG_MOUSEKEYDOWN	
+		// MSG_MOUSEKEYDOWN
 		case 30:
 		    switch (long1)
 			{
 				case 1:
 				
 				    //#obs: No keydown a gente só abaixa o botão.
+
+					if ( window == editboxWindow )
+					{
+					    APISetFocus (window);
+						break;
+					}	
 					
 					
 					if ( window == navbar_button )
@@ -767,12 +773,7 @@ shellProcedure ( struct window_d *window,
 					    break;
 					}
 					
-					if ( window == editboxWindow )
-					{
-					    APISetFocus (editboxWindow);
-					    //APIredraw_window (editboxWindow,1);
-						break;
-					}					
+				
 					
 					APISetActiveWindow (window);
 					//APIredraw_window ( window, 1 );
@@ -7051,14 +7052,15 @@ noArgs:
 	//#importante:
 	//Vamos cancelar a inicialização do shell (console)
 	
-	
+	/*
 	enterCriticalSection();
-	Status = (int) shellInit (hWindow);
+	//Status = (int) shellInit (hWindow);
+	Status = (int) shellInit (navbar_button);
 	if ( Status != 0 ){
 		die ("spr: app_main: shellInit fail");
 	};
 	exitCriticalSection();
-
+    */
 
 	//#importante:
 	//Agora é a hora de pegar mensagens de input de teclado.
