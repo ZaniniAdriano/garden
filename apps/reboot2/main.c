@@ -20,6 +20,12 @@ int running = 1;
 	//
 	// ## Janelas de teste ##
 	//
+	
+	// #todo
+	// A intenção é colocarmos isso dentro do procedimento de janelas
+	// para acessarmos quando necessário.
+	// Para isso, é necessário enviarmos uma mensagem WM_CREATE no momento
+	// em que a janela principal foi criada. (Ou logo após.#test)
 
 	//struct window_d *mainWindow;
     struct window_d *gWindow;          //grid 
@@ -53,18 +59,56 @@ reboot2Procedure ( struct window_d *window,
                    unsigned long long1, 
                    unsigned long long2 )
 {
+    struct window_d *test_button;;
+    unsigned long left = 300;
+    unsigned long top = 100;
+    unsigned long width = 480;
+    unsigned long height = 480;
+    
+
+
 	switch (msg)
 	{
-		
+        //vamos criar um botão.
+        case MSG_CREATE:
+	        //++
+            enterCriticalSection (); 
+            test_button = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " Test ",  
+                                       (width/3), ((height/4)*3), 
+                                       (width/3), (height/8),   
+                                        NULL, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
+
+            if ( (void *) reboot_button == NULL )
+            {
+                printf ("Couldn't create button\n");
+                return 1;
+            }else{
+
+                APIRegisterWindow (test_button);
+                apiShowWindow (test_button);
+                refresh_screen ();
+            };
+            exitCriticalSection (); 
+	        //--
+            break;
+          
 		case MSG_SYSKEYDOWN:
 		    switch (long1)
 			{  
 				case VK_F1:
-						
+						printf ("disabling ps2 mouse\n");
+	                    system_call ( 9800,   //serviço. seleciona o diálogo 
+	                        (unsigned long) 4001, // (desabilita) mensagem par ao diálogo
+		                    (unsigned long) 0, 
+		                    (unsigned long) 0 );
 					break;
 					
 				case VK_F2:
- 
+ 						printf ("enabling ps2 mouse\n");
+	                    system_call ( 9800,   //serviço. seleciona o diálogo 
+	                        (unsigned long) 4000, // (habilita) mensagem par ao diálogo
+		                    (unsigned long) 0, 
+		                    (unsigned long) 0 );
 					break;
 					
 				case VK_F3:
@@ -84,7 +128,7 @@ reboot2Procedure ( struct window_d *window,
 			};
 			break;		
 		
-		// MSG_MOUSEKEYDOWN	
+		// MSG_MOUSEKEYDOWN
 		case 30:
 		    switch (long1)
 			{
@@ -93,15 +137,39 @@ reboot2Procedure ( struct window_d *window,
 				    if ( window == reboot_button )
 				    {
 						apiReboot ();
+                       //#todo: Usar outro método para enviar a mensagem.
+                       //reboot2Procedure ( NULL, 
+                           //(int) MSG_CREATE, 
+                           //(unsigned long) 0, 
+                           //(unsigned long) 0 );
+                        
+                        //OK. Isso funcionou.
+						//printf ("disabling ps2 mouse\n");
+	                    //system_call ( 9800,   //serviço. seleciona o diálogo 
+	                        //(unsigned long) 4001, // (desabilita) mensagem par ao diálogo
+		                    //(unsigned long) 0, 
+		                    //(unsigned long) 0 );
 						break;
 					}
+
 				    if ( window == gWindow )
 					{
 						printf("grid window\n");
+						break;
 					}
 				    if ( window == mWindow )
 					{
 						printf("menu window\n");
+						break;
+					}
+				    if ( window == test_button )
+					{
+						printf ("Test button pressed\n");
+	                    //system_call ( 9800,   //serviço. seleciona o diálogo 
+	                        //(unsigned long) 4001, // (desabilita) mensagem par ao diálogo
+		                    //(unsigned long) 0, 
+		                    //(unsigned long) 0 );
+		               break;
 					}
 
 					break;
@@ -131,10 +199,10 @@ int main ( int argc, char *argv[] ){
     int ch;
     int char_count = 0;
 
-    unsigned long left = 600;
+    unsigned long left = 300;
     unsigned long top = 100;
-    unsigned long width = 280;
-    unsigned long height = 320;
+    unsigned long width = 480;
+    unsigned long height = 480;
 
 
 //#ifdef TEDITOR_VERBOSE
@@ -191,6 +259,12 @@ int main ( int argc, char *argv[] ){
     apiEndPaint ();
     //--
 
+
+    //#todo: Usar outro método para enviar a mensagem.
+    //reboot2Procedure ( (struct window_d *) hWindow, 
+     //   (int) MSG_CREATE, 
+     //   (unsigned long) 0, 
+     //   (unsigned long) 0 );
 
 
     //printf("Nothing for now! \n");
