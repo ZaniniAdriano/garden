@@ -19,6 +19,8 @@ int running = 1;
 	//
 	// ## Janelas de teste ##
 	//
+	
+    struct window_d *main_window;
 
     struct window_d *gWindow;          // grid 
     struct window_d *mWindow;          // menu
@@ -126,6 +128,16 @@ launcherProcedure ( struct window_d *window,
 				    if ( window == mWindow )
 					{
 						printf("menu window\n");
+					}
+					
+					//se
+					if ( window == main_window )
+					{
+						//raise window.
+	                     system_call ( 9700, 
+	                         (unsigned long) main_window, 
+		                     (unsigned long) main_window, 
+		                     (unsigned long) main_window );	
 					}
 
 					break;
@@ -248,6 +260,11 @@ int main ( int argc, char *argv[] ){
         APISetActiveWindow (hWindow);
         APISetFocus (hWindow);
         apiShowWindow (hWindow);
+        
+        
+        //#test
+        //global, pra acessar via procedimento de janela.
+        main_window = ( struct window_d *) hWindow;
     };
     apiEndPaint ();
     //--

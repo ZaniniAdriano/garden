@@ -2661,7 +2661,7 @@ do_compare:
 	if ( strncmp( prompt, "socket-test", 11 ) == 0 )
 	{
 		//printf("~socket \n");        
-		shellSocketTest();
+		shellSocketTest ();
 		goto exit_cmp;
     };		
 	
@@ -6973,12 +6973,19 @@ void updateVisibleArea( int direction )
 }
 
 
+/*
+ ************************************** 
+ * shellSocketTest: 
+ * 
+ * 
+ */
 
 //rotina de testes de socket
+
 void shellSocketTest (){
 
 	//#todo: isso precisa ser um porteiro de estrutura.
-	void *socketHandle;
+	void *ClientHandle;
 	
 	unsigned long iplong;
 	unsigned long port; //short
@@ -6993,32 +7000,44 @@ void shellSocketTest (){
 	// Creating socket
 	//
 	
-    printf ("Creating socket ...\n");
-    socketHandle = (void *) system_call ( 160, 
-	                            (unsigned long) 0xC0A80164, 
-	                            (unsigned long) 0, 
-	                            (unsigned long) 0x22C3 );
-
-    printf ("Updating socket ...\n");
-    system_call ( 163, 
-	    (unsigned long) socketHandle, 
-	    (unsigned long) 0xC0A80165, 
-	    (unsigned long) 0x22C2 );
 	
+	// Queremos nos conectar com o host 192.168.1.100, na porta 8000.
+	//#todo: mudar para 127.0.0.1:8000
+	//um servidor pode ser criado para ouvir essa porta.
+
+
+    printf ("Creating client socket ...\n");
+    ClientHandle = (void *) system_call ( 160, 
+	                            (unsigned long) 0xC0A80164,  // ip 192.168.1.100
+	                            (unsigned long) 8000,           // porta 8000
+	                            (unsigned long) 0x22C3 );    // ??
+
+    //printf ("Updating socket ...\n");
+    //system_call ( 163, 
+	//    (unsigned long) socketHandle, 
+	//    (unsigned long) 0xC0A80165, 
+	//    (unsigned long) 0x22C2 );
+
+
+	//
+	// Check socket info.
+	//
+
+
     printf ("Getting ip from socket ...\n");
     iplong = (unsigned long) system_call ( 161, 
-	                             (unsigned long) socketHandle, 
-	                             (unsigned long) socketHandle, 
-	                             (unsigned long) socketHandle );
+	                             (unsigned long) ClientHandle, 
+	                             (unsigned long) ClientHandle, 
+	                             (unsigned long) ClientHandle );
 	
     printf ("Getting port from socket ...\n");
     port = (unsigned long) system_call ( 162, 
-	                           (unsigned long) socketHandle, 
-	                           (unsigned long) socketHandle, 
-	                           (unsigned long) socketHandle );
+	                           (unsigned long) ClientHandle, 
+	                           (unsigned long) ClientHandle, 
+	                           (unsigned long) ClientHandle );
 
 	//
-	// output
+	// Output
 	//
 
     unsigned long tmp = 0;
