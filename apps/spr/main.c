@@ -6508,7 +6508,7 @@ noArgs:
 	
 	printf ("Calling shellShell...\n");
 	
-	shellShell (); 	
+	shellShell (); 
 	
 	//Apenas inicialize. Continuaremos com o procedimento 
 	//do shell e não o da barra,	
@@ -6520,19 +6520,15 @@ noArgs:
 	// Main window.
 	//
 	
-	
-	//++
-	//cria, registra e mostra;
-	enterCriticalSection ();    
-
-    printf ("Creating window ...\n");	
-	
 	wpWindowLeft = 40;
 	wpWindowTop = 40;
 	wsWindowWidth = 600;
 	wsWindowHeight = 480;
-
-
+	
+	//++
+	//cria, registra e mostra;
+	enterCriticalSection ();    
+    printf ("Creating main window ...\n");
     //hWindow = shellCreateMainWindow (1);
 	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, "Sprinkler", 
                            wpWindowLeft, wpWindowTop, 
@@ -6542,8 +6538,8 @@ noArgs:
 
 	if ( (void *) hWindow == NULL )
 	{
-		printf ("FAIL!");
-		while (1){}	
+		printf ("hWindow FAIL!");
+		while (1){}
 	}else{
 		
 		//Registrar e mostrar.
@@ -6893,13 +6889,19 @@ noArgs:
       // #bugbug: O left deve ser em relação à janela mãe. E no momento
       // está sendo em relação à tela.
 
-      //++
-      enterCriticalSection ();  
-      w_navbar = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "navbar",     
-                              1, 80, 
-                              wsWindowWidth -38, 24,    
+    
+    //++
+    enterCriticalSection ();  
+    w_navbar = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "navbar",     
+                              1, 40, 
+                              wsWindowWidth -40, 24,  
                               hWindow, 0, COLOR_GRAY, COLOR_GRAY );
-
+	if ( (void *) w_navbar == NULL)
+	{	
+		printf("w_navbar fail");
+		refresh_screen();
+		while(1){}
+	}
 	APIRegisterWindow (w_navbar);
 	apiShowWindow (w_navbar);
 	exitCriticalSection ();  
@@ -6918,17 +6920,15 @@ noArgs:
 	//++
 	enterCriticalSection ();  
 	editboxWindow = (void *) APICreateWindow ( WT_EDITBOX, 1, 1, "editbox-navbar",     
-                                8, 80, 
-                                wsWindowWidth -100, 24,    
-                                hWindow, 0, COLOR_WINDOW, COLOR_WINDOW );
+                                0, 0, 
+                                wsWindowWidth -40 -40, 24,    
+                                w_navbar, 0, COLOR_WINDOW, COLOR_WINDOW );
 	if ( (void *) editboxWindow == NULL)
 	{	
 		printf("edit box fail");
-		
 		refresh_screen();
 		while(1){}
-		//exit(0);
-	};
+	}
 	APIRegisterWindow (editboxWindow);
 	apiShowWindow (editboxWindow);
 	exitCriticalSection ();  
@@ -6942,9 +6942,9 @@ noArgs:
 	//++
     enterCriticalSection ();  
 	navbar_button = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "[>]",     
-                                wsWindowWidth -80, 40, 
+                                wsWindowWidth -40 -40, 0, 
                                 32, 24,    
-                                hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
+                                w_navbar, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
 
     APIRegisterWindow (navbar_button);
 	apiShowWindow (navbar_button);
@@ -6958,7 +6958,7 @@ noArgs:
     /*
     //++
     enterCriticalSection ();  
-	void *b = (void *) malloc (1024*100); 	 
+	void *b = (void *) malloc (1024*100); 
     
 	if ( (void *) b == NULL )
 	{
@@ -6988,7 +6988,7 @@ noArgs:
     //++
     enterCriticalSection ();  
     //system_call ( 4001, (unsigned long) "dennis.bmp", 100, 100 );
-    system_call ( 4001, (unsigned long) "dennis.bmp", 100, 100 );
+    system_call ( 4001, (unsigned long) "dennis.bmp", 200, 200 );
     exitCriticalSection ();  
     //--    
 	//===========================================================

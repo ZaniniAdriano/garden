@@ -244,7 +244,6 @@ int main ( int argc, char *argv[] ){
 
     //++
     apiBeginPaint (); 
-    //hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, 
     hWindow = (void *) APICreateWindow (  WT_OVERLAPPED, 1, 1, 
                            "App Launcher",
                            left, top, width, height,    
@@ -258,10 +257,9 @@ int main ( int argc, char *argv[] ){
 		goto fail;
     }else{
 
+		//Registrar e mostrar.
         APIRegisterWindow (hWindow);
-        APISetActiveWindow (hWindow);
-        APISetFocus (hWindow);
-        apiShowWindow (hWindow);
+	    apiShowWindow (hWindow);
         
         
         //#test

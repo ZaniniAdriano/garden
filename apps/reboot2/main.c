@@ -241,7 +241,7 @@ int main ( int argc, char *argv[] ){
     apiBeginPaint (); 
     hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, 
                            "Reboot2",
-                           left, top, width, height,    
+                           left, top, width, height, 
                            0, 0, 0xF5DEB3, 0x2d89ef );  
 
     if ( (void *) hWindow == NULL )
@@ -251,10 +251,14 @@ int main ( int argc, char *argv[] ){
         goto fail;
     }else{
 
+		//Registrar e mostrar.
         APIRegisterWindow (hWindow);
-        APISetActiveWindow (hWindow);
-        APISetFocus (hWindow);
-        apiShowWindow (hWindow);
+	    apiShowWindow (hWindow);
+	    
+        //APIRegisterWindow (hWindow);
+        //APISetActiveWindow (hWindow);
+        //APISetFocus (hWindow);
+        //apiShowWindow (hWindow);
     };
     apiEndPaint ();
     //--
