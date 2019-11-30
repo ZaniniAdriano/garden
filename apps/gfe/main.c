@@ -58,15 +58,15 @@ gfeProcedure ( struct window_d *window,
 		    switch (long1)
 			{  
 				case VK_F1:
-						
+				    printf ("F1\n");
 					break;
 					
 				case VK_F2:
- 
+				    printf ("F2\n"); 
 					break;
 					
 				case VK_F3:
- 
+ 				    printf ("F3\n");
 					break;
 					
 				//...
@@ -158,23 +158,17 @@ int main ( int argc, char *argv[] ){
 	apiBeginPaint (); 
 	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, 
 	                       "Gramado File Explorer",
-	                       10, 10, 800, 600,    
-                           0, 0, COLOR_WHITESMOKE, 0x303030 );
+	                       10, 10, 640, 480,    
+                           0, 0, COLOR_BLUE, 0x303030 ); //COLOR_WHITESMOKE
 
 	if ( (void *) hWindow == NULL )
 	{	
 		printf ("gfe: hWindow fail");
 		apiEndPaint ();
-		
 		goto fail;
     }else{
 
         APIRegisterWindow (hWindow);
-
-        APISetActiveWindow (hWindow);
-
-        APISetFocus (hWindow);
-
         apiShowWindow (hWindow);
     };
 	apiEndPaint ();
@@ -208,8 +202,10 @@ int main ( int argc, char *argv[] ){
 	    // Usar alguma rotina da API específica para carregar arquivo.
 	    // na verdade tem que fazer essas rotinas na API.
 	
-	    system_call ( SYSTEMCALL_READ_FILE, (unsigned long) "FOLDER  BMP", 
-		    (unsigned long) b, (unsigned long) b );			
+	    system_call ( SYSTEMCALL_READ_FILE, 
+	        (unsigned long) "FOLDER  BMP", 
+		    (unsigned long) b, 
+		    (unsigned long) b );			
 	};
     //--
 
@@ -229,8 +225,9 @@ int main ( int argc, char *argv[] ){
 	//++
 	apiBeginPaint (); 
 	gWindow = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "GRID-WINDOW",
-	                       (1024-150), 10, 100, 320,    
-                           hWindow, 0, 0x303030, 0x303030 );	  
+	                       8, 42, 
+	                       100, 320,    
+                           hWindow, 0, 0x303030, 0x303030 );
 	if ( (void *) gWindow == NULL )
 	{	
 		printf ("gfe: gWindow fail");
@@ -239,18 +236,21 @@ int main ( int argc, char *argv[] ){
 		goto fail;
 	}else{
 		
-        APIRegisterWindow (gWindow);		
+        APIRegisterWindow (gWindow);
 		
 		// #bugbug
 		// problemas na largura dos ítens quando pintamos no modo vertical;
 		// ver a rotina no kgws,
-		
+
+        // #bugbug
+        // Nessa chamada não temos o posicionamento do grid.
+
 	    //#obs: Acho que isso cria grid.
 	    int s = (int) system_call ( 148, (unsigned long) gWindow, 
 	                      4, (unsigned long) GRID_VERTICAL );
-	                      //4, (unsigned long) GRID_HORIZONTAL );		
+	                      //4, (unsigned long) GRID_HORIZONTAL );
 	
-        if (s == 1)	
+        if (s != 0)
         {
 		    printf ("gfe: 148 fail.\n");
 	        apiEndPaint ();
@@ -258,50 +258,13 @@ int main ( int argc, char *argv[] ){
 	        goto fail;
 	    }
 	    
-	    apiShowWindow (gWindow);	    			
+	    apiShowWindow (gWindow);
 	};
 	apiEndPaint ();
 	//--
 	
 	
-	
-	//
-	// Menu.
-	//
-	
-	/*
-	//++
-	apiBeginPaint (); 
-	mWindow = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "MENU-WINDOW",
-	                       (1024-350), 400, 320, 200,
-	                       hWindow, 0, COLOR_PINK, COLOR_PINK );	    
-                           //hWindow, 0, 0x303030, 0x303030 );	  
 
-	if ( (void *) mWindow == NULL )
-	{	
-		printf ("gfe: mWindow fail");
-		apiEndPaint ();
-		
-		goto fail;
-	}else{
-		
-        APIRegisterWindow (mWindow);		
-
-	    // #obs: Acho que isso cria menu.
-	    // Criaremos o menu de acordo com a janela mãe
-	    // mas usaremos apenas o posicionamento da janela mãe. left top
-	    // ou o ponteiro do mouse, quando clicarmos com o botão direito.
-	    
-        system_call ( 149, (unsigned long) mWindow, 
-            (unsigned long) mWindow, (unsigned long) mWindow );
-            
-    	apiShowWindow (mWindow);            
-	};
-	apiEndPaint ();
-    //--	
-	*/
-	
-	
 	//
 	// ## Mostrando bmps dentro da área de cliente ##
 	//
@@ -330,7 +293,7 @@ int main ( int argc, char *argv[] ){
 	    tmpWindow = (void*) APICreateWindow( WT_SIMPLE, 1, 1,"ICON-WINDOW",
 	                    20, 1+20+(i*24), 
 						800-40, 24,    
-                        0, 0, COLOR_BLUE, COLOR_BLUE );	  
+                        0, 0, COLOR_BLUE, COLOR_BLUE );
 
 	    if((void*) tmpWindow == NULL)
 	    {	
@@ -338,30 +301,69 @@ int main ( int argc, char *argv[] ){
 		    apiEndPaint();
 		    goto fail;
 	    }
-        apiEndPaint();		
+        apiEndPaint();
 		*/
 		
 		
 	    //Usando a API para exibir o bmp carregado. 
 	    //ACHO QUE ISSO SOMENTE PINTA NO BACKBUFFER
-	    apiDisplayBMP ( (char *) b, 40, 1 + 60 + (i*24) ); 
+	    apiDisplayBMP ( (char *) b, 
+	        200, 
+	        1 + 60 + (i*24) ); 
     };
     
     
     
-	 //
-	 // Novo menu.
-	 //
 	 
+	//
+	// Menu.
+	//
+
+
+    //==================#todo =======================================
+    
+    //#todo
+    //estamos trabalhando na pintura do menu ...
+    //está quase funcionando novamente.
+    //é questão de posicionamento.
+
+
+    /*
+	//++
+	apiBeginPaint (); 
+    mWindow = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "MENU-WINDOW",
+                           280, 37, 
+                           320, 200,
+                           hWindow, 0, COLOR_PINK, COLOR_PINK );
+                           
+    if ( (void *) mWindow == NULL )
+    {	
+		printf ("gfe: mWindow fail");
+		apiEndPaint ();
+		
+		goto fail;
+    }else{
+		
+        APIRegisterWindow (mWindow);            
+        apiShowWindow (mWindow); 
+    };
+	apiEndPaint ();
+    //--
+
+	 
+	 // Isso é uma rotina de teste.
 	 // #obs: Acho que isso cria menu.
 	 // Criaremos o menu de acordo com a janela mãe
 	 // mas usaremos apenas o posicionamento da janela mãe. left top
 	 // ou o ponteiro do mouse, quando clicarmos com o botão direito.
-	    
-     system_call ( 149, (unsigned long) hWindow, 
-         (unsigned long) hWindow, (unsigned long) hWindow );    
-	
-			
+
+     system_call ( 149, (unsigned long) mWindow, 
+         (unsigned long) mWindow, (unsigned long) mWindow );  
+
+*/
+
+
+
 	//
 	// ## Refresh Window ##
 	//
@@ -376,7 +378,7 @@ int main ( int argc, char *argv[] ){
 	//
 	
 	
-    unsigned long message_buffer[5];	
+    unsigned long message_buffer[5];
 
 Mainloop:	
 	
