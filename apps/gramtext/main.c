@@ -1,7 +1,7 @@
 /*
  * File: main.c
  *
- * Arquivo principal do aplicativo teditor.bin 
+ * Arquivo principal do aplicativo gramtext.
  * O aplicativo é usado para testes do sistema operacional Gramado 0.4
  *
     ## todo: 
@@ -611,7 +611,7 @@ int main ( int argc, char *argv[] ){
 	//#importante
 	//inicializa as variáveis antes de pintar.
 	
-    teditorTeditor ();	
+    teditorTeditor ();
 	
 
 	//
@@ -620,42 +620,65 @@ int main ( int argc, char *argv[] ){
     
 	//frame
 	//Criando uma janela para meu editor de textos.
-	
-	apiBeginPaint(); 
 
-	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, argv[1],
-	                    wpWindowLeft, wpWindowTop, wsWindowWidth, wsWindowHeight,    
-                        0, 0, 0x303030, 0x303030 );	   
-	
 
-	if ( (void *) hWindow == NULL )
-	{	
-		printf("TEDITOR.BIN: hWindow fail");
-		apiEndPaint();
-		goto fail;
-	}
-	
+    //++
+    apiBeginPaint(); 
+    hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, argv[1],
+                          wpWindowLeft, wpWindowTop, wsWindowWidth, wsWindowHeight,    
+                          0, 0, 0x303030, 0x303030 );
+
+    if ( (void *) hWindow == NULL )
+    {
+        printf ("gramcode: hWindow fail\n");
+        goto fail;
+    }else{
+
+        APIRegisterWindow (hWindow);
+        APISetActiveWindow (hWindow);
+        
+        // #bugbug
+        // ??
+        // Isso está repintando a moldura e ficando ruin.
+        // Mas precisamos do foco senão trava por causa do teclado.
+        // Se setarmos o foco na janela, então a janela mãe
+        // será repintada e se tornará a janela ativa.
+
+        //APISetFocus (hWindow);
+
+        apiShowWindow (hWindow);
+    };
     apiEndPaint();
+    //--
+
+
+    struct window_d *editboxWindow;
+
+	//++
+	enterCriticalSection ();  
+	editboxWindow = (void *) APICreateWindow ( WT_EDITBOX, 1, 1, "editbox-navbar",     
+                                4, 4 +36, 
+                                wsWindowWidth -4 -40, wsWindowHeight -36 -40, 
+                                hWindow, 0, 0x303030, 0x303030 );
+	if ( (void *) editboxWindow == NULL)
+	{	
+		printf("edit box fail");
+		refresh_screen();
+		while(1){}
+	}
+	APIRegisterWindow (editboxWindow);
 	
-    APIRegisterWindow (hWindow);
+	APISetFocus (editboxWindow);
 	
-	//set active efetua um redraw ...
-	//isso parece ser redundante na inicialização do 
-	//programa. Talvez o certo seria desenhar a janela 
-	//ja setando ativando.	
-    APISetActiveWindow (hWindow);	
-    
-	//set focus efetua um redraw ...
-	//isso parece ser redundante na inicialização do 
-	//programa. Talvez o certo seria desenhar a janela 
-	//ja setando o foco.
-	APISetFocus (hWindow);	
-	
-	//#suspenso 
-	//vamos tentar refresh só da janela.
-	//refresh_screen ();	
-	
-	apiShowWindow (hWindow);
+	apiShowWindow (editboxWindow);
+	exitCriticalSection ();  
+	//--
+
+
+
+
+
+ 
 
 
 	//apiBeginPaint();    
@@ -789,20 +812,20 @@ startTyping:
 	// Habilitando o cursor de textos.
 	//
 	
-	system_call ( 244, 
-	    (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );	
+    system_call ( 244, 
+        (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );
 
-	
 		//saiu.
-        printf(".\n");		
-        printf(".\n");		
+        printf(".\n");
+        printf(".\n");
         printf(".\n");
 
 	}; //fim do else.
 	
-	
-	unsigned long message_buffer[5];	
-	
+
+    unsigned long message_buffer[5];
+
+
 	//
 	// main loop
 	//
@@ -818,12 +841,10 @@ startTyping:
 // botões para salvarmos o arquivo. 
 	
 	
-Mainloop:		
-	
+Mainloop:
 
-   
-	while (_running)
-	{
+    while (_running)
+    {
 		enterCriticalSection(); 
 		system_call ( 111,
 		    (unsigned long)&message_buffer[0],
@@ -837,30 +858,30 @@ Mainloop:
 		        (int) message_buffer[1], 
 		        (unsigned long) message_buffer[2], 
 		        (unsigned long) message_buffer[3] );
-			
-			message_buffer[0] = 0;
+
+            message_buffer[0] = 0;
             message_buffer[1] = 0;
             message_buffer[3] = 0;
-            message_buffer[4] = 0;	
-        };				
-	};	
-	
+            message_buffer[4] = 0;
+        };
+    };
+
 	
 	//
 	// fail.
 	//
 	
-fail:	
+fail:
     printf ("fail\n");
-	
+
 done:
-	
+
 	printf ("Exiting editor ...\n");
     printf ("done\n");
 
     _running = 0;
-	
-	return 0;
+
+    return 0;
 }
 
 //
