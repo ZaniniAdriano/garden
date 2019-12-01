@@ -380,15 +380,17 @@ void *teditorProcedure ( struct window_d *window,
 
 
 /*
+ *****************************************
  * teditorTeditor:
  *     Contrutor e inicialização.
  */
  
 void teditorTeditor (){
-	
-	int i=0;
-	int j=0;
-	
+
+    int i=0;
+    int j=0;
+
+
 	//
 	// ## Inicializando as estruturas de linha ##
 	//
@@ -407,19 +409,20 @@ void teditorTeditor (){
 		LINES[i].pos = 0;
 	};	
 	
-	
-	//inicializa as metricas do sistema.	
-    //inicializa os limites da janela.
+
+
+	//inicializa as metricas do sistema.
+	//inicializa os limites da janela.
 	//inicia o tamanho da janela.
 	//inicializar a posição da janela.
 	
     // #todo
     // Mudar o nome dessas funções.
     
-    shellInitSystemMetrics();
-    shellInitWindowLimits();
-    shellInitWindowSizes();
-    shellInitWindowPosition();
+    shellInitSystemMetrics ();
+    shellInitWindowLimits ();
+    shellInitWindowSizes ();
+    shellInitWindowPosition ();
 }
 
 
@@ -794,7 +797,7 @@ skip_test:
 	
 	//#importante
 	//inicializa as variáveis antes de pintar.
-    teditorTeditor ();	
+    teditorTeditor ();
 	
 
 	//
@@ -803,40 +806,62 @@ skip_test:
     
 	//frame
 	//Criando uma janela para meu editor de textos.
-	
-	apiBeginPaint(); 
 
-	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, argv[1],
-	                    wpWindowLeft, wpWindowTop, wsWindowWidth, wsWindowHeight,    
-                        0, 0, 0x303030, 0x303030 );	   
-	
-    apiEndPaint();
-    
-	if ( (void *) hWindow == NULL )
-	{	
-		printf ("gramcode: hWindow fail\n");
-		goto fail;
-		
-	}else{
-		
-        APIRegisterWindow (hWindow);		
-		
-	    //set active efetua um redraw ...
-	    //isso parece ser redundante na inicialização do 
-	    //programa. Talvez o certo seria desenhar a janela 
-	    //ja setando ativando.	
-        APISetActiveWindow (hWindow);	
-    		
-	    //set focus efetua um redraw ...
-	    //isso parece ser redundante na inicialização do 
-	    //programa. Talvez o certo seria desenhar a janela ja setando o foco.
-	    APISetFocus (hWindow);
-    	
-	    
-	    // Mostra na tela apenas a janela.
-	    apiShowWindow (hWindow);
-	    		
+    //++
+    apiBeginPaint(); 
+    hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, argv[1],
+                          wpWindowLeft, wpWindowTop, wsWindowWidth, wsWindowHeight,    
+                          0, 0, 0x303030, 0x303030 );
+
+    if ( (void *) hWindow == NULL )
+    {
+        printf ("gramcode: hWindow fail\n");
+        goto fail;
+    }else{
+
+        APIRegisterWindow (hWindow);
+        APISetActiveWindow (hWindow);
+        
+        // #bugbug
+        // ??
+        // Isso está repintando a moldura e ficando ruin.
+        // Mas precisamos do foco senão trava por causa do teclado.
+        // Se setarmos o foco na janela, então a janela mãe
+        // será repintada e se tornará a janela ativa.
+
+        //APISetFocus (hWindow);
+
+        apiShowWindow (hWindow);
     };
+    apiEndPaint();
+    //--
+    
+
+    struct window_d *editboxWindow;
+
+	//++
+	enterCriticalSection ();  
+	editboxWindow = (void *) APICreateWindow ( WT_EDITBOX, 1, 1, "editbox-navbar",     
+                                4, 4 +36, 
+                                wsWindowWidth -4 -40, wsWindowHeight -36 -40, 
+                                hWindow, 0, 0x303030, 0x303030 );
+	if ( (void *) editboxWindow == NULL)
+	{	
+		printf("edit box fail");
+		refresh_screen();
+		while(1){}
+	}
+	APIRegisterWindow (editboxWindow);
+	
+	APISetFocus (editboxWindow);
+	
+	apiShowWindow (editboxWindow);
+	exitCriticalSection ();  
+	//--
+
+
+
+
 
      //
      // Status bar. 
