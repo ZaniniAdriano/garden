@@ -21,9 +21,9 @@ int running = 1;
     //
 	// ## Janelas de teste ##
 	//
-	
+
     struct window_d *gWindow;  //grid 
-	struct window_d *mWindow;  //menu
+    struct window_d *mWindow;  //menu
 
 //static char *dest_argv[] = { "-sujo0","-sujo1","-sujo2",NULL };
 //static unsigned char *dest_envp[] = { "-sujo", NULL };
@@ -34,8 +34,8 @@ int running = 1;
 int 
 gfeProcedure ( struct window_d *window, 
                int msg, 
-			   unsigned long long1, 
-			   unsigned long long2 );
+               unsigned long long1, 
+               unsigned long long2 );
  
 
 
@@ -48,12 +48,12 @@ gfeProcedure ( struct window_d *window,
 int 
 gfeProcedure ( struct window_d *window, 
                int msg, 
-			   unsigned long long1, 
-			   unsigned long long2 )
+               unsigned long long1, 
+               unsigned long long2 )
 {
-	switch (msg)
-	{
-		
+
+    switch (msg)
+    {
 		case MSG_SYSKEYDOWN:
 		    switch (long1)
 			{  
@@ -72,7 +72,7 @@ gfeProcedure ( struct window_d *window,
 				//...
 				
                 //full screen
-                //colocar em full screen somente a área de cliente. 				
+                //colocar em full screen somente a área de cliente. 
 		        case VK_F11:
 				    
 					break;
@@ -81,7 +81,8 @@ gfeProcedure ( struct window_d *window,
 
 			};
 			break;		
-		
+
+
 		// MSG_MOUSEKEYDOWN	
 		case 30:
 		    switch (long1)
@@ -90,7 +91,7 @@ gfeProcedure ( struct window_d *window,
 				case 1:
 				    if ( window == gWindow )
 					{
-						printf("grid window\n");
+						printf ("grid window\n");
 					}
 				    if ( window == mWindow )
 					{
@@ -103,9 +104,10 @@ gfeProcedure ( struct window_d *window,
 		
 		default:
 		    break;
-	};
-	
-    return 0;	
+    };
+
+
+    return 0;
 }
 
 
@@ -116,20 +118,21 @@ gfeProcedure ( struct window_d *window,
 
 int main ( int argc, char *argv[] ){
 
-	struct window_d *hWindow;
-	
-	FILE *fp;
-		
-	int ch;
+    struct window_d *hWindow;
+
+    FILE *fp;
+
+    int ch;
     int char_count = 0;	
-	
-	
-#ifdef TEDITOR_VERBOSE			
+
+
+#ifdef TEDITOR_VERBOSE
 	printf("\n");
 	printf("Initializing File explorer:\n");
 	printf("mainTextEditor: # argv={%s} # \n", &argv[0] );
-#endif	
-	
+#endif
+
+
 	//
 	// ## vamos repetir o que dá certo ...
 	//
@@ -159,7 +162,7 @@ int main ( int argc, char *argv[] ){
 	hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, 
 	                       "Gramado File Explorer",
 	                       10, 10, 640, 480,    
-                           0, 0, COLOR_BLUE, 0x303030 ); //COLOR_WHITESMOKE
+                           0, 0, COLOR_WHITESMOKE, 0x303030 ); 
 
 	if ( (void *) hWindow == NULL )
 	{	
@@ -189,7 +192,7 @@ int main ( int argc, char *argv[] ){
 	//
 	
 	//++
-	void *b = (void *) malloc (1024*30); 	 
+	void *b = (void *) malloc (1024*30); 
     
 	if ( (void *) b == NULL )
 	{
@@ -205,7 +208,7 @@ int main ( int argc, char *argv[] ){
 	    system_call ( SYSTEMCALL_READ_FILE, 
 	        (unsigned long) "FOLDER  BMP", 
 		    (unsigned long) b, 
-		    (unsigned long) b );			
+		    (unsigned long) b );
 	};
     //--
 
@@ -328,11 +331,11 @@ int main ( int argc, char *argv[] ){
     //é questão de posicionamento.
 
 
-    /*
+    
 	//++
 	apiBeginPaint (); 
     mWindow = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "MENU-WINDOW",
-                           280, 37, 
+                           280, 50, 
                            320, 200,
                            hWindow, 0, COLOR_PINK, COLOR_PINK );
                            
@@ -360,7 +363,7 @@ int main ( int argc, char *argv[] ){
      system_call ( 149, (unsigned long) mWindow, 
          (unsigned long) mWindow, (unsigned long) mWindow );  
 
-*/
+
 
 
 
@@ -380,7 +383,7 @@ int main ( int argc, char *argv[] ){
 	
     unsigned long message_buffer[5];
 
-Mainloop:	
+Mainloop:
 	
 	while (running)
 	{
@@ -402,7 +405,7 @@ Mainloop:
             message_buffer[1] = 0;
             message_buffer[3] = 0;
             message_buffer[4] = 0;	
-        };				
+        };
 	};	
 	
 	
