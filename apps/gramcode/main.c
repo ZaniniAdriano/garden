@@ -837,14 +837,42 @@ skip_test:
     //--
     
 
+    struct window_d *editbox_bg_Window;
+
+	//++
+	enterCriticalSection ();  
+	editbox_bg_Window = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "editbox-bg",     
+                                4, 4 +36, 
+                                wsWindowWidth -4 -40, wsWindowHeight -36 -40, 
+                                hWindow, 0, 0x303030, 0x303030 );
+	if ( (void *) editbox_bg_Window == NULL)
+	{	
+		printf("edit box fail");
+		refresh_screen();
+		while(1){}
+	}
+	APIRegisterWindow (editbox_bg_Window);
+	
+	//APISetFocus (editbox_bg_Window);
+	
+	apiShowWindow (editbox_bg_Window);
+	exitCriticalSection ();  
+	//--
+	
+
+
+
+
+
+
     struct window_d *editboxWindow;
 
 	//++
 	enterCriticalSection ();  
-	editboxWindow = (void *) APICreateWindow ( WT_EDITBOX, 1, 1, "editbox-navbar",     
-                                4, 4 +36, 
-                                wsWindowWidth -4 -40, wsWindowHeight -36 -40, 
-                                hWindow, 0, 0x303030, 0x303030 );
+	editboxWindow = (void *) APICreateWindow ( WT_EDITBOX, 1, 1, "editbox",     
+                                1, 1, 
+                                wsWindowWidth -50, wsWindowHeight -80, 
+                                editbox_bg_Window, 0, 0x303030, 0x303030 );
 	if ( (void *) editboxWindow == NULL)
 	{	
 		printf("edit box fail");

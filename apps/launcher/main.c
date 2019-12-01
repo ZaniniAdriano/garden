@@ -95,9 +95,9 @@ launcherProcedure ( struct window_d *window,
 				case 1:
 				    if ( window == launcher_button_1 )
 				    {
-						APISetFocus ( window );
-						//execve ( (const char *) "noraterm.bin", 
-                          //  (const char *) 0, (const char *) 0); 
+						//APISetFocus ( window );
+						execve ( (const char *) "noraterm.bin", 
+                           (const char *) 0, (const char *) 0); 
 
 						 // #todo:
 						 // Tentar enviar mensagens para o terminal 
@@ -109,10 +109,9 @@ launcherProcedure ( struct window_d *window,
 
 				    if ( window == launcher_button_2 )
 				    {
-						APISetFocus ( window );
-						//execve ( (const char *) "gfe.bin", 
-						 //execve ( (const char *) "gramcode.bin",
-                           //  (const char *) 0, (const char *) 0);
+						//PISetFocus ( window );
+						 execve ( (const char *) "gramcode.bin",
+                            (const char *) 0, (const char *) 0);
 						 break;
 					}
 				
