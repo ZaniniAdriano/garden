@@ -136,7 +136,9 @@ reboot2Procedure ( struct window_d *window,
 				case 1:
 				    if ( window == reboot_button )
 				    {
-						apiReboot ();
+						//#todo mudar a aparência do botão
+						
+						//apiReboot ();
                        //#todo: Usar outro método para enviar a mensagem.
                        //reboot2Procedure ( NULL, 
                            //(int) MSG_CREATE, 
@@ -175,7 +177,19 @@ reboot2Procedure ( struct window_d *window,
 					break;
 			};
 			break;
-		
+
+		case 31:
+		    switch(long1)
+		    {
+				case 1:
+				    if ( window == reboot_button )
+				    {
+						apiReboot ();
+					}
+				    break;
+			};
+			break;
+
 		default:
 		    break;
 	};

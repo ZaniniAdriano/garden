@@ -96,8 +96,8 @@ launcherProcedure ( struct window_d *window,
 				    if ( window == launcher_button_1 )
 				    {
 						//APISetFocus ( window );
-						execve ( (const char *) "noraterm.bin", 
-                           (const char *) 0, (const char *) 0); 
+						//execve ( (const char *) "noraterm.bin", 
+                           //(const char *) 0, (const char *) 0); 
 
 						 // #todo:
 						 // Tentar enviar mensagens para o terminal 
@@ -110,8 +110,8 @@ launcherProcedure ( struct window_d *window,
 				    if ( window == launcher_button_2 )
 				    {
 						//PISetFocus ( window );
-						 execve ( (const char *) "gramcode.bin",
-                            (const char *) 0, (const char *) 0);
+						 //execve ( (const char *) "gramcode.bin",
+                            //(const char *) 0, (const char *) 0);
 						 break;
 					}
 				
@@ -144,9 +144,29 @@ launcherProcedure ( struct window_d *window,
 					break;
 			};
 			break;
-		
-		default:
-		    break;
+
+		case 31:
+		    switch (long1)
+		    {
+				case 1:
+				    if ( window == launcher_button_1 )
+				    {
+						execve ( (const char *) "noraterm.bin", 
+                           (const char *) 0, (const char *) 0); 
+						 break;
+					}
+				    if ( window == launcher_button_2 )
+				    {
+						 execve ( (const char *) "gramcode.bin",
+                            (const char *) 0, (const char *) 0);
+						 break;
+					}
+				    break;
+			};
+			break;
+
+        default:
+            break;
     };
 
 

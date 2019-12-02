@@ -507,6 +507,9 @@ void quit ( int status ){
  *     LOCAL
  */
 
+//#test
+int navbar_button_status;
+
 unsigned long 
 shellProcedure ( struct window_d *window, 
                  int msg, 
@@ -515,7 +518,12 @@ shellProcedure ( struct window_d *window,
 {
     unsigned long input_ret;
     unsigned long compare_return;
-    int q;	
+    int q;
+    
+    
+    
+
+    
 	
 	//if( msg == COMMAND_INITIALIZE_SHELL ){
 		//...
@@ -744,14 +752,17 @@ shellProcedure ( struct window_d *window,
 
 					if ( window == editboxWindow )
 					{
-					    APISetFocus (window);
+					    //APISetFocus (window);
 						break;
 					}	
 					
 					
 					if ( window == navbar_button )
 					{
-						MessageBox ( 3, "Test","Button clicked!");
+						//mudar a aparência do botão e o estado
+						//desnhar ele clicado.
+						navbar_button_status = 1;
+						//MessageBox ( 3, "Test","Button clicked!");
 						break;
 					}
 					
@@ -807,6 +818,20 @@ shellProcedure ( struct window_d *window,
 		    switch (long1)
 			{		
 				case 1:
+				
+					if ( window == editboxWindow )
+					{
+					    APISetFocus (window);
+						break;
+					}	
+
+					if ( window == navbar_button )
+					{
+						navbar_button_status = 0;
+						MessageBox ( 3, "Test","Button up");
+						break;
+					}
+					
 				    //printf("up button 1\n");
 					if (window == menu_button)
 					{
@@ -830,7 +855,7 @@ shellProcedure ( struct window_d *window,
 					    //refresh_screen (); //não precisa isso	
 
 						running = 0;
-                        ShellFlag = SHELLFLAG_EXIT;						
+                        ShellFlag = SHELLFLAG_EXIT;	
 					}  
 					
 					break;
@@ -847,6 +872,19 @@ shellProcedure ( struct window_d *window,
 
 		// MSG_MOUSEMOVE	
 		case 32:
+           switch (long1)
+           {
+			   case 1:
+			   		if ( window == navbar_button )
+					{
+						if (navbar_button_status == 0)
+						{
+						    printf ("+");
+						}
+						break;
+					}
+			      break;
+           }
             //APISetFocus(window);
 			//printf("m");
             break;	
