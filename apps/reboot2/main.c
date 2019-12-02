@@ -136,14 +136,14 @@ reboot2Procedure ( struct window_d *window,
 				case 1:
 				    if ( window == reboot_button )
 				    {
-						//#todo mudar a aparência do botão
-						
-						//apiReboot ();
-                       //#todo: Usar outro método para enviar a mensagem.
-                       //reboot2Procedure ( NULL, 
-                           //(int) MSG_CREATE, 
-                           //(unsigned long) 0, 
-                           //(unsigned long) 0 );
+						//#test (fail)
+						//button_down
+                        //quando um botão é clicado ou pressionado,
+                        //ele será repintado com a aparência de botão apertado.
+	                    //system_call ( 9900,   
+	                       // (unsigned long) window, 
+		                   // (unsigned long) window, 
+		                   // (unsigned long) window );
                         
                         //OK. Isso funcionou.
 						//printf ("disabling ps2 mouse\n");
@@ -151,6 +151,7 @@ reboot2Procedure ( struct window_d *window,
 	                        //(unsigned long) 4001, // (desabilita) mensagem par ao diálogo
 		                    //(unsigned long) 0, 
 		                    //(unsigned long) 0 );
+		                    
 						break;
 					}
 
@@ -177,6 +178,7 @@ reboot2Procedure ( struct window_d *window,
 					break;
 			};
 			break;
+
 
 		case 31:
 		    switch(long1)
