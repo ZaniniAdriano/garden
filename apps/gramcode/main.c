@@ -810,7 +810,8 @@ skip_test:
     //++
     apiBeginPaint(); 
     hWindow = (void *) APICreateWindow ( WT_OVERLAPPED, 1, 1, argv[1],
-                          wpWindowLeft, wpWindowTop, wsWindowWidth, wsWindowHeight,    
+                          wpWindowLeft, wpWindowTop, 
+                          wsWindowWidth, wsWindowHeight,    
                           0, 0, 0x303030, 0x303030 );
 
     if ( (void *) hWindow == NULL )
