@@ -140,10 +140,10 @@ reboot2Procedure ( struct window_d *window,
 						//button_down
                         //quando um botão é clicado ou pressionado,
                         //ele será repintado com a aparência de botão apertado.
-	                    //system_call ( 9900,   
-	                       // (unsigned long) window, 
-		                   // (unsigned long) window, 
-		                   // (unsigned long) window );
+	                    system_call ( 9900,   
+	                        (unsigned long) window, 
+		                    (unsigned long) window, 
+		                    (unsigned long) window );
                         
                         //OK. Isso funcionou.
 						//printf ("disabling ps2 mouse\n");
