@@ -275,6 +275,14 @@ typedef struct {
 static STREscape strescseq;
 
 
+
+/*
+ * credits: linux 0.1.
+ * this is what the terminal answers to a ESC-Z or csi0c
+ * query (= vt100 response).
+ */
+#define RESPONSE "\033[?1;2c"
+
 #define VT102_ID "\033[?6c"
 
 struct window_d *main_window;
@@ -1187,7 +1195,7 @@ void *noratermProcedure ( struct window_d *window,
 				case VK_RETURN:
 				     
 					terminal_write_char ((int) '\r');
-					terminal_write_char	((int) '\n');
+					terminal_write_char ((int) '\n');
 					
 				    input ('\0'); 
 					
@@ -1202,10 +1210,10 @@ void *noratermProcedure ( struct window_d *window,
                     break; 
 
 				//#test	
-                case VK_TAB:					
+                case VK_TAB:
 					terminal_write_char ( (int) '\t');
 					goto done;
-				    break;	
+				    break;
 
 				//#todo
 				case VK_BACK:
@@ -1215,7 +1223,7 @@ void *noratermProcedure ( struct window_d *window,
 					//terminalSetCursor (textCurrentCol,textCurrentRow);
 					//terminalInsertNextChar ( (char) ' ' ); 
 					goto done;
-                    break;					
+                    break;
                               
                 // Mensagens de digitação.
 				// Texto. Envia o caractere.
@@ -1225,17 +1233,17 @@ void *noratermProcedure ( struct window_d *window,
 				// ser comparada com outras strings.
 				// prompt[] é o stdin.
 					
-                default:			   
+                default:
 				    
 					// Coloca no stdin, prompt[].
 					input ( (unsigned long) long1 );   
 					
-                    // coloca no buffer de linhas e colunas e					
+                    // coloca no buffer de linhas e colunas e
 					// imprime na tela usando api
 					terminal_write_char ( (int) long1 );
-                   					
+
 					goto done;
-                    break;               
+                    break; 
             };
         break;
 		
@@ -4875,14 +4883,15 @@ void shellTestLoadFile (){
 		
 		} else {   			
 		    
-			terminalInsertNextChar ( (char) ch_test ); 		
-	    };
-	};	
-	 
+			terminalInsertNextChar ( (char) ch_test ); 
+        };
+    };
+
+
 done:
     //
 fail:
-    return;	
+    return;
 }
 
 
@@ -6053,12 +6062,30 @@ int save_string2 ( char string[], char file_name[] ){
 
 
 /* 
- * Give version information about this shell.  */
+ * Give version information about this shell.  
+ */
 
 void show_shell_version (){
-	
+
     printf ("%s, version %s.%s \n", shell_name, dist_version, build_version );
 }
+
+
+
+// #todo
+// Isso é um teste.
+/*
+void response ();
+void response (){
+
+    char *p = RESPONSE;
+
+    while (*p){
+        terminal_write_char ( (int) *p );
+        p++;
+    }
+}
+*/
 
 
 /*
@@ -6071,8 +6098,6 @@ void show_shell_version (){
 // usando o cursor gerenciado pelo sistema,
 
 void terminal_write_char ( int c){
-	
-	
 	//
 	//  Escape sequence.
 	//
@@ -6107,7 +6132,7 @@ void terminal_write_char ( int c){
 	// imprime na tela usando api.  
 	//(implementando ainda). 
 	//isso funcionou.
-	terminalRefreshCurrentChar2 ();		
+	terminalRefreshCurrentChar2 ();
 	
 	//#obs: Não usar mais esse.
 	// imprime na tela usando libc. (funcionou)
@@ -6557,39 +6582,57 @@ noArgs:
         while (1){ asm ("pause"); }			
 	}	
      */ 
- 	
- 	
- 	
- 	
- 	
-	
+
+
+    //
+    // Bg
+    //
+
+    struct window_d *client_bg;
+    
+    client_bg = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "NORATERM-CLIENT-bg",
+                            1, 37, 
+                            (terminal_rect.width - 38), (terminal_rect.height - 26), 
+                            hWindow, 0, COLOR_BLACK, COLOR_BLACK );
+
+
+    if ( (void *) client_bg == NULL )
+    {
+		printf ("client_bg window fail ");
+		die( ":(");
+    }else{
+        APIRegisterWindow (client_bg);
+        apiShowWindow (client_bg);
+    };
+
+
 	//
 	// Draw window.
 	//
 	
 	// #Atenção
-	// Estamos criando um área de cliente. É uma janela filha que
-	// se sobrepoe ao bg da janela mãe.
-	// #bugbug: Problemas de tamanho, pois está pintando em cima
-	// da barra de scroll.
-	// Vamos improvisar um ajuste.
+	// Estamos criando um área de cliente. 
+	// É uma janela filha que se sobrepoe ao bg da janela mãe.
 	
-	
+
 	//++
     //apiBeginPaint ();
     hWindow2 = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "NORATERM-CLIENT-WINDOW",
-                            terminal_rect.left, terminal_rect.top, 
-                            (terminal_rect.width - 38), 
-                            (terminal_rect.height - 26), 
-                            0, 0, COLOR_TERMINAL2, COLOR_TERMINAL2 );
+                            1, 1, 
+                            (terminal_rect.width - 39), (terminal_rect.height - 27),
+                            client_bg, 0, COLOR_TERMINAL2, COLOR_TERMINAL2 );
 
-	if ( (void *) hWindow2 == NULL )
-	{
-		die ("NORATERM: hWindow2 \n");
-	}else{
+    if ( (void *) hWindow2 == NULL )
+    {
+        die ("NORATERM: hWindow2 \n");
+    }else{
 
         APIRegisterWindow (hWindow2);
         //APISetActiveWindow (hWindow2);
+        
+        // #bugbug
+        // Temos que setar o foco por causa do teclado do shell interno.
+        // Mas se setarmos o foco a janela mãe irá repintar (errada).
         APISetFocus (hWindow2);
         apiShowWindow (hWindow2);
 
@@ -6609,17 +6652,20 @@ noArgs:
         system_call ( SYSTEMCALL_SETTERMINALWINDOW, (unsigned long) hWindow2, 
 		    (unsigned long) hWindow2, (unsigned long) hWindow2 );
 		
-	    // Salva ponteiro da janela do terminal.  	
-	    shell_info.terminal_window = ( struct window_d * ) hWindow2;				
-		
-    };		
+	    // Salva ponteiro da janela do terminal.  
+	    shell_info.terminal_window = ( struct window_d * ) hWindow2;
+    };
 	//apiEndPaint ();
 	//--
 
-	
+
+    //printf ("*debug");
+    //while(1){}
+
+
 	//
 	// ===========================================================
-    //
+	//
 	
 	// #obs
 	// Aqui, tentaremos inicializar o aplicativo indicado pelo argumento
@@ -6669,6 +6715,9 @@ noArgs:
 		    printf ("noraterm: estamos no FILHO\n");
 			printf ("PID=%d", getpid());
 			
+			//#bugbug: 
+			//O gdeshell é fullscreen e não cabe dentro da 
+			//área de cliente da janela do terminal.
 			execve ("gdeshell.bin", NULL, NULL );
 			
 			printf ("noraterm: execve falhou.\n");
@@ -6684,7 +6733,7 @@ noArgs:
 	// Internal shell
 	//
 	
-do_run_internal_shell:	
+do_run_internal_shell:
  	
 
 
@@ -6693,7 +6742,7 @@ do_run_internal_shell:
 	// Set cursor.
 	// Enable cursor.	
 	
-	terminalSetCursor ( (terminal_rect.left / 8) , ( terminal_rect.top/8) );	
+	terminalSetCursor ( (terminal_rect.left / 8) , ( terminal_rect.top/8) );
 	
 	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );
 		

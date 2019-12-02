@@ -7259,7 +7259,13 @@ noArgs:
 		while (1){}
 		
 		die ("gdeterm: hWindow fail");
-	}
+	}else{
+
+    //salva ponteiro da janela principal e da janela do terminal. 
+    shell_info.main_window = ( struct window_d * ) hWindow;			 
+    APIRegisterWindow (hWindow);
+    apiShowWindow (hWindow);
+    };
 
 
 	//printf("SHELL\n");	
@@ -7305,71 +7311,6 @@ noArgs:
 	// Precisamos mostrar a janela e não repintar 
 	// a tela toda.
 
-    APIRegisterWindow (hWindow);
-    //APISetActiveWindow (hWindow);	
-    //APISetFocus (hWindow);
-
-	//#test
-	//vamos mostrar a janela do shell antes de criarmos a janela 
-	//da área de cliente
-	apiShowWindow (hWindow);
-	
-	
-	
-	//#bugbug
-	//janela usada para input de textos ...
-	//o input de texto pode vir de várias fontes.
-	//api_set_window_with_text_input(hWindow);
-	
-	//
-	// ++ terminal ++
-	//
-	
-	// #importante
-	// Definindo a janela como sendo uma janela de terminal.
-	// Isso faz com que as digitações tenham acesso ao procedimento de janela de terminal 
-	// para essa janela e não apenas ao procedimento de janela do sistema.
-	// # provavelmente isso marca os limites para a impressão de caractere em modo terminal 
-
-	system_call ( SYSTEMCALL_SETTERMINALWINDOW, 
-	    (unsigned long) hWindow, 
-		(unsigned long) hWindow, 
-		(unsigned long) hWindow );
-		
-				 
-	//salva ponteiro da janela principal e da janela do terminal. 
-	shell_info.main_window = ( struct window_d * ) hWindow;			 
-	shell_info.terminal_window = ( struct window_d * ) hWindow;			
-	
-	
-
-	//#test 
-	//Criando um timer.
-	
-	//printf("shmain: Creating timer\n");
-					
-		//janela, 100 ms, tipo 2= intermitente.
-	//system_call ( 222, (unsigned long) hWindow, 100, 2);		
-
-	
-	//printf("SHELL\n");	
-    //printf("#debug breakpoint");
-    //while(1){} 	
-	
-	//#importante
-	//VAMOS EFETUAR ESSE REFRESH DEPOIS DE CRIARMOS OUTRA JANELA.
-	//refresh_screen ();
-	
-	
-	//
-	// #importante:
-	// +pegamos o retângulo referente à area de cliente da janela registrada. 
-	// +atualizamos as variáveis que precisam dessa informação. 
-	// reposicionamos o cursor.
-	// reabilitamos a piscagem de cursor.
-	//
-	
- 
 
 	//3bugbug
 	//vamos suspender isso porque estamos usando janela WT_SIMPLE,
@@ -7425,6 +7366,115 @@ noArgs:
 			terminal_rect.height );	
 	   */
 	
+
+
+    //
+    // Bg
+    //
+
+    struct window_d *client_bg;
+    
+    client_bg = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "NORATERM-CLIENT-bg",
+                            1, 37, 
+                            (terminal_rect.width - 38), (terminal_rect.height - 26), 
+                            hWindow, 0, COLOR_BLACK, COLOR_BLACK );
+
+
+    if ( (void *) client_bg == NULL )
+    {
+		printf ("client_bg window fail ");
+		die( ":(");
+    }else{
+        APIRegisterWindow (client_bg);
+        apiShowWindow (client_bg);
+    };
+
+
+    //
+    // Client window.
+    //
+
+    struct window_d *hWindow2;
+
+	//++
+    //apiBeginPaint ();
+    hWindow2 = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "NORATERM-CLIENT-WINDOW",
+                            1, 1, 
+                            (terminal_rect.width - 39), (terminal_rect.height - 27),
+                            client_bg, 0, COLOR_TERMINAL2, COLOR_TERMINAL2 );
+
+    if ( (void *) hWindow2 == NULL )
+    {
+        die ("NORATERM: hWindow2 \n");
+    }else{
+
+        APIRegisterWindow (hWindow2);
+        //APISetActiveWindow (hWindow2);
+        
+        // #bugbug
+        // Temos que setar o foco por causa do teclado do shell interno.
+        // Mas se setarmos o foco a janela mãe irá repintar (errada).
+        APISetFocus (hWindow2);
+        apiShowWindow (hWindow2);
+
+		//janela usada para input de textos ...
+	    //o input de texto pode vir de várias fontes.
+	    //api_set_window_with_text_input(hWindow);
+	    
+	    //Terminal window.
+	    // #importante
+	    // Definindo a janela como sendo uma janela de terminal.
+	    // Isso faz com que as digitações tenham acesso ao 
+	    // procedimento de janela de terminal 
+	    // para essa janela e não apenas ao procedimento de janela do sistema.
+	    // # provavelmente isso marca os limites para a 
+	    // impressão de caractere em modo terminal 
+        
+        system_call ( SYSTEMCALL_SETTERMINALWINDOW, (unsigned long) hWindow2, 
+		    (unsigned long) hWindow2, (unsigned long) hWindow2 );
+		
+	    // Salva ponteiro da janela do terminal.  
+	    shell_info.terminal_window = ( struct window_d * ) hWindow2;
+    };
+	//apiEndPaint ();
+	//--
+	
+	
+				 
+
+
+	
+	
+
+	//#test 
+	//Criando um timer.
+	
+	//printf("shmain: Creating timer\n");
+					
+		//janela, 100 ms, tipo 2= intermitente.
+	//system_call ( 222, (unsigned long) hWindow, 100, 2);		
+
+	
+	//printf("SHELL\n");	
+    //printf("#debug breakpoint");
+    //while(1){} 	
+	
+	//#importante
+	//VAMOS EFETUAR ESSE REFRESH DEPOIS DE CRIARMOS OUTRA JANELA.
+	//refresh_screen ();
+	
+	
+	//
+	// #importante:
+	// +pegamos o retângulo referente à area de cliente da janela registrada. 
+	// +atualizamos as variáveis que precisam dessa informação. 
+	// reposicionamos o cursor.
+	// reabilitamos a piscagem de cursor.
+	//
+	
+ 
+
+
  
 	
 	
@@ -7552,7 +7602,7 @@ do_run_internal_shell:
     //#BUGBUG
     //Estamos passando um ponteiro que é uma variável local.	
 
-	Status = (int) shellInit (hWindow); 
+	Status = (int) shellInit (hWindow2); 
 	
 	if ( Status != 0 )
 	{

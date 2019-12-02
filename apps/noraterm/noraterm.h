@@ -10,6 +10,9 @@
  *     2018 - Add some bash 1.05 stuff. 
  */
  
+ 
+ 
+ 
 
 // main window.
 //# usado para teste 
@@ -20,7 +23,6 @@
 
 #define WINDOW_WIDTH     800    
 #define WINDOW_HEIGHT    600-24   
-
 
 
 
