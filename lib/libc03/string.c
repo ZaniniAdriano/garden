@@ -1334,6 +1334,32 @@ void swab (const void *from, void *to, size_t len){
 */
 
 
+/* #todo
+char *strerror(int errnum);
+char *strerror(int errnum)
+{ return 0; }
+*/
+
+/* #todo
+//GNU-specific 
+char *strerror_r(int errnum, char *buf, size_t buflen);
+char *strerror_r(int errnum, char *buf, size_t buflen)
+{ return 0; }
+*/
+
+/* #todo
+char *strerror_l(int errnum, locale_t locale);
+char *strerror_l(int errnum, locale_t locale)
+{ return 0; }
+*/
+
+/* #todo
+char *strsignal(int sig);
+char *strsignal(int sig)
+{ return 0; }
+*/
+
+
 //
 // End.
 //

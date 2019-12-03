@@ -3718,6 +3718,184 @@ char * fileread(FILE * fp) {
 */
 
 
+/* #todo
+int dprintf(int fd, const char *format, ...);
+int dprintf(int fd, const char *format, ...)
+{ return -1; }
+*/
+
+/* #todo
+int vdprintf(int fd, const char *format, va_list ap); 
+int vdprintf(int fd, const char *format, va_list ap)
+{ return -1; }
+*/
+
+
+/* #todo
+int vsprintf(char *str, const char *format, va_list ap);
+int vsprintf(char *str, const char *format, va_list ap)
+{ return -1; }
+*/
+
+/* #todo
+int vsnprintf(char *str, size_t size, const char *format, va_list ap);
+int vsnprintf(char *str, size_t size, const char *format, va_list ap)
+{ return -1; }
+*/
+
+/* #todo
+int vscanf(const char *format, va_list ap);
+int vscanf(const char *format, va_list ap)
+{ return -1; }
+*/
+
+/* #todo
+int vsscanf(const char *str, const char *format, va_list ap);
+int vsscanf(const char *str, const char *format, va_list ap)
+{ return -1; }
+*/
+
+/* #todo
+int vfscanf(FILE *stream, const char *format, va_list ap);
+int vfscanf(FILE *stream, const char *format, va_list ap)
+{ return -1; }
+*/
+
+
+//tmpnam(): 
+//SVr4, 4.3BSD, C89, C99, POSIX.1-2001.  
+//POSIX.1-2008 marks tmpnam() as obsolete.
+/* #todo
+char *tmpnam(char *s);
+char *tmpnam(char *s)
+{ return 0; }
+*/
+
+//tmpnam_r() is a nonstandard extension that is 
+//also available on a few other systems.
+/* #todo
+char *tmpnam_r(char *s);
+char *tmpnam_r(char *s)
+{ return 0; }
+*/
+
+/* #todo
+char *tempnam(const char *dir, const char *pfx);
+char *tempnam(const char *dir, const char *pfx)
+{ return 0; }
+*/
+
+
+
+/*
+ ERRORS  for tmpfile();
+
+       EACCES Search permission denied for directory in file's path prefix.
+
+       EEXIST Unable to generate a unique filename.
+
+       EINTR  The call was interrupted by a signal; see signal(7).
+
+       EMFILE The per-process limit on the number of open file descriptors
+              has been reached.
+
+       ENFILE The system-wide limit on the total number of open files has
+              been reached.
+
+       ENOSPC There was no room in the directory to add the new filename.
+
+       EROFS  Read-only filesystem.
+
+ */
+
+/* #todo
+FILE *tmpfile(void);
+FILE *tmpfile(void)
+{
+	return (FILE *) 0;
+}
+*/
+
+
+/* #todo
+FILE *fdopen(int fd, const char *mode);
+FILE *fdopen(int fd, const char *mode)
+{
+	return (FILE *) 0;
+}
+*/
+    
+
+/* #todo
+FILE *freopen(const char *pathname, const char *mode, FILE *stream);
+FILE *freopen(const char *pathname, const char *mode, FILE *stream)
+{
+	return (FILE *) 0;
+}
+*/
+
+/* #todo
+FILE *fopencookie(void *cookie, const char *mode,
+                         cookie_io_functions_t io_funcs);
+FILE *fopencookie(void *cookie, const char *mode,
+                         cookie_io_functions_t io_funcs)
+{
+	return (FILE *) 0;
+}
+*/
+
+
+/* #todo
+FILE *open_memstream(char **ptr, size_t *sizeloc);
+FILE *open_memstream(char **ptr, size_t *sizeloc)
+{
+	return (FILE *) 0;
+}
+*/
+
+/* #todo       
+FILE *open_wmemstream(wchar_t **ptr, size_t *sizeloc);
+FILE *open_wmemstream(wchar_t **ptr, size_t *sizeloc)
+{
+	return (FILE *) 0;
+}
+*/
+
+/* #todo       
+FILE *fmemopen(void *buf, size_t size, const char *mode);
+FILE *fmemopen(void *buf, size_t size, const char *mode)
+{
+	return (FILE *) 0;
+}
+*/
+
+/* #todo
+int fgetpos(FILE *stream, fpos_t *pos);
+int fgetpos(FILE *stream, fpos_t *pos)
+{ return -1; }
+*/
+
+/* #todo
+int fsetpos(FILE *stream, const fpos_t *pos);
+int fsetpos(FILE *stream, const fpos_t *pos)       
+{ return -1; }
+*/
+
+/* #todo
+int fpurge(FILE *stream);
+int fpurge(FILE *stream)      
+{ return -1; }
+*/
+
+
+/*
+  #todo: esse protótipo pertence à stdio_ext.h
+void  __fpurge(FILE *stream);
+void  __fpurge(FILE *stream)
+{}
+*/
+
+
 //
 // End.
 //

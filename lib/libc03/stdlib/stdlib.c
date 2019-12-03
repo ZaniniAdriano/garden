@@ -1729,6 +1729,35 @@ long labs (long j)
 
 
 
+//mkstemp(): 4.3BSD, POSIX.1-2001.
+/* #todo
+int mkstemp(char *template);
+int mkstemp(char *template)
+{ return -1; }
+*/
+
+//mkostemp() and mkostemps(): are glibc extensions.
+/* #todo
+int mkostemp(char *template, int flags);
+int mkostemp(char *template, int flags)
+{ return -1; }
+*/
+
+//mkstemps(): unstandardized, but appears on several other systems.
+/* #todo
+int mkstemps(char *template, int suffixlen);
+int mkstemps(char *template, int suffixlen)
+{ return -1; }
+*/
+
+
+//mkostemp() and mkostemps(): are glibc extensions.
+/* #todo
+int mkostemps(char *template, int suffixlen, int flags);
+int mkostemps(char *template, int suffixlen, int flags)
+{ return -1; }
+*/
+
 
 //
 // End.
