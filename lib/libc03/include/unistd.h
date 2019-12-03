@@ -219,6 +219,10 @@ char * ttyname (int filedes);
 */
 
 
+//See: http://man7.org/linux/man-pages/man2/sethostname.2.html
+int sethostname (const char *name, size_t len);
+int gethostname (char *name, size_t len);
+
 
 #endif /* _UNISTD_H */
 

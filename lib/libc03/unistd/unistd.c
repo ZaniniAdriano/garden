@@ -15,6 +15,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include <limits.h>
 
 //system calls.
 #include <stubs/gramado.h> 
@@ -727,6 +728,76 @@ long pathconf (const char *pathname, int name)
 {
     return -1;
 } 
+
+
+
+static char   hostname[HOST_NAME_MAX];
+
+
+//See: http://man7.org/linux/man-pages/man2/sethostname.2.html
+
+int sethostname (const char *name, size_t len)
+{
+    size_t __name_len = strlen(name) + 1;
+
+    if ( __name_len > len )
+    {
+		printf ("sethostname: len\n");
+	    return 1;     
+    }
+
+    if (len < 0 || len > HOST_NAME_MAX )
+    {
+		printf ("sethostname: len\n");
+	    return 1;
+	}
+
+    return (int) gramado_system_call ( 802, 
+                    (unsigned long) name,
+                    (unsigned long) name,
+                    (unsigned long) name );
+}
+
+
+//See: http://man7.org/linux/man-pages/man2/sethostname.2.html
+int gethostname (char *name, size_t len)
+{
+	int len_ret;
+	
+	if ( len < 0 || len > HOST_NAME_MAX )
+	{
+	    printf ("gethostname: len\n");
+	    return -1;
+	}
+
+    //coloca no buffer interno
+    len_ret = (int) gramado_system_call ( 801, 
+                        (unsigned long) &hostname[0],
+                        (unsigned long) &hostname[0],
+                        (unsigned long) &hostname[0] );
+
+	if ( len_ret < 0 || len_ret > HOST_NAME_MAX )
+	{
+	    printf ("gethostname: len_ret\n");
+	    return -1;
+	}
+
+	if ( len_ret > len )
+	{
+		len_ret = len;
+	}
+	
+	//se o tamanho do nome oferecido pelo kernel
+	//for menor que o buffer disponibilizado pelo aplicativo.
+	if ( len_ret <= len )
+	{
+		//ok
+		memcpy ( name, hostname, len);
+		return (int) len;
+	}
+
+    return -1;
+}
 
 
 //

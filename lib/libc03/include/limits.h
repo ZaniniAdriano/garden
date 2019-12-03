@@ -115,6 +115,8 @@ or provides its own editing facilities.
 */
 
 
+#define HOST_NAME_MAX 64
+//#define HOST_NAME_MAX _POSIX_HOST_NAME_MAX
 
 //#define PTHREAD_STACK_MIN 65536
 

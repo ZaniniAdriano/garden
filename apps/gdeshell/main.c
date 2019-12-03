@@ -210,6 +210,8 @@ char *current_user_name = (char *) "username";
 char *current_host_name = (char *) "hostname";
 //char *current_host_name = (char *) NULL;
 
+char __hostname_buffer[256];
+
 /* Non-zero means that this shell is a login shell.
    Specifically:
    0 = not login shell.
@@ -2283,6 +2285,16 @@ do_compare:
 	};		
 	
 	
+
+    // gethostname
+	if ( strncmp( prompt, "gethostname", 11 ) == 0 )
+	{
+	    gethostname ( __hostname_buffer, (size_t) 64);
+	    printf (__hostname_buffer);
+        goto exit_cmp;
+    };
+
+
     // getpid
 	if ( strncmp( prompt, "getpid", 6 ) == 0 )
 	{
@@ -2618,7 +2630,17 @@ do_compare:
 		//test_services();
         goto exit_cmp;
     };
-	
+
+    // sethostname
+	if ( strncmp( prompt, "sethostname", 11 ) == 0 )
+	{
+		i++;
+		token = (char *) tokenList[i];
+		//sprintf ( __hostname_buffer, "Host1" ); 
+		sprintf ( __hostname_buffer, (const char*) tokenList[i] ); 
+	    sethostname ( __hostname_buffer, (size_t) 64);
+        goto exit_cmp;
+    };
 	
 	// show-screen-buffer
 	
