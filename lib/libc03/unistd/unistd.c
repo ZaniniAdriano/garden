@@ -731,11 +731,52 @@ long pathconf (const char *pathname, int name)
 
 
 
-static char   hostname[HOST_NAME_MAX];
+static char   __libc_hostname[HOST_NAME_MAX];
+static char   __libc_username[HOST_NAME_MAX];
+
+//See: http://man7.org/linux/man-pages/man2/sethostname.2.html
+int gethostname (char *name, size_t len)
+{
+	int len_ret;
+	
+	if ( len < 0 || len > HOST_NAME_MAX )
+	{
+	    printf ("gethostname: len\n");
+	    return -1;
+	}
+
+    //coloca no buffer interno
+    len_ret = (int) gramado_system_call ( 801, 
+                        (unsigned long) &__libc_hostname[0],
+                        (unsigned long) &__libc_hostname[0],
+                        (unsigned long) &__libc_hostname[0] );
+
+	if ( len_ret < 0 || len_ret > HOST_NAME_MAX )
+	{
+	    printf ("gethostname: len_ret\n");
+	    return -1;
+	}
+
+	if ( len_ret > len )
+	{
+		len_ret = len;
+	}
+	
+	//se o tamanho do nome oferecido pelo kernel
+	//for menor que o buffer disponibilizado pelo aplicativo.
+	if ( len_ret <= len )
+	{
+		//ok
+		memcpy ( name, __libc_hostname, len);
+		return (int) len;
+	}
+
+    return -1;
+}
+
 
 
 //See: http://man7.org/linux/man-pages/man2/sethostname.2.html
-
 int sethostname (const char *name, size_t len)
 {
     size_t __name_len = strlen(name) + 1;
@@ -759,26 +800,26 @@ int sethostname (const char *name, size_t len)
 }
 
 
-//See: http://man7.org/linux/man-pages/man2/sethostname.2.html
-int gethostname (char *name, size_t len)
+
+int getusername (char *name, size_t len)
 {
 	int len_ret;
 	
 	if ( len < 0 || len > HOST_NAME_MAX )
 	{
-	    printf ("gethostname: len\n");
+	    printf ("getusername: len\n");
 	    return -1;
 	}
 
     //coloca no buffer interno
-    len_ret = (int) gramado_system_call ( 801, 
-                        (unsigned long) &hostname[0],
-                        (unsigned long) &hostname[0],
-                        (unsigned long) &hostname[0] );
+    len_ret = (int) gramado_system_call ( 803, 
+                        (unsigned long) &__libc_username[0],
+                        (unsigned long) &__libc_username[0],
+                        (unsigned long) &__libc_username[0] );
 
 	if ( len_ret < 0 || len_ret > HOST_NAME_MAX )
 	{
-	    printf ("gethostname: len_ret\n");
+	    printf ("getusername: len_ret\n");
 	    return -1;
 	}
 
@@ -792,13 +833,35 @@ int gethostname (char *name, size_t len)
 	if ( len_ret <= len )
 	{
 		//ok
-		memcpy ( name, hostname, len);
+		memcpy ( name, __libc_username, len);
 		return (int) len;
 	}
 
     return -1;
 }
 
+
+int setusername (const char *name, size_t len)
+{
+    size_t __name_len = strlen(name) + 1;
+
+    if ( __name_len > len )
+    {
+		printf ("setusername: len\n");
+	    return 1;     
+    }
+
+    if (len < 0 || len > HOST_NAME_MAX )
+    {
+		printf ("setusername: len\n");
+	    return 1;
+	}
+
+    return (int) gramado_system_call ( 804, 
+                    (unsigned long) name,
+                    (unsigned long) name,
+                    (unsigned long) name );
+}
 
 //
 // End.

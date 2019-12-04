@@ -202,15 +202,14 @@ COMMAND *global_command = (COMMAND *) NULL;
 /* Non-zero after SIGINT. */
 int interrupt_state = 0;
 
+
+
 /* The current user's name. */
-char *current_user_name = (char *) "username";
-//char *current_user_name = (char *) NULL;
+char __current_host_name[64];
+char __current_user_name[64];
+char *current_host_name = (char *) &__current_host_name[0]; //"username";
+char *current_user_name = (char *) &__current_user_name[0]; //NULL;
 
-/* The current host's name. */
-char *current_host_name = (char *) "hostname";
-//char *current_host_name = (char *) NULL;
-
-char __hostname_buffer[256];
 
 /* Non-zero means that this shell is a login shell.
    Specifically:
@@ -1893,9 +1892,8 @@ do_compare:
     if ( strncmp( prompt, "about", 5 ) == 0 )
     {
         shellSendMessage ( NULL, MSG_COMMAND, CMD_ABOUT, 0);
-
         goto exit_cmp;
-    };
+    }
     
 
     //arp-test
@@ -1904,7 +1902,7 @@ do_compare:
     {
         testSendARP ();
         goto exit_cmp;
-    };
+    }
 
 
 	
@@ -1932,7 +1930,7 @@ do_compare:
 		   
 		   // test. aloca 200 KB
 		   printf ("test 200 KB\n");
-		   shellDisplayBMPEx ( (char *) tokenList[i], (int) (200) );		
+		   shellDisplayBMPEx ( (char *) tokenList[i], (int) (200) );
 			
 			//@todo: podemos checar se o pathname é absoluto,
 			//e onde se encontra o arquivo que queremos.
@@ -2178,17 +2176,15 @@ do_compare:
 	
 	// editbox
 	// Cria uma edibox.
-    // #teste: deletar.
-	
-	if ( strncmp( prompt, "editbox", 7 ) == 0 )
-	{
-	    enterCriticalSection();    
-	    shellCreateEditBox ();
-	    exitCriticalSection();    
-		
-		goto exit_cmp;
-    };		
-	
+    if ( strncmp( prompt, "editbox", 7 ) == 0 )
+    {
+        enterCriticalSection ();
+        shellCreateEditBox ();
+        exitCriticalSection();
+        goto exit_cmp;
+    }
+
+
 	
 	// exec - Executa um programa fechando o shell.
     if ( strncmp( prompt, "exec", 4 ) == 0 )
@@ -2199,9 +2195,10 @@ do_compare:
 		exec_builtins();
 		ShellFlag = SHELLFLAG_EXIT;
 		goto exit_cmp;
-    };	
+    }
 	
-	
+
+
 	// exit - Exit the application.
     if ( strncmp( prompt, "exit", 4 ) == 0 )
 	{
@@ -2209,7 +2206,9 @@ do_compare:
 		ShellFlag = SHELLFLAG_EXIT;
 		goto exit_cmp;
     };
-	
+
+
+
     // fork
 	// Retorna no filho e chamamos execve.
 	
@@ -2254,11 +2253,7 @@ do_compare:
 			printf ("gdeshell: execve falhou.\n");
 			exit (1);
 		}
-		
 
-
-				
-		
 		//#TODO
 		//se aqui estivermos rodando o filho, devemos analizar
 		//porque ela trava olhando o registrador.
@@ -2286,11 +2281,21 @@ do_compare:
 	
 	
 
-    // gethostname
+    // gethostname 
 	if ( strncmp( prompt, "gethostname", 11 ) == 0 )
 	{
-	    gethostname ( __hostname_buffer, (size_t) 64);
-	    printf (__hostname_buffer);
+	    //gethostname ( __hostname_buffer, (size_t) 64);
+	    //printf (__hostname_buffer);
+	    gethostname ( current_host_name, (size_t) 64);
+	    printf (current_host_name);
+        goto exit_cmp;
+    };
+
+    // getusername 
+	if ( strncmp( prompt, "getusername", 11 ) == 0 )
+	{
+	    getusername ( current_user_name, (size_t) 64);
+	    printf (current_user_name);
         goto exit_cmp;
     };
 
@@ -2360,7 +2365,7 @@ do_compare:
 		printf ("Testando heap\n");
 				
 		hBuffer = (void *) malloc ( 1024*100 ); //100kb
-        //hBuffer = (void *) malloc ( 1024*1024*3 ); //3mb		
+        //hBuffer = (void *) malloc ( 1024*1024*3 ); //3mb
 		
 		if ( (void *) hBuffer == NULL )
 		{
@@ -2377,12 +2382,12 @@ do_compare:
 	// hd ??
 	// hd info maybe.
     if ( strncmp( prompt, "hd", 2 ) == 0 )
-	{
-	    printf ("~hd\n");
+    {
+        printf ("~hd\n");
         goto exit_cmp;
-    };	
+    }
 	
-	
+
 	// help
 	// ?
 	// Mostra ajuda.
@@ -2390,7 +2395,6 @@ do_compare:
          strncmp( prompt, "help", 4 ) == 0 || 
          strncmp( prompt, "?", 1 ) == 0 )
     {
-
 		i++;
 		token = (char *) tokenList[i];
 		
@@ -2408,22 +2412,19 @@ do_compare:
 			{
                 help_builtins (2);
 			}
-
 			//...
 		};
 		goto exit_cmp;
     };
 
 
-	// install
-    // ?? 
-	
+	// ? - install
 	if ( strncmp( prompt, "install", 7 ) == 0 )
 	{
 	    printf ("~install\n");
         goto exit_cmp;
-    };
-	
+    }
+
 	
     // kernel-info
 	if ( strncmp( prompt, "kernel-info", 11 ) == 0 )
@@ -2495,27 +2496,25 @@ do_compare:
         goto exit_cmp;
 	};	
 
+
 	// new
 	if ( strncmp( prompt, "new", 3 ) == 0 )
 	{		
 	    printf("~new - New file or directory\n");		
 	    goto exit_cmp;
-	}		
+	}
 	
     
 	// mbr
 	// ?? Talvez mostrar informações sobre o mbr ou realizar testes.
     if ( strncmp( prompt, "mbr", 3 ) == 0 )
 	{
-	    printf("~mbr\n");
-		
-		//#bugbug pagefault
-		
-		shellTestMBR();
+		shellTestMBR ();
 		printf("done\n");
 		goto exit_cmp;
-    }; 
-	
+    }
+
+
     // pci-info
 	if ( strncmp( prompt, "pci-info", 8 ) == 0 )
 	{
@@ -2572,19 +2571,18 @@ do_compare:
 	*/
 
 	
-	// rename - reneme directory or file.
+	// rename - rename directory or file.
+	// o que segue o comando rename são dois pathnames.
+	//@todo: podemos checar se o pathname é absoluto,
+	//e onde se encontra o arquivo que queremos.
 	if ( strncmp( prompt, "rename", 6 ) == 0 )
 	{
-		// o que segue o comando rename são dois pathnames.
-		//@todo: podemos checar se o pathname é absoluto,
-		//e onde se encontra o arquivo que queremos.		
         goto exit_cmp;
-    };	
+    }
+
+
 	
-	
-    // root
-	// ??
-	
+    // ? - root
     if ( strncmp( prompt, "root", 4 ) == 0 )
 	{
 	    printf("~/root\n");
@@ -2617,8 +2615,7 @@ do_compare:
 	{
 	     testScrollChar((int) '2');
         goto exit_cmp;		
-	}	
-	
+	}
 	
 	
 	// service
@@ -2629,45 +2626,60 @@ do_compare:
 	    printf("~service - testa servicos do kernel:\n");
 		//test_services();
         goto exit_cmp;
-    };
+    }
+
 
     // sethostname
 	if ( strncmp( prompt, "sethostname", 11 ) == 0 )
 	{
 		i++;
 		token = (char *) tokenList[i];
-		//sprintf ( __hostname_buffer, "Host1" ); 
-		sprintf ( __hostname_buffer, (const char*) tokenList[i] ); 
-	    sethostname ( __hostname_buffer, (size_t) 64);
+		sprintf ( current_host_name, (const char*) tokenList[i] ); 
+	    sethostname ( current_host_name, (size_t) 64);
         goto exit_cmp;
-    };
-	
+    }
+
+    // setusername
+	if ( strncmp( prompt, "setusername", 11 ) == 0 )
+	{
+		i++;
+		token = (char *) tokenList[i];
+		sprintf ( current_user_name, (const char*) tokenList[i] ); 
+	    setusername ( current_user_name, (size_t) 64);
+        goto exit_cmp;
+    }
+
+
 	// show-screen-buffer
-	
 	if ( strncmp( prompt, "show-screen-buffer", 18 ) == 0 )
 	{
 		shellShowScreenBuffer ();
 		goto exit_cmp;
 	}
 
-	
-	
-    // shellinfo
-	// informações sobre o aplicativo.
-	
-	if ( strncmp( prompt, "shell-info", 10 ) == 0 )
+
+
+
+	// show-screen-buffer
+	if ( strncmp( prompt, "show-screen-buffer", 18 ) == 0 )
 	{
-	    printf ("#todo: shell info.\n");
-		shellShowInfo();
-		
+		shellShowScreenBuffer ();
+		goto exit_cmp;
+	}
+
+
+    // shellinfo - Informações sobre o aplicativo.
+    if ( strncmp( prompt, "shell-info", 10 ) == 0 )
+    {
+        shellShowInfo ();
         goto exit_cmp;
-    };	
-	
+    }
+
 
 	// socket
 	// testando socket da libc.
 	// Vai retornar um indice na lista de arquivos abertos do processo.
-	//um descritor de arquivos.
+	// um descritor de arquivos.
 	int socket_fd = -1;
     if ( strncmp( prompt, "socket", 6 ) == 0 )
     {
@@ -2677,7 +2689,8 @@ do_compare:
         printf ("Done\n");
         goto exit_cmp;
     };
-   
+
+
 	//socket-test
 	//rotina de teste de soquetes.
 	if ( strncmp( prompt, "socket-test", 11 ) == 0 )
@@ -2687,23 +2700,15 @@ do_compare:
 		goto exit_cmp;
     };		
 	
-	
-    // shutdown - isso será um programa. shutdown.bin
-	if ( strncmp( prompt, "shutdown", 8 ) == 0 )
-	{
-	    printf("~shutdown \n");
-        goto exit_cmp;
-    };	
 
-	// slots
-	if ( strncmp( prompt, "slots", 5 ) == 0 )
-	{
-	    printf("~slots - mostra slots \n");
-		//mostra_slots();
+    // shutdown - Isso será um programa. shutdown.bin
+    if ( strncmp( prompt, "shutdown", 8 ) == 0 )
+    {
+        printf ("~shutdown \n");
         goto exit_cmp;
-    };
-	
-	
+    }
+
+
 	// start
 	// Inicia uma nova janela(instancia ??) para executar 
 	// um programa ou comando desejado.
@@ -2723,16 +2728,15 @@ do_compare:
 		goto exit_cmp;
     };
 
-    // systeminfo
-	// informações sobre o sistema.
-	if ( strncmp( prompt, "system-info", 11 ) == 0 )
-	{
-	    printf("~@todo: system info.\n");
-		shellShowSystemInfo();
+
+    // systeminfo - Informações sobre o sistema.
+    if ( strncmp( prompt, "system-info", 11 ) == 0 )
+    {
+        shellShowSystemInfo ();
         goto exit_cmp;
-    };	
-	
-	
+    }
+
+
     // t1 - Test file
 	// Carrega um arquivo no buffer de words 
 	// depois exibe todo o buffer mantendo o posicionamento 
@@ -2740,7 +2744,7 @@ do_compare:
 	if ( strncmp( prompt, "t1", 2 ) == 0 )
 	{	
 		//esse testa com fopen
-		shellTestLoadFile ();		
+		shellTestLoadFile ();
         goto exit_cmp;
     };
 	
@@ -2789,9 +2793,7 @@ do_compare:
 		//printf("f1->_ptr: %x\n",f1->_ptr);
 		//printf("f1->_cnt: %d\n",f1->_cnt);
 		
-		//
 		// #bugbug ... o fgetc não lê na estrutura esperada.
-		//
 		printf("Testing fgetc ... \n\n");
 		while(1)
 		{
@@ -2807,10 +2809,10 @@ do_compare:
 			    printf("%c", ch_test);	
 			};
 		};
-		
 		//fail.
 		goto exit_cmp;
     };
+
 
 	// t5 - ( save file )
 	// Ok isso funcionou.
@@ -2820,20 +2822,22 @@ do_compare:
 		shell_save_file ();
 		printf("t5: done\n");
         goto exit_cmp;
-    };	
+    }
 
 
 	// t6 - testando a api. rotina que salva arquivo. 
 	// ok, isso funcionou.
-	if ( strncmp( prompt, "t6", 2 ) == 0 )	
+	if ( strncmp( prompt, "t6", 2 ) == 0 )
 	{
         printf("t6: todo\n");
         goto exit_cmp;
-	};
-	
+	}
+
+
 	//t7
 	//#test
 	//testando estado das teclas.
+	//#todo: Criar uma função que faça várias chamadas.
     if ( strncmp( prompt, "KEYS", 4 ) == 0 ||
          strncmp( prompt, "keys", 4 ) == 0 || 
          strncmp( prompt, "T7", 2 ) == 0 || 
@@ -2858,7 +2862,7 @@ do_compare:
             system_call ( 138, VK_LMENU, VK_LMENU, VK_LMENU ) );
 		//...
 		goto exit_cmp;
-    };
+    }
 
 
 	//testando a criação de botão e a interação com ele através do mouse.
@@ -2879,21 +2883,23 @@ do_compare:
 	if ( strncmp( prompt, "t10", 3 ) == 0 )
     {    
 	    testChangeVisibleArea();
-
 		goto exit_cmp;
 	};
 
 
 	//t11 - testando o envio de mensagens para o procedimento,
 	//usando o kernel.
+	// Chama message box com mensagem about.
     if ( strncmp( prompt, "t11", 3 ) == 0 )
     {    
-        // Chama message box com mensagem about.
-        apiSendMessage ( (struct window_d *) 0, (int) MSG_COMMAND, 
-            (unsigned long) CMD_ABOUT, (unsigned long) 0 );
+        apiSendMessage ( (struct window_d *) 0, 
+            (int) MSG_COMMAND, 
+            (unsigned long) CMD_ABOUT, 
+            (unsigned long) 0 );
 
 		goto exit_cmp;
     };
+
 
 	//buffer de test;
 	unsigned long message_buffer[11];
@@ -2937,22 +2943,23 @@ do_compare:
 	    //coloca no stdout.
 		stdout_printf("Escrevendo no stdout com stdout_printf \n");
 		
+		//#bugbug: não devemos acessar elementos dessa estrutura 
+		//em ring3
 		//mostra o arquivo desde o começo.
 		printf(stdout->_base);
-
 		goto exit_cmp;
-	};	
-	
+	};
+
+
 	if ( strncmp( prompt, "t14", 3 ) == 0 )
 	{
 	    testCreateWindow ();
-
 		printf("t14: debug *hang");
 		while(1){}
-		
 		goto exit_cmp;
 	}
-	
+
+
 	//#todo t15 
 	
 	// t16
@@ -2986,7 +2993,8 @@ do_compare:
 		
 		goto exit_cmp;
 	}
-	
+
+
 	// t18
 	// OpenTTY.
 	FILE *opentty_fp;
@@ -2994,7 +3002,7 @@ do_compare:
 	int x_ch;
 	int terminal_PID;
 	#define MSG_TERMINALCOMMAND 100 //provisório
-	if ( strncmp ( prompt, "t18", 3 ) == 0 )	
+	if ( strncmp ( prompt, "t18", 3 ) == 0 )
 	{
 		//get tty stream
 		//o shell pega um stream para escrever.
@@ -3020,7 +3028,7 @@ do_compare:
 		//get terminal pid
 		//avisa o terminal que ele pode imprimir as mesangens pendentes que estao na stream
 		
-		terminal_PID = (int) system_call ( 1004, 0, 0, 0 );		
+		terminal_PID = (int) system_call ( 1004, 0, 0, 0 );
 		__SendMessageToProcess ( terminal_PID, NULL, MSG_TERMINALCOMMAND, 2000, 2000 );
 		
 		goto exit_cmp;
@@ -3058,9 +3066,10 @@ do_compare:
 		__SendMessageToProcess ( xxx__PID, NULL, MSG_TERMINALCOMMAND, 2001, 2001 );
 		goto exit_cmp;
 	}
-	
-	//t20
-	//isso executa o terminal e manda uma mensagem pra ele.
+
+
+
+	//t20 - Isso executa o terminal e manda uma mensagem pra ele.
 	int terminal___PID;
 	FILE *_fp;
 	if ( strncmp ( prompt, "t20", 3 ) == 0 )
@@ -3108,17 +3117,15 @@ do_compare:
 		goto exit_cmp;
 	}
 	
-	
-    // t900
-    // clona e executa o filho dado o nome do filho.
+
+    // t900 - Clona e executa o filho dado o nome do filho.
     if ( strncmp ( prompt, "t900", 4 ) == 0 )
     {
-	    system_call ( 900, (unsigned long) "gramcode.bin", 0, 0 );
-		//system_call ( 900, (unsigned long) "noraterm.bin", 0, 0 );
+        system_call ( 900, (unsigned long) "gramcode.bin", 0, 0 );
 		goto exit_cmp;
-    }	
+    }
 
-	
+
     // t901
     //clona um processo, retorna para o pai e inicializa o processo
     //filho do seu entrypoint. (#test)	
@@ -3181,7 +3188,6 @@ do_compare:
 	if ( strncmp( prompt, "timer-test", 10 ) == 0 )
 	{
 		printf("timer-test: Creating timer\n");
-		
 	    printf("%d Hz | sys time %d ms | ticks %d \n", 
 		    apiGetSysTimeInfo(1), 
 			apiGetSysTimeInfo(2), 
@@ -3200,10 +3206,8 @@ do_compare:
         deltaY = deltaValue;
           
         printf ("timer-test: done\n");
-
         goto exit_cmp;
-    };
-	
+    }
 
 
 	
@@ -3219,20 +3223,19 @@ do_compare:
 		//shellCreateTaskBar (1);
 	    
 		exitCriticalSection();    
-		
 		goto exit_cmp;
-    };			
-	
-	
+    }
+
+
 	// tree
 	// Desenha uma pequena árvore.
     if ( strncmp( prompt, "tree", 4 ) == 0 )
 	{
-		shellTree();
+		shellTree ();
 		goto exit_cmp;
-    };			
-	
-	
+    }
+
+
 	// version
 	//?? isso pode ser um programa
     if ( strncmp( prompt, "version", 7 ) == 0 )
@@ -3241,13 +3244,14 @@ do_compare:
 	    //printf("\n Gramado version %s \n", OS_VERSION );
         goto exit_cmp;
     };
-	
+
+
     // volume-info
-	if ( strncmp( prompt, "volume-info", 11 ) == 0 )
-	{
-	    shellShowVolumeInfo();
+    if ( strncmp( prompt, "volume-info", 11 ) == 0 )
+    {
+        shellShowVolumeInfo();
         goto exit_cmp;
-    };	
+    }
 	
 
 	// window
@@ -3258,15 +3262,19 @@ do_compare:
     };
 
 
-	// waitpid
-	// vamos esperar por qualquer um dos filhos;
+	// wait-test - Vamos esperar por qualquer um dos filhos.
 	int ___wait_status;
     if ( strncmp( prompt, "wait-test", 9 ) == 0 )
     {
         //wait (&___wait_status);
         wait (-1,&___wait_status,0);
         goto exit_cmp;
-    };
+    }
+
+
+	//
+	// ========= Fim dos comandos ===========
+	//
 
 
     // Se apertamos o enter e não encontramos um comando válido
@@ -3363,7 +3371,7 @@ doexec_first_command:
     //Execve_Ret = (int) shell_gramado_core_init_execve( 
 	//                       (const char*) tokenList[0], //nome
 	//                       (const char*) tokenList[1], 
-	//					   (const char*) tokenList[2] ); //env ...deve ser null
+	//             (const char*) tokenList[2] ); //env ...deve ser null
 	
 	//#bugbug: e sem argumento.
 	/*
@@ -3466,7 +3474,7 @@ dobin:
 
 	//Precisamos passar somente o nome pois a linah de comando 
 	//já foi enviada através de memória compartilhada.
-    Execve_Ret = (int) shell_gramado_core_init_execve( 
+    Execve_Ret = (int) shell_gramado_core_init_execve ( 
 	                       (const char*) tokenList[1],   // Nome
 	                       (const char*) 0,              // Null
 						   (const char*) 0 );            // Null
@@ -3514,10 +3522,10 @@ dotry:
     	
     //Precisamos passar somente o nome pois já passamos 
 	//a linha de comandos através de memória compartilhada.
-    Execve_Ret = (int) shell_gramado_core_init_execve( 
+    Execve_Ret = (int) shell_gramado_core_init_execve ( 
 	                       (const char*) tokenList[1], //Name
 	                       (const char*) 0,            //Null
-						   (const char*) 0 );          //Null
+                           (const char*) 0 );          //Null
 						 
 	// Ok, funcionou e o arquivo foi carregado,
 	// mas demora para receber tempo de processamento.
@@ -3541,7 +3549,7 @@ dotry:
 		// Isso sai do loop de mensagens e 
 		// sai do shell elegantemente.
 		
-		_running = 0;		
+		_running = 0;
 		
 	    goto exit_cmp;	
 		
@@ -3633,10 +3641,16 @@ done:
 }
 
 
+
+/*
+ ********************************* 
+ * shellInitSystemMetrics: 
+ * 
+ */
+ 
 	// step1
 	//inicializa as metricas do sistema.
-void shellInitSystemMetrics ()
-{
+void shellInitSystemMetrics (){
 	//pegaremos todas as metricas de uma vez só,
 	//se uma falhar, então pegaremos tudo novamente.
 	
@@ -3649,7 +3663,7 @@ void shellInitSystemMetrics ()
 	smMousePointerWidth = apiGetSystemMetrics(5);
 	smMousePointerHeight = apiGetSystemMetrics(6);
 	smCharWidth = apiGetSystemMetrics(7);
-	smCharHeight = apiGetSystemMetrics(8);	
+	smCharHeight = apiGetSystemMetrics(8);
 	//...
 	
 	
@@ -4346,7 +4360,11 @@ done:
 	// tudo indica que é saudável aumentar o tamanho do buffer usado pelo heap.
 	*/
 	
-	
+
+    //Inicializar o nome do host.
+    getusername ( current_user_name, (size_t) 64);
+    gethostname ( current_host_name, (size_t) 64);
+    
 	if ( interactive == 1 )
 	    shellPrompt ();
 	
@@ -4598,8 +4616,8 @@ void shellHelp (){
 
 //drawing a tree
 void shellTree (){
-	
-    printf (tree_banner);	
+
+    printf (tree_banner);
 }
 
 
@@ -4612,8 +4630,8 @@ void shellTree (){
  */
 
 void shellPrompt (){
-	
-	int i;
+
+    int i;
 	
 	// Linpando o buffer de entrada.
 	
@@ -4627,15 +4645,15 @@ void shellPrompt (){
     prompt_status = 0;
 	prompt_max = PROMPT_MAX_DEFAULT;  
 
-	//old
+    //old
     //printf ("\n");
     //printf ("[%s]", current_workingdiretory_string );	
-	//printf ("%s ", SHELL_PROMPT );
-	
+    //printf ("%s ", SHELL_PROMPT );
+
     printf ("\n");
     printf ("[%s", current_user_name );
-	printf ("@%s]", current_host_name );
-	printf ("%s ", SHELL_PROMPT );		
+    printf ("@%s]", current_host_name );
+    printf ("%s ", SHELL_PROMPT );
 }
 
 
