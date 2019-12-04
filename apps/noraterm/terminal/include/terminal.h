@@ -550,4 +550,4 @@ void terminal_clear_to_endofline ();
 void terminal_clear_from_startofline ();
 void terminal_clear_to_endofdisplay ();
 void terminal_scroll_display ();
-
+void terminalCopyToScroll ();

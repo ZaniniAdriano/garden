@@ -3120,7 +3120,17 @@ do_compare:
 	//    printf("~save root\n");
     //    goto exit_cmp;
     //};
-	
+
+
+	//scroll
+	//usado para teste de scroll
+	if ( strncmp( prompt, "scroll", 6 ) == 0 )
+	{
+		printf ("*SCROLL\n");
+		terminal_scroll_display ();
+		shellPrompt ();
+        goto exit_cmp;
+	}
 	
 	//scroll1
 	//usado para teste de scroll
@@ -3137,9 +3147,8 @@ do_compare:
 	{
 	     testScrollChar ((int) '2');
         goto exit_cmp;		
-	}	
-	
-	
+	}
+
 	
 	// service
 	//podemos tertar serviços do kernel 
@@ -6134,7 +6143,16 @@ void terminal_write_char ( int c){
 	};
 	*/
 
-    //#test scroll.
+    // #test scroll.
+    // tentando fazer scroll da área de cliente.
+    // #bugbug: esse if não funcionou,
+    // o scroll do kernel foi acionado.
+    
+	if ( textCurrentRow >= wlMaxRows )
+	{
+		//printf ("*SCROLL\n");
+		//terminal_scroll_display ();
+	}
 
 
     //coloca no buffer de linhas e colunas.

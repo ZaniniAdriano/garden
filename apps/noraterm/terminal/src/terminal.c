@@ -905,13 +905,9 @@ void terminal_scroll_display ()
     OldY = textCurrentRow;
 
  
+    //limpa a tela, copia o conteúdo do buffer na tela limpa.
+    terminalCopyToScroll ();
     
-    //limpa a tela.
-    terminalClearScreen ();
-
-    //limpa o buffer
-    //a rotina acima já limpou o buffer.
-    //terminalClearBuffer ();
     
     // vamos limpar a última linha.
     
@@ -927,5 +923,63 @@ void terminal_scroll_display ()
 
     terminalSetCursor ( OldX, OldY );
 }
+
+
+ 
+
+void terminalCopyToScroll (){
+
+	unsigned long left, top, right, bottom;
+	
+    // Desabilita o cursor
+	system_call ( 245, (unsigned long) 0, (unsigned long) 0, 
+	    (unsigned long) 0);	
+	
+	
+	if ( (void *) shell_info.terminal_window != NULL )
+	{
+		//Limpa o buffer,
+		//terminalClearBuffer ();
+		
+		//#todo:
+		//limpar a janela.
+		
+		//redraw window.
+		//isso limpa a janela
+		APIredraw_window ( shell_info.terminal_window, 1 );
+		
+		// Cursor.
+        // Ajusta o cursor.
+        //left = (terminal_rect.left/8);
+        //top = (terminal_rect.top/8);
+        //terminalSetCursor ( left, top );
+        
+	    // Copiamos o conteúdo do screenbuffer para 
+	    // a área de cliente do shell.
+        //terminalRefreshScreen ();	
+	    //shellRefreshVisibleArea();
+
+		// Cursor.
+        // Ajusta o cursor.
+        //#bugbug: o tamano do char foi determinado.
+        left = (terminal_rect.left/8);
+        top = (terminal_rect.top/8);
+        terminalSetCursor ( left, top );
+	    
+	    // show client window.
+	    apiShowWindow (shell_info.terminal_window);
+	}
+
+
+    shellRefreshVisibleArea();
+ 
+	// Reabilita o cursor
+	system_call ( 244, (unsigned long) 0, (unsigned long) 0, 
+	    (unsigned long) 0);	
+}
+
+
+
+
 
 
