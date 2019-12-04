@@ -1043,6 +1043,52 @@ int printf2 ( const char *format, ... ){
 //=============================================================
 //
 
+//find next line
+char *stdio_nextline ( char *string )
+{
+	
+    char *p;
+
+    p = (char *) strchr (string, '\n');
+    
+    if (p==NULL)
+    {
+        return (p);
+    }
+
+    ++p;
+
+    
+    if (*p=='\0')
+    {
+		//não há próxima linha
+        return (NULL);
+    
+    } else {
+		
+		//retorna o ponteiro para a próxima linha.
+        return (p);
+    }
+}
+
+
+//next line sprintf
+int nlsprintf ( char *out, const char *format, ... ){
+
+    char *tmp;
+
+    tmp = (char *) stdio_nextline (out);
+
+    if (tmp == NULL )
+    {
+        return -1;
+    }
+
+    register int *varg = (int *)(&format);
+
+    return (int) print( &tmp, varg );
+}
+
 
 /*
  *****************************************************************

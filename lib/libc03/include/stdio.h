@@ -706,6 +706,13 @@ int printf2(const char *format, ...);
 
 int printf3(const char *fmt, ...);
 
+
+//find next line
+char *stdio_nextline ( char *string );
+
+//next line sprintf
+int nlsprintf ( char *out, const char *format, ... );
+
 int sprintf(char *out, const char *format, ...);
 
 
