@@ -558,7 +558,7 @@ Linker script and memory map
                 0x000000000040cade                gws_init
                 0x000000000040cb10                serverInit
                 0x000000000040cb2d                serverDialog
- .text          0x000000000040ccbb      0x920 terminal.o
+ .text          0x000000000040ccbb      0xaab terminal.o
                 0x000000000040ccbb                terminalInsertNextChar
                 0x000000000040cce9                terminalInsertNullTerminator
                 0x000000000040ccf9                terminalInsertLF
@@ -589,20 +589,24 @@ Linker script and memory map
                 0x000000000040d553                textGetCurrentCol
                 0x000000000040d55d                move_to
                 0x000000000040d589                pad_to
- .text          0x000000000040d5db      0x882 termui.o
-                0x000000000040d5db                termui_fntos
-                0x000000000040d6f5                terminalTopbarProcedure
-                0x000000000040d859                terminalCreateEditBox
-                0x000000000040d8c7                terminalCreateMainWindow
-                0x000000000040d983                terminalCreateWindow
-                0x000000000040da15                terminalDisplayBMP
-                0x000000000040da89                terminalDisplayBMPEx
-                0x000000000040db15                terminalTestDisplayBMP
-                0x000000000040db77                bmpDisplayBMP
-                0x000000000040db94                terminalCreateTaskBar
-                0x000000000040dccf                terminalTestButtons
+                0x000000000040d5db                terminal_clear_to_endofline
+                0x000000000040d63a                terminal_clear_from_startofline
+                0x000000000040d6ab                terminal_clear_to_endofdisplay
+                0x000000000040d6f9                terminal_scroll_display
+ .text          0x000000000040d766      0x882 termui.o
+                0x000000000040d766                termui_fntos
+                0x000000000040d880                terminalTopbarProcedure
+                0x000000000040d9e4                terminalCreateEditBox
+                0x000000000040da52                terminalCreateMainWindow
+                0x000000000040db0e                terminalCreateWindow
+                0x000000000040dba0                terminalDisplayBMP
+                0x000000000040dc14                terminalDisplayBMPEx
+                0x000000000040dca0                terminalTestDisplayBMP
+                0x000000000040dd02                bmpDisplayBMP
+                0x000000000040dd1f                terminalCreateTaskBar
+                0x000000000040de5a                terminalTestButtons
                 0x000000000040e000                . = ALIGN (0x1000)
- *fill*         0x000000000040de5d      0x1a3 
+ *fill*         0x000000000040dfe8       0x18 
 
 .iplt           0x000000000040e000        0x0
  .iplt          0x000000000040e000        0x0 crt0.o
@@ -642,7 +646,7 @@ Linker script and memory map
  *fill*         0x0000000000415521       0x1f 
  .rodata        0x0000000000415540      0xb4c termui.o
 
-.eh_frame       0x000000000041608c     0x3528
+.eh_frame       0x000000000041608c     0x35a8
  .eh_frame      0x000000000041608c       0x34 crt0.o
  .eh_frame      0x00000000004160c0      0x624 main.o
                                         0x63c (size before relaxing)
@@ -686,69 +690,69 @@ Linker script and memory map
                                          0xf8 (size before relaxing)
  .eh_frame      0x0000000000418f70       0x60 gws.o
                                          0x78 (size before relaxing)
- .eh_frame      0x0000000000418fd0      0x484 terminal.o
-                                        0x49c (size before relaxing)
- .eh_frame      0x0000000000419454      0x160 termui.o
+ .eh_frame      0x0000000000418fd0      0x504 terminal.o
+                                        0x51c (size before relaxing)
+ .eh_frame      0x00000000004194d4      0x160 termui.o
                                         0x178 (size before relaxing)
 
-.rel.dyn        0x00000000004195b4        0x0
- .rel.got       0x00000000004195b4        0x0 crt0.o
- .rel.iplt      0x00000000004195b4        0x0 crt0.o
- .rel.text      0x00000000004195b4        0x0 crt0.o
+.rel.dyn        0x0000000000419634        0x0
+ .rel.got       0x0000000000419634        0x0 crt0.o
+ .rel.iplt      0x0000000000419634        0x0 crt0.o
+ .rel.text      0x0000000000419634        0x0 crt0.o
 
-.data           0x00000000004195c0     0x5a40
-                0x00000000004195c0                data = .
-                0x00000000004195c0                _data = .
-                0x00000000004195c0                __data = .
+.data           0x0000000000419640     0x59c0
+                0x0000000000419640                data = .
+                0x0000000000419640                _data = .
+                0x0000000000419640                __data = .
  *(.data)
- .data          0x00000000004195c0      0x4c8 crt0.o
- *fill*         0x0000000000419a88       0x18 
- .data          0x0000000000419aa0      0x538 main.o
-                0x0000000000419f34                running
-                0x0000000000419f38                primary_prompt
-                0x0000000000419f3c                secondary_prompt
-                0x0000000000419f40                mainwindow_used
-                0x0000000000419f44                remember_on_history
-                0x0000000000419f48                current_command_number
-                0x0000000000419f4c                bashrc_file
-                0x0000000000419f50                shell_config_file
-                0x0000000000419f60                long_args
- .data          0x0000000000419fd8        0x0 stubs.o
- .data          0x0000000000419fd8        0x0 ctype.o
- .data          0x0000000000419fd8        0x0 stdio.o
- .data          0x0000000000419fd8        0x8 stdlib.o
-                0x0000000000419fd8                _infinity
- .data          0x0000000000419fe0        0x0 string.o
- .data          0x0000000000419fe0        0x0 conio.o
- .data          0x0000000000419fe0        0x0 socket.o
- .data          0x0000000000419fe0        0x0 signal.o
- .data          0x0000000000419fe0        0x0 unistd.o
- .data          0x0000000000419fe0      0x440 api.o
- .data          0x000000000041a420      0x492 builtins.o
- *fill*         0x000000000041a8b2        0xe 
- .data          0x000000000041a8c0      0x49c desktop.o
-                0x000000000041ad54                primary_desktop_folder
-                0x000000000041ad58                secondary_desktop_folder
- *fill*         0x000000000041ad5c        0x4 
- .data          0x000000000041ad60      0x492 login.o
- *fill*         0x000000000041b1f2        0xe 
- .data          0x000000000041b200      0x498 tests.o
-                0x000000000041b694                deltaValue
- *fill*         0x000000000041b698        0x8 
- .data          0x000000000041b6a0      0x492 cmdline.o
- *fill*         0x000000000041bb32        0xe 
- .data          0x000000000041bb40      0x492 input.o
- *fill*         0x000000000041bfd2        0xe 
- .data          0x000000000041bfe0      0x440 pixel.o
- .data          0x000000000041c420      0x440 line.o
- .data          0x000000000041c860      0x440 rect.o
- .data          0x000000000041cca0      0x440 char.o
- .data          0x000000000041d0e0      0x840 gws.o
- .data          0x000000000041d920      0x492 terminal.o
- *fill*         0x000000000041ddb2        0xe 
- .data          0x000000000041ddc0      0x492 termui.o
+ .data          0x0000000000419640      0x4c8 crt0.o
+ *fill*         0x0000000000419b08       0x18 
+ .data          0x0000000000419b20      0x538 main.o
+                0x0000000000419fb4                running
+                0x0000000000419fb8                primary_prompt
+                0x0000000000419fbc                secondary_prompt
+                0x0000000000419fc0                mainwindow_used
+                0x0000000000419fc4                remember_on_history
+                0x0000000000419fc8                current_command_number
+                0x0000000000419fcc                bashrc_file
+                0x0000000000419fd0                shell_config_file
+                0x0000000000419fe0                long_args
+ .data          0x000000000041a058        0x0 stubs.o
+ .data          0x000000000041a058        0x0 ctype.o
+ .data          0x000000000041a058        0x0 stdio.o
+ .data          0x000000000041a058        0x8 stdlib.o
+                0x000000000041a058                _infinity
+ .data          0x000000000041a060        0x0 string.o
+ .data          0x000000000041a060        0x0 conio.o
+ .data          0x000000000041a060        0x0 socket.o
+ .data          0x000000000041a060        0x0 signal.o
+ .data          0x000000000041a060        0x0 unistd.o
+ .data          0x000000000041a060      0x440 api.o
+ .data          0x000000000041a4a0      0x492 builtins.o
+ *fill*         0x000000000041a932        0xe 
+ .data          0x000000000041a940      0x49c desktop.o
+                0x000000000041add4                primary_desktop_folder
+                0x000000000041add8                secondary_desktop_folder
+ *fill*         0x000000000041addc        0x4 
+ .data          0x000000000041ade0      0x492 login.o
+ *fill*         0x000000000041b272        0xe 
+ .data          0x000000000041b280      0x498 tests.o
+                0x000000000041b714                deltaValue
+ *fill*         0x000000000041b718        0x8 
+ .data          0x000000000041b720      0x492 cmdline.o
+ *fill*         0x000000000041bbb2        0xe 
+ .data          0x000000000041bbc0      0x492 input.o
+ *fill*         0x000000000041c052        0xe 
+ .data          0x000000000041c060      0x440 pixel.o
+ .data          0x000000000041c4a0      0x440 line.o
+ .data          0x000000000041c8e0      0x440 rect.o
+ .data          0x000000000041cd20      0x440 char.o
+ .data          0x000000000041d160      0x840 gws.o
+ .data          0x000000000041d9a0      0x492 terminal.o
+ *fill*         0x000000000041de32        0xe 
+ .data          0x000000000041de40      0x492 termui.o
                 0x000000000041f000                . = ALIGN (0x1000)
- *fill*         0x000000000041e252      0xdae 
+ *fill*         0x000000000041e2d2      0xd2e 
 
 .got            0x000000000041f000        0x0
  .got           0x000000000041f000        0x0 crt0.o

@@ -30,8 +30,6 @@ utf8countBytes (int c)
 
 
 
-
-	
 /*
  ***************************************************
  * terminalInsertNextChar:
@@ -169,7 +167,7 @@ terminalGetCharXY ( unsigned long x,
 void 
 terminalInsertCharXY ( unsigned long x, 
                        unsigned long y, 
-				       char c )
+                       char c )
 {
 	if ( x >= wlMaxColumns || y >= wlMaxRows )
 	{	
@@ -463,14 +461,14 @@ void terminalSetCursor ( unsigned long x, unsigned long y ){
 	// Coisas do kernel.
 	//
 	
-	//setando o cursor usado pelo kernel base.	
+	//setando o cursor usado pelo kernel base.
     apiSetCursor (x,y);
 	
 //Atualizando as variáveis globais usadas somente aqui no shell.
 //setGlobals:	
 	
     g_cursor_x = (unsigned long) x;
-    g_cursor_y = (unsigned long) y;	
+    g_cursor_y = (unsigned long) y;
 	
 	//
 	// Coisas do screen buffer.
@@ -802,5 +800,132 @@ int pad_to (int count, char *string){
     return (i);
 }
 
+
+/*
+void reset_terminal()
+void reset_terminal(){
+}
+*/
+
+
+
+//preenche com espaço da caluna atual até o fim da linha.
+void terminal_clear_to_endofline ()
+{
+
+    int i;
+
+    unsigned long OldX, OldY;
+
+    char temp;
+
+    temp = ' ';
+    
+    //save
+    OldX = textCurrentCol;
+    OldY = textCurrentRow;
+
+    //começa da coluna atual e vai até o fim da linha.
+    for ( i=textCurrentCol; i<wlMaxColumns; i++)
+    {
+        terminalInsertCharXY ( i, textCurrentRow, temp );
+    }
+
+    terminalSetCursor ( OldX, OldY );
+}
+
+
+
+// preencher com espaços do início da linha
+//até a coluna atual
+void terminal_clear_from_startofline ()
+{
+    int i;
+
+    unsigned long OldX, OldY;
+
+    char temp;
+
+    temp = ' ';
+
+    //save
+    OldX = textCurrentCol;
+    OldY = textCurrentRow;
+    
+    //posiciona no início da linha.
+    terminalSetCursor ( 0, OldY );
+    
+    for (i=0; i<textCurrentCol; i++)
+    {
+        terminalInsertCharXY ( i, textCurrentRow, temp );
+    }
+    
+    terminalSetCursor ( OldX, OldY );
+}
+
+
+
+
+void terminal_clear_to_endofdisplay ()
+{
+    unsigned long x, y;
+
+    // Step1
+    // Limpa o resto da linha atual
+    terminal_clear_to_endofline ();
+
+    // Step2
+    // Limpa as linhas que faltam
+
+    //começa da próxima linha 
+    for ( y=textCurrentRow+1; y< wlMaxRows; y++)
+    {
+        //limpa uma linha
+        for (x=0; x<wlMaxColumns; x++)
+        {
+			//coloca um char na posição atual.
+            terminal_write_char (' ');
+        };
+    };
+}
+
+
+
+void terminal_scroll_display ()
+{
+    unsigned long OldX, OldY;
+    char temp;
+    temp = ' ';
+    
+    int i;
+
+
+    //save
+    OldX = textCurrentCol;
+    OldY = textCurrentRow;
+
+ 
+    
+    //limpa a tela.
+    terminalClearScreen ();
+
+    //limpa o buffer
+    //a rotina acima já limpou o buffer.
+    //terminalClearBuffer ();
+    
+    // vamos limpar a última linha.
+    
+    // vamos posicionar o cursor no início da última linha.
+    terminalSetCursor ( 0, wlMaxRows-1 );
+     
+    //limpa uma linha
+    for (i=0; i<wlMaxColumns; i++)
+    {
+		//coloca um char na posição atual.
+        terminal_write_char (' ');
+    };
+
+    terminalSetCursor ( OldX, OldY );
+}
 
 

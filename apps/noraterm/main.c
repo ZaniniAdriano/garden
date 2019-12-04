@@ -675,7 +675,7 @@ __PostMessageToProcess ( int pid,
 
 
 
-//diálogo para alimentar o terminal usado pelos aplicativos.				
+//diálogo para alimentar o terminal usado pelos aplicativos.
 int feedterminalDialog( struct window_d *window, 
                       int msg, 
 				      unsigned long long1, 
@@ -685,11 +685,14 @@ int feedterminalDialog( struct window_d *window,
 
 int process_input ();
 
+
+
+
 // Procedimento de janela principal do aplicativo.
 void *noratermProcedure ( struct window_d *window, 
-                       int msg, 
-				       unsigned long long1, 
-				       unsigned long long2 );
+                          int msg, 
+                          unsigned long long1, 
+                          unsigned long long2 );
 
 
 void terminal_test_write ();
@@ -1477,7 +1480,7 @@ void *noratermProcedure ( struct window_d *window,
 				    fread ( (void *) ___buffer, 1, READ_BUFFER_SIZE, stdout );
 					for (_i=0; _i<50; _i++)
 					{
-					    terminal_write_char ( (int) ___buffer[_i] );						
+					    terminal_write_char ( (int) ___buffer[_i] );
 					}
 					break;	
 					
@@ -6088,16 +6091,22 @@ void response (){
 */
 
 
+
 /*
- *********************
+ *********************************************************
+ *********************************************************
  * terminal_write_char: 
  * 
+ * # Importante:
+ * 
+ * Escreve um char no backbuffer e exibe na tela usando o cursor 
+ * gerenciado pelo sistema.
+ * 
+ * #todo: Essa rotina pode ir para ./terminal ?
  */
 
-// escreve um char no backbuffer e exibe na tela
-// usando o cursor gerenciado pelo sistema,
-
 void terminal_write_char ( int c){
+	
 	//
 	//  Escape sequence.
 	//
@@ -6124,7 +6133,10 @@ void terminal_write_char ( int c){
 		//...
 	};
 	*/
-	
+
+    //#test scroll.
+
+
     //coloca no buffer de linhas e colunas.
 	terminalInsertNextChar ( (char) c );  
 
@@ -6140,11 +6152,7 @@ void terminal_write_char ( int c){
 }
 
 
-/*
-void reset_terminal()
-void reset_terminal(){
-}
-*/
+
 
 
 /*
