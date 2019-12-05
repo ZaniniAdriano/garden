@@ -42,6 +42,9 @@
 #ifndef _AR_H_
 #define	_AR_H_
 
+//v7unix style
+//#define	ARMAG	0177545
+
 /* Pre-4BSD archives had these magic numbers in them. */
 #define	OARMAG1	0177555
 #define	OARMAG2	0177545

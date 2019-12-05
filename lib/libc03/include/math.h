@@ -76,6 +76,11 @@ struct exception {
 #endif
 
 
+//v7unix style
+//#define HUGE	1.701411733192644270e38
+//#define LOGHUGE 39
+
+
 /*
  * set X_TLOSS = pi*2**52, which is possibly defined in <values.h>
  * (one may replace the following line by "#include <values.h>")

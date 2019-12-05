@@ -63,6 +63,17 @@ struct utmp {
 	time_t	ut_time;
 };
 
+
+//v7unix style
+/*
+struct utmp {
+	char	ut_line[8];		// tty name
+	char	ut_name[8];		// user id 
+	long	ut_time;		// time on 
+};
+*/
+
+
 /*
 __BEGIN_DECLS
 int utmpname(const char *);
