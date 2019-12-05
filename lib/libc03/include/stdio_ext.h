@@ -6,6 +6,10 @@
       // of the FILE structure, and glibc also implemented these.
        
        
+void  __fpurge(FILE *stream);
+
+
+
 
 
 

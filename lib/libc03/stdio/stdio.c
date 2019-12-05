@@ -29,6 +29,7 @@
 #include <types.h> 
 #include <stdarg.h> 
 
+#include <stdio_ext.h>
 
 #include <stddef.h>
 //#include <stdlib.h> 
@@ -43,6 +44,8 @@
 #include <stubs/gramado.h> 
 
 
+//usada por uma função nesse documento. 
+char **environ;
 
 //#importante: Tem que inicializar isso.
 static int __libc_output_mode = 0;
@@ -3517,24 +3520,27 @@ int stdio_initialize_standard_streams (void){
 
 
 
+
 /*linux klibc style*/
-/*
-//  char **environ é global.
-char *getenv(const char *name)
+//  char **environ é global nesse documento.
+// Talvez o lugar disso seja em ring0.
+char *getenv (const char *name)
 {
-  char **p, *q;
-  int len = strlen(name);
+    char **p, *q;
 
-  for ( p = environ ; (q = *p) ; p++ ) {
-    if ( !strncmp(name, q, len) && q[len] == '=' ) {
-      return q+(len+1);
-    }
-  }
+    int len = strlen (name);
 
-  return NULL;
+    for ( p = environ ; (q = *p) ; p++ )
+    {
+        if ( !strncmp(name, q, len) && q[len] == '=' )
+        {
+             return q+(len+1);
+        }
+    };
+
+
+    return NULL;
 }
-*/
-
 
 
 
@@ -3738,98 +3744,117 @@ int setvbuf (FILE *stream, char *buf, int mode, size_t size){
 
 
 
-//#todo
-/*
-unsigned int filesize(FILE * fp);
-unsigned int filesize(FILE * fp) {
-	if(!fp) return 0;
-	fseek(fp, 0, SEEK_END);
-	unsigned int ret = (unsigned int)ftell(fp);
-	rewind(fp);
-	return ret;
+unsigned int filesize (FILE * fp){
+
+    if (!fp) 
+        return 0;
+
+    fseek(fp, 0, SEEK_END);
+
+    unsigned int ret = (unsigned int) ftell(fp);
+
+    rewind (fp);
+
+    return ret;
 }
-*/
 
 
-//#todo
-/*
-char * fileread(FILE * fp);
-char * fileread(FILE * fp) {
-	if(!fp) return 0;
-	unsigned int buffer_size = filesize(fp);
-	char * buff = (char*)malloc(buffer_size);
-	fread(buff, sizeof(char), buffer_size, fp);
-	return buff;
+
+
+char *fileread (FILE * fp){
+
+    if (!fp) 
+        return 0;
+
+    unsigned int buffer_size = filesize (fp);
+
+    char *buff = (char *) malloc (buffer_size);
+
+    fread (buff, sizeof(char), buffer_size, fp);
+
+    return buff;
 }
-*/
 
 
-/* #todo
-int dprintf(int fd, const char *format, ...);
+
 int dprintf(int fd, const char *format, ...)
-{ return -1; }
-*/
+{ 
+	return -1; 
+}
 
-/* #todo
-int vdprintf(int fd, const char *format, va_list ap); 
+
+
 int vdprintf(int fd, const char *format, va_list ap)
-{ return -1; }
-*/
+{ 
+	return -1; 
+}
 
 
-/* #todo
-int vsprintf(char *str, const char *format, va_list ap);
 int vsprintf(char *str, const char *format, va_list ap)
-{ return -1; }
-*/
+{ 
+	return -1; 
+}
 
-/* #todo
-int vsnprintf(char *str, size_t size, const char *format, va_list ap);
+
+
+
 int vsnprintf(char *str, size_t size, const char *format, va_list ap)
-{ return -1; }
-*/
+{ 
+	return -1; 
+}
 
-/* #todo
-int vscanf(const char *format, va_list ap);
+
+
+
+
 int vscanf(const char *format, va_list ap)
-{ return -1; }
-*/
+{ 
+	return -1; 
+}
 
-/* #todo
-int vsscanf(const char *str, const char *format, va_list ap);
+
+
 int vsscanf(const char *str, const char *format, va_list ap)
-{ return -1; }
-*/
+{ 
+	return -1; 
+}
 
-/* #todo
-int vfscanf(FILE *stream, const char *format, va_list ap);
+
 int vfscanf(FILE *stream, const char *format, va_list ap)
-{ return -1; }
-*/
+{ 
+    return -1; 
+}
+
 
 
 //tmpnam(): 
 //SVr4, 4.3BSD, C89, C99, POSIX.1-2001.  
 //POSIX.1-2008 marks tmpnam() as obsolete.
-/* #todo
-char *tmpnam(char *s);
 char *tmpnam(char *s)
-{ return 0; }
-*/
+{ 
+	return NULL; 
+}
+
+
+
 
 //tmpnam_r() is a nonstandard extension that is 
 //also available on a few other systems.
-/* #todo
-char *tmpnam_r(char *s);
 char *tmpnam_r(char *s)
-{ return 0; }
-*/
+{ 
+	return NULL; 
+}
 
-/* #todo
-char *tempnam(const char *dir, const char *pfx);
+
+
+
+
+
 char *tempnam(const char *dir, const char *pfx)
-{ return 0; }
-*/
+{ 
+	return NULL; 
+}
+
 
 
 
@@ -3854,33 +3879,31 @@ char *tempnam(const char *dir, const char *pfx)
 
  */
 
-/* #todo
-FILE *tmpfile(void);
+
+
 FILE *tmpfile(void)
 {
 	return (FILE *) 0;
 }
-*/
 
 
-/* #todo
-FILE *fdopen(int fd, const char *mode);
+
+
+
 FILE *fdopen(int fd, const char *mode)
 {
 	return (FILE *) 0;
 }
-*/
-    
 
-/* #todo
-FILE *freopen(const char *pathname, const char *mode, FILE *stream);
+
 FILE *freopen(const char *pathname, const char *mode, FILE *stream)
 {
 	return (FILE *) 0;
 }
-*/
 
-/* #todo
+
+
+/* #todo it needs 'cookie_io_functions_t'
 FILE *fopencookie(void *cookie, const char *mode,
                          cookie_io_functions_t io_funcs);
 FILE *fopencookie(void *cookie, const char *mode,
@@ -3891,63 +3914,72 @@ FILE *fopencookie(void *cookie, const char *mode,
 */
 
 
-/* #todo
-FILE *open_memstream(char **ptr, size_t *sizeloc);
+
+
 FILE *open_memstream(char **ptr, size_t *sizeloc)
 {
 	return (FILE *) 0;
 }
-*/
 
-/* #todo       
-FILE *open_wmemstream(wchar_t **ptr, size_t *sizeloc);
+
+    
+
 FILE *open_wmemstream(wchar_t **ptr, size_t *sizeloc)
 {
 	return (FILE *) 0;
 }
-*/
 
-/* #todo       
-FILE *fmemopen(void *buf, size_t size, const char *mode);
+
+
+
+
+
 FILE *fmemopen(void *buf, size_t size, const char *mode)
 {
 	return (FILE *) 0;
 }
-*/
 
-/* #todo
-int fgetpos(FILE *stream, fpos_t *pos);
+
+
+
+
 int fgetpos(FILE *stream, fpos_t *pos)
-{ return -1; }
-*/
+{ 
+	return -1; 
+}
 
-/* #todo
-int fsetpos(FILE *stream, const fpos_t *pos);
+
+
+
 int fsetpos(FILE *stream, const fpos_t *pos)       
-{ return -1; }
-*/
+{ 
+	return -1; 
+}
 
-/* #todo
-int fpurge(FILE *stream);
+
+
+
 int fpurge(FILE *stream)      
-{ return -1; }
-*/
+{ 
+    return -1; 
+}
 
 
-/*
-  #todo: esse protótipo pertence à stdio_ext.h
-void  __fpurge(FILE *stream);
+
+
+//#todo: esse protótipo pertence à stdio_ext.h
 void  __fpurge(FILE *stream)
-{}
-*/
+{
+}
 
-/*
+
 //ctermid - get controlling terminal name
-* //POSIX.1-2001, POSIX.1-2008, Svr4.
-char *ctermid(char *s);
+//POSIX.1-2001, POSIX.1-2008, Svr4.
 char *ctermid(char *s)
-{ return NULL; }
-*/
+{ 
+   return NULL; 
+}
+
 
 
 //

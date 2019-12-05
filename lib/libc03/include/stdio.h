@@ -644,6 +644,47 @@ zzz __putc (c, stream)
 // ## Protótipos do padrão C. ##
 //===========================================
 
+char *ctermid(char *s);
+
+int fpurge(FILE *stream);
+
+int fsetpos(FILE *stream, const fpos_t *pos);
+
+int fgetpos(FILE *stream, fpos_t *pos);
+
+FILE *fmemopen(void *buf, size_t size, const char *mode);
+
+FILE *open_wmemstream(wchar_t **ptr, size_t *sizeloc);
+
+FILE *open_memstream(char **ptr, size_t *sizeloc);
+
+FILE *freopen(const char *pathname, const char *mode, FILE *stream);
+
+FILE *fdopen(int fd, const char *mode);
+
+FILE *tmpfile(void);
+
+char *tempnam(const char *dir, const char *pfx);
+char *tmpnam_r(char *s);
+char *tmpnam(char *s);
+
+int vfscanf(FILE *stream, const char *format, va_list ap);
+int vsscanf(const char *str, const char *format, va_list ap);
+int vscanf(const char *format, va_list ap);
+
+int vsnprintf(char *str, size_t size, const char *format, va_list ap);
+int vsprintf(char *str, const char *format, va_list ap);
+int vdprintf(int fd, const char *format, va_list ap); 
+int dprintf(int fd, const char *format, ...);
+
+unsigned int filesize (FILE * fp);
+char * fileread (FILE * fp);
+
+
+//#test
+char *getenv (const char *name);
+
+
 // remove - remove a file or directory 
 // On success, zero is returned. On error, -1 is returned, and 
 // errno is set appropriately. 
