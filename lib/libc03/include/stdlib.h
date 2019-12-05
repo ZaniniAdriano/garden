@@ -115,6 +115,31 @@ void *stdlib_system_call ( unsigned long ax,
                            unsigned long cx, 
                            unsigned long dx );
 
+
+int unlockpt(int fd);
+
+int getpt(void);
+
+int grantpt(int fd);
+
+int posix_openpt (int flags);
+
+int ptsname_r(int fd, char *buf, size_t buflen);
+
+char *ptsname(int fd);
+
+int mkostemps(char *template, int suffixlen, int flags);
+
+int mkstemps(char *template, int suffixlen);
+
+int mkostemp(char *template, int flags);
+
+int mkstemp(char *template);
+
+long labs (long j);
+
+
+
 void stdlib_die (char *str);
 
 int atoi (const char *str);
