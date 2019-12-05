@@ -1,8 +1,13 @@
 
 
+
+
+#include <termios.h>
+
 /*
 int tcgetattr (int fd, struct termios *termios_p);
 int tcgetattr (int fd, struct termios *termios_p){
+
     return ioctl(fd, TCGETS, termios_p);
 }
 */
@@ -26,6 +31,37 @@ int tcsetattr ( int fd, int optional_actions,
 	return -1;
 }
 */
+
+
+/*
+int tcsendbreak(int fd, int duration);
+int tcsendbreak(int fd, int duration)
+{ return -1; }
+*/
+
+/*
+int tcdrain(int fd);
+int tcdrain(int fd)
+{ return -1; }
+*/
+
+
+
+
+int tcflush(int fd, int queue_selector)
+{ 
+    return -1; 
+}
+
+
+/*
+int tcflow(int fd, int action);
+int tcflow(int fd, int action)
+{ return -1; }
+*/
+
+
+
 
 /*
 void cfmakeraw (struct termios *termios_p);
@@ -62,8 +98,23 @@ speed_t cfgetospeed(const struct termios* tp)
 */
 
 
+/*
+int cfsetispeed(struct termios *termios_p, speed_t speed);
+int cfsetispeed(struct termios *termios_p, speed_t speed)
+{return -1;}
+*/
 
+/*
+int cfsetospeed(struct termios *termios_p, speed_t speed);
+int cfsetospeed(struct termios *termios_p, speed_t speed)
+{return -1;}
+*/
 
+/*
+int cfsetspeed(struct termios *termios_p, speed_t speed);
+int cfsetspeed(struct termios *termios_p, speed_t speed)
+{return -1;}
+*/
 
 
 

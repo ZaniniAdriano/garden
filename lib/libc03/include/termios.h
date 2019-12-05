@@ -1,4 +1,6 @@
-//provavelmente suporte ao gerenciamento de terminais.
+// File: termios.h
+
+//suporte ao gerenciamento de terminais.
 //http://man7.org/linux/man-pages/man3/termios.3.html
 //http://kirste.userpage.fu-berlin.de/chemnet/use/info/libc/libc_12.html
 
@@ -197,6 +199,9 @@ struct termios {
 //https://linux.die.net/man/3/tcgetattr
 //https://www.mkssoftware.com/docs/man3/tcsetattr.3.asp
 
+
+int tcflush(int fd, int queue_selector);
+
 /*
 int tcgetattr(int fd, struct termios *termios_p);
 
@@ -207,7 +212,6 @@ int tcsendbreak(int fd, int duration);
 
 int tcdrain(int fd);
 
-int tcflush(int fd, int queue_selector);
 
 int tcflow(int fd, int action);
 

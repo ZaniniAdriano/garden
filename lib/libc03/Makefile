@@ -85,8 +85,10 @@ all-c:
 #/unistd
 	gcc  -c  unistd/unistd.c  $(CFLAGS) -I. -I include/ -o unistd.o
 	
-	
-	
+#/unistd
+	gcc  -c  termios/termios.c  $(CFLAGS) -I. -I include/ -o termios.o
+
+
 # outros	
 	gcc  -c  conio.c   $(CFLAGS) -I. -I include/ -o conio.o
 	gcc  -c  string.c  $(CFLAGS) -I. -I include/ -o string.o
