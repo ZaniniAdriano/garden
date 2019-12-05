@@ -3941,8 +3941,21 @@ void  __fpurge(FILE *stream)
 {}
 */
 
+/*
+//ctermid - get controlling terminal name
+* //POSIX.1-2001, POSIX.1-2008, Svr4.
+char *ctermid(char *s);
+char *ctermid(char *s)
+{ return NULL; }
+*/
+
 
 //
 // End.
 //
+
+
+
+
+
 

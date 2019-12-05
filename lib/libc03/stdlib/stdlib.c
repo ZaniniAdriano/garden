@@ -1759,6 +1759,79 @@ int mkostemps(char *template, int suffixlen, int flags)
 */
 
 
+
+
+
+// ptsname():
+// POSIX.1-2001, POSIX.1-2008.
+//ptsname() is part of the UNIX 98 pseudoterminal support.
+//The ptsname() function returns the name of the slave pseudoterminal
+//       device corresponding to the master referred to by fd.
+/*
+char *ptsname(int fd);
+char *ptsname(int fd)
+{ return NULL; }
+*/
+
+
+//ptsname_r() is a Linux extension, that is proposed for inclusion in
+//the next major revision of POSIX.1
+// The ptsname_r() function is the reentrant equivalent of ptsname().
+// It returns the name of the slave pseudoterminal device as a null-
+// terminated string in the buffer pointed to by buf.  The buflen
+//argument specifies the number of bytes available in buf.
+       
+/*
+int ptsname_r(int fd, char *buf, size_t buflen);
+int ptsname_r(int fd, char *buf, size_t buflen)
+{ return -1; }
+*/
+
+
+
+//posix_openpt - open a pseudoterminal device 
+//posix_openpt() is part of the UNIX 98 pseudoterminal support.
+//This function is specified in POSIX.1-2001. 
+/*
+int posix_openpt (int flags);
+int posix_openpt (int flags)
+{
+    return open("/dev/ptmx", flags);
+}
+*/
+
+//grantpt - grant access to the slave pseudoterminal 
+//POSIX.1-2001. 
+/*
+int grantpt(int fd);
+int grantpt(int fd)
+{ return -1; }
+*/
+
+
+
+//getpt - open the pseudoterminal master (PTM) 
+//getpt() is glibc-specific; use posix_openpt(3) instead. 
+/*
+int getpt(void);
+int getpt(void)
+{ return -1; }
+*/
+
+//POSIX.1-2001. 
+//unlockpt - unlock a pseudoterminal master/slave pair 
+/*
+int unlockpt(int fd);
+int unlockpt(int fd)
+{ return -1; }
+*/
+
+
 //
 // End.
 //
+
+
+
+
+
