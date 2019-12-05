@@ -86,6 +86,9 @@ __END_DECLS
 */
 
 
+
+int login_tty(int fd);
+
 #endif /* !_UTMP_H_ */
 
 

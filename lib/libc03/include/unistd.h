@@ -231,7 +231,7 @@ int ttyname_r(int fd, char *buf, size_t buflen);
 int isatty(int fd);
 
               
-int login_tty(int fd);
+
 
 #endif /* _UNISTD_H */
 
