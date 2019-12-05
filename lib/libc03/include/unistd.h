@@ -226,6 +226,9 @@ int sethostname (const char *name, size_t len);
 int getusername (char *name, size_t len);
 int setusername (const char *name, size_t len);
 
+char *ttyname(int fd);
+int ttyname_r(int fd, char *buf, size_t buflen);
+int isatty(int fd);
 
 #endif /* _UNISTD_H */
 
