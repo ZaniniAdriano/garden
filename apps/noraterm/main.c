@@ -153,6 +153,22 @@ and are themselves never placed in the input queue.
 
 
 
+//Credits: xterm.
+/*
+#ifdef USE_ANY_SYSV_TERMIO
+#define TERMIO_STRUCT struct termio
+#define ttySetAttr(fd, datap) ioctl(fd, TCSETA, datap)
+#define ttyGetAttr(fd, datap) ioctl(fd, TCGETA, datap)
+#define ttyFlush(fd)          ioctl(fd, TCFLSH, 1)
+#elif defined(USE_POSIX_TERMIOS)
+#define TERMIO_STRUCT struct termios
+#define ttySetAttr(fd, datap) tcsetattr(fd, TCSANOW, datap)
+#define ttyGetAttr(fd, datap) tcgetattr(fd, datap)
+#define ttyFlush(fd)          tcflush(fd, TCOFLUSH)
+#endif 
+*/
+
+
 //
 // Modes.
 //
@@ -4169,6 +4185,7 @@ done:
 
 
 /*
+ *******************************************
  * terminalInitSystemMetrics:
  *     mudar para noratermInitSystemMetrics
  */
@@ -4186,23 +4203,33 @@ done:
 void terminalInitSystemMetrics (){
 	
 	
-	// Tamanho da tela.
+	//Tamanho da tela. (full screen)
 	smScreenWidth = apiGetSystemMetrics (1);
 	smScreenHeight = apiGetSystemMetrics (2); 
+	
+	//cursor
 	smCursorWidth = apiGetSystemMetrics(3);
 	smCursorHeight = apiGetSystemMetrics(4);
+	
+	//mouse
 	smMousePointerWidth = apiGetSystemMetrics(5);
 	smMousePointerHeight = apiGetSystemMetrics(6);
+	
+	//char
 	smCharWidth = apiGetSystemMetrics(7);
 	smCharHeight = apiGetSystemMetrics(8);
 	
+	
+	//#todo:
+	//vertical scroll size
+	//horizontal scroll size.
 	
 	//#importante
 	//#todo: pegar mais.
 	
 	//...
 	
-	//#todo: temos que criar essa variável.
+	//#todo: Temos que criar essa variável.
 	//InitSystemMetricsStatus = 1;
 } 
 

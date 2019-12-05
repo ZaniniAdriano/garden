@@ -30,7 +30,7 @@ typedef unsigned char cc_t;
 /* size of cc_c array, some extra space for extensions. */
 #define NCCS		   20
 //#define NCCS 32
-
+//#define NCC 8
 
 /*
  * # descrição
@@ -66,6 +66,15 @@ tcflag_t c_cflag;      // control modes
 tcflag_t c_lflag;      // local modes 
 cc_t     c_cc[NCCS];   // special characters 
 */
+
+
+
+struct winsize {
+	unsigned short ws_row;
+	unsigned short ws_col;
+	unsigned short ws_xpixel;
+	unsigned short ws_ypixel;
+};
 
 
 //

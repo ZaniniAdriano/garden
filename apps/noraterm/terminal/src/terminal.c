@@ -456,12 +456,19 @@ void terminalClearScreen (){
  */
 
 void terminalSetCursor ( unsigned long x, unsigned long y ){
+
+    //filtro
+	if ( x >= wlMaxColumns)
+	{
+		x = (wlMaxColumns-1);
+	} 
 	
-    //
-	// Coisas do kernel.
-	//
-	
-	//setando o cursor usado pelo kernel base.
+	if( y >= wlMaxRows )
+	{
+		y = (wlMaxRows-1);
+	}	
+		
+	// Coisas do kernel. Setando o cursor usado pelo kernel base.
     apiSetCursor (x,y);
 	
 //Atualizando as variáveis globais usadas somente aqui no shell.
@@ -933,7 +940,7 @@ void terminalCopyToScroll (){
 	
     // Desabilita o cursor
 	system_call ( 245, (unsigned long) 0, (unsigned long) 0, 
-	    (unsigned long) 0);	
+	    (unsigned long) 0);
 	
 	
 	if ( (void *) shell_info.terminal_window != NULL )
@@ -971,7 +978,7 @@ void terminalCopyToScroll (){
 	}
 
 
-    shellRefreshVisibleArea();
+    //shellRefreshVisibleArea();
  
 	// Reabilita o cursor
 	system_call ( 244, (unsigned long) 0, (unsigned long) 0, 

@@ -1149,6 +1149,9 @@ int putchar (int __c)
 */
 
 
+
+
+
 /*
  *******************************
  * putchar:
@@ -2044,6 +2047,18 @@ int fputs ( const char *str, FILE *stream ){
                      (unsigned long) stream, (unsigned long) stream ); 
 }
 
+
+
+//#todo: testar.
+//Credits: Sombra OS.
+void nputs (char *cp, int len)
+{
+	int i = len;
+	char *str;
+
+	for (str = cp; i; str++, i--)
+        putchar ( (int) *str);
+}
 
 
 /*uClib style*/

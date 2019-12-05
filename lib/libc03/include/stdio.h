@@ -710,6 +710,10 @@ int fclose(FILE *stream);
  
 int puts(const char *str); 
 
+//#todo: testar.
+//Credits: Sombra OS.
+void nputs (char *cp, int len);
+
 static int prints(char **out, const char *string, int width, int pad);
 static int printi(char **out, int i, int b, int sg, int width, int pad, int letbase);
 static int print(char **out, int *varg);
