@@ -871,24 +871,27 @@ int setusername (const char *name, size_t len)
 
 //POSIX.1-2001, POSIX.1-2008, 4.2BSD.
 //ttyname, ttyname_r - return name of a terminal
-char *ttyname(int fd)
-{ return NULL; }
+char *ttyname (int fd)
+{ 
+    return NULL; 
+}
 
 
 //POSIX.1-2001, POSIX.1-2008, 4.2BSD.
 //ttyname, ttyname_r - return name of a terminal
 int ttyname_r(int fd, char *buf, size_t buflen)
-{ return -1; }
+{ 
+	return -1; 
+}
 
 
 
 // POSIX.1-2001, POSIX.1-2008, SVr4, 4.3BSD.
 //isatty - test whether a file descriptor refers to a terminal
 int isatty(int fd) 
-{ return -1; }
-
-
-
+{ 
+	return -1; 
+}
 
 
 /*
@@ -944,6 +947,13 @@ int login_tty(int fd)
 }
 
 
+
+
+
+int getopt (int argc, char * const argv[], const char *optstring)
+{
+	return -1;
+}
 
 //
 // End.

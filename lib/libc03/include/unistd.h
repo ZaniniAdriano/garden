@@ -231,7 +231,7 @@ int ttyname_r(int fd, char *buf, size_t buflen);
 int isatty(int fd);
 
               
-
+int getopt (int argc, char * const argv[], const char *optstring);
 
 #endif /* _UNISTD_H */
 
