@@ -1977,6 +1977,11 @@ static unsigned long vga_256colors_palette[256] = {
 //UM TIMER SE ESGOTOU,
 #define MSG_TIMER 53   
 
+
+//o servidor de rede se comunica com o processo.
+#define MSG_AF_INET 54
+#define MSG_NET_DATA_IN 55
+
 //
 //  terminal commands
 //

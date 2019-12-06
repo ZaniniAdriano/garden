@@ -796,8 +796,22 @@ shellProcedure( struct window_d *window,
 		//...
 	//}
 	
+	int c;
+	
     switch (msg)
     {
+         case MSG_AF_INET:
+             //receberemos uma mensagem vida do servidor de rede.
+             printf ("gdeshell: MSG_AF_INET\n");
+             break;
+             
+         case MSG_NET_DATA_IN:
+             //receberemos uma mensagem vida do servidor de rede.
+             printf ("gdeshell: MSG_NET_DATA_IN\n");
+              while ( (c = fgetc( (FILE *) long1)) >= 0 )
+                  printf ("%c", c); 
+             break;
+
 		//Faz algumas inicializações de posicionamento e dimensões.
         //case MSG_INITDIALOG:
         //    break;
@@ -2680,6 +2694,7 @@ do_compare:
 	// testando socket da libc.
 	// Vai retornar um indice na lista de arquivos abertos do processo.
 	// um descritor de arquivos.
+	// >>> Isso está criando o socket e se comunicando com o driver de rede.
 	int socket_fd = -1;
     if ( strncmp( prompt, "socket", 6 ) == 0 )
     {
@@ -2687,9 +2702,27 @@ do_compare:
         socket_fd = (int) socket ( (int) AF_INET, (int) SOCK_STREAM, (int) 0);
         printf ("socket_fd = %d\n",socket_fd);
         printf ("Done\n");
+
+        // Pede para o kernel usar esse descritor para
+        // mandar mensagens através dessa stream.
+        // O procedimento de janela tratará a mensagem MSG_AF_INET.
+        gramado_system_call ( 966, 
+            (unsigned long) socket_fd,
+            (unsigned long) socket_fd,
+            (unsigned long) socket_fd );
         goto exit_cmp;
     };
 
+    //pedimos para o servidor de rede enviar dados para o
+    //processo através da stream configurada anteriormente.
+    if ( strncmp( prompt, "test-net", 8 ) == 0 )
+    {
+        gramado_system_call ( 967, 
+            (unsigned long) socket_fd,
+            (unsigned long) socket_fd,
+            (unsigned long) socket_fd );
+        goto exit_cmp;
+    }
 
 	//socket-test
 	//rotina de teste de soquetes.
