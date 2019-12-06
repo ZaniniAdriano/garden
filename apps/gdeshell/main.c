@@ -4362,8 +4362,9 @@ done:
 	
 
     //Inicializar o nome do host.
-    getusername ( current_user_name, (size_t) 64);
-    gethostname ( current_host_name, (size_t) 64);
+    //#bugbug: suspensa. problemas nessa rotina dentro do kernel,
+    //getusername ( current_user_name, (size_t) 64);
+    //gethostname ( current_host_name, (size_t) 64);
     
 	if ( interactive == 1 )
 	    shellPrompt ();

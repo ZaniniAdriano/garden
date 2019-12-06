@@ -1299,7 +1299,7 @@ char *__findenv ( const char *name, int *offset ){
  * getenv:
  *     Credits: Apple open source.
  */
- 
+
 char *getenv (const char *name){
 
     int offset;
@@ -1318,9 +1318,34 @@ char *getenv (const char *name){
     result = __findenv(name, &offset);
 	//rwlock_unlock(&__environ_lock);
 
-
     return (char *) result;
 }
+
+
+
+/*linux klibc style*/
+//  char **environ é global nesse documento.
+// Talvez o lugar disso seja em ring0.
+/*
+char *getenv (const char *name);
+char *getenv (const char *name)
+{
+    char **p, *q;
+
+    int len = strlen (name);
+
+    for ( p = environ ; (q = *p) ; p++ )
+    {
+        if ( !strncmp(name, q, len) && q[len] == '=' )
+        {
+             return q+(len+1);
+        }
+    };
+
+    return NULL;
+}
+*/
+
 
 
 int setenv (const char *name, const char *value, int overwrite)

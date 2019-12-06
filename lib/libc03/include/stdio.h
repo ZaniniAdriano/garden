@@ -681,8 +681,6 @@ unsigned int filesize (FILE * fp);
 char * fileread (FILE * fp);
 
 
-//#test
-char *getenv (const char *name);
 
 
 // remove - remove a file or directory 

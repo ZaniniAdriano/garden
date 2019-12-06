@@ -3536,26 +3536,6 @@ int stdio_initialize_standard_streams (void){
 
 
 
-/*linux klibc style*/
-//  char **environ é global nesse documento.
-// Talvez o lugar disso seja em ring0.
-char *getenv (const char *name)
-{
-    char **p, *q;
-
-    int len = strlen (name);
-
-    for ( p = environ ; (q = *p) ; p++ )
-    {
-        if ( !strncmp(name, q, len) && q[len] == '=' )
-        {
-             return q+(len+1);
-        }
-    };
-
-
-    return NULL;
-}
 
 
 
