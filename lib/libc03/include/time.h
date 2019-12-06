@@ -2,13 +2,14 @@
 // time.h
 
 
-//#ifndef	_TIME_H_
-//#define	_TIME_H_
+#ifndef	_TIME_H_
+#define	_TIME_H_
 
 /*
  * A structure for storing all kinds of useful information about the
  * current (or another) time.
  */
+
 struct tm
 {
 	int	tm_sec;		/* Seconds: 0-59 (K&R says 0-61?) */
@@ -31,7 +32,7 @@ typedef	long clock_t;
 time_t time(time_t *timer);
 
 
-//#endif	/* Not _TIME_H_ */
+#endif	/* Not _TIME_H_ */
 
 
 
