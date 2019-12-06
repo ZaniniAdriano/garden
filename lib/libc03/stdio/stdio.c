@@ -1672,7 +1672,9 @@ void stdioInitialize (){
 	
 	//?? será que isso funciona.
 	//pegamos a stdout válida
-	_fp = (FILE *) system_call ( 1000, getpid(), 0, 0 );
+	//_fp = (FILE *) system_call ( 1000, getpid(), 0, 0 );
+	_fp = (FILE *) gramado_system_call ( 1000, getpid(), 0, 0 );
+	
 	
 	stdout = (FILE *) _fp;
 	
@@ -1979,7 +1981,8 @@ int fprintf ( FILE *stream, const char *format, ... ){
 	//SÓ NOTIFICAREMOS O TERMINAL SE TIVERMOS NO MODO NORMAL
 	if ( __libc_output_mode == LIBC_NORMAL_MODE )
 	{
-	    terminal___PID = (int) system_call ( 1004, 0, 0, 0 ); 
+        //terminal___PID = (int) system_call ( 1004, 0, 0, 0 ); 
+        terminal___PID = (int) gramado_system_call ( 1004, 0, 0, 0 ); 
 	
 	    if ( terminal___PID < 0 )
 	    {
@@ -1998,8 +2001,13 @@ int fprintf ( FILE *stream, const char *format, ... ){
 	    //...
 
 	    //notifica o terminal de que ele tem mensagens.
-	    return (int) system_call ( 112 , (unsigned long) &message_buffer[0], 
-	                 (unsigned long) terminal___PID, (unsigned long) terminal___PID );
+        //return (int) system_call ( 112 , (unsigned long) &message_buffer[0], 
+        //                (unsigned long) terminal___PID, (unsigned long) terminal___PID );
+
+        return (int) gramado_system_call ( 112 , 
+                         (unsigned long) &message_buffer[0], 
+                         (unsigned long) terminal___PID, 
+                         (unsigned long) terminal___PID );
 
         //#todo temos que usar essa chamada ao invés dessa rotina acima.
         //ok
@@ -2204,8 +2212,10 @@ int ungetc(int c, FILE *stream)
 
 int ungetc ( int c, FILE *stream ){
 
-    return (int) system_call ( 606, (unsigned long) c, 
-                      (unsigned long) stream, (unsigned long) stream );
+    return (int) gramado_system_call ( 606, 
+                     (unsigned long) c, 
+                     (unsigned long) stream, 
+                     (unsigned long) stream );
 }
 
 
@@ -2222,15 +2232,19 @@ static __inline__ off_t ftell(FILE *__f)
 //This function returns the current file position of the stream stream. 
 long ftell (FILE *stream){
 	
-    return (long) system_call ( 249, (unsigned long) stream, 
-                      (unsigned long) stream, (unsigned long) stream );	
+    return (long) gramado_system_call ( 249, 
+                      (unsigned long) stream, 
+                      (unsigned long) stream, 
+                      (unsigned long) stream );
 }
 
 
 int fileno ( FILE *stream ){
 	
-    return (int) system_call ( 605, (unsigned long) stream, 
-                      (unsigned long) stream, (unsigned long) stream );
+    return (int) gramado_system_call ( 605, 
+                     (unsigned long) stream, 
+                     (unsigned long) stream, 
+                     (unsigned long) stream );
 }
 
 
@@ -2437,7 +2451,8 @@ int fputc ( int ch, FILE *stream ){
 	//SÓ NOTIFICAREMOS O TERMINAL SE TIVERMOS NO MODO NORMAL
 	if ( __libc_output_mode == LIBC_NORMAL_MODE )
 	{
-	    terminal___PID = (int) system_call ( 1004, 0, 0, 0 ); 
+        //terminal___PID = (int) system_call ( 1004, 0, 0, 0 ); 
+        terminal___PID = (int) gramado_system_call ( 1004, 0, 0, 0 ); 
 	
 	    if ( terminal___PID < 0 )
 	    {
@@ -2456,11 +2471,16 @@ int fputc ( int ch, FILE *stream ){
 	    //...
 
 	    //notifica o terminal de que ele tem mensagens.
-	    return (int) system_call ( 112 , (unsigned long) &message_buffer[0], 
-	                 (unsigned long) terminal___PID, (unsigned long) terminal___PID );
+	    //return (int) system_call ( 112 , (unsigned long) &message_buffer[0], 
+	    //             (unsigned long) terminal___PID, (unsigned long) terminal___PID );
+
+        return (int) gramado_system_call ( 112 , 
+                         (unsigned long) &message_buffer[0], 
+                         (unsigned long) terminal___PID, 
+                         (unsigned long) terminal___PID );
 
         //#todo temos que usar essa chamada ao invés dessa rotina acima.
-	    // __SendMessageToProcess ( terminal___PID, NULL, MSG_TERMINALCOMMAND, 2008, 2008 );	//ok		
+	    // __SendMessageToProcess ( terminal___PID, NULL, MSG_TERMINALCOMMAND, 2008, 2008 );	//ok
     }
 
 
@@ -3661,20 +3681,22 @@ int libcStartTerminal (void){
 	int PID;
 	
 	// 'Clona' e executa o noraterm como processo filho. 
-	PID = (int) system_call ( 900, (unsigned long) "noraterm.bin", 0, 0 );
+	//PID = (int) system_call ( 900, (unsigned long) "noraterm.bin", 0, 0 );
 	//PID = (int) system_call ( 901, (unsigned long) "noraterm.bin", 0, 0 );
-		
+
+	PID = (int) gramado_system_call ( 900, (unsigned long) "noraterm.bin", 0, 0 );
+
 	// Exibe o PID para debug.
 	//printf ("PID = %d \n", PID);
 
     //registra o terminal como terminal atual.
-	system_call ( 1003, PID, 0, 0 ); 
+	gramado_system_call ( 1003, PID, 0, 0 ); 
 		
 	//invalida a variável.
 	PID = -1;
 		
 	//pega o pid do terminal atual
-	PID = (int) system_call ( 1004, 0, 0, 0 ); 
+	PID = (int) gramado_system_call ( 1004, 0, 0, 0 ); 
 		
 	if ( PID <= 0 )
 	{

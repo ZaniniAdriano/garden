@@ -30,9 +30,9 @@ int main ( int argc, char *argv[] ){
 	printf ("####################################################\n");
 	  puts ("################### Reboot #########################\n");
 	printf ("####################################################\n");
-	printf ("\n");	
+	printf ("\n");
 	
-	printf ("#todo: reboot the system ...\n");	
+	printf ("#todo: reboot the system ...\n");
 
 	
 	// #todo
@@ -44,7 +44,9 @@ int main ( int argc, char *argv[] ){
 	
 	while (1)
 	{
-        system_call ( 110, 0, 0, 0 );	
+		//#todo
+		//Usar uma função da libc.
+        gramado_system_call ( 110, 0, 0, 0 );
 	}
 	
 	return -1;
