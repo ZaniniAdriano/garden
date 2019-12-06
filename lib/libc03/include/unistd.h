@@ -12,6 +12,12 @@
 
 #include <sys/types.h>
 
+
+//The <unistd.h> header shall declare the following external variables:
+extern char  *optarg;
+extern int    opterr, optind, optopt;
+
+
 /*
  In the C and C++ programming languages, unistd.h is the name 
  of the header file that provides access to the POSIX 
@@ -232,6 +238,9 @@ int isatty(int fd);
 
               
 int getopt (int argc, char * const argv[], const char *optstring);
+
+
+
 
 #endif /* _UNISTD_H */
 

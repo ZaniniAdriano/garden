@@ -41,6 +41,11 @@
 int errno;
 
 
+//The <unistd.h> header shall declare the following external variables:
+char  *optarg;
+int    opterr, optind, optopt;
+
+
 //#todo
 //#define	UNISTD_SYSTEMCALL_GETGID ??
 

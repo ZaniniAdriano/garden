@@ -1845,7 +1845,13 @@ int unlockpt(int fd)
 	return -1; 
 }
 
+const char	*getprogname(void)
+{
+	return NULL;
+}
 
+void setprogname(const char *progname)
+{}
 
 //
 // End.

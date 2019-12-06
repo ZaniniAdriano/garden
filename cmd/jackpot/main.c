@@ -49,7 +49,7 @@ void Start (){
     printf ("1 : Easy (0-15)\n");
     printf ("2 : Medium (0-30)\n");
     printf ("3 : Difficult (0-50)\n");
-    printf ("or type another key to quit.\n\n");
+    printf ("or type q to quit.\n\n");
     
 	c = 30;
 	
@@ -160,9 +160,9 @@ checkNumber:
 		// The user found the secret number
 		
 	    printf("\n");	
-	    printf("####################################################\n");
-	      puts("################## YOU WIN ! #######################\n");
-	    printf("####################################################\n");		
+	    printf("################################################\n");
+	      puts("################ YOU WIN ! #####################\n");
+	    printf("################################################\n");
 		printf("\n");
 		
         Start ();

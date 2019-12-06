@@ -4,7 +4,7 @@
 
 // Conversão precisa entre tipos inteiros.
 
-
+#include <types.h>
 
 /*
 #define PRId8 "d"
@@ -28,7 +28,7 @@
 */
 
 
-//long long??
+
 typedef unsigned long uintptr_t;
 
 typedef unsigned int uintmax_t;

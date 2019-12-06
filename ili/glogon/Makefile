@@ -8,7 +8,7 @@ VERSION = 0
 PATCHLEVEL = 0
 SUBLEVEL = 0
 EXTRAVERSION =
-#NAME = cat
+#NAME = tty
 
 #todo:
 #We need to simplify these flags
@@ -74,13 +74,13 @@ all-c:
 #	cp $(APIOBJ)/api.o      .
 	
 cat-link:
-	ld -m elf_i386 -T link.ld -o CAT.BIN $(myObjects) -Map map.s
+	ld -m elf_i386 -T link.ld -o GLOGON.BIN $(myObjects) -Map map.s
 
 finalize:
-	cp CAT.BIN  ../../bin
+#	cp GLOGON.BIN  ../../bin
 
 clean:
 	-rm *.o
-	-rm CAT.BIN 
+#	-rm GLOGON.BIN 
 	
 	

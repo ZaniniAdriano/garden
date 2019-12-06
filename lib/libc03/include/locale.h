@@ -1,6 +1,9 @@
 #ifndef _LOCALE_H_
 #define _LOCALE_H_
 
+
+#include <stddef.h>
+
 struct lconv {
 	char	*decimal_point;
 	char	*thousands_sep;
@@ -40,7 +43,7 @@ struct lconv {
 #define	_LC_LAST	7		/* marks end */
 
 
-
+char *setlocale(int category, const char *locale);
 
 
 #endif /* _LOCALE_H_ */

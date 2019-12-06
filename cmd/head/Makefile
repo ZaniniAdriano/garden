@@ -1,4 +1,4 @@
-# cat for gde
+# head for garden
 
 #history:
 #2019 - Created by Fred Nora.
@@ -8,7 +8,7 @@ VERSION = 0
 PATCHLEVEL = 0
 SUBLEVEL = 0
 EXTRAVERSION =
-#NAME = cat
+#NAME = tty
 
 #todo:
 #We need to simplify these flags
@@ -45,6 +45,8 @@ stdlib.o \
 string.o \
 time.o \
 unistd.o \
+err.o \
+locale.o \
 stubs.o
 
 
@@ -70,17 +72,19 @@ all-c:
 	cp $(LIBCOBJ)/string.o .
 	cp $(LIBCOBJ)/time.o    .
 	cp $(LIBCOBJ)/unistd.o  .
+	cp $(LIBCOBJ)/err.o  .
+	cp $(LIBCOBJ)/locale.o  .
 
 #	cp $(APIOBJ)/api.o      .
 	
 cat-link:
-	ld -m elf_i386 -T link.ld -o CAT.BIN $(myObjects) -Map map.s
+	ld -m elf_i386 -T link.ld -o HEAD.BIN $(myObjects) -Map map.s
 
 finalize:
-	cp CAT.BIN  ../../bin
+#	cp HEAD.BIN  ../../bin
 
 clean:
 	-rm *.o
-	-rm CAT.BIN 
+#	-rm HEAD.BIN 
 	
 	

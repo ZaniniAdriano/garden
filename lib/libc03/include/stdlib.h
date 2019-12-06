@@ -116,6 +116,11 @@ void *stdlib_system_call ( unsigned long ax,
                            unsigned long dx );
 
 
+
+
+const char	*getprogname(void);
+void setprogname(const char *progname);
+
 int unlockpt(int fd);
 
 int getpt(void);

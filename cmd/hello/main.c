@@ -349,7 +349,7 @@ int jackpot_main (){
 	
 	libcInitRT ();
     
-	stdioInitialize ();		
+	stdioInitialize ();
 	
     printf ("** Jackpot game **\n");
     printf ("The goal of this game is to guess a number. You will be ask to type\n");
