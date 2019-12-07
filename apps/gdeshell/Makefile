@@ -51,7 +51,7 @@ APIOBJ  = ../../lib/api02/obj
 	## Objects
 	##
 
-myObjects = crt0.o main.o \
+myObjects = crt0.o main.o net.o \
 shellui.o \
 api.o \
 ctype.o \
@@ -87,7 +87,9 @@ all-c:
 	gcc  -c  shellui.c   -I $(LIBC) -I $(API)  $(CFLAGS) -o shellui.o
 	gcc  -c  builtins.c  -I $(LIBC) -I $(API)  $(CFLAGS) -o builtins.o
 	gcc  -c  desktop.c   -I $(LIBC) -I $(API)  $(CFLAGS) -o desktop.o
+	gcc  -c  net.c   -I $(LIBC) -I $(API)  $(CFLAGS) -o net.o
 	
+		
 #	gcc  -c  parser.c    -I ../../../lib/libc01/include/ -I ../../../lib/api01/include/ $(CFLAGS) -o parser.o
 #	gcc  -c  lexer.c     -I ../../../lib/libc01/include/ -I ../../../lib/api01/include/ $(CFLAGS) -o lexer.o
 #	gcc  -c  net.c       -I ../../../lib/libc01/include/ -I ../../../lib/api01/include/ $(CFLAGS) -o net.o

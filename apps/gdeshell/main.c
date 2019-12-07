@@ -2723,6 +2723,20 @@ do_compare:
             (unsigned long) socket_fd );
         goto exit_cmp;
     }
+    
+
+    if ( strncmp( prompt, "test-arp", 8 ) == 0 )
+    {
+		//net.c
+		__shellTestARP ();
+        //gramado_system_call ( ?, 
+          //  (unsigned long) ?,
+          //  (unsigned long) ?,
+          //  (unsigned long) ? );
+        goto exit_cmp;
+    }
+
+    
 
 	//socket-test
 	//rotina de teste de soquetes.
@@ -7045,6 +7059,11 @@ void updateVisibleArea( int direction )
             break; 
     };
 }
+
+
+
+
+ 
 
 
 /*
