@@ -811,6 +811,14 @@ shellProcedure( struct window_d *window,
               while ( (c = fgetc( (FILE *) long1)) >= 0 )
                   printf ("%c", c); 
              break;
+             
+         //esse processo é notificado sobre o recebimento de um pacote ipv4    
+         case MSG_NETWORK_NOTIFY_PROCESS:
+             //receberemos uma mensagem vida do servidor de rede.
+             printf ("gdeshell: MSG_NETWORK_NOTIFY_PROCESS\n");
+              while ( (c = fgetc( (FILE *) long1)) >= 0 )
+                  printf ("%c", c); 
+             break;             
 
 		//Faz algumas inicializações de posicionamento e dimensões.
         //case MSG_INITDIALOG:
