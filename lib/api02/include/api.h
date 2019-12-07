@@ -1985,6 +1985,16 @@ static unsigned long vga_256colors_palette[256] = {
 //o driver de network está notificando um processo em ring3.
 #define MSG_NETWORK_NOTIFY_PROCESS 56
 
+
+//
+// mouse support: continuação ...
+//
+#define MSG_MOUSE_DOUBLECLICKED	  60
+//...
+
+
+
+
 //
 //  terminal commands
 //

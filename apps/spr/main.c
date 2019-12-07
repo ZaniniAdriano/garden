@@ -741,6 +741,12 @@ shellProcedure ( struct window_d *window,
 		case MSG_DESTROY:
 		    printf("SHELL.BIN: MSG_DESTROY\n");
 		    break;
+		 
+		//double click
+		case MSG_MOUSE_DOUBLECLICKED:
+		    //if ( window == editboxWindow )
+		    printf ("*Double Click!!\n");
+		    break;
 			
 		// MSG_MOUSEKEYDOWN
 		case 30:
