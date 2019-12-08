@@ -810,10 +810,16 @@ int sethostname (const char *name, size_t len)
 }
 
 
-
+/*
+ **************************** 
+ * getusername 
+ * 
+ */
+ 
+ 
 int getusername (char *name, size_t len)
 {
-	int len_ret;
+	int __len_ret;
 	
 	if ( len < 0 || len > HOST_NAME_MAX )
 	{
@@ -821,51 +827,75 @@ int getusername (char *name, size_t len)
 	    return -1;
 	}
 
-    //coloca no buffer interno
-    len_ret = (int) gramado_system_call ( 803, 
-                        (unsigned long) &__libc_username[0],
-                        (unsigned long) &__libc_username[0],
-                        (unsigned long) &__libc_username[0] );
 
-	if ( len_ret < 0 || len_ret > HOST_NAME_MAX )
+
+    //coloca no buffer interno
+    __len_ret = (int) gramado_system_call ( 803, 
+                        (unsigned long) name,
+                        (unsigned long) name,
+                        (unsigned long) name );
+
+	if ( __len_ret < 0 || __len_ret > HOST_NAME_MAX )
 	{
-	    printf ("getusername: len_ret\n");
+	    printf ("getusername: __len_ret\n");
 	    return -1;
 	}
 
-	if ( len_ret > len )
+	if ( __len_ret > len )
 	{
-		len_ret = len;
-	}
-	
-	//se o tamanho do nome oferecido pelo kernel
-	//for menor que o buffer disponibilizado pelo aplicativo.
-	if ( len_ret <= len )
-	{
-		//ok
-		memcpy ( name, __libc_username, len);
-		return (int) len;
+		__len_ret = len;
 	}
 
-    return -1;
+
+    return 0;
 }
 
 
-int setusername (const char *name, size_t len)
+char __Login[64];
+
+//#todo
+char *getlogin (void)
 {
+	//strcpy(__Login, "test");
+	return __Login;
+}
+
+//#todo
+int setlogin(const char *name)
+{
+	strcpy (__Login, (const char *) name);
+	return 0;
+}
+
+/*
+ **************************** 
+ * setusername 
+ * 
+ */
+
+// Um pequeno buffer foi passado pelo aplicativo.
+// O limite precisa ser respeitado. 
+ 
+int setusername (const char *name, size_t len){
+
     size_t __name_len = strlen(name) + 1;
 
-    if ( __name_len > len )
+
+    // Limite dado pelo sistema.
+    if (len < 0 || len >= HOST_NAME_MAX )
     {
-		printf ("setusername: len\n");
-	    return 1;     
+        printf ("setusername: *len\n");
+        return 1;
     }
 
-    if (len < 0 || len > HOST_NAME_MAX )
+
+    // Tamanho indicado pelo aplicativo.
+    if ( __name_len > len )
     {
-		printf ("setusername: len\n");
-	    return 1;
-	}
+        printf ("setusername: len\n");
+        return 1;     
+    }
+
 
     return (int) gramado_system_call ( 804, 
                     (unsigned long) name,

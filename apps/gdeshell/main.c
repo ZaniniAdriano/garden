@@ -205,10 +205,11 @@ int interrupt_state = 0;
 
 
 /* The current user's name. */
-char __current_host_name[64];
-char __current_user_name[64];
-char *current_host_name = (char *) &__current_host_name[0]; //"username";
-char *current_user_name = (char *) &__current_user_name[0]; //NULL;
+char __username[64];
+//char __current_host_name[64];
+//char __current_user_name[64];
+//char *current_host_name = (char *) &__current_host_name[0]; //"username";
+//char *current_user_name = (char *) &__current_user_name[0]; //NULL;
 
 
 /* Non-zero means that this shell is a login shell.
@@ -2308,16 +2309,19 @@ do_compare:
 	{
 	    //gethostname ( __hostname_buffer, (size_t) 64);
 	    //printf (__hostname_buffer);
-	    gethostname ( current_host_name, (size_t) 64);
-	    printf (current_host_name);
+	    //gethostname ( current_host_name, (size_t) 64);
+	    //printf (current_host_name);
         goto exit_cmp;
     };
 
     // getusername 
+    char *my_username;
 	if ( strncmp( prompt, "getusername", 11 ) == 0 )
 	{
-	    getusername ( current_user_name, (size_t) 64);
-	    printf (current_user_name);
+		my_username = (char *) getlogin();
+		printf (my_username);
+	    //getusername ( current_user_name, (size_t) 64);
+	    //printf (current_user_name);
         goto exit_cmp;
     };
 
@@ -2656,18 +2660,28 @@ do_compare:
 	{
 		i++;
 		token = (char *) tokenList[i];
-		sprintf ( current_host_name, (const char*) tokenList[i] ); 
-	    sethostname ( current_host_name, (size_t) 64);
+		//sprintf ( current_host_name, (const char*) tokenList[i] ); 
+	    //sethostname ( current_host_name, (size_t) 64);
         goto exit_cmp;
     }
+
+
 
     // setusername
 	if ( strncmp( prompt, "setusername", 11 ) == 0 )
 	{
 		i++;
 		token = (char *) tokenList[i];
-		sprintf ( current_user_name, (const char*) tokenList[i] ); 
-	    setusername ( current_user_name, (size_t) 64);
+		
+		setlogin( (const char*) tokenList[i] );
+		
+		//fail
+		//sprintf ( current_user_name, (const char*) tokenList[i] ); 
+	    //setusername ( current_user_name, (size_t) 64);
+
+		//sprintf ( __username, (const char*) tokenList[i] ); 
+	    //setusername ( __username, (size_t) 64);
+
         goto exit_cmp;
     }
 
@@ -4449,7 +4463,7 @@ int shellCheckPassword (){
 	if (interactive == 1)
 	{
 		//hostname
-        current_host_name = "??host??";		
+        //current_host_name = "??host??";		
 		
 		
 		//file 
@@ -4472,7 +4486,7 @@ int shellCheckPassword (){
 		
 	    printf("\n username: ");
 	    gets(username);
-		current_user_name = username;
+		//current_user_name = username;
 		
 		//
 		//  ## password ##
@@ -4718,8 +4732,8 @@ void shellPrompt (){
     //printf ("%s ", SHELL_PROMPT );
 
     printf ("\n");
-    printf ("[%s", current_user_name );
-    printf ("@%s]", current_host_name );
+    //printf ("[%s", current_user_name );
+    //printf ("@%s]", current_host_name );
     printf ("%s ", SHELL_PROMPT );
 }
 
