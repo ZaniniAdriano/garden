@@ -7,8 +7,9 @@
 // 
 
 #include <sys/types.h>  
+#include <sys/select.h>
 #include <sys/socket.h>
-
+//#include <unistd.h>
 
 
 //sortix style;
@@ -21,12 +22,112 @@
 */
 
 
+
+//gnu
+/*
+int accept4(int sockfd, struct sockaddr *addr,
+           socklen_t *addrlen, int flags);
+int accept4(int sockfd, struct sockaddr *addr,
+           socklen_t *addrlen, int flags)
+{ return -1; }
+*/ 
+
+
+
+// POSIX.1-2001, POSIX.1-2008, SVr4, 4.4BSD, 
+//(connect() first appeared in 4.2BSD).
+/*
+int connect(int sockfd, const struct sockaddr *addr,
+           socklen_t addrlen);
+int connect(int sockfd, const struct sockaddr *addr,
+           socklen_t addrlen)
+{ return -1; }
+*/           
+           
+           
+           
+/*
+The accept() system call is used with connection-based socket types
+       (SOCK_STREAM, SOCK_SEQPACKET).  It extracts the first connection
+       request on the queue of pending connections for the listening socket,
+       sockfd, creates a new connected socket, and returns a new file
+       descriptor referring to that socket.  The newly created socket is not
+       in the listening state.  The original socket sockfd is unaffected by
+       this call.
+*/
+/*
+int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
+{ return -1; }
+*/
+
+
+/*
+void FD_CLR(int fd, fd_set *set);
+void FD_CLR(int fd, fd_set *set)
+{}
+*/
+
+/*
+int  FD_ISSET(int fd, fd_set *set);
+int  FD_ISSET(int fd, fd_set *set)
+{ return -1; }
+*/
+
+/*
+void FD_SET(int fd, fd_set *set);
+void FD_SET(int fd, fd_set *set)
+{}
+*/
+
+/*
+void FD_ZERO(fd_set *set);
+void FD_ZERO(fd_set *set)
+{}
+*/  
+
+
+
+/*
+select() and pselect() allow a program to monitor multiple file
+       descriptors, waiting until one or more of the file descriptors become
+       "ready" for some class of I/O operation (e.g., input possible).
+*/
+//see: sys/select.h
+/*
+int select(int nfds, fd_set *readfds, fd_set *writefds,
+                  fd_set *exceptfds, struct timeval *timeout);
+int select(int nfds, fd_set *readfds, fd_set *writefds,
+                  fd_set *exceptfds, struct timeval *timeout)
+{ return -1; }
+*/  
+  
+/*       
+int pselect(int nfds, fd_set *readfds, fd_set *writefds,
+            fd_set *exceptfds, const struct timespec *timeout,
+            const sigset_t *sigmask);                       
+int pselect(int nfds, fd_set *readfds, fd_set *writefds,
+            fd_set *exceptfds, const struct timespec *timeout,
+            const sigset_t *sigmask)
+{ return -1; }
+*/            
+            
+            
+            
+/*
+int bind(int sockfd, const struct sockaddr *addr,
+                socklen_t addrlen);
+int bind(int sockfd, const struct sockaddr *addr,
+                socklen_t addrlen)
+{ return -1; }
+*/
+
 /*
  * listen:
  */
 
 int listen (int sockfd, int backlog){
-	
+
 	return -1; //#todo
 }
 
@@ -70,6 +171,13 @@ int shutdown ( int	sockfd,	int how ){
 
 // Linux style.
 // See: http://man7.org/linux/man-pages/man2/socket.2.html
+
+/*
+socket() creates an endpoint for communication and returns a file
+       descriptor that refers to that endpoint.  The file descriptor
+       returned by a successful call will be the lowest-numbered file
+       descriptor not currently open for the process. 
+ */
 
 //int socket ( int family, int type, int protocol ){
 int socket ( int domain, int type, int protocol ){
