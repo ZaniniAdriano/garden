@@ -2305,12 +2305,22 @@ do_compare:
 	
 
     // gethostname 
+    char *my_hostname;
+    char hostbuffer[256]; 
 	if ( strncmp( prompt, "gethostname", 11 ) == 0 )
 	{
-	    //gethostname ( __hostname_buffer, (size_t) 64);
-	    //printf (__hostname_buffer);
-	    //gethostname ( current_host_name, (size_t) 64);
-	    //printf (current_host_name);
+		gethostname (hostbuffer, sizeof(hostbuffer));
+		printf(">>> ");
+		printf (hostbuffer);
+		printf("\n");
+		
+		//#obs: Isso funciona.
+		//vai colocar num buffer ba libc
+		//my_hostname = ( char *) __gethostname();
+		//printf(">> ");
+		//printf (my_hostname);
+		//printf("\n");
+
         goto exit_cmp;
     };
 
@@ -2318,6 +2328,7 @@ do_compare:
     char *my_username;
 	if ( strncmp( prompt, "getusername", 11 ) == 0 )
 	{
+		//vai colocar num buffer ba libc
 		my_username = (char *) getlogin();
 		printf (my_username);
 	    //getusername ( current_user_name, (size_t) 64);
@@ -2660,6 +2671,9 @@ do_compare:
 	{
 		i++;
 		token = (char *) tokenList[i];
+		
+		sethostname( (const char*) tokenList[i], (size_t) 64-1 );
+		
 		//sprintf ( current_host_name, (const char*) tokenList[i] ); 
 	    //sethostname ( current_host_name, (size_t) 64);
         goto exit_cmp;

@@ -225,10 +225,13 @@ char * ttyname (int filedes);
 */
 
 
+
+
 //#test
 char *getlogin (void);
 int setlogin(const char *name);
 
+char *__gethostname (void);
 
 //See: http://man7.org/linux/man-pages/man2/sethostname.2.html
 
