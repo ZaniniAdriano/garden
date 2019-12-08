@@ -851,20 +851,32 @@ int getusername (char *name, size_t len)
 }
 
 
-char __Login[64];
+char __Login_buffer[64];
 
 //#todo
 char *getlogin (void)
 {
+	//passamos um buffer para o kernel.
+	gramado_system_call ( 803, 
+	    (unsigned long) &__Login_buffer[0],
+	    (unsigned long) &__Login_buffer[0],
+	    (unsigned long) &__Login_buffer[0] );
+	
 	//strcpy(__Login, "test");
-	return __Login;
+	return __Login_buffer;
 }
 
 //#todo
 int setlogin(const char *name)
 {
-	strcpy (__Login, (const char *) name);
-	return 0;
+	//strcpy (__Login, (const char *) name);
+	
+	gramado_system_call ( 804, 
+	    (unsigned long) name,
+	    (unsigned long) name,
+	    (unsigned long) name );
+	    
+	return 0; //poderia retornar o size.
 }
 
 /*
