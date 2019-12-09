@@ -1989,9 +1989,10 @@ static unsigned long vga_256colors_palette[256] = {
 //
 // mouse support: continuação ...
 //
-#define MSG_MOUSE_DOUBLECLICKED	  60
+#define MSG_MOUSE_DOUBLECLICKED   60
+#define MSG_MOUSE_DRAG            61
+#define MSG_MOUSE_DROP            62
 //...
-
 
 
 
