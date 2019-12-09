@@ -510,6 +510,35 @@ int main ( int argc, char *argv[] ){
 	//--
 
 
+    //
+    // #test
+    //
+    
+    // Testando a criação de uma janela do tipo ícone.
+    // #obs: Esse apps não precisa desse tipo de janela. Foi somente
+    // usado para teste.
+
+    struct window_d *__icon1;
+
+	//++
+    enterCriticalSection (); 
+    __icon1 = (void *) APICreateWindow ( WT_ICON, 1, 1, " Icon ",  
+                           (100), (100), 
+                           (100), (100),   
+                           hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
+    if ( (void *) __icon1 == NULL )
+    {
+        printf ("Couldn't create icon\n");
+        return 1;
+    }else{
+        APIRegisterWindow (__icon1);
+        apiShowWindow (__icon1);
+        refresh_screen ();
+    };
+    exitCriticalSection (); 
+	//--
+
+
 
 	//
 	//  ## Loop ##

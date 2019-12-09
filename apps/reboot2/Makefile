@@ -35,12 +35,14 @@ CFLAGS = -m32 \
 
 
 
-#LIBC    = ../../lib/libc01/include/
-#LIBCOBJ = ../../lib/libc01/obj
+
 LIBC    = ../../lib/libc03/include/
 LIBCOBJ = ../../lib/libc03/obj
-API     = ../../lib/api01/include/
-APIOBJ  = ../../lib/api01/obj
+
+#API     = ../../lib/api01/include/
+#APIOBJ  = ../../lib/api01/obj
+API     = ../../lib/api02/include/
+APIOBJ  = ../../lib/api02/obj
 
 
 
