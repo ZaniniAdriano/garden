@@ -243,6 +243,8 @@ int _init_app = 1;
 
 int ShellFlag = 0;
 
+//she o shell interno deve ou não rodar.
+int __embedded_shell = 1;
 
 //O shell está rodadndo.
 int running = 1;
@@ -636,6 +638,12 @@ static inline void rep_nop (void){
 // Protótipos para funções internas.
 //
 
+unsigned long 
+gdetermProcedure( struct window_d *window, 
+                int msg, 
+				unsigned long long1, 
+				unsigned long long2 );
+
 // Procedimento de janela principal do aplicativo.
 unsigned long 
 shellProcedure ( struct window_d *window, 
@@ -969,6 +977,94 @@ void initialize_buffer (void){
 
 
 
+//procedimento de janela do terminal virtual.
+unsigned long 
+gdetermProcedure( struct window_d *window, 
+                int msg, 
+				unsigned long long1, 
+				unsigned long long2 )
+{
+
+    switch (msg)
+    {
+		case MSG_TERMINALCOMMAND:
+		    switch (long1)
+		    {
+				int xxx_ch;
+				case 2008:
+					//#importante: testar isso.
+					//initialize_buffer();
+					
+					//line_buffer_buffersize = 1024; //configurando tamanho do buffer.
+					line_buffer_buffersize = LINE_BUFFER_SIZE;
+					
+					//fprintf (stdout,"noraterm: This is a string ..."); //#bugbug
+					//printf ("MSG_TERMINALCOMMAND.2008 pode pegar, coloca no buffer >> \n");
+					printf ("MSG_TERMINALCOMMAND.2008\n");
+					//#suspenso.
+					//break;
+					
+					// pegando chars.
+		            // #importante
+					// Se for \n sifnifica que temos que efetuar o flush do buffer
+					// mostrando ele na tela e colocando nos buffers do terminal.
+						
+		            while (1)
+		            {					
+		                xxx_ch = (int) system_call ( 1002, 0, 0, 0 );
+                        
+                        if (xxx_ch == '\0')
+                            break;
+                            
+						if (xxx_ch == '\n')
+						{
+							printf ("gdetermProcedure: EOL, flush me\n");
+							print_buffer ();
+							initialize_buffer ();
+						}else{
+							
+						    //Colocar o char no buffer
+						    LINE_BUFFER[line_buffer_tail++] = (char) xxx_ch;							
+							
+						    if ( line_buffer_tail >= line_buffer_buffersize )
+						    {
+							    LINE_BUFFER[line_buffer_tail] = 0; //FINALIZA;
+							    line_buffer_tail = 0;
+							    
+							    printf ("gdetermProcedure: buffer limits, flush me\n");
+							    print_buffer ();
+							    initialize_buffer ();
+						    }
+						};
+	                };					
+				    break;
+				    
+				default:
+				    break;
+			}
+		    break;
+
+ 		case MSG_SYSKEYDOWN:
+		    switch (long1)
+			{
+ 
+				case VK_F1:
+                     MessageBox ( 3, "gdetermProcedure", " VK_F1 " );
+					break;
+					
+				case VK_F2:
+				     MessageBox ( 3, "gdetermProcedure", " VK_F2 " );
+					break;
+			};
+			break;   
+     
+    };
+
+
+    return 0;
+}
+
+
 /*
  ***********************************************
  * shellProcedure:
@@ -1103,8 +1199,6 @@ shellProcedure( struct window_d *window,
 			{
 
 				case VK_F1:
-                    
-
 					//shellTestLoadFile ();
 					
 					//inicializa a área visível.
@@ -1124,9 +1218,8 @@ shellProcedure( struct window_d *window,
 				//...
 				
                 //full screen
-                //colocar em full screen somente a área de cliente. 				
+                //colocar em full screen somente a área de cliente. 
 		        case VK_F11:
-				    
 					break;
 					
 				//...
@@ -1145,7 +1238,7 @@ shellProcedure( struct window_d *window,
 				//O MENU APPLICATION É O CONTEXT MENU.
 				//
 				case VK_APPS:
-				    MessageBox ( 1, "gdeterm", "VK_APPS Context Menu" );
+				    MessageBox ( 1, "shellProcedure", "VK_APPS Context Menu" );
 					break;
 			}		
 		    break;
@@ -1181,7 +1274,7 @@ shellProcedure( struct window_d *window,
                             
 						if (xxx_ch == '\n')
 						{
-							printf ("gdeterm: EOL, flush me\n");
+							printf ("shellProcedure: EOL, flush me\n");
 							print_buffer ();
 							initialize_buffer ();
 						}else{
@@ -1194,7 +1287,7 @@ shellProcedure( struct window_d *window,
 							    LINE_BUFFER[line_buffer_tail] = 0; //FINALIZA;
 							    line_buffer_tail = 0;
 							    
-							    printf ("gdeterm: buffer limits, flush me\n");							    
+							    printf ("shellProcedure: buffer limits, flush me\n");							    
 							    print_buffer ();
 							    initialize_buffer ();
 						    }							
@@ -1206,7 +1299,6 @@ shellProcedure( struct window_d *window,
 				    break;
 			}
 		    break;
-		
 
         // Commands.		
 		case MSG_COMMAND:
@@ -1214,13 +1306,13 @@ shellProcedure( struct window_d *window,
 			{
 				// Null.
 				case 0:
-				    MessageBox ( 1, "gdeterm", "Testing MSG_COMMAND.NULL." );
+				    MessageBox ( 1, "shellProcedure", "Testing MSG_COMMAND.NULL." );
 				    break;
 				
 				// About.
 				// Abre uma janela e oferece informações sobre o aplicativo.
 				case CMD_ABOUT:
-				    MessageBox ( 1, "gdeterm", "Testing MSG_COMMAND.CMD_ABOUT." );
+				    MessageBox ( 1, "shellProcedure", "Testing MSG_COMMAND.CMD_ABOUT." );
 				    break;
 				
 				//clicaram no botão
@@ -1628,7 +1720,7 @@ shellProcedure( struct window_d *window,
     // Nothing for now !
 done:
 	return (unsigned long) apiDefDialog ( window, msg, long1, long2 );
-};
+}
 
 
 /*
@@ -7257,14 +7349,14 @@ noArgs:
 	{
 		printf ("FAIL!");
 		while (1){}
-		
 		die ("gdeterm: hWindow fail");
+	
 	}else{
 
-    //salva ponteiro da janela principal e da janela do terminal. 
-    shell_info.main_window = ( struct window_d * ) hWindow;			 
-    APIRegisterWindow (hWindow);
-    apiShowWindow (hWindow);
+        //salva ponteiro da janela principal e da janela do terminal. 
+        shell_info.main_window = ( struct window_d * ) hWindow;
+        APIRegisterWindow (hWindow);
+        apiShowWindow (hWindow);
     };
 
 
@@ -7376,7 +7468,7 @@ noArgs:
     
     client_bg = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "NORATERM-CLIENT-bg",
                             1, 37, 
-                            (terminal_rect.width - 38), (terminal_rect.height - 26), 
+                            (terminal_rect.width - 38), (terminal_rect.height -27) -40, 
                             hWindow, 0, COLOR_BLACK, COLOR_BLACK );
 
 
@@ -7400,7 +7492,7 @@ noArgs:
     //apiBeginPaint ();
     hWindow2 = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "NORATERM-CLIENT-WINDOW",
                             1, 1, 
-                            (terminal_rect.width - 39), (terminal_rect.height - 27),
+                            (terminal_rect.width - 39), (terminal_rect.height -27 -40),
                             client_bg, 0, COLOR_TERMINAL2, COLOR_TERMINAL2 );
 
     if ( (void *) hWindow2 == NULL )
@@ -7414,6 +7506,7 @@ noArgs:
         // #bugbug
         // Temos que setar o foco por causa do teclado do shell interno.
         // Mas se setarmos o foco a janela mãe irá repintar (errada).
+
         APISetFocus (hWindow2);
         apiShowWindow (hWindow2);
 
@@ -7440,11 +7533,7 @@ noArgs:
 	//--
 	
 	
-				 
 
-
-	
-	
 
 	//#test 
 	//Criando um timer.
@@ -7474,7 +7563,9 @@ noArgs:
 	
  
 
-
+	// registrando teminal.
+	printf ("gdeterm: Registering the terminal ...\n");
+	system_call ( 1003, getpid(), 0, 0 );
  
 	
 	
@@ -7501,17 +7592,24 @@ noArgs:
 	if ( _init_app == 1 )
 	{
 		// registrando terminal e criando shell como processo filho
-				
-		printf ("Executing child process ...\n");
+
+
 		
 		// registrando teminal.
-		system_call ( 1003, getpid(), 0, 0 );
-		
+		//#obs. Já registramos antes.
+		//system_call ( 1003, getpid(), 0, 0 );
+
 		//>>> clona e executa o filho dado o nome do filho.
-		system_call ( 900, (unsigned long) "hello3.bin", 0, 0 );		
-        printf ("done: initializing internal shell\n"); 
+		printf ("gdeterm: Executing default child process hello3 ...\n");
+        system_call ( 900, (unsigned long) "hello3.bin", 0, 0 );
+        printf ("gdeterm: gdeterm is still alive!\n");
+        printf ("gdeterm: No internal shell\n"); 
+        __embedded_shell = 0; //flag. O loop precisa disso.
+        goto no_internal_shell;
 	}
 	
+	
+    printf ("gdeterm: initializing internal shell\n"); 
 	
 	// #todo
 	// Testando fork()
@@ -7562,7 +7660,7 @@ noArgs:
 	// Internal shell
 	//
 	
-do_run_internal_shell:	
+do_run_internal_shell:
  	
 	//
 	// ===========================================================
@@ -7596,31 +7694,25 @@ do_run_internal_shell:
 	
 	// Init Shell:
 	//     Inicializa variáveis, buffers e estruturas. Atualiza a tela.
-	
-	enterCriticalSection ();
-
     //#BUGBUG
     //Estamos passando um ponteiro que é uma variável local.	
-
+	enterCriticalSection ();
 	Status = (int) shellInit (hWindow2); 
-	
 	if ( Status != 0 )
 	{
-		die ("gdeterm: app_main: shellInit fail");
-	};
+		die ("gdeterm: shellInit fail");
+	}
 	exitCriticalSection (); 
 	
-	//printf("HOLAMBRA KERNEL SHELL\n");	
-    //printf("#debug breakpoint");
-    //while(1){} 
 
-	
-	//
+
+no_internal_shell:
+
 	//#importante:
 	//Agora é a hora de pegar mensagens de input de teclado.
 	//Mas se o shell não for interativo, então não pegaremos 
 	//mensagens de input de teclado.
-	//
+
 	
 	if ( interactive != 1 ){
 		
@@ -7713,15 +7805,27 @@ Mainloop:
 		
 		if ( message_buffer[1] != 0 )
 		{
-	        shellProcedure ( (struct window_d *) message_buffer[0], 
+
+            if ( __embedded_shell != 1 )
+	        { 
+			  gdetermProcedure ( (struct window_d *) message_buffer[0], 
 		        (int) message_buffer[1], 
 		        (unsigned long) message_buffer[2], 
 		        (unsigned long) message_buffer[3] );
-
+            }
+            
+            if ( __embedded_shell == 1 )
+            { 
+	          shellProcedure ( (struct window_d *) message_buffer[0], 
+		        (int) message_buffer[1], 
+		        (unsigned long) message_buffer[2], 
+		        (unsigned long) message_buffer[3] );
+            }
+            
 			message_buffer[0] = 0;
             message_buffer[1] = 0;
             message_buffer[3] = 0;
-            message_buffer[4] = 0;	
+            message_buffer[4] = 0;
         };				
 	};
 	

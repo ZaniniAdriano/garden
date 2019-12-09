@@ -88,11 +88,13 @@ int main ( int argc, char *argv[] ){
 	// Depois todas as outras devem usar o modo NORMAL.
 	// Nesse modo o terminal não será notificado.
 
-    libc_set_output_mode (LIBC_DRAW_MODE);
+    //#test
+    // Vamos suspender essa parte que usar o modo draw e
+    // testar diretamente o modo normal, onde a libc escreve
+    // em arquivo.
 
-
-    printf ("hello3: Testing libc in NORMAL MODE ...\n"); 
-
+    //libc_set_output_mode (LIBC_DRAW_MODE);
+    printf ("hello3: Testing libc in LIBC_DRAW_MODE ...\n"); 
 
 	//#Opção: 
 	// Ao fim, isso habilita o modo normal.
@@ -106,7 +108,7 @@ int main ( int argc, char *argv[] ){
 	// Habilitando o modo normal e usando ele até o fim.
 	
 	libc_set_output_mode (LIBC_NORMAL_MODE);
-	
+	printf ("hello3: Testing libc in LIBC_NORMAL_MODE ...\n"); 
 	
 	
 	//
@@ -236,9 +238,10 @@ int main ( int argc, char *argv[] ){
 	
 	//testando o segundo \n
 	//precisaremos renovar o buffer la no terminal?
-	printf("Hello again. *hang\n");  
-		
-		
+	printf("Hello again. \n");  
+	printf("Done *hang \n");  
+
+    while(1){}
 	//#bugbug
 	//Esse segundo teste não funcionou.
 	//depois do \n a libc não se comportou como esperado.
