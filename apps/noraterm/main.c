@@ -339,6 +339,8 @@ int _init_app = 0;   // >>> usado para debug.
 
 int ShellFlag = 0;
 
+//usar o shell embutido.
+int __embedded_shell = 1;
 
 //
 // ======== ## Status support ## ========
@@ -1212,25 +1214,29 @@ void *noratermProcedure ( struct window_d *window,
 				// Enter.
 				// Finaliza a string e compara.
 				case VK_RETURN:
-				     
-					terminal_write_char ((int) '\r');
-					terminal_write_char ((int) '\n');
-					
-				    input ('\0'); 
-					
-					//#obs: 
-					//#importante 
-					//Se essa janela for a janela do shell, 
-					//então a rotina de comparação poderá fazer um refresh dessa janela. 
-					//#obs: talvez esse refresh nem seja necessário.
-					//cada rotina chamada que faça seu próprio refresh se conseguir.
-					shellCompare (window);
+				    //se temos um shell embutido
+				    if ( __embedded_shell == 1)
+					{
+					    terminal_write_char ((int) '\r');
+					    terminal_write_char ((int) '\n');
+				         input ('\0'); 
+					    //#obs: 
+					    //#importante 
+					    //Se essa janela for a janela do shell, 
+					    //então a rotina de comparação poderá fazer um refresh dessa janela. 
+					    //#obs: talvez esse refresh nem seja necessário.
+					    //cada rotina chamada que faça seu próprio refresh se conseguir.
+					    shellCompare (window);
+				    }
 					goto done;
                     break; 
 
 				//#test	
                 case VK_TAB:
-					terminal_write_char ( (int) '\t');
+                    if ( __embedded_shell == 1)
+                    {
+					    terminal_write_char ( (int) '\t');
+					}
 					goto done;
 				    break;
 
@@ -1254,13 +1260,16 @@ void *noratermProcedure ( struct window_d *window,
 					
                 default:
 				    
+				    //se temos um shell embutido
 					// Coloca no stdin, prompt[].
-					input ( (unsigned long) long1 );   
-					
                     // coloca no buffer de linhas e colunas e
-					// imprime na tela usando api
-					terminal_write_char ( (int) long1 );
-
+					// imprime na tela usando api					
+					if ( __embedded_shell == 1)
+					{
+					    input ( (unsigned long) long1 );   
+					    terminal_write_char ( (int) long1 );
+                    };
+                    
 					goto done;
                     break; 
             };
@@ -1278,15 +1287,13 @@ void *noratermProcedure ( struct window_d *window,
 		    switch (long1)
 			{	        
 				case VK_F1:  
-				     //MessageBox ( 1, "Noraterm", 
-				     //    "This is Noraterm!" );
-				     MessageBox ( 3, "Noraterm", 
-				         "This is Noraterm!" );				         
+				     MessageBox ( 3, "Noraterm", "F1" ); 
 					break;
 					
 				case VK_F2:
+					MessageBox ( 3, "Noraterm", "F2" );
 					break;
-					
+
 				case VK_F3:
 				    //testChangeVisibleArea();				
 				    //terminalRefreshVisibleArea();
@@ -1312,18 +1319,22 @@ void *noratermProcedure ( struct window_d *window,
 				//??talvez esse tamb'em seja gerenciado pode procedimento do
 				//sistema,
                 case VK_F9:
+                    MessageBox ( 3, "Noraterm", "F9" );
                     break;
                     
                 case VK_F10:
+                    MessageBox ( 3, "Noraterm", "F10" );
                     break;
                 
                 //full screen
-                //colocar em full screen somente a área de cliente. 				
+                //colocar em full screen somente a área de cliente. 
 		        case VK_F11:
+		            MessageBox ( 3, "Noraterm", "F11" );
 					break;
 					
 				case VK_F12:
-				    break;	
+				    MessageBox ( 3, "Noraterm", "F12" );
+				    break;
 				
 				//...
 				
@@ -6737,7 +6748,7 @@ noArgs:
 	
 	if ( _init_app == 1 )
 	{
-		printf ("noraterm: Tentando executar um aplicativo\n");
+		printf ("noraterm: Tentando executar um aplicativo usando fork\n");
 		
 		int pidFORK = (int) fork ();
 
@@ -6745,14 +6756,21 @@ noArgs:
 		if ( pidFORK < 0 )
 		{
 		    printf ("noraterm: fork falhou\n");
-            goto do_run_internal_shell;
+            //goto do_run_internal_shell;
+            interactive = 0; //não temos mais um shell interativo
+		    __embedded_shell = 0; //sem shell embutido.
+		    goto no_internal_shell;
 		}
 		
 		// Pai.
 		if ( pidFORK > 0 )
 		{
-		    printf ("noraterm: estamos no PAI\n");
-			goto do_run_internal_shell;
+			printf ("noraterm: Noraterm is alive!\n");
+		    printf ("noraterm: estamos no PAI. O filho eh pid=%d \n", pidFORK);
+			interactive = 0; //não temos mais um shell interativo
+			__embedded_shell = 0; //sem shell embutido.
+			//goto do_run_internal_shell;
+		    goto no_internal_shell;
 		}
 		
 		// Filho.
@@ -6773,8 +6791,9 @@ noArgs:
 			//área de cliente da janela do terminal.
 			execve ("gdeshell.bin", NULL, NULL );
 			
-			printf ("noraterm: execve falhou.\n");
-			goto do_run_internal_shell;
+			printf ("execve falhou. *hang\n");
+			while(1){}
+			//goto do_run_internal_shell;
 		}	
 	}
 	
@@ -6801,10 +6820,11 @@ do_run_internal_shell:
 		
 	//===========================
 	
-	
+
+no_internal_shell:
 	
 	//
-	// ======== ## Shell init ## ========
+	// ======== ## terminal init ## ========
 	//	
 	
 	// #importante
@@ -6868,10 +6888,23 @@ do_run_internal_shell:
         printf ("noraterm: Internal shell is not interactive\n");	
 		goto skip_input;
 	};
+
 	
 	//
 	// Podemos tentar criar um processo.
 	//
+
+
+    //
+    // ==== Child process ====
+    //
+    
+    //>>> clona e executa o filho dado o nome do filho.
+	printf ("noraterm: Executing default child process hello3 ...\n");
+    system_call ( 900, (unsigned long) "hello3.bin", 0, 0 );
+    printf ("noraterm: noraterm is still alive!\n");
+    printf ("noraterm: No internal shell\n"); 
+    __embedded_shell = 0; //sem shell embutido.
 
     //
 	// Get message.
