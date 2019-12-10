@@ -299,7 +299,7 @@ Linker script and memory map
                 0x00000000004061d2                forkpty
                 0x00000000004061dc                login_tty
                 0x00000000004061e6                getopt
- .text          0x00000000004061f0     0x2195 api.o
+ .text          0x00000000004061f0     0x2198 api.o
                 0x00000000004061f0                system_call
                 0x0000000000406218                apiSystem
                 0x0000000000406620                system1
@@ -330,84 +330,84 @@ Linker script and memory map
                 0x00000000004069a6                apiInitBackground
                 0x00000000004069ac                MessageBox
                 0x0000000000406f43                mbProcedure
-                0x0000000000407014                DialogBox
-                0x00000000004073cf                dbProcedure
-                0x0000000000407445                call_kernel
-                0x000000000040756d                call_gui
-                0x0000000000407602                gde_create_window
-                0x000000000040767b                gde_register_window
-                0x00000000004076a3                gde_close_window
-                0x00000000004076cb                gde_set_focus
-                0x00000000004076f3                gde_get_focus
-                0x0000000000407708                APIKillFocus
-                0x0000000000407730                APISetActiveWindow
-                0x0000000000407758                APIGetActiveWindow
-                0x000000000040776d                APIShowCurrentProcessInfo
-                0x0000000000407783                APIresize_window
-                0x000000000040779d                APIredraw_window
-                0x00000000004077b7                APIreplace_window
-                0x00000000004077d1                APImaximize_window
-                0x00000000004077ed                APIminimize_window
-                0x0000000000407809                APIupdate_window
-                0x0000000000407825                APIget_foregroung_window
-                0x000000000040783b                APIset_foregroung_window
-                0x0000000000407857                apiExit
-                0x0000000000407874                kill
-                0x000000000040787a                dead_thread_collector
-                0x0000000000407890                api_strncmp
-                0x00000000004078f3                refresh_screen
-                0x0000000000407909                api_refresh_screen
-                0x0000000000407914                apiReboot
-                0x000000000040792a                apiSetCursor
-                0x0000000000407942                apiGetCursorX
-                0x000000000040795a                apiGetCursorY
-                0x0000000000407972                apiGetClientAreaRect
-                0x000000000040798a                apiSetClientAreaRect
-                0x00000000004079a9                gde_create_process
-                0x00000000004079c2                gde_create_thread
-                0x00000000004079db                apiStartThread
-                0x00000000004079f7                apiFOpen
-                0x0000000000407a23                gde_save_file
-                0x0000000000407a76                apiDown
-                0x0000000000407acb                apiUp
-                0x0000000000407b20                enterCriticalSection
-                0x0000000000407b5b                exitCriticalSection
-                0x0000000000407b74                initializeCriticalSection
-                0x0000000000407b8d                gde_begin_paint
-                0x0000000000407b98                gde_end_paint
-                0x0000000000407ba3                apiPutChar
-                0x0000000000407bbf                apiDefDialog
-                0x0000000000407bc9                apiGetSystemMetrics
-                0x0000000000407be7                api_set_current_keyboard_responder
-                0x0000000000407c06                api_get_current_keyboard_responder
-                0x0000000000407c1e                api_set_current_mouse_responder
-                0x0000000000407c3d                api_get_current_mouse_responder
-                0x0000000000407c55                api_set_window_with_text_input
-                0x0000000000407c97                api_get_window_with_text_input
-                0x0000000000407caf                gramadocore_init_execve
-                0x0000000000407cb9                apiDialog
-                0x0000000000407d52                api_getchar
-                0x0000000000407d6a                apiDisplayBMP
-                0x0000000000408171                apiSendMessageToProcess
-                0x00000000004081b4                apiSendMessageToThread
-                0x00000000004081f7                apiSendMessage
-                0x000000000040822d                apiDrawText
-                0x000000000040826c                apiGetWSScreenWindow
-                0x0000000000408284                apiGetWSMainWindow
-                0x000000000040829c                apiCreateTimer
-                0x00000000004082b9                apiGetSysTimeInfo
-                0x00000000004082d7                apiShowWindow
-                0x00000000004082f3                apiStartTerminal
-                0x0000000000408367                apiUpdateStatusBar
- .text          0x0000000000408385      0x130 status.o
-                0x0000000000408385                statusInitializeStatusBar
-                0x000000000040841f                update_statuts_bar
- .text          0x00000000004084b5       0x9a addrbar.o
-                0x00000000004084b5                topbarInitializeTopBar
- .text          0x000000000040854f       0x28 stubs.o
-                0x000000000040854f                gramado_system_call
+                0x0000000000407017                DialogBox
+                0x00000000004073d2                dbProcedure
+                0x0000000000407448                call_kernel
+                0x0000000000407570                call_gui
+                0x0000000000407605                gde_create_window
+                0x000000000040767e                gde_register_window
+                0x00000000004076a6                gde_close_window
+                0x00000000004076ce                gde_set_focus
+                0x00000000004076f6                gde_get_focus
+                0x000000000040770b                APIKillFocus
+                0x0000000000407733                APISetActiveWindow
+                0x000000000040775b                APIGetActiveWindow
+                0x0000000000407770                APIShowCurrentProcessInfo
+                0x0000000000407786                APIresize_window
+                0x00000000004077a0                APIredraw_window
+                0x00000000004077ba                APIreplace_window
+                0x00000000004077d4                APImaximize_window
+                0x00000000004077f0                APIminimize_window
+                0x000000000040780c                APIupdate_window
+                0x0000000000407828                APIget_foregroung_window
+                0x000000000040783e                APIset_foregroung_window
+                0x000000000040785a                apiExit
+                0x0000000000407877                kill
+                0x000000000040787d                dead_thread_collector
+                0x0000000000407893                api_strncmp
+                0x00000000004078f6                refresh_screen
+                0x000000000040790c                api_refresh_screen
+                0x0000000000407917                apiReboot
+                0x000000000040792d                apiSetCursor
+                0x0000000000407945                apiGetCursorX
+                0x000000000040795d                apiGetCursorY
+                0x0000000000407975                apiGetClientAreaRect
+                0x000000000040798d                apiSetClientAreaRect
+                0x00000000004079ac                gde_create_process
+                0x00000000004079c5                gde_create_thread
+                0x00000000004079de                apiStartThread
+                0x00000000004079fa                apiFOpen
+                0x0000000000407a26                gde_save_file
+                0x0000000000407a79                apiDown
+                0x0000000000407ace                apiUp
+                0x0000000000407b23                enterCriticalSection
+                0x0000000000407b5e                exitCriticalSection
+                0x0000000000407b77                initializeCriticalSection
+                0x0000000000407b90                gde_begin_paint
+                0x0000000000407b9b                gde_end_paint
+                0x0000000000407ba6                apiPutChar
+                0x0000000000407bc2                apiDefDialog
+                0x0000000000407bcc                apiGetSystemMetrics
+                0x0000000000407bea                api_set_current_keyboard_responder
+                0x0000000000407c09                api_get_current_keyboard_responder
+                0x0000000000407c21                api_set_current_mouse_responder
+                0x0000000000407c40                api_get_current_mouse_responder
+                0x0000000000407c58                api_set_window_with_text_input
+                0x0000000000407c9a                api_get_window_with_text_input
+                0x0000000000407cb2                gramadocore_init_execve
+                0x0000000000407cbc                apiDialog
+                0x0000000000407d55                api_getchar
+                0x0000000000407d6d                apiDisplayBMP
+                0x0000000000408174                apiSendMessageToProcess
+                0x00000000004081b7                apiSendMessageToThread
+                0x00000000004081fa                apiSendMessage
+                0x0000000000408230                apiDrawText
+                0x000000000040826f                apiGetWSScreenWindow
+                0x0000000000408287                apiGetWSMainWindow
+                0x000000000040829f                apiCreateTimer
+                0x00000000004082bc                apiGetSysTimeInfo
+                0x00000000004082da                apiShowWindow
+                0x00000000004082f6                apiStartTerminal
+                0x000000000040836a                apiUpdateStatusBar
+ .text          0x0000000000408388      0x130 status.o
+                0x0000000000408388                statusInitializeStatusBar
+                0x0000000000408422                update_statuts_bar
+ .text          0x00000000004084b8       0x9a addrbar.o
+                0x00000000004084b8                topbarInitializeTopBar
+ .text          0x0000000000408552       0x28 stubs.o
+                0x0000000000408552                gramado_system_call
                 0x0000000000409000                . = ALIGN (0x1000)
- *fill*         0x0000000000408577      0xa89 
+ *fill*         0x000000000040857a      0xa86 
 
 .iplt           0x0000000000409000        0x0
  .iplt          0x0000000000409000        0x0 crt0.o

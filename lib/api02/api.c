@@ -665,18 +665,20 @@ int system15 ( unsigned long ax,
  * refresh_buffer:
  *     int 0x80, serviços de 1 à 9.
  *     Refresh buffer.
- *     Atualiza um buffer dado seu número.  (rever) */
+ *     Atualiza um buffer dado seu número.  (rever) 
+ */
 
 void refresh_buffer (unsigned long n){
 	
 	// Limits.
-	if (n < 1 || n > 9)
-	{
-	    return;
-	};
-		
+    if (n < 1 || n > 9)
+    {
+        return;
+    }
+
+
     switch (n){
-		
+
         //refresh buffer 1,2,3
         
 		case 1: 
@@ -729,13 +731,15 @@ void refresh_buffer (unsigned long n){
 /*
  * print_string:
  *     int 0x80, serviço 10.
- *     Print string no buffer.  (rever) */
+ *     Print string no buffer.  (rever) 
+ */
 
-void print_string ( unsigned long x,  
-                    unsigned long y,  
-				    unsigned long color, 
-				    unsigned char *string )
-{	
+void 
+print_string ( unsigned long x,  
+               unsigned long y,  
+               unsigned long color, 
+               unsigned char *string )
+{
     //#todo
 }
 
@@ -761,15 +765,16 @@ int vsync (){
 int 
 edit_box ( unsigned long x,  
            unsigned long y, 
-		   unsigned long height, 
-		   unsigned long width )
+           unsigned long height, 
+           unsigned long width )
 {
 	//#todo:
 	//Agora o edit box é um tipo de janelas.
 	
 	// #todo: 
 	// Altura e largura negligenciados.
-	
+
+
     return (int) system_call ( SYSTEMCALL_EDITBOX, x, y, 0 );
 }
 
@@ -782,21 +787,24 @@ edit_box ( unsigned long x,
  */
 
 void *gde_system_procedure ( struct window_d *window,
-					         int msg,
-					         unsigned long long1,
-					         unsigned long long2 )
+                             int msg,
+                             unsigned long long1,
+                             unsigned long long2 )
 {
-    unsigned long message_buffer[5];     	
-		
-	message_buffer[0] = (unsigned long) window; 
-	message_buffer[1] = (unsigned long) msg;
-	message_buffer[2] = (unsigned long) long1;
-	message_buffer[3] = (unsigned long) long2;
-	
+
+    unsigned long message_buffer[5]; 
+
+
+    message_buffer[0] = (unsigned long) window; 
+    message_buffer[1] = (unsigned long) msg;
+    message_buffer[2] = (unsigned long) long1;
+    message_buffer[3] = (unsigned long) long2;
+
+
     return (void *) system_call ( SYSTEMCALL_CALL_SYSTEMPROCEDURE, 
-					    (unsigned long) &message_buffer[0], 
-						(unsigned long) &message_buffer[0], 
-						(unsigned long) &message_buffer[0] );
+                        (unsigned long) &message_buffer[0], 
+                        (unsigned long) &message_buffer[0], 
+                        (unsigned long) &message_buffer[0] );
 }
 
 
@@ -804,7 +812,8 @@ void *gde_system_procedure ( struct window_d *window,
  * SetNextWindowProcedure
  *     Interrupção 200, serviço SYSTEMCALL_SETPROCEDURE. 
  *     Setar o endereço do procedimento que deverá ser chamado. 
- *     Obs: Lembrando que estamos usando endereços lógicos.  (rever) */
+ *     Obs: Lembrando que estamos usando endereços lógicos.  (rever) 
+ */
 
 int SetNextWindowProcedure (unsigned long next_procedure){
 	
@@ -1195,7 +1204,6 @@ mbProcedure ( struct window_d *window,
 {
     switch (msg)
 	{
-		
 		// MSG_MOUSEKEYDOWN
 		case 30:
 		    switch (long1)
@@ -1212,8 +1220,9 @@ mbProcedure ( struct window_d *window,
 						break;
 					}
 				   break;
-			}
+			};
 		    break;
+
         case MSG_KEYDOWN:
             switch(long1)
             {
@@ -1227,8 +1236,8 @@ mbProcedure ( struct window_d *window,
 				    return (unsigned long) 0;
                     break; 
             };
-        break;
-	
+            break;
+
         case MSG_SYSKEYDOWN: 
             switch(long1)	       
             {	
@@ -1247,7 +1256,7 @@ mbProcedure ( struct window_d *window,
 				    return (unsigned long) 0;
 				    break;
 		    };              
-        break;
+            break;
 		
 	    case MSG_SYSKEYUP:
 		   //printf ("sys key up\n");
@@ -1517,7 +1526,7 @@ dbProcedure ( struct window_d *window,
 				    return (unsigned long) 0;
                     break; 
             };
-        break;
+            break;
 	
         case MSG_SYSKEYDOWN:                 
             switch(long1)	       
@@ -1537,7 +1546,7 @@ dbProcedure ( struct window_d *window,
 				    return (unsigned long) 0;
 				    break;
 		    };              
-        break;
+            break;
 		
 	    case MSG_SYSKEYUP:
 		   //printf ("sys key up\n");
@@ -1598,7 +1607,8 @@ int call_kernel ( unsigned long int_number,
                   unsigned long arg12 )
 {
 	int ret_val;
-	
+
+
     switch (int_number){ 
                       
         //48 - Vários serviços de Kernel Requests.
@@ -1682,8 +1692,9 @@ int call_kernel ( unsigned long int_number,
             //Nothing.
             break;
     };
-	
-	return (int) ret_val;
+
+
+    return (int) ret_val;
 }
 
 
@@ -1758,6 +1769,7 @@ int call_gui ( unsigned long int_number,
 		    break; 
     };
 
+
     return (int) ret_val;
 }
 
@@ -1827,24 +1839,25 @@ void *gde_create_window ( unsigned long type,        //1, Tipo de janela (popup,
 	
     
 	//enterCriticalSection();
-	
-	Window = (void *) system_call ( 118 , (unsigned long) &message_buffer[0], 
-					    (unsigned long) &message_buffer[0], 
-						(unsigned long) &message_buffer[0] );
+
+    Window = (void *) system_call ( 118 , 
+                          (unsigned long) &message_buffer[0], 
+                          (unsigned long) &message_buffer[0], 
+                          (unsigned long) &message_buffer[0] );
     
 	//exitCriticalSection();
 
-	if ( (void *) Window == NULL )
-		return NULL;  
+    if ( (void *) Window == NULL )
+        return NULL;  
+
 
     // ??
     // #teste
     // Vamos enviar a mensagem MSG_CREATE para o procedimento de janela.
     // Assim ele pode terminar de pintar nessa mesma janela.
 
-    
 
-	return (void *) Window;    
+    return (void *) Window;    
 }
 
 
@@ -1868,6 +1881,7 @@ int gde_register_window (struct window_d *window){
                         (unsigned long) window);
     }
 
+
     return 2;
 }
 
@@ -1890,7 +1904,8 @@ int gde_close_window (struct window_d *window){
 		                 (unsigned long) window, 
 		                 (unsigned long) window );
 	}
-	
+
+
 	return 2;
 }
 
@@ -1913,7 +1928,8 @@ int gde_set_focus (struct window_d *window){
 	
 	//a flag 1 indica que deve-se redesenha e efetuar refresh.
 	//APIredraw_window (window,1);
-		
+
+
     return 2;
 }
 
@@ -1941,13 +1957,16 @@ int APIKillFocus (struct window_d *window){
 		return (int) 1;
 	}else{
 	
-        return (int) system_call ( SYSTEMCALL_KILLFOCUS, (unsigned long) window, 
-                         (unsigned long) window, (unsigned long) window );
+        return (int) system_call ( SYSTEMCALL_KILLFOCUS, 
+                         (unsigned long) window, 
+                         (unsigned long) window, 
+                         (unsigned long) window );
 	}
 	
 	//a flag 1 indica que deve-se redesenha e efetuar refresh.
 	//APIredraw_window ( window, 1 );
-		
+
+
     return 2;
 }
 
@@ -1965,13 +1984,16 @@ int APISetActiveWindow (struct window_d *window){
 		return (int) 1;
 	}else{
 	
-        return (int) system_call ( SYSTEMCALL_SETACTIVEWINDOW, (unsigned long) window, 
-                        (unsigned long) window, (unsigned long) window );	
+        return (int) system_call ( SYSTEMCALL_SETACTIVEWINDOW, 
+                         (unsigned long) window, 
+                         (unsigned long) window, 
+                         (unsigned long) window );	
 	}
-	
+
 	//a flag 1 indica que deve-se redesenha e efetuar refresh.
 	//APIredraw_window ( window, 1 );
-		
+
+
     return 2;
 }
 
@@ -2015,9 +2037,11 @@ APIresize_window ( struct window_d *window,
  */
 
 void APIredraw_window ( struct window_d *window, unsigned long flags ){
-	
-	system_call ( SYSTEMCALL_REDRAWWINDOW, (unsigned long) window, 
-		(unsigned long) flags, (unsigned long) flags );
+
+    system_call ( SYSTEMCALL_REDRAWWINDOW, 
+        (unsigned long) window, 
+        (unsigned long) flags, 
+        (unsigned long) flags );
 }
 
 
@@ -2075,19 +2099,26 @@ void APIset_foregroung_window (struct window_d *window){
  */
 
 void apiExit (int exit_code){
-	
-    system_call ( SYSTEMCALL_EXIT, (unsigned long) exit_code, 
-		(unsigned long) exit_code, (unsigned long) exit_code );
-    
+
+    system_call ( SYSTEMCALL_EXIT, 
+        (unsigned long) exit_code, 
+        (unsigned long) exit_code, 
+        (unsigned long) exit_code );
+
+
     while (1){ asm ("pause"); };
 }
 
 
 /*
+ *****************************************
  * kill:
  *     @todo: Poderia ser o envio de um sinal para um processo dado deu PID.  
  *     #bugbug: Essa rotina não pode existir aqui, ela pertence a libc. Deletar.
  */
+
+// #bugbug
+// Essa entra em conflito com o nome da função na libc.
 
 void kill (int exit_code){
 	//#todo
@@ -2099,18 +2130,21 @@ void kill (int exit_code){
  ****************************
  * dead_thread_collector:
  *     Aciona o coletor de threads zumbis.
- *     Procura em todos os slots por threads no estado ZOMBIE e fecha elas.
- *     @todo: Talvez essa rotina possa ser implemetada em user mode por um server,
- * ficando à cargo do kernel apenas fazer a realocação dos recursos de destruição das
- * estruturas. 
+ *     Procura em todos os slots por threads no estado ZOMBIE e 
+ * fecha elas.
+ *     @todo: Talvez essa rotina possa ser implemetada em user mode 
+ * por um server, ficando à cargo do kernel apenas fazer a realocação 
+ * dos recursos de destruição das estruturas. 
  */
 
 // What a cool thing !
 
 void dead_thread_collector (){
-	
-    system_call ( SYSTEMCALL_DEAD_THREAD_COLLECTOR, (unsigned long) 0, 
-		(unsigned long) 0, (unsigned long) 0 );	
+
+    system_call ( SYSTEMCALL_DEAD_THREAD_COLLECTOR, 
+        (unsigned long) 0, 
+        (unsigned long) 0, 
+        (unsigned long) 0 );
 }
 
 
@@ -2176,17 +2210,19 @@ void api_refresh_screen (){
 
 
 /*
+ *************************
  * apiReboot:
  *     Reboot. 
  */
 
+	// #todo: 
+	// Fazer outras chamadas para
+	// as camadas de software de mais alto nível antes
+	// de efetuar o reboot de hardware propriamente dito. 
+
 void apiReboot (){
-	
-	// @todo: Fazer outras chamadas para
-	//        as camadas de software de mais alto nível antes
-    //        de efetuar o reboot de hardware propriamente dito. 	
-	
-    system_call ( SYSTEMCALL_REBOOT, 0, 0, 0 );	
+
+    system_call ( SYSTEMCALL_REBOOT, 0, 0, 0 );
 }
 
 
@@ -2231,7 +2267,7 @@ unsigned long apiGetCursorY (){
 
 void *apiGetClientAreaRect (){
 	
-    return (void *) system_call ( SYSTEMCALL_GETCLIENTAREARECT, 0, 0, 0 );	
+    return (void *) system_call ( SYSTEMCALL_GETCLIENTAREARECT, 0, 0, 0 );
 }
 
 
@@ -2248,6 +2284,7 @@ void apiSetClientAreaRect (struct rect_d *r){
 
 
 /*
+ ***********************************
  * gde_create_process:
  *     Create a process.
  */
@@ -2257,15 +2294,19 @@ void *gde_create_process ( unsigned long process_eip,
                            char *name )
 {
     return (void *) system_call ( SYSTEMCALL_CREATEPROCESS, 
-                        process_eip, process_priority, (unsigned long) name );
+                        process_eip, 
+                        process_priority, 
+                        (unsigned long) name );
 }
 
 
 /*
+ **************************
  * gde_create_thread:
  *     Create a thread.
- *     #todo: Precisamos uma função que envie mais argumentos.
- *            Essa será uma rotina de baixo nível para pthreads.
+ *     #todo: 
+ *     Precisamos uma função que envie mais argumentos.
+ *     Essa será uma rotina de baixo nível para pthreads.
  */
 
 void *gde_create_thread ( unsigned long init_eip, 
@@ -2273,7 +2314,9 @@ void *gde_create_thread ( unsigned long init_eip,
                           char *name )
 {
     return (void *) system_call ( SYSTEMCALL_CREATETHREAD, 
-                        init_eip, init_stack, (unsigned long) name );
+                        init_eip, 
+                        init_stack, 
+                        (unsigned long) name );
 }
 
 
@@ -2285,8 +2328,10 @@ void *gde_create_thread ( unsigned long init_eip,
 
 void apiStartThread (void *Thread){
 
-    system_call ( SYSTEMCALL_STARTTHREAD, (unsigned long) Thread, 
-		(unsigned long) Thread, (unsigned long) Thread );	
+    system_call ( SYSTEMCALL_STARTTHREAD, 
+        (unsigned long) Thread, 
+        (unsigned long) Thread, 
+        (unsigned long) Thread );
 }
 
 
@@ -2308,7 +2353,8 @@ void *apiFOpen (const char *filename, const char *mode){
 
 	exitCriticalSection ();
  
-	return (void *) Ret;
+ 
+    return (void *) Ret;
 }
 
 
@@ -2445,15 +2491,21 @@ void apiUp (struct semaphore_d *s){
     //0 = deu certo, podemos asir da sessão crítica.
     //1 = algo deu errado, não conseguimos sair da sessão crítica.	
 	
-tryAgain:	
+tryAgain:
 
-	Status = (int) system_call ( SYSTEMCALL_SEMAPHORE_UP, (unsigned long) s, 
-						(unsigned long) s, (unsigned long) s );	
+
+    Status = (int) system_call ( SYSTEMCALL_SEMAPHORE_UP, 
+                       (unsigned long) s, 
+                       (unsigned long) s, 
+                       (unsigned long) s );
+
 
 	//Ok , podemos sair sa sessão crítica.
-	if (Status == 0){
+	if (Status == 0)
+	{
 		return;
-	};
+	}
+
 
 	//Deu errado a nossa tentativa d sair da sessão crítica.
 	if (Status == 1)
@@ -2575,11 +2627,11 @@ apiDefDialog ( struct window_d *window,
  */
  
 unsigned long apiGetSystemMetrics (int index){
-	
+
     return (unsigned long) system_call ( SYSTEMCALL_GETSYSTEMMETRICS, 
-	                           (unsigned long) index, 
-							   (unsigned long) index, 
-							   (unsigned long) index );
+                               (unsigned long) index, 
+                               (unsigned long) index, 
+                               (unsigned long) index );
 }
 
 
