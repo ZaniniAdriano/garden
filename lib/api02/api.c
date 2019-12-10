@@ -929,167 +929,105 @@ void apiInitBackground (){
 	
 int MessageBox ( int type, char *string1, char *string2 ){
 
-    int Response = 0;	
-    int running = 1;
-	
-	struct window_d *hWnd;    //Window.
-	struct window_d *pWnd;    //Parent.
-	struct window_d *bWnd;    //Button.	
-		
-	// x and y
-	// @todo centralizado: metade | um terço.
-	// @todo: Pegar a métrica do dispositivo.
-	
-	unsigned long x  = (unsigned long) 10;       //deslocamento x
-	unsigned long y  = (unsigned long) 300;      //deslocamento y
-    unsigned long cx = (unsigned long) (800/2);  //largura   
-    unsigned long cy = (unsigned long) (600/3);  //altura		
+    int Response = 0;
+    int running = 1;  //Loop.
 
-	int Button = 0;	
-	
-	unsigned long WindowClientAreaColor;
-	unsigned long WindowColor;
-	
+    struct window_d *hWnd;    //Window.
+
+	// x and y
+	// #todo 
+	// centralizado: metade | um terço.
+	// #todo: 
+	// Pegar a métrica do dispositivo.
+
+    unsigned long x  = (unsigned long) 10;       //deslocamento x
+    unsigned long y  = (unsigned long) 300;      //deslocamento y
+    unsigned long cx = (unsigned long) (800/2);  //largura 
+    unsigned long cy = (unsigned long) (600/3);  //altura
+
+    int Button = 0;
+
+    unsigned long WindowClientAreaColor;
+    unsigned long WindowColor;
+
 	//
 	// Colors.
 	//
-	
-	WindowClientAreaColor = xCOLOR_GRAY3;   
-	WindowColor = COLOR_TERMINAL2;          	
-	
-	
+
+    WindowClientAreaColor = xCOLOR_GRAY3;   
+    WindowColor = COLOR_TERMINAL2;  
+
+
 	// Obs: 
 	// Por enquanto para todos os tipos de messagebox 
 	// estamos usando o mesmo tipo de janela.
-	
+
+
 	//if (type <0)
 		//return -1;
-	
-	switch (type)
-	{	
-	    // Janela tipo simples.
-		// Com botão, considera o título.
-	    case 1:
-		    Button = 1;
-			gde_begin_paint ();
-	        hWnd = (void *) gde_create_window (  WT_SIMPLE, 1, 1, string1, 
-			                    x, y, cx, cy, 
-								NULL, 0, WindowClientAreaColor, WindowColor );
-			
-			if ( (void *) hWnd == NULL ){
-				printf ("MessageBox: hWnd \n");
-				//return -1;
-			}else{
-			    gde_register_window (hWnd);
-                APISetActiveWindow (hWnd);	
-                gde_set_focus (hWnd);	
-                	
-                //apiDrawText ( (struct window_d *) hWnd,
-                //    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );
-                    
-                apiDrawText ( (struct window_d *) hWnd,
-                    1*(cx/16), 1*(cy/3), COLOR_WHITE, string1 );                    
-			}
-			gde_end_paint ();
-		    break;
-			
-		// Sem botão, considera o título.	
-	    case 2:
-		    Button = 0;
-			gde_begin_paint ();
-	        hWnd = (void *) gde_create_window ( WT_POPUP, 1, 1, string1, 
-			                x, y, cx, cy, NULL, 0, 
-							WindowClientAreaColor, WindowColor ); 
-			if ( (void *) hWnd == NULL ){
-				printf("hWnd fail\n");
-				//return -1;
-			}else{
-			    gde_register_window (hWnd);
-                APISetActiveWindow (hWnd);	
-                gde_set_focus (hWnd);
-                	
-                //apiDrawText ( (struct window_d *) hWnd,
-                //    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );
-                apiDrawText ( (struct window_d *) hWnd,
-                    1*(cx/16), 1*(cy/3), COLOR_WHITE, string1 );
-			}
-	        break;
 
-		// Janela de aplicativo.
-		// Com botão, Título de alerta.
-	    // #bugbug: Não precisamos de barra de rolagem nem barra de status,
-	    // mas elas aparecem.
-	    case 3:
-	        Button = 1;
-			gde_begin_paint ();
-			hWnd = (void *) gde_create_window ( WT_OVERLAPPED, 1, 1, string1, 
-			                x, y, cx, cy, NULL, 0, 
-							WindowClientAreaColor, WindowColor );
-			
-			if ( (void *) hWnd == NULL ){
-				printf("hWnd fail\n");
-				//return -1;
-			}else{
-			    gde_register_window (hWnd);
-                APISetActiveWindow (hWnd);	
-                gde_set_focus (hWnd);	
-                //apiDrawText ( (struct window_d *) hWnd,
-                //    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string2 );
-                apiDrawText ( (struct window_d *) hWnd,
-                    1*(cx/16), 1*(cy/3), COLOR_WHITE, string2 );
-			}
-			gde_end_paint ();
-	        break;
-			
-		//Com botão, título de mensagem do sistema.	
-	    case 4:
-		    Button = 1;
-			gde_begin_paint ();
-	        hWnd = (void *) gde_create_window ( WT_OVERLAPPED, 1, 1, "System Message", 
-			                x, y, cx, cy, NULL, 0, 
-							WindowClientAreaColor, WindowColor );
-			
-			if ( (void *) hWnd == NULL ){
-				printf("hWnd fail\n");
-				//return -1;
-			}else{
-			    gde_register_window (hWnd);
-                APISetActiveWindow (hWnd);	
-                gde_set_focus (hWnd);	
-                //apiDrawText ( (struct window_d *) hWnd,
-                //    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );
-                apiDrawText ( (struct window_d *) hWnd,
-                    1*(cx/16), 1*(cy/3), COLOR_WHITE, string1 );
-			}
-			gde_end_paint ();
-	        break;
-			
-		//Tipo negligenciado. Usamos o formato padrão.	
-		default:
-		    Button = 1;
-			gde_begin_paint ();
-	        hWnd = (void *) gde_create_window ( WT_OVERLAPPED, 1, 1, "Error", 
-			                x, y, cx, cy, NULL, 0, 
-							WindowClientAreaColor, WindowColor ); 
-			
-			if ( (void *) hWnd == NULL )
-			{
-				printf("hWnd fail\n");
-				//return -1;
-			}else{
-			    gde_register_window (hWnd);
-                APISetActiveWindow (hWnd);	
-                gde_set_focus (hWnd);	
-                //apiDrawText ( (struct window_d *) hWnd,
-                //    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );
-                apiDrawText ( (struct window_d *) hWnd,
-                    1*(cx/16), 1*(cy/3), COLOR_WHITE, string1 );
-			}
-			gde_end_paint ();
-		    break;
-	};
-	
-	
+
+    switch (type)
+    {
+        case 1:
+        case 2:
+            return (int) -1;
+            break;
+
+        case 3:
+            goto do_create_messagebox_3;
+            break;
+
+        case 4:
+        default:
+            return (int) -1;
+            break;
+    };
+
+
+//
+// Create Window.
+//
+
+do_create_messagebox_3:
+
+    // Características.
+    Button = 1;
+    //...
+    
+
+    //++
+    enterCriticalSection (); 
+    
+    hWnd = (void *) gde_create_window ( WT_OVERLAPPED, 1, 1, string1, 
+                        x, y, 
+                        cx, cy, 
+                        NULL, 0, 
+                        WindowClientAreaColor, WindowColor );
+
+
+    if ( (void *) hWnd == NULL )
+    {
+        printf ("MessageBox: hWnd\n");
+        return (int) -1;
+
+    }else{
+
+        gde_register_window (hWnd);
+        //APISetActiveWindow (hWnd);
+        //gde_set_focus (hWnd);
+        
+        apiDrawText ( (struct window_d *) hWnd,
+            1*(cx/16), 1*(cy/3), 
+            COLOR_WHITE, string2 );
+
+        apiShowWindow (hWnd);
+    };
+
+    exitCriticalSection ();
+    //--
+
+
 	//======================================
 	// button support
 	//
@@ -1103,46 +1041,70 @@ int MessageBox ( int type, char *string1, char *string2 ){
 	//unsigned long app2Top = app1Top; 
 
 
+
+    //++
 	// button 1
-	messagebox_button1 = (void *) gde_create_window ( WT_BUTTON, 1, 1, "OK",     
-                                      (cx/3), ((cy/8)*5), 80, 24,    
-                                      hWnd, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
-	
-	if ( (void *) messagebox_button1 == NULL )
-	{
-	    printf("button fail \n");
-	}else{
+    enterCriticalSection (); 
+
+    messagebox_button1 = (void *) gde_create_window ( WT_BUTTON, 1, 1, "OK", 
+                                      (cx/3), ((cy/8)*5), 
+                                      80, 24,    
+                                      hWnd, 0, 
+                                      xCOLOR_GRAY1, xCOLOR_GRAY1 );
+
+    if ( (void *) messagebox_button1 == NULL )
+    {
+        printf ("OK button fail\n");
+        return (int) -1;
+    }else{
         gde_register_window (messagebox_button1); 
-	}
+        apiShowWindow (messagebox_button1);
+    };
+
+    exitCriticalSection (); 
+    //--
 
 
+    //++
 	// button 2
-	messagebox_button2 = (void *) gde_create_window ( WT_BUTTON, 1, 1, "CANCEL",     
-                                      ((cx/3)*2), ((cy/8)*5), 80, 24,    
-                                      hWnd, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
+	enterCriticalSection (); 
 
-	if ( (void *) messagebox_button2 == NULL )
-	{
-	    printf("button fail \n");
-	}else{
+	messagebox_button2 = (void *) gde_create_window ( WT_BUTTON, 1, 1, "CANCEL",     
+                                      ((cx/3)*2), ((cy/8)*5), 
+                                      80, 24,    
+                                      hWnd, 0, 
+                                      xCOLOR_GRAY1, xCOLOR_GRAY1 );
+
+    if ( (void *) messagebox_button2 == NULL )
+    {
+        printf (" CANCEL button fail \n");
+        return (int) -1;
+    }else{
         gde_register_window (messagebox_button2); 
-	}
-	
-	
-	// string
+        apiShowWindow (hWnd);
+    };
+    exitCriticalSection (messagebox_button2); 
+    //--
+
+
+
+
+    // string
     // apiDrawText ( (struct window_d *) hWnd,
     //    1*(cx/16), 1*(cy/3), COLOR_WINDOWTEXT, string1 );	
-	
-	
 
-    //Show window.
-	
-    apiShowWindow (hWnd);
-	
-	//====================================
-	// loop support
+    // #sustenso:
+    // Show window.
+    // apiShowWindow (hWnd);
+
+
+	//
+	//  ==== Loop ====
 	//
 
+
+
+	// loop support
 	unsigned long message_buffer[5];
 
     message_buffer[0] = 0;
@@ -1150,33 +1112,44 @@ int MessageBox ( int type, char *string1, char *string2 ){
     message_buffer[3] = 0;
     message_buffer[4] = 0;
 
+
+
 Mainloop:
-	
-	while (running)
-	{
-		enterCriticalSection (); 
-		system_call ( 111, (unsigned long)&message_buffer[0],
-			(unsigned long)&message_buffer[0], (unsigned long)&message_buffer[0] );
-		exitCriticalSection (); 
-			
-		if ( message_buffer[1] != 0 )
-		{
-			Response = (int) mbProcedure ( (struct window_d *) message_buffer[0], 
-		                        (int) message_buffer[1], 
-		                        (unsigned long) message_buffer[2], 
-		                        (unsigned long) message_buffer[3] );
-			
-			if (Response > 100)
-			{
-				printf ("Response=%d \n", Response );
-				goto exit_messagebox;
-			}
+
+    while (running)
+    {
+
+        //++
+        enterCriticalSection (); 
+        system_call ( 111, 
+            (unsigned long) &message_buffer[0],
+            (unsigned long) &message_buffer[0], 
+            (unsigned long) &message_buffer[0] );
+        exitCriticalSection (); 
+        //--
+
+
+        if ( message_buffer[1] != 0 )
+        {
+            Response = (int) mbProcedure ( (struct window_d *) message_buffer[0], 
+                                 (int) message_buffer[1], 
+                                 (unsigned long) message_buffer[2], 
+                                 (unsigned long) message_buffer[3] );
+
+            // Temos uma resposta.
+            if (Response > 100)
+            {
+                printf ("Response=%d \n", Response );
+                goto exit_messagebox;
+            };
+
             message_buffer[0] = 0;
             message_buffer[1] = 0;
             message_buffer[3] = 0;
             message_buffer[4] = 0;
         };
-	};
+    };
+
 
 //
 // Exit.
@@ -1184,11 +1157,12 @@ Mainloop:
 
 exit_messagebox:
 
-	//#debug
-	printf ("Exiting Message Box \n");
-	
+    // #debug
+    //printf ("Exiting Message Box \n");
+
     return (int) Response;
 }
+
 
 
 /*

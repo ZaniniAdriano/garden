@@ -520,10 +520,7 @@ shellProcedure ( struct window_d *window,
     unsigned long compare_return;
     int q;
     
-    
-    
 
-    
 	
 	//if( msg == COMMAND_INITIALIZE_SHELL ){
 		//...
@@ -833,8 +830,10 @@ shellProcedure ( struct window_d *window,
 
 					if ( window == navbar_button )
 					{
+						printf ("shellProcedure: Testing MessageBox\n");
 						navbar_button_status = 0;
-						MessageBox ( 3, "Test","Button up");
+						MessageBox ( 3, "*Test","*Button up");
+						printf ("shellProcedure: Testing MessageBox done\n");
 						break;
 					}
 					
@@ -842,7 +841,7 @@ shellProcedure ( struct window_d *window,
 					if (window == menu_button)
 					{
 	                    shellTestButtons ();	
-		                refresh_screen ();						
+		                refresh_screen ();	
 					}
 					
 					
@@ -7182,13 +7181,14 @@ noArgs:
 	unsigned long message_buffer[5];	
 		
 Mainloop:
-    
+
+
 	/* Nesse teste vamos enviar um ponteiro de array, pegarmos os quatro 
 	   elementos da mensagem e depois zerar o buffer */
-	
-	while (running)
-	{
-		//#obs: O retorno será 1 se tiver mensagem e 0 se não tiver.
+
+    while (running)
+    {
+		// #obs: O retorno será 1 se tiver mensagem e 0 se não tiver.
 		enterCriticalSection(); 
 		system_call ( 111,
 		    (unsigned long) &message_buffer[0],
@@ -7213,7 +7213,7 @@ Mainloop:
             message_buffer[3] = 0;
             message_buffer[4] = 0;
         };
-	};
+    };
 
 
 	//
