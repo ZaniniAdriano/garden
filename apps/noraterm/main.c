@@ -1408,7 +1408,7 @@ void *noratermProcedure ( struct window_d *window,
 				    //se temos um shell embutido
 					// Coloca no stdin, prompt[].
                     // coloca no buffer de linhas e colunas e
-					// imprime na tela usando api					
+					// imprime na tela usando api
 					if ( __embedded_shell == 1)
 					{
 					    input ( (unsigned long) long1 );   
@@ -1432,11 +1432,16 @@ void *noratermProcedure ( struct window_d *window,
 		    switch (long1)
 			{	        
 				case VK_F1:  
-				     MessageBox ( 3, "Noraterm", "F1" ); 
+				    //MessageBox ( 3, "Noraterm", "F1" ); 
+				    //shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2008, 0);
+		            printf ("*SCROLL\n");
+		            terminal_scroll_display ();
+		            shellPrompt ();	
 					break;
 					
 				case VK_F2:
-					MessageBox ( 3, "Noraterm", "F2" );
+					//MessageBox ( 3, "Noraterm", "F2" );
+					shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2020, 0);
 					break;
 
 				case VK_F3:
@@ -1464,21 +1469,25 @@ void *noratermProcedure ( struct window_d *window,
 				//??talvez esse tamb'em seja gerenciado pode procedimento do
 				//sistema,
                 case VK_F9:
-                    MessageBox ( 3, "Noraterm", "F9" );
+                    //MessageBox ( 3, "Noraterm", "F9" );
+                    shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2009, 0);
                     break;
                     
                 case VK_F10:
-                    MessageBox ( 3, "Noraterm", "F10" );
+                    //MessageBox ( 3, "Noraterm", "F10" );
+                    shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2020, 0);
                     break;
                 
                 //full screen
                 //colocar em full screen somente a área de cliente. 
 		        case VK_F11:
-		            MessageBox ( 3, "Noraterm", "F11" );
+		            //MessageBox ( 3, "Noraterm", "F11" );
+					shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2020, 0);
 					break;
 					
 				case VK_F12:
-				    MessageBox ( 3, "Noraterm", "F12" );
+				    //MessageBox ( 3, "Noraterm", "F12" );
+				    shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2020, 0);
 				    break;
 				
 				//...
@@ -1502,7 +1511,7 @@ void *noratermProcedure ( struct window_d *window,
 		
 		
 		
-		//Terminal communication
+		//100 - Terminal communication
 		case MSG_TERMINALCOMMAND:
 			switch (long1)
 			{
@@ -1588,28 +1597,21 @@ void *noratermProcedure ( struct window_d *window,
 				int xxx_ch;
 				case 2008:
 					
-					//#importante: testar isso.
-					//initialize_buffer();
+					// #importante: 
+					initialize_buffer();
 					
-					//line_buffer_buffersize = 1024; //configurando tamanho do buffer.
-					line_buffer_buffersize = LINE_BUFFER_SIZE;
+					//rewind (stdout);
 					
-					//fprintf (stdout,"noraterm: This is a string ..."); //#bugbug
-					//printf ("MSG_TERMINALCOMMAND.2008 pode pegar, coloca no buffer >> \n");
-					//printf ("MSG_TERMINALCOMMAND.2008\n");
-					//#suspenso.
-					//break;
-					
-					// pegando chars.
-		            // #importante
+					// Pegando chars no arquivo.
+					// Que arquivo ? Podemos uma função da libc ?
 					// Se for \n sifnifica que temos que efetuar o flush do buffer
 					// mostrando ele na tela e colocando nos buffers do terminal.
 						
-		            while (1)
-		            {	
-						// ?? Como isso funciona ?
-		                xxx_ch = (int) system_call ( 1002, 0, 0, 0 );
-
+                    while (1)
+                    {
+						// Qual stream ? See: gde_serv.c
+						// stream = CurrentTTY
+                        xxx_ch = (int) gramado_system_call ( 1002, 0, 0, 0 );
 
                         // Chegamos no fim do arquivo antes de acabar a sring?
                         // mostre o buffer e sinalize o erro.
@@ -1630,40 +1632,36 @@ void *noratermProcedure ( struct window_d *window,
 						}
 
 
-						//Encontramos um \n no meio da string
-						//mostre o buffer
+						// Encontramos um \n no meio da string,
+						// mostre o buffer.
 						if (xxx_ch == '\n')
 						{
 							//printf ("noraterm: EOL, flush me\n");
 							print_buffer ();
-							
-                            //isso ja foi feito pelo print_buffer
-							//terminal_write_char ( (int) '\n');							
-							//initialize_buffer ();
-							//break;
-					
-					
-					    // ainda não encontramos  \n nem \0, continue colocando no buffer.
+
+					    // Ainda não encontramos  \n nem \0, 
+					    // continue colocando no buffer.
 						}else{
 							
 							// #importante:
 						    // Colocar o char no buffer
 						    LINE_BUFFER[line_buffer_tail++] = (char) xxx_ch;
 							
-							
 						    if ( line_buffer_tail >= line_buffer_buffersize )
 						    {
+
+							    //LINE_BUFFER[line_buffer_tail--] = 0; //FINALIZA;
+							    //line_buffer_tail = 0;
+
+                                //isso vai inicializar o buffer,
 								print_buffer ();
 								
-							    LINE_BUFFER[line_buffer_tail] = 0; //FINALIZA;
-							    line_buffer_tail = 0;
-															    
 							    //printf ("noraterm: buffer limits, flush me\n"); 
 								//MessageBox (3, "noraterm","buffer limit");
 							    //break;
 						    }
 						};
-	                };					
+	                };
 					break;
 				
 				
@@ -1673,25 +1671,25 @@ void *noratermProcedure ( struct window_d *window,
 					break;
 					
 				// #importante	
-                // Pegando mensagens no arquivo stdout do terminal. Talvez 
-                // deva ser stdin.
-				// Isso imprime na posição x y. 2005 e 2006 gerenciam o 
-				// posicionamento atual                
+                // Pegando mensagens no arquivo stdout do desse terminal. 
+                // Talvez deva ser stdin.
+				// Isso imprime na posição x y. 
+				// 2005 e 2006 gerenciam o posicionamento atual                
                 // ver: https://github.com/skiftOS/skift/
                 //blob/6d7876bb95c160596c74f0ba4b011ede31429b1a/userspace/terminal.c
                 
                 #define READ_BUFFER_SIZE 512
                 char ___buffer[READ_BUFFER_SIZE];
 				int _i;
-				
 				case 2020:
 				    fread ( (void *) ___buffer, 1, READ_BUFFER_SIZE, stdout );
 					for (_i=0; _i<50; _i++)
 					{
 					    terminal_write_char ( (int) ___buffer[_i] );
 					}
-					break;	
-					
+					//rewind(stdout);
+					break;
+
 					
 				//#importante
 				// Write char on terminal x y.	

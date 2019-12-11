@@ -950,12 +950,13 @@ int print_buffer (void){
 	      tputc ( (char *) &LINE_BUFFER[i], (int) 1 );	
 	}
 	 
-	 
+	shellInsertNextChar ( (char) '\n' );  
+	
 	//depois de lido o buffer podemos reinicali-lo 
 	
     initialize_buffer();
-	    
-    return 0;	
+
+    return 0;
 }
 
 
@@ -1020,12 +1021,10 @@ gdetermProcedure( struct window_d *window,
 						{
 							printf ("gdetermProcedure: EOL, flush me\n");
 							print_buffer ();
-							terminal_write_char ( (int) '\n');
-							initialize_buffer ();
 						}else{
 							
 						    //Colocar o char no buffer
-						    LINE_BUFFER[line_buffer_tail++] = (char) xxx_ch;							
+						    LINE_BUFFER[line_buffer_tail++] = (char) xxx_ch;
 							
 						    if ( line_buffer_tail >= line_buffer_buffersize )
 						    {
@@ -1034,7 +1033,6 @@ gdetermProcedure( struct window_d *window,
 							    
 							    printf ("gdetermProcedure: buffer limits, flush me\n");
 							    print_buffer ();
-							    initialize_buffer ();
 						    }
 						};
 	                };					
@@ -1275,23 +1273,21 @@ shellProcedure( struct window_d *window,
                             
 						if (xxx_ch == '\n')
 						{
-							printf ("shellProcedure: EOL, flush me\n");
+							//printf ("shellProcedure: EOL, flush me\n");
 							print_buffer ();
-							initialize_buffer ();
 						}else{
 							
 						    //Colocar o char no buffer
-						    LINE_BUFFER[line_buffer_tail++] = (char) xxx_ch;							
+						    LINE_BUFFER[line_buffer_tail++] = (char) xxx_ch;
 							
 						    if ( line_buffer_tail >= line_buffer_buffersize )
 						    {
 							    LINE_BUFFER[line_buffer_tail] = 0; //FINALIZA;
 							    line_buffer_tail = 0;
 							    
-							    printf ("shellProcedure: buffer limits, flush me\n");							    
+							    printf ("shellProcedure: buffer limits, flush me\n");
 							    print_buffer ();
-							    initialize_buffer ();
-						    }							
+						    }	
 						};
 	                };					
 				    break;

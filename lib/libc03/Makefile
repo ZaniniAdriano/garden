@@ -103,6 +103,9 @@ all-c:
 	gcc  -c  locale.c    $(CFLAGS) -I. -I include/ -o locale.o
 	
 	gcc  -c  assert.c    $(CFLAGS) -I. -I include/ -o assert.o
+	
+	gcc  -c  pty.c    $(CFLAGS) -I. -I include/ -o pty.o
+	gcc  -c  tty.c    $(CFLAGS) -I. -I include/ -o tty.o
 #...	
 
  

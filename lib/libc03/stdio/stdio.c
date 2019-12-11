@@ -2406,7 +2406,7 @@ ssize_t getline (char **lineptr, size_t *n, FILE *stream)
 
 int fputc ( int ch, FILE *stream ){
 
-     // ??
+     // Coloca um char numa stream.
      gramado_system_call ( 196, 
          (unsigned long) ch,  
          (unsigned long) stream,  
@@ -2414,7 +2414,7 @@ int fputc ( int ch, FILE *stream ){
 
 
 	// #importante:
-	// Se não for \n não precisa notificar o terminal.
+	// Se não for \n, não precisa notificar o terminal.
 
     if ( ch != '\n')
     {
@@ -2459,36 +2459,34 @@ int fputc ( int ch, FILE *stream ){
 	// MSG_ = 2008.
     if ( __libc_output_mode == LIBC_NORMAL_MODE )
     {
-        //terminal___PID = (int) system_call ( 1004, 0, 0, 0 ); 
+		// Qual é o pid do terminal?
         terminal___PID = (int) gramado_system_call ( 1004, 0, 0, 0 ); 
 	
 	    if ( terminal___PID < 0 )
 	    {
 			//libc_set_output_mode (LIBC_DRAW_MODE);
 		    //printf_draw ("fprintf:fail\n");
-		    return -1;
-	    }
-		
-        //if (pid<0)
-		    //return -1;
-	
-	    message_buffer[0] = (unsigned long) 0;    //window
-	    message_buffer[1] = (unsigned long) 100;  //message;  //MSG_TERMINALCOMMAND
-	    message_buffer[2] = (unsigned long) 2008; //long1;    //2008  
-	    message_buffer[3] = (unsigned long) 2008; //long2;    //2008
-	    //...
+             return -1;
+        }
 
-	    //notifica o terminal de que ele tem mensagens.
-	    //return (int) system_call ( 112 , (unsigned long) &message_buffer[0], 
-	    //             (unsigned long) terminal___PID, (unsigned long) terminal___PID );
+        // Prepara o buffer.
+        // window, MSG_TERMINALCOMMAND, 2008, 2008.
+        message_buffer[0] = (unsigned long) 0;    //window
+        message_buffer[1] = (unsigned long) 100;  //message;  
+        message_buffer[2] = (unsigned long) 2008; //long1; 
+        message_buffer[3] = (unsigned long) 2008; //long2; 
+        //...
 
+
+        // Pede para o kernel enviar uma mensagem para determinado processo.
         return (int) gramado_system_call ( 112 , 
                          (unsigned long) &message_buffer[0], 
                          (unsigned long) terminal___PID, 
                          (unsigned long) terminal___PID );
 
-        //#todo temos que usar essa chamada ao invés dessa rotina acima.
-	    // __SendMessageToProcess ( terminal___PID, NULL, MSG_TERMINALCOMMAND, 2008, 2008 );	//ok
+        // #todo 
+        // Temos que usar essa chamada ao invés dessa rotina acima.
+	    // __SendMessageToProcess ( terminal___PID, NULL, MSG_TERMINALCOMMAND, 2008, 2008 );
     }
 
 
