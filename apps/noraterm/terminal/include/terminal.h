@@ -432,10 +432,11 @@ void terminalInsertNextChar (char c);
 void terminalInsertNullTerminator ();
 void terminalInsertLF ();
 void terminalInsertCR ();
-static void lf (void);
-static void ri (void);
-static void cr (void);
-static void del (void);
+
+void lf (void);
+void cr (void);
+void ri (void);
+void del (void);
 
 
 char 

@@ -29,6 +29,8 @@
 
 #include <stubs/gramado.h>
 
+#include <ctype.h>
+
 //lib C
 #include <types.h>
 #include <stddef.h>

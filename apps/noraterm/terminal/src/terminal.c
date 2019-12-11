@@ -57,7 +57,7 @@ void terminalInsertNextChar (char c){
 // # terminal stuff
 void terminalInsertNullTerminator (){
 	
-	terminalInsertNextChar ( (char) '\0' );	
+	terminalInsertNextChar ( (char) '\0' );
 }
 
 
@@ -71,13 +71,13 @@ void terminalInsertLF (){
 // # terminal stuff
 void terminalInsertCR (){
     
-	terminalInsertNextChar ( (char) '\r' );		
+	terminalInsertNextChar ( (char) '\r' );
 }
 
 
 // # terminal stuff
 //line feed
-static void lf (void){
+void lf (void){
 	
 	//enquanto for menor que o limite de linhas, avança.
 	if ( textCurrentRow+1 < wlMaxRows )
@@ -92,9 +92,17 @@ static void lf (void){
 
 
 // # terminal stuff
+//carriege return
+void cr (void){
+	
+    textCurrentCol = 0;
+}
+
+
+// # terminal stuff
 // ??
 //voltando uma linha.
-static void ri (void){
+void ri (void){
 	
 	//if ( screen_buffer_y > top ){
 		
@@ -110,15 +118,7 @@ static void ri (void){
 
 
 // # terminal stuff
-//carriege return
-static void cr (void){
-	
-    textCurrentCol = 0;
-}
-
-
-// # terminal stuff
-static void del (void){
+void del (void){
 	
 	LINES[textCurrentRow].CHARS[textCurrentCol] = (char) '\0';
 	LINES[textCurrentRow].ATTRIBUTES[textCurrentCol] = 7;

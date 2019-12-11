@@ -1020,6 +1020,7 @@ gdetermProcedure( struct window_d *window,
 						{
 							printf ("gdetermProcedure: EOL, flush me\n");
 							print_buffer ();
+							terminal_write_char ( (int) '\n');
 							initialize_buffer ();
 						}else{
 							

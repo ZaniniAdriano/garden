@@ -266,17 +266,26 @@ static Term term;
 #define STR_BUF_SIZ   ESC_BUF_SIZ
 #define STR_ARG_SIZ ESC_ARG_SIZ
 
+
+// 
+// Escape sequence
+//
+
 /* CSI Escape sequence structs */
 /* ESC '[' [[ [<priv>] <arg> [;]] <mode>] */
 typedef struct {
-	char buf[ESC_BUF_SIZ]; /* raw string */
-	int len;	       /* raw string length */
-	char priv;
-	int arg[ESC_ARG_SIZ];
-	int narg;	       /* nb of args */
-	char mode;
+
+    char buf[ESC_BUF_SIZ];    /* raw string */
+    int len;                  /* raw string length */
+    char priv;
+    int arg[ESC_ARG_SIZ];
+    int narg;                 /* nb of args */
+    char mode;
+
 } CSIEscape;
+
 static CSIEscape csiescseq;
+
 
 
 /* STR Escape sequence structs */
@@ -659,10 +668,12 @@ void terminalInitWindowSizes ();
 
 void terminalInitWindowPosition ();
 
-
+void csidump (void);
 void csireset (void);
+void strdump(void);
 void strreset (void);
 
+void techo(char *buf, int len);
 void tputc (char *c, int len);
 int print_buffer (void);
 void initialize_buffer (void);
@@ -801,40 +812,165 @@ int process_input (){
 	// O retorno será 1 se tiver mensagem e 0 se não tiver.
 	// message_buffer[1] será 0 se não tiver mensagem
 	// Chamaremos o procedimento de janelas do aplicativo.
-			
-	while (running)
-	{	
-		msg_status = host_get_message ( (unsigned long) &message_buffer[0] );		
+
+    while (running)
+    {
+		msg_status = host_get_message ( (unsigned long) &message_buffer[0] );
 					
 		// Se temos mensagem.
 		if (msg_status != 0)
 		{
-	        noratermProcedure ( (struct window_d *) message_buffer[0], 
-		        (int) message_buffer[1], 
-		        (unsigned long) message_buffer[2], 
-		        (unsigned long) message_buffer[3] );
-			
-			message_buffer[0] = 0;  //window
+            noratermProcedure ( (struct window_d *) message_buffer[0], 
+                (int) message_buffer[1], 
+                (unsigned long) message_buffer[2], 
+                (unsigned long) message_buffer[3] );
+
+            message_buffer[0] = 0;  //window
             message_buffer[1] = 0;  //msg
             message_buffer[3] = 0;  //long1
             message_buffer[4] = 0;	//long2
-        };				
-	};
+        };
+    };
 
-	return 0;
+
+    return 0;
+}
+
+
+
+void csidump (void) {
+
+    int i;
+    unsigned int c;    //uint c; //?
+
+    printf ("ESC[");
+
+    for (i = 0; i < csiescseq.len; i++)
+    {
+        c = csiescseq.buf[i] & 0xff;
+
+		if(isprint(c)) {
+			putchar(c);
+		} else if(c == '\n') {
+			printf("(\\n)");
+		} else if(c == '\r') {
+			printf("(\\r)");
+		} else if(c == 0x1b) {
+			printf("(\\e)");
+		} else {
+			printf ("(%02x)", c);
+		};
+    };
+
+    putchar ('\n');
 }
 
 
 void csireset (void){
     
-    memset(&csiescseq, 0, sizeof(csiescseq));	
+    memset ( &csiescseq, 0, sizeof(csiescseq) );
+}
+
+void
+strdump(void) {
+
+	int i;
+	unsigned int c;    //uint c;
+
+	printf ("ESC%c", strescseq.type);
+
+	for(i = 0; i < strescseq.len; i++)
+	{
+		c = strescseq.buf[i] & 0xff;
+		
+		if(c == '\0') {
+			return;
+		} else if(isprint(c)) {
+			putchar(c);
+		} else if(c == '\n') {
+			printf("(\\n)");
+		} else if(c == '\r') {
+			printf("(\\r)");
+		} else if(c == 0x1b) {
+			printf("(\\e)");
+		} else {
+			printf("(%02x)", c);
+		}
+	}
+	printf("ESC\\\n");
 }
 
 
 void strreset (void){
     
-    memset(&strescseq, 0, sizeof(strescseq));	
+    memset ( &strescseq, 0, sizeof(strescseq) );
 }
+
+
+/*
+//#todo:
+void csiparse (void);
+void csiparse (void) {
+	
+	char *p = csiescseq.buf, *np;
+	long int v;
+
+	csiescseq.narg = 0;
+	if(*p == '?') {
+		csiescseq.priv = 1;
+		p++;
+	}
+
+	csiescseq.buf[csiescseq.len] = '\0';
+	while(p < csiescseq.buf+csiescseq.len) {
+		np = NULL;
+		v = strtol(p, &np, 10);
+		if(np == p)
+			v = 0;
+		if(v == LONG_MAX || v == LONG_MIN)
+			v = -1;
+		csiescseq.arg[csiescseq.narg++] = v;
+		p = np;
+		if(*p != ';' || csiescseq.narg == ESC_ARG_SIZ)
+			break;
+		p++;
+	}
+	csiescseq.mode = *p;
+}
+*/
+
+
+
+void techo(char *buf, int len) {
+
+    for(; len > 0; buf++, len--)
+    {
+		char c = *buf;
+
+		if(c == '\033') {		/* escape */
+			tputc("^", 1);
+			tputc("[", 1);
+		} else if(c < '\x20') {	/* control code */
+			if(c != '\n' && c != '\r' && c != '\t') {
+				c |= '\x40';
+				tputc("^", 1);
+			}
+			tputc(&c, 1);
+		} else {
+			break;
+		}
+	};
+	
+	if(len)
+		tputc (buf, len);
+}
+
+
+/*
+ ***************** 
+ * tputc:
+ * 
+ */
 
 // #todo
 // See: https://github.com/gramado/st/blob/tlvince/st.c
@@ -1112,6 +1248,8 @@ int print_buffer (void){
 	//provisorio
     //printf (LINE_BUFFER); 
     
+    // #bugbug: da pra medir um array? 
+
     size_t len = strlen (LINE_BUFFER);
     
    
@@ -1119,11 +1257,10 @@ int print_buffer (void){
     
     if ( len >= LINE_BUFFER_SIZE )
     {
-		printf ( "print_buffer: buffer limit\n");
+		//printf ( "print_buffer: buffer limit\n");
+		MessageBox (3,"noraterm","print_buffer: buffer limit");
 		return -1;
 	}
-    
-
     
     for (i=0; i<len; i++)
     {
@@ -1131,20 +1268,28 @@ int print_buffer (void){
 	      tputc ( (char *) &LINE_BUFFER[i], (int) 1 );	
 	}
 	 
+	terminal_write_char ( (int) '\n'); 
 	 
-	//depois de lido o buffer podemos reinicali-lo 
-	
+	//Depois de lido o buffer podemos reinicali-lo 
     initialize_buffer();
 	    
     return 0;	
 }
 
 
+//
+// Inicializando o buffer.
+//
+
+// #bugbug
+// E o arquivo ??
+// Em que momento o arquivo chega ao EOF ?
+
 void initialize_buffer (void){
 	
 	int i;
 	
-	for (i=0; i<=LINE_BUFFER_SIZE; i++)
+	for (i=0; i<LINE_BUFFER_SIZE; i++)
 	{
 		LINE_BUFFER[i] = 0;
 	}
@@ -1361,29 +1506,40 @@ void *noratermProcedure ( struct window_d *window,
 		case MSG_TERMINALCOMMAND:
 			switch (long1)
 			{
-				
 				// Isso indica que o terminal tem chars na stream da tty,
 				// então ele deve pegar e exibir.
-				// Pega um char, mas não é o último que foi colocado, 
-				// é o que ainda não foi pego.	
-				
-				int x_ch;
-				case 2000:
-		            while (1)
-		            {
+				// Pegar um char, mas não é o último que foi colocado, 
+				// é o que ainda não foi pego.
+
+                int __x_ch;
+                case 2000:
+                    while (1)
+                    {
 						// Estudar isso.
-						// Isso pega char.
-		                x_ch = (int) system_call ( 1002, 0, 0, 0 );
-		                
-		                if (x_ch == '\n')
-		                { 
-							break;
-						}
-						terminal_write_char ( (int) x_ch );
-	                };					
-					break;
-					
-					
+						// Isso pega o char.
+                        __x_ch = (int) system_call ( 1002, 0, 0, 0 );
+ 
+                        if (__x_ch == '\n')
+                        {
+                            //terminal_write_char ( (int) '\n' ); 
+                            //terminalInsertLF ();
+                            //terminalInsertCR ();
+                            //lf ();
+                            //cr ();
+                            //textCurrentRow++;
+                            //textCurrentCol = 0;
+                            //terminalSetCursor ( textCurrentRow, textCurrentCol );
+                            break;
+                        }
+
+                        terminal_write_char ( (int) __x_ch );
+                    };
+                    //textCurrentRow++;
+                    //textCurrentCol = 0;
+                    //terminalSetCursor ( textCurrentRow, textCurrentCol );
+                    break;
+
+
 					
 					
 				// Hello	
@@ -1418,8 +1574,10 @@ void *noratermProcedure ( struct window_d *window,
 				case 2006:
 					terminalSetCursor ( textCurrentRow, long2 );
 					break;
-						
 					
+						
+				// >> Isso é chamado quando um printf na libc03 encontra
+				// um \n no fim da linha.
 				// write a char in the current line buffer,
 				// Isso indica que o terminal tem chars na stream da tty,
 				// então ele deve pegar e exibir.
@@ -1449,38 +1607,61 @@ void *noratermProcedure ( struct window_d *window,
 						
 		            while (1)
 		            {	
-						// ?? Como isso funciona ?				
+						// ?? Como isso funciona ?
 		                xxx_ch = (int) system_call ( 1002, 0, 0, 0 );
 
+
+                        // Chegamos no fim do arquivo antes de acabar a sring?
+                        // mostre o buffer e sinalize o erro.
+						if (xxx_ch == EOF )
+						{
+							print_buffer ();
+						    MessageBox (3,"noraterm", "bugbug xxx_ch == EOF");
+						    //exit (1);
+						    //break;
+						}
+
+                        // Chegamos no fim da string.
+                        // Mostre a string e saia.
 						if (xxx_ch == '\0')
+						{
+							print_buffer ();
 						    break;
-						    
+						}
+
+
+						//Encontramos um \n no meio da string
+						//mostre o buffer
 						if (xxx_ch == '\n')
 						{
 							//printf ("noraterm: EOL, flush me\n");
 							print_buffer ();
 							
-							//#test
-							initialize_buffer ();
+                            //isso ja foi feito pelo print_buffer
+							//terminal_write_char ( (int) '\n');							
+							//initialize_buffer ();
 							//break;
-							
+					
+					
+					    // ainda não encontramos  \n nem \0, continue colocando no buffer.
 						}else{
 							
-						    //Colocar o char no buffer
-						    LINE_BUFFER[line_buffer_tail++] = (char) xxx_ch;							
+							// #importante:
+						    // Colocar o char no buffer
+						    LINE_BUFFER[line_buffer_tail++] = (char) xxx_ch;
+							
 							
 						    if ( line_buffer_tail >= line_buffer_buffersize )
 						    {
+								print_buffer ();
+								
 							    LINE_BUFFER[line_buffer_tail] = 0; //FINALIZA;
 							    line_buffer_tail = 0;
-							    
-							    printf ("noraterm: buffer limits, flush me\n");							    
-							    print_buffer ();
-							    
-							    //#test
-							    initialize_buffer ();
+															    
+							    //printf ("noraterm: buffer limits, flush me\n"); 
+								//MessageBox (3, "noraterm","buffer limit");
 							    //break;
-						    }							
+						    }
 						};
 	                };					
 					break;

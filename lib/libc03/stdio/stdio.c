@@ -2406,17 +2406,23 @@ ssize_t getline (char **lineptr, size_t *n, FILE *stream)
 
 int fputc ( int ch, FILE *stream ){
 
+     // ??
+     gramado_system_call ( 196, 
+         (unsigned long) ch,  
+         (unsigned long) stream,  
+         (unsigned long) stream );    
 
-     gramado_system_call ( 196, (unsigned long) ch,  
-         (unsigned long) stream,  (unsigned long) stream );    
 
+	// #importante:
+	// Se não for \n não precisa notificar o terminal.
 
-	// se não for \n não precisa notificar o terminal
-	if ( ch != '\n')
-	{
-		return 0;
-	}
+    if ( ch != '\n')
+    {
+        return 0;
+    }
 
+	// #importante:
+	// Se for '\n'
 
 	// #bugbug
 	// ??
@@ -2447,10 +2453,12 @@ int fputc ( int ch, FILE *stream ){
 	// notificação de evento para ele.
 	int terminal___PID = -1;
 	unsigned long message_buffer[5];
-	
-	//SÓ NOTIFICAREMOS O TERMINAL SE TIVERMOS NO MODO NORMAL
-	if ( __libc_output_mode == LIBC_NORMAL_MODE )
-	{
+
+
+	// SÓ NOTIFICAREMOS O TERMINAL SE TIVERMOS NO MODO NORMAL.
+	// MSG_ = 2008.
+    if ( __libc_output_mode == LIBC_NORMAL_MODE )
+    {
         //terminal___PID = (int) system_call ( 1004, 0, 0, 0 ); 
         terminal___PID = (int) gramado_system_call ( 1004, 0, 0, 0 ); 
 	

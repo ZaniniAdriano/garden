@@ -109,7 +109,8 @@ int main ( int argc, char *argv[] ){
 	
 	libc_set_output_mode (LIBC_NORMAL_MODE);
 	printf ("hello3: Testing libc in LIBC_NORMAL_MODE ...\n"); 
-	
+
+	printf (" ==== Begin of test ==== \n");
 	
 	//
 	// testing fread.
@@ -192,8 +193,14 @@ int main ( int argc, char *argv[] ){
 	//Ok. Testamos essas funções de output e as string foram exibidas
 	//no terminal virtual noraterm.
 		
-	printf ("{printf} ");
-	
+	printf ("{printf 1 ");
+	printf ("2 ");
+	printf ("3}\n");
+
+    printf ("*\n");
+    
+    //printf ("Esse eh um texto grande .... um texto realmente grand ..... ooops\n");
+
 	//printf("\x1b[1Am");  //cursor up
 	//printf("\x1b[1Bm");  //cursor down
 	//printf("\x1b[1Cm");
@@ -202,15 +209,32 @@ int main ( int argc, char *argv[] ){
 	//printf("\x1b[1Fm");
 	//printf("\x1b[1Gm");
 	   
-	puts ("{puts} ");
-	fprintf (stdout, "{fprintf} ");
-	fputc ('X',stdout);
-	fputc (' ',stdout);
-	putc ('Y',stdout);
-	putc (' ',stdout);
-	putchar('Z');
-	putchar(' ');
-	fputs("{fputs} ",stdout);
+	puts ("{puts}\n");
+	
+	fprintf (stdout, "{fprintf}\n");
+
+
+    //fputc = putc
+
+    //printf ("fputc={");
+	  //fputc ('X',stdout);
+	  //fputc (' ',stdout);
+    //printf ("}\n");
+
+
+    //printf ("putc={");
+	  //putc ('Y',stdout);
+	  //putc (' ',stdout);
+    //printf ("}\n");
+    
+
+    //printf ("putchar={");
+	  //putchar ('Z');
+	  //putchar (' ');
+    //printf ("}\n");
+    
+    
+	//fputs("{fputs}\n",stdout);
 	
 	//
 	// ESC tests
@@ -233,15 +257,32 @@ int main ( int argc, char *argv[] ){
 //printf("\x1b[6n");    // Print current cursor position	
 	
 	
-	//fim.
-	printf ("*fim-do-test\n");
-	
 	//testando o segundo \n
 	//precisaremos renovar o buffer la no terminal?
-	printf("Hello again. \n");  
-	printf("Done *hang \n");  
-
+	//printf ("Hello\n");  
+	
+    printf ("1 ");
+    printf ("2 ");
+    printf ("3 ");
+    printf ("4 ");
+    printf ("5 ");
+    printf ("6\n");
+    //printf ("7 ");
+    //printf ("8 ");
+    //printf ("9 ");
+    //printf ("10 ");
+    //printf ("11 ");
+    //printf ("12 ");
+    //printf ("13 ");
+    //printf ("14 ");
+    //printf ("15 \n");
+    
+    //printf ("Esse eh um texto grande .... um texto realmente grand ..... ooops\n");
+	printf ("almost \n *hg... \n");  
+	//printf ("*hang\n");
+	printf (" ==== End of test ====\n");
     while(1){}
+    
 	//#bugbug
 	//Esse segundo teste não funcionou.
 	//depois do \n a libc não se comportou como esperado.
