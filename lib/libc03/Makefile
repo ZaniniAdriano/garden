@@ -101,6 +101,8 @@ all-c:
 	
 	gcc  -c  err.c    $(CFLAGS) -I. -I include/ -o err.o
 	gcc  -c  locale.c    $(CFLAGS) -I. -I include/ -o locale.o
+	
+	gcc  -c  assert.c    $(CFLAGS) -I. -I include/ -o assert.o
 #...	
 
  
