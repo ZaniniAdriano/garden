@@ -50,6 +50,26 @@
 //
 // @todo: Fazer suporte a objetos. estruturas.
 //
+
+
+//
+// getpid_t:
+//     Índices usados pela função gde_get_pid(x)
+//     Usada para obter o pid de alguns drivers e servidores
+// do sistema. Aqueles servidores que só podem ter um do tipo 
+// rodando ao mesmo tempo.
+//
+
+typedef enum {
+
+    GETPID_NULL,
+    GETPID_WS,
+    GETPID_WM
+    //...
+
+}getpid_t;
+
+
  
 // 
 //Interrupções. 
@@ -3702,6 +3722,15 @@ int
 apiUpdateStatusBar ( struct window_d *window, 
                      unsigned char *string1, 
                      unsigned char *string2 );
+
+
+
+
+// Usada para obter o pid de alguns drivers e servidores
+// do sistema. Aqueles servidores que só podem ter um do tipo 
+// rodando ao mesmo tempo.
+int gde_get_pid (int index);
+
 
 
 //

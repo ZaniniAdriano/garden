@@ -2337,6 +2337,14 @@ do_compare:
     };
 
 
+    // getpids
+    if ( strncmp( prompt, "getpids", 7 ) == 0 )
+    {
+        printf ( "Window Server PID %d\n", gde_get_pid (GETPID_WS) );
+        printf ( "Window Manager PID %d\n", gde_get_pid (GETPID_WM) );
+        goto exit_cmp;
+    }
+
     // getpid
 	if ( strncmp( prompt, "getpid", 6 ) == 0 )
 	{

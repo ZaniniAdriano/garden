@@ -3335,6 +3335,22 @@ apiUpdateStatusBar ( struct window_d *window,
 }
 
 
+// Usada para obter o pid de alguns drivers e servidores
+// do sistema. Aqueles servidores que só podem ter um do tipo 
+// rodando ao mesmo tempo.
+int gde_get_pid (int index){
+
+    if ( index < 0 )
+        return (int) -1;
+
+    // #todo
+    // Lá no kernel tem que checar os limites.
+
+    return gramado_system_call ( 9999, index, index, index );
+}
+
+
+
 //
 // End.
 //
