@@ -27,10 +27,27 @@ typedef unsigned int speed_t;
 typedef unsigned char cc_t;
 
 
+//typedef unsigned long	tcflag_t;
+//typedef unsigned char	cc_t;
+//typedef long		speed_t;	/* XXX should be unsigned long */
+
+
 /* size of cc_c array, some extra space for extensions. */
 #define NCCS		   20
 //#define NCCS 32
 //#define NCC 8
+
+
+#ifndef _POSIX_VDISABLE
+#define	_POSIX_VDISABLE	0xff
+#endif
+
+#ifndef _POSIX_SOURCE
+#define	CCEQ(val, c)	((c) == (val) ? (val) != _POSIX_VDISABLE : 0)
+#endif
+
+
+
 
 /*
  * # descrição
@@ -89,6 +106,7 @@ struct termios {
   tcflag_t c_oflag;		// output modes 
   tcflag_t c_cflag;		// control modes 
   tcflag_t c_lflag;		// local modes 
+  //cc_t		c_cc[NCCS];	/* control chars */
   speed_t  c_ispeed;	// input speed 
   speed_t  c_ospeed;	// output speed 
   
@@ -150,7 +168,9 @@ struct termios {
 #define VSTOP               10	/* cc_c[VSTOP] = STOP char (^Q) */
 #define VERASEWORD          14	/* cc_c[VERASEWORD] = ERASEWORD char (^W) */
 
-#define _POSIX_VDISABLE	  (cc_t)0xFF	/* You can't even generate this 
+//#define _POSIX_VDISABLE	  (cc_t) 0xFF
+
+                     /* You can't even generate this 
 					 * character with 'normal' keyboards.
 					 * But some language specific keyboards
 					 * can generate 0xFF. It seems that all
@@ -159,9 +179,9 @@ struct termios {
 					 */
 
 /* Values for the baud rate settings.  POSIX Table 7-6. */
-#define B0		0x0000	/* hang up the line */
-#define B50		0x1000	/* 50 baud */
-#define B75		0x2000	/* 75 baud */
+#define B0			0x0000	/* hang up the line */
+#define B50			0x1000	/* 50 baud */
+#define B75			0x2000	/* 75 baud */
 #define B110		0x3000	/* 110 baud */
 #define B134		0x4000	/* 134.5 baud */
 #define B150		0x5000	/* 150 baud */
@@ -175,6 +195,20 @@ struct termios {
 #define B9600		0xD000	/* 9600 baud */
 #define B19200		0xE000	/* 19200 baud */
 #define B38400		0xF000	/* 38400 baud */
+
+/*
+#ifndef _POSIX_SOURCE
+#define B7200	7200
+#define B14400	14400
+#define B28800	28800
+#define B57600	57600
+#define B76800	76800
+#define B115200	115200
+#define B230400	230400
+#define EXTA	19200
+#define EXTB	38400
+#endif  //!_POSIX_SOURCE 
+*/
 
 /* Optional actions for tcsetattr().  POSIX Sec. 7.2.1.2. */
 #define TCSANOW            1	/* changes take effect immediately */

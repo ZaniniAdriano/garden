@@ -11,7 +11,9 @@
 #include <sys/types.h>  
 #include <sys/socket.h>
 #include <sys/mman.h>
+
 //#include <sys/stat.h>   
+
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -541,7 +543,9 @@ int dup3 (int oldfd, int newfd, int flags){
  */
 
 int fcntl ( int fd, int cmd, ... ){
-	
+
+    //if (cmd == F_GETFD || cmd == F_SETFD) { return 0; }
+
 	return -1; //#todo
 }
 
@@ -908,6 +912,7 @@ int setusername (const char *name, size_t len){
 //ttyname, ttyname_r - return name of a terminal
 char *ttyname (int fd)
 { 
+	//errno = ENOTTY;
     return NULL; 
 }
 
@@ -935,6 +940,39 @@ int getopt (int argc, char * const argv[], const char *optstring)
 {
 	return -1;
 }
+
+
+//sys/stat.h
+/*
+int fstat(int fd, struct stat *buf);
+int fstat(int fd, struct stat *buf)
+{
+	return -1;
+}
+*/
+
+
+//sys/stat.h
+/*
+int lstat(const char *path, struct stat *buf);
+int lstat(const char *path, struct stat *buf)
+{
+	return (int) stat (path, buf);
+}
+*/
+
+
+//sys/stat.h
+/*
+int stat(const char *path, struct stat *buf);
+int stat(const char *path, struct stat *buf)
+{
+	int i = open(path, 0);
+	int ret = fstat(i, buf);
+	close(i);
+	return ret;
+}
+*/
 
 //
 // End.
