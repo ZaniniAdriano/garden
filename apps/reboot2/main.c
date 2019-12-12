@@ -127,7 +127,8 @@ reboot2Procedure ( struct window_d *window,
 
 			};
 			break;		
-		
+
+
 		// MSG_MOUSEKEYDOWN
 		case 30:
 		    switch (long1)
@@ -136,15 +137,14 @@ reboot2Procedure ( struct window_d *window,
 				case 1:
 				    if ( window == reboot_button )
 				    {
-						//#test (fail)
-						//button_down
-                        //quando um botão é clicado ou pressionado,
-                        //ele será repintado com a aparência de botão apertado.
-	                    system_call ( 9900,   
-	                        (unsigned long) window, 
-		                    (unsigned long) window, 
-		                    (unsigned long) window );
-                        
+                        // button_down
+                        // Quando um botão é clicado ou pressionado,
+                        // ele será repintado com a aparência de botão apertado.
+                        gramado_system_call ( 9900,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+
                         //OK. Isso funcionou.
 						//printf ("disabling ps2 mouse\n");
 	                    //system_call ( 9800,   //serviço. seleciona o diálogo 
@@ -180,13 +180,18 @@ reboot2Procedure ( struct window_d *window,
 			break;
 
 
+        // MSG_MOUSEKEYUP
 		case 31:
 		    switch(long1)
 		    {
 				case 1:
 				    if ( window == reboot_button )
 				    {
-						apiReboot ();
+                        gramado_system_call ( 9901,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+						//apiReboot ();
 					}
 				    break;
 			};

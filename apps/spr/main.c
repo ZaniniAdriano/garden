@@ -575,7 +575,7 @@ shellProcedure ( struct window_d *window,
                     break; 
 
 				//#test	
-                case VK_TAB:					
+                case VK_TAB:
 					printf("\t");
 					goto done;
 				    break;	
@@ -628,26 +628,24 @@ shellProcedure ( struct window_d *window,
 		
 		case MSG_KEYUP: 
 		    // printf("%c", (char) 'u');
-            // printf("%c", (char) long1);  			
+            // printf("%c", (char) long1); 
 		    break;
 		
-		//Não interceptaremos mensagens do sistema por enquanto.
-		//As mensagens do sistema são interceptadas primeiro pelo procedimento 
-		//do sistema.
-		
+		// Não interceptaremos mensagens do sistema por enquanto.
+		// As mensagens do sistema são interceptadas primeiro pelo 
+		// procedimento do sistema.
+
 		case MSG_SYSKEYDOWN:
 		    switch (long1)
 			{
-		        
+
 				case VK_F1:
-                    
 
 					//shellTestLoadFile ();
 					
 					//inicializa a área visível.
 					//textTopRow = 0;
 	                //textBottomRow = 0 + 24;
-						
 					break;
 					
 				case VK_F2:
@@ -661,16 +659,16 @@ shellProcedure ( struct window_d *window,
 				//...
 				
                 //full screen
-                //colocar em full screen somente a área de cliente. 				
+                //colocar em full screen somente a área de cliente. 
 		        case VK_F11:
 				    
 					break;
 					
 				//...
-
 			};
 			break;
-		
+
+
 		//Obs:
 		//essas teclas são tratadas pelo procedimento do sistema.
 		//mas alguma tecla personalizada pode ser  tratada pelo aplicativo,
@@ -678,32 +676,36 @@ shellProcedure ( struct window_d *window,
 		case MSG_SYSKEYUP:
             switch (long1)
 			{
-				
 				//O MENU APPLICATION É O CONTEXT MENU.
-				//
 				case VK_APPS:
-				    MessageBox ( 1, "Gramado Core Shell:", "VK_APPS Context Menu" );
+				    MessageBox ( 1, 
+				        "Gramado Core Shell:", 
+				        "VK_APPS Context Menu" );
 					break;
-			}		
+			};
 		    break;
-		
 
-        // Commands.		
+
+        // Commands.
 		case MSG_COMMAND:
             switch (long1)
 			{
 				// Null.
 				case 0:
-				    MessageBox( 1, "Shell test", "Testing MSG_COMMAND.NULL." );
+				    MessageBox ( 3, 
+				        "Shell test", 
+				        "Testing MSG_COMMAND.NULL." );
 				    break;
-				
+
 				// About.
 				// Abre uma janela e oferece informações sobre o aplicativo.
 				case CMD_ABOUT:
 				    // Test.
-				    MessageBox( 1, "Shell test", "Testing MSG_COMMAND.CMD_ABOUT." );
+				    MessageBox ( 3, 
+				        "Shell test", 
+				        "Testing MSG_COMMAND.CMD_ABOUT." );
 				    break;
-				
+
 				//clicaram no botão
 				case BN_CLICKED:
 				    //if(window == i1Window){
@@ -720,8 +722,9 @@ shellProcedure ( struct window_d *window,
 				//default:
 				//break;
 			}
-		    break; 		
-		
+		    break; 
+
+
 		//Essa mensagem pode ser acionada clidando um botão.
 		case MSG_CLOSE:
 		    //??
@@ -738,13 +741,14 @@ shellProcedure ( struct window_d *window,
 		case MSG_DESTROY:
 		    printf("SHELL.BIN: MSG_DESTROY\n");
 		    break;
-		 
+
 		//double click
 		case MSG_MOUSE_DOUBLECLICKED:
 		    //if ( window == editboxWindow )
 		    printf ("*Double Click!!\n");
 		    break;
-			
+
+
 		// MSG_MOUSEKEYDOWN
 		case 30:
 		    switch (long1)
@@ -757,21 +761,27 @@ shellProcedure ( struct window_d *window,
 					{
 					    //APISetFocus (window);
 						break;
-					}	
+					}
 					
-					
-					if ( window == navbar_button )
-					{
+                    // O botão da navbar foi pressionado!
+                    if ( window == navbar_button )
+                    {
 						//mudar a aparência do botão e o estado
 						//desnhar ele clicado.
 						navbar_button_status = 1;
-						//MessageBox ( 3, "Test","Button clicked!");
-						break;
-					}
-					
+                        // button_down
+                        // Quando um botão é clicado ou pressionado,
+                        // ele será repintado com a aparência de botão apertado.
+                        gramado_system_call ( 9900,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+						//MessageBox ( 3, "Test","Button down!");
+                        break;
+                    }
+
                     //cima
 					if ( window == app1_button )
-                    
                     {
 						updateVisibleArea( 0 );
 						shellRefreshVisibleArea(); 
@@ -786,9 +796,7 @@ shellProcedure ( struct window_d *window,
 						shellRefreshVisibleArea();
 					    break;
 					}
-					
-				
-					
+
 					APISetActiveWindow (window);
 					//APIredraw_window ( window, 1 );
 					
@@ -797,10 +805,10 @@ shellProcedure ( struct window_d *window,
 				    //{
 					    //APIresize_window ( window, 200, 200 );
 					    //APIredraw_window ( window, 1 );
-					    //refresh_screen (); //não precisa isso	
+					    //refresh_screen (); //não precisa isso
 
 					//	running = 0;
-                    //    ShellFlag = SHELLFLAG_EXIT;						
+                    //    ShellFlag = SHELLFLAG_EXIT;
 					//}    
 					break;
 					
@@ -816,26 +824,33 @@ shellProcedure ( struct window_d *window,
 			};			
             break;
 
-		// MSG_MOUSEKEYUP	
+
+		// MSG_MOUSEKEYUP
 		case 31:
 		    switch (long1)
-			{		
+			{
+
 				case 1:
-				
+
 					if ( window == editboxWindow )
 					{
 					    APISetFocus (window);
 						break;
-					}	
-
-					if ( window == navbar_button )
-					{
-						printf ("shellProcedure: Testing MessageBox\n");
-						navbar_button_status = 0;
-						MessageBox ( 3, "*Test","*Button up");
-						printf ("shellProcedure: Testing MessageBox done\n");
-						break;
 					}
+
+                    // O botão da navbar foi liberado!
+                    if ( window == navbar_button )
+                    {
+						//printf ("shellProcedure: Testing MessageBox\n");
+						navbar_button_status = 0;
+                        gramado_system_call ( 9901,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+						MessageBox ( 3, "*Test", "*Button up");
+                        //printf ("shellProcedure: Testing MessageBox done\n");
+                        break;
+                    }
 					
 				    //printf("up button 1\n");
 					if (window == menu_button)
@@ -4816,17 +4831,18 @@ shellSendMessage ( struct window_d *window,
 				   unsigned long long2 )
 {
 	return (unsigned long) shellProcedure ( window, msg, long1, long2 );
-};
+}
 
 
-//copia bytes	
-void shell_memcpy_bytes( unsigned char *Dest, 
-                         unsigned char *Source,
-                         unsigned long Length )
+//copia bytes
+void 
+shell_memcpy_bytes ( unsigned char *Dest, 
+                     unsigned char *Source,
+                     unsigned long Length )
 {
     while (Length--)
         *Dest++ = *Source++;
-};
+}
 
 
 /*
@@ -4847,7 +4863,7 @@ void shellExit (int code){
 	
 	//@todo ...
 	exit (code);
-};
+}
  
 
 /*
@@ -4859,6 +4875,7 @@ void shellExit (int code){
  * ?? isso deve sser todo o pathname do pwd ?? 
  * ex: root:/volume0>
  */
+
 void shellUpdateWorkingDiretoryString ( char *string ){
 	
 	if ( pwd_initialized == 0 )
@@ -4890,7 +4907,7 @@ void shellUpdateWorkingDiretoryString ( char *string ){
 fail:	
 done:
     return;
-};
+}
 
 
 /*
@@ -4902,6 +4919,7 @@ done:
  * ?? isso deve sser todo o pathname do pwd ?? 
  * ex: root:/volume0>
  */
+
 void shellInitializeWorkingDiretoryString (){
 	
 	//get info
@@ -4939,9 +4957,7 @@ void shellInitializeWorkingDiretoryString (){
 	strcat( current_workingdiretory_string, SHELL_PATHNAME_SEPARATOR );
 	
     pwd_initialized = 1;
-};
-
-
+}
 
 
 
@@ -4949,7 +4965,7 @@ void shellInitializeWorkingDiretoryString (){
 void shellUpdateCurrentDirectoryID ( int id ){
 	
 	g_current_workingdirectory_id = (id);
-};
+}
 
 
 //lista informações sobre os processos.
@@ -5000,57 +5016,57 @@ void shellTaskList (){
 	printf("...");
 	
     //...	
-	
-};
+}
 
 
 void shellShowPID (){
 	
 	printf("Current PID %d\n", 
 	    (int) system_call ( SYSTEMCALL_GETPID, 0, 0, 0) );
-};
+}
 
 
 void shellShowPPID (){
 	
 	printf("Current PID %d\n", 
 	    (int) system_call( SYSTEMCALL_GETPPID, 0, 0, 0) );
-};
+}
 
 
 void shellShowUID (){
 	
 	printf("Current UID %d\n", 
 	    (int) system_call( SYSTEMCALL_GETCURRENTUSERID, 0, 0, 0) );
-};
+}
 
 
 void shellShowGID (){
 	
 	printf("Current GID %d\n", 
 	    (int) system_call( SYSTEMCALL_GETCURRENTGROUPID, 0, 0, 0) );
-};
+}
 
 
 void shellShowUserSessionID (){
 	
 	printf("Current user session %d\n", 
 	    (int) system_call( SYSTEMCALL_GETCURRENTUSERSESSION, 0, 0, 0) );
-};
+}
 
 
 void shellShowWindowStationID (){
 	
 	printf("Current window station %d\n", 
 	    (int) system_call( SYSTEMCALL_GETCURRENTWINDOWSTATION, 0, 0, 0) );
-};
+}
 
 
 void shellShowDesktopID (){
 	
 	printf("Current desktop %d\n", 
 	    (int) system_call( SYSTEMCALL_GETCURRENTDESKTOP, 0, 0, 0) );
-};
+}
+
 
 void shellShowProcessHeapPointer (){
 	
@@ -5061,7 +5077,7 @@ void shellShowProcessHeapPointer (){
 	
 	printf("Current Process heap pointer address %x\n", 
 	    (unsigned long) heap_pointer );
-};
+}
 
 
 void shellShowKernelHeapPointer (){
@@ -5070,9 +5086,9 @@ void shellShowKernelHeapPointer (){
 	unsigned long heap_pointer = (unsigned long) system_call( SYSTEMCALL_GETPROCESSHEAPPOINTER, 
 	                                                id, 0, 0 );
 	
-	printf("Current Process heap pointer address %x\n", 
-	    (unsigned long) heap_pointer );
-};
+    printf ("Current Process heap pointer address %x\n", 
+        (unsigned long) heap_pointer );
+}
 
 
 //mostra informações sobre o disco atual.
@@ -5080,32 +5096,36 @@ void shellShowDiskInfo (){
 	
 	//@todo: atualizar api.h
 	system_call ( 251, 0, 0, 0 );
-};
+}
+
 
 //mostra informações sobre o volume atual.
 void shellShowVolumeInfo (){
 	
 	//@todo: atualizar api.h
 	system_call ( 252, 0, 0, 0 );
-};
+}
+
 
 //mostrar informações gerais sobre a memória.
 void shellShowMemoryInfo (){
 	
 	system_call ( SYSTEMCALL_MEMORYINFO, 0, 0, 0 );
-};
+}
+
 
 //mostrar informações gerais sobre a memória.
 void shellShowPCIInfo (){
 	
     system_call ( SYSTEMCALL_SHOWPCIINFO, 0, 0, 0 );	
-};
+}
+
 
 //mostrar informações gerais sobre a memória.
 void shellShowKernelInfo (){
 	
 	system_call ( SYSTEMCALL_SHOWKERNELINFO, 0, 0, 0 );
-};
+}
 
 
 
@@ -5117,12 +5137,14 @@ void shellShowKernelInfo (){
  * não tem protótipo ainda.
  * Credits: Luiz Felipe
  */
+ 
 void shell_fntos (char *name){
-	
+
     int  i, ns = 0;
     char ext[4];
     //const char ext[4];
-	
+
+
     //transforma em maiúscula
 	while ( *name && *name != '.' )
 	{
@@ -5153,7 +5175,7 @@ void shell_fntos (char *name){
         *name++ = ext[i];
 
     *name = '\0';
-};
+}
 
 
 /*
@@ -5166,13 +5188,15 @@ void shell_fntos (char *name){
  *     # Devemos presumir que ele seja .bin ?? 
  *       Ou não tenha ponto nem extensão. ?? Certamente o 
  * carregamento irá falhar.
- *     #@todo: caso seja .bin mas começe com "/"
- *     Devemos suprimir a barra. 
- *     
- */									 
-int shell_gramado_core_init_execve( const char *arg1,  //nome
-                                    const char *arg2,  //arg(endereço da linha de comando)
-                                    const char *arg3 ) //env
+ * 
+ * #todo: 
+ * caso seja .bin mas começe com "/", devemos suprimir a barra.     
+ */
+ 
+int 
+shell_gramado_core_init_execve ( const char *arg1,  //nome
+                                 const char *arg2,  //arg(endereço da linha de comando)
+                                 const char *arg3 ) //env
 {
 	//erro.
 	int Status = 1;
@@ -5325,20 +5349,19 @@ execve:
 	
 	//fail.
 	
-	//
-    // Retornaremos. 
+
+	// Retornaremos. 
 	// Quem chamou essa rotina que tome a decisão 
 	// se entra em wait ou não.
-    //
 
-	
+
 fail:
     //#importante: Error message.
     //status = 1.
-    printf("shell_gramado_core_init_execve: \n fail retornando ao interpretador\n");
+    printf ("shell_gramado_core_init_execve: \n fail retornando ao interpretador\n");
 done:
-    return (int) Status;						  
-};
+    return (int) Status;
+}
 
 
 
@@ -5386,7 +5409,7 @@ int feedterminalDialog( struct window_d *window,
 					break;
 				
                 //full screen
-                //colocar em full screen somente a área de cliente. 				
+                //colocar em full screen somente a área de cliente. 
 		        case VK_F2:
 				    //APISetFocus(i2Window);
 					//APIredraw_window(i2Window);				
