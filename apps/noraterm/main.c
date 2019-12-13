@@ -1821,6 +1821,16 @@ void *noratermProcedure ( struct window_d *window,
 					    APISetFocus (editboxWindow);
 					    //APIredraw_window (editboxWindow,1);
 						break;
+					}
+					
+					if ( window == main_window )
+					{
+						//raise window.
+	                     system_call ( 9700, 
+	                         (unsigned long) window, 
+		                     (unsigned long) window, 
+		                     (unsigned long) window );
+		                 break;
 					}					
 					
 					// ??
@@ -7078,9 +7088,15 @@ no_internal_shell:
     // ==== Child process ====
     //
     
-    //>>> clona e executa o filho dado o nome do filho.
-	printf ("noraterm: Executing default child process hello3 ...\n");
-    system_call ( 900, (unsigned long) "hello3.bin", 0, 0 );
+    // #importante
+    // >>> clona e executa o filho dado o nome do filho.
+
+	//printf ("noraterm: Executing default child process hello3 ...\n");
+    //system_call ( 900, (unsigned long) "hello3.bin", 0, 0 );
+
+	printf ("noraterm: Executing default child process launcher ...\n");
+    system_call ( 900, (unsigned long) "launcher.bin", 0, 0 );
+    
     printf ("noraterm: noraterm is still alive!\n");
     printf ("noraterm: No internal shell\n"); 
     __embedded_shell = 0; //sem shell embutido.

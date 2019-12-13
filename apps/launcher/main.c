@@ -132,15 +132,17 @@ launcherProcedure ( struct window_d *window,
 					{
 						//raise window.
 	                     system_call ( 9700, 
-	                         (unsigned long) main_window, 
-		                     (unsigned long) main_window, 
-		                     (unsigned long) main_window );	
+	                         (unsigned long) window, 
+		                     (unsigned long) window, 
+		                     (unsigned long) window );
+		                 break;
 					}
 
 					break;
 			};
 			break;
 
+        //mouse key up
         case 31:
             switch (long1)
             {
@@ -161,7 +163,9 @@ launcherProcedure ( struct window_d *window,
                             (unsigned long) window, 
                             (unsigned long) window, 
                             (unsigned long) window );
-                        execve ( (const char *) "gramcode.bin",
+                        //execve ( (const char *) "gramcode.bin",
+                            //(const char *) 0, (const char *) 0 );
+                        execve ( (const char *) "reboot2.bin",
                             (const char *) 0, (const char *) 0 );
                             break;
                     }
@@ -517,7 +521,7 @@ int main ( int argc, char *argv[] ){
 
 	//++
     enterCriticalSection (); 
-	launcher_button_2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "Editor", 
+	launcher_button_2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "Reboot2", 
                                      (width/3), ((height/4)*3), 
                                      (width/3), (height/8),   
                                      hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );

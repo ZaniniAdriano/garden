@@ -26,6 +26,8 @@ int running = 1;
 	// para acessarmos quando necessário.
 	// Para isso, é necessário enviarmos uma mensagem WM_CREATE no momento
 	// em que a janela principal foi criada. (Ou logo após.#test)
+	
+    struct window_d *main_window;
 
 	//struct window_d *mainWindow;
     struct window_d *gWindow;          //grid 
@@ -59,7 +61,7 @@ reboot2Procedure ( struct window_d *window,
                    unsigned long long1, 
                    unsigned long long2 )
 {
-    struct window_d *test_button;;
+    struct window_d *test_button;
     unsigned long left = 300;
     unsigned long top = 100;
     unsigned long width = 480;
@@ -174,6 +176,18 @@ reboot2Procedure ( struct window_d *window,
 		                    //(unsigned long) 0 );
 		               break;
 					}
+					if (window == main_window)
+					{
+						//raise window.
+	                     system_call ( 9700, 
+	                         (unsigned long) window, 
+		                     (unsigned long) window, 
+		                     (unsigned long) window );
+						//gde_set_focus(window); 
+						//MessageBox(3,"x","main");
+						//printf("Main\n");
+						break;
+					}
 
 					break;
 			};
@@ -220,11 +234,15 @@ int main ( int argc, char *argv[] ){
     int ch;
     int char_count = 0;
 
-    unsigned long left = 300;
-    unsigned long top = 100;
+    //unsigned long left = 300;
+    //unsigned long top = 100;
+    //unsigned long width = 480;
+    //unsigned long height = 480;
+
+    unsigned long left = 10;
+    unsigned long top = 10;
     unsigned long width = 480;
     unsigned long height = 480;
-
 
 //#ifdef TEDITOR_VERBOSE
 	//printf("\n");
@@ -274,12 +292,9 @@ int main ( int argc, char *argv[] ){
 
 		//Registrar e mostrar.
         APIRegisterWindow (hWindow);
-	    apiShowWindow (hWindow);
-	    
-        //APIRegisterWindow (hWindow);
-        //APISetActiveWindow (hWindow);
-        //APISetFocus (hWindow);
-        //apiShowWindow (hWindow);
+        apiShowWindow (hWindow);
+
+        main_window = ( struct window_d *) hWindow;
     };
     apiEndPaint ();
     //--
@@ -359,7 +374,7 @@ int main ( int argc, char *argv[] ){
 		goto fail;
 	}else{
 		
-        APIRegisterWindow (gWindow);		
+        APIRegisterWindow (gWindow);
 		
 		// #bugbug
 		// problemas na largura dos ítens quando pintamos no modo vertical;
