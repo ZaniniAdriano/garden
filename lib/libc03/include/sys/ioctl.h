@@ -84,6 +84,8 @@ struct ttysize {
 // comments credits: freebsd.org	 
 //int ioctl ( int d, int request, ... );
 
+
+// The ioctl() system call appeared in Version 7 AT&T UNIX.
 //linux style.
 int ioctl (int fd, unsigned long request, ...);
 

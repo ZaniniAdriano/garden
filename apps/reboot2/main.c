@@ -191,7 +191,7 @@ reboot2Procedure ( struct window_d *window,
                             (unsigned long) window, 
                             (unsigned long) window, 
                             (unsigned long) window );
-						//apiReboot ();
+						apiReboot ();
 					}
 				    break;
 			};

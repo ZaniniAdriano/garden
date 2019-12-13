@@ -97,7 +97,7 @@ int tcsendbreak(int fd, int duration)
 }
 
 
-int tcdrain(int fd)
+int tcdrain (int fd)
 {
 	return -1; 
 	//return ( ioctl(fd, TIOCDRAIN, 0) );

@@ -64,6 +64,8 @@ desktop.o \
 unistd.o \
 socket.o \
 wait.o \
+termios.o \
+ioctl.o \
 stubs.o    
 
 
@@ -108,8 +110,11 @@ all-c:
 	cp $(LIBCOBJ)/unistd.o .
 
 	cp $(LIBCOBJ)/socket.o .
-	
+	cp $(LIBCOBJ)/termios.o .
+	cp $(LIBCOBJ)/ioctl.o .
+
 	cp $(APIOBJ)/api.o      .
+
 shell-link:
 	ld -m elf_i386 -T link.ld -o GDESHELL.BIN $(myObjects) -Map shell_map.s
 

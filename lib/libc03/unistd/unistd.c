@@ -930,7 +930,11 @@ int ttyname_r(int fd, char *buf, size_t buflen)
 //isatty - test whether a file descriptor refers to a terminal
 int isatty(int fd) 
 { 
-	return -1; 
+	//return -1;
+
+	struct termios t;
+	
+	return ( tcgetattr(fd, &t) != -1 ); 
 }
 
 

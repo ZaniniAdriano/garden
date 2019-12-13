@@ -16,6 +16,8 @@
 #include <string.h>
 
 
+#include <termios.h>
+
 #include <sys/socket.h>
 
 //shell stuff 

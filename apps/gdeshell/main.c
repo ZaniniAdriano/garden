@@ -83,7 +83,15 @@
 */ 
 
 
+//#test
+#include <sys/ioctl.h>
+#include <sys/ioctls.h>
+
+
+
 #include "shell.h"
+
+
 
 // A janela principal do aplicativo.
 struct window_d *hWindow;  
@@ -2460,10 +2468,30 @@ do_compare:
 			//...
 		};
 		goto exit_cmp;
-    };
+    }
 
 
-	// ? - install
+    // See: http://man7.org/linux/man-pages/man2/ioctl.2.html
+	int32_t ____value;
+	if ( strncmp( prompt, "ioctl", 5 ) == 0 )
+	{
+	    printf ("~ioctl\n");
+	    
+	    //fd request
+        ioctl ( 1, 0666, (int32_t *) &____value );
+        ioctl ( 2, 0666, (int32_t *) &____value );
+        ioctl ( 3, 0666, (int32_t *) &____value );
+        ioctl ( 4, 0666, (int32_t *) &____value );
+        ioctl ( 5, 0666, (int32_t *) &____value );
+        ioctl ( 6, 0666, (int32_t *) &____value );
+        ioctl ( 7, 0666, (int32_t *) &____value );
+        ioctl ( 8, 0666, (int32_t *) &____value );
+       
+        goto exit_cmp;
+    }
+
+
+	// 
 	if ( strncmp( prompt, "install", 7 ) == 0 )
 	{
 	    printf ("~install\n");
