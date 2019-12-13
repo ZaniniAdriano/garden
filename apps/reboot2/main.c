@@ -211,6 +211,27 @@ reboot2Procedure ( struct window_d *window,
 			};
 			break;
 
+		case MSG_MOUSEMOVE:
+		    if (window == main_window)
+		    {
+				printf ("m");
+			}
+		    break;
+			
+		case MSG_MOUSEOVER:
+		    if (window == main_window)
+		    {
+				printf ("o");
+			}
+		    break;
+		    
+		case MSG_MOUSEEXITED:
+		    if (window == main_window)
+		    {
+				printf ("e");
+			}
+		    break;
+
 		default:
 		    break;
 	};

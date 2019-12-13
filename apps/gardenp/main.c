@@ -1,5 +1,5 @@
 // main.c 
-// sysmon
+// Garden Paint
 
 
 #include "sysmon.h"
@@ -12,6 +12,9 @@
 #define GRID_VERTICAL 2000
 
 
+unsigned long __mousex;
+unsigned long __mousey;
+
 //static int running = 1;
 int running = 1;
 
@@ -21,13 +24,21 @@ int running = 1;
 	//
 	
     struct window_d *main_window;
+    struct window_d *client_window;
 
     struct window_d *gWindow;          // grid 
     struct window_d *mWindow;          // menu
     struct window_d *reboot_button;    // reboot button;
+    
+    
+    // launcher buttons
     struct window_d *launcher_button_1;
     struct window_d *launcher_button_2;
 
+    // bar buttons
+    struct window_d *bar_button_1; 
+    struct window_d *bar_button_2;
+    struct window_d *bar_button_3;
 
 
 //static char *dest_argv[] = { "-sujo0","-sujo1","-sujo2",NULL };
@@ -64,58 +75,78 @@ sysmonProcedure ( struct window_d *window,
 		    switch (long1)
 			{  
 				case VK_F1:
-						
 					break;
 					
 				case VK_F2:
- 
 					break;
 					
-				case VK_F3:
- 
-					break;
-					
+				//case VK_F3:
+					//break;
+
 				//...
-				
+	
                 //full screen
                 //colocar em full screen somente a área de cliente. 
-		        case VK_F11:
-				    
+		        case VK_F11:    
 					break;
-					
+
 				//...
 
 			};
 			break;
-		
+
+
 		// MSG_MOUSEKEYDOWN
-		case 30:
-		    switch (long1)
-			{
+        case 30:
+            switch (long1)
+            {
 				//botão 1.
 				case 1:
 				    if ( window == launcher_button_1 )
 				    {
-						//APISetFocus ( window );
-						//execve ( (const char *) "noraterm.bin", 
-                           //(const char *) 0, (const char *) 0); 
-
-						 // #todo:
-						 // Tentar enviar mensagens para o terminal 
-						 //libc_set_output_mode (LIBC_NORMAL_MODE);
-						 //printf ("launcher: Testing ...\n");
-						 
+                        gramado_system_call ( 9900,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
 						 break;
 					}
 
 				    if ( window == launcher_button_2 )
 				    {
-						//PISetFocus ( window );
-						 //execve ( (const char *) "gramcode.bin",
-                            //(const char *) 0, (const char *) 0);
+                        gramado_system_call ( 9900,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
 						 break;
 					}
-				
+					
+					if ( window == bar_button_1 )
+					{
+                        gramado_system_call ( 9900,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+						break;
+					}
+					
+					if ( window == bar_button_2 )
+					{
+                        gramado_system_call ( 9900,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+					    break;
+					}
+
+					if ( window == bar_button_3 )
+					{
+                        gramado_system_call ( 9900,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+					    break;
+					}
+
 				    if ( window == reboot_button )
 				    {
 						apiReboot ();
@@ -139,33 +170,92 @@ sysmonProcedure ( struct window_d *window,
 	                     system_call ( 9700, 
 	                         (unsigned long) main_window, 
 		                     (unsigned long) main_window, 
-		                     (unsigned long) main_window );	
+		                     (unsigned long) main_window );
 					}
 
 					break;
 			};
 			break;
 
+
         // Mouse button up
-		case 31:
-		    switch (long1)
-		    {
+        case 31:
+            switch (long1)
+            {
 				case 1:
 				    if ( window == launcher_button_1 )
 				    {
+                        gramado_system_call ( 9901,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
 						execve ( (const char *) "noraterm.bin", 
                            (const char *) 0, (const char *) 0); 
 						 break;
 					}
 				    if ( window == launcher_button_2 )
 				    {
+                        gramado_system_call ( 9901,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
 						 execve ( (const char *) "reboot2.bin",
                             (const char *) 0, (const char *) 0);
 						 break;
 					}
+					if ( window == bar_button_1 )
+					{
+                        gramado_system_call ( 9901,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+                        apiDrawText ( client_window, 4, 40 +32, COLOR_BLACK, "info 1 ...");
+                        refresh_screen ();
+						break;
+					}
+					
+					if ( window == bar_button_2 )
+					{
+                        gramado_system_call ( 9901,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+                        apiDrawText ( client_window, 4,  40 +32 +32, COLOR_BLACK, "info 2 ...");
+                        refresh_screen ();
+					    break;
+					}
+
+					if ( window == bar_button_3 )
+					{
+                        gramado_system_call ( 9901,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+                        apiDrawText ( client_window, 4,  40 +32 +32 +32, COLOR_BLACK, "info 3 ...");
+                        refresh_screen ();
+					    break;
+					}
 				    break;
 			};
 			break;
+
+       //#todo
+       /*
+       case MSG_MOUSEMOVE:
+           if ( window == bar_button_3 )
+           {
+			   //pegar posição do ponteiro.
+			   __mousex = (unsigned long) apiGetSystemMetrics ( 20 );
+			   __mousey = (unsigned long) apiGetSystemMetrics ( 21 );
+			   
+			   //put pixel on backbuffer.
+               gramado_system_call ( 6, COLOR_BLACK, __mousex, __mousey );
+           
+               //TODO: REFRESH rectangle.
+           }
+           break;
+       */
+
 
         default:
             break;
@@ -494,7 +584,7 @@ int main ( int argc, char *argv[] ){
 
 	//++
     enterCriticalSection (); 
-	launcher_button_1 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "T",  
+	launcher_button_1 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "1",  
                                      10, 36 +10, 
                                      40, 40,    
                                      hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
@@ -515,7 +605,7 @@ int main ( int argc, char *argv[] ){
 
 	//++
     enterCriticalSection (); 
-	launcher_button_2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "R", 
+	launcher_button_2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "2", 
                                      10 +40 +10, 36 +10,
                                      40, 40,   
                                      hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
@@ -541,7 +631,7 @@ int main ( int argc, char *argv[] ){
     //
 
     struct window_d *client_bg_Window;
-
+    
 	//++
 	enterCriticalSection ();  
 	client_bg_Window = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "client-bg",     
@@ -554,10 +644,8 @@ int main ( int argc, char *argv[] ){
 		refresh_screen();
 		while(1){}
 	}
+	client_window = ( struct window_d *) client_bg_Window;
 	APIRegisterWindow (client_bg_Window);
-	
-	//APISetFocus (editbox_bg_Window);
-	
 	apiShowWindow (client_bg_Window);
 	exitCriticalSection ();  
 	//--
@@ -578,9 +666,6 @@ int main ( int argc, char *argv[] ){
 		while(1){}
 	}
 	APIRegisterWindow (client_bar_Window);
-	
-	//APISetFocus (?_Window);
-	
 	apiShowWindow (client_bar_Window);
 	exitCriticalSection ();  
 	//--
@@ -590,14 +675,13 @@ int main ( int argc, char *argv[] ){
     // ============ Bar buttons =========
     //
     
-    struct window_d *bar_button_1;
-    
 	//++
     enterCriticalSection (); 
 	bar_button_1 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "PID",  
                                      1, 1, 
                                      50, 32,    
-                                     client_bar_Window, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
+                                     client_bar_Window, 0, 
+                                     xCOLOR_GRAY3, xCOLOR_GRAY3 );
 
     if ( (void *) bar_button_1 == NULL )
     {
@@ -612,14 +696,14 @@ int main ( int argc, char *argv[] ){
 	//--
 
 
-    struct window_d *bar_button_2;
     
 	//++
     enterCriticalSection (); 
 	bar_button_2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "State", 
                                      50 +1, 1,
                                      100, 32,   
-                                     client_bar_Window, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
+                                     client_bar_Window, 0, 
+                                     xCOLOR_GRAY3, xCOLOR_GRAY3 );
 	
 	if ( (void *) bar_button_2 == NULL )
 	{
@@ -635,14 +719,13 @@ int main ( int argc, char *argv[] ){
 	//--
 
 
-    struct window_d *bar_button_3;
-    
 	//++
     enterCriticalSection (); 
 	bar_button_3 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "Priority", 
                                      50 +1 +100 +1, 1,
                                      200, 32,   
-                                     client_bar_Window, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
+                                     client_bar_Window, 0, 
+                                     xCOLOR_GRAY3, xCOLOR_GRAY3 );
 	
 	if ( (void *) bar_button_3 == NULL )
 	{
