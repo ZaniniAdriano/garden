@@ -59,13 +59,15 @@ unistd.o \
 api.o \
 status.o \
 addrbar.o \
+termios.o \
+ioctl.o \
 stubs.o    
 
 
 
-.PHONY: all all-c gfe-link finalize clean
+.PHONY: all all-c app-link finalize clean
 
-all: main.o all-c gfe-link finalize clean
+all: main.o all-c app-link finalize clean
 	@echo "Ok?"
 
 main.o:
@@ -74,22 +76,26 @@ main.o:
 	gcc  -c  addrbar.c  $(CFLAGS) -I $(LIBC) -I $(API) -o addrbar.o
 	
 all-c:
+
 	cp $(LIBCOBJ)/crt0.o   .
 	
 	cp $(LIBCOBJ)/ctype.o   .
 	cp $(LIBCOBJ)/stdio.o   .
-	cp $(LIBCOBJ)/stdlib.o  .	
+	cp $(LIBCOBJ)/stdlib.o  .
 	cp $(LIBCOBJ)/string.o  .
 	cp $(LIBCOBJ)/time.o    .
 	cp $(LIBCOBJ)/unistd.o  .
 
-	cp $(LIBCOBJ)/stubs.o   .	
+	cp $(LIBCOBJ)/termios.o  .
+	cp $(LIBCOBJ)/ioctl.o  .
+	
+	cp $(LIBCOBJ)/stubs.o   .
 	
 	cp $(APIOBJ)/api.o      .
-		
 
 
-gfe-link:
+
+app-link:
 	ld -m elf_i386 -T link.ld -o REBOOT2.BIN $(myObjects) -Map app_map.s
 
 finalize:

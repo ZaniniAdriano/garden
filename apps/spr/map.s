@@ -566,7 +566,7 @@ Linker script and memory map
                 0x000000000040cb2f                pwd_builtins
  .text          0x000000000040cb4b       0x49 desktop.o
                 0x000000000040cb4b                desktopInitialize
- .text          0x000000000040cb94      0x549 unistd.o
+ .text          0x000000000040cb94      0x562 unistd.o
                 0x000000000040cb94                execv
                 0x000000000040cbb2                execve
                 0x000000000040cc11                write
@@ -612,11 +612,26 @@ Linker script and memory map
                 0x000000000040d0b5                ttyname
                 0x000000000040d0bf                ttyname_r
                 0x000000000040d0c9                isatty
-                0x000000000040d0d3                getopt
- .text          0x000000000040d0dd       0x28 stubs.o
-                0x000000000040d0dd                gramado_system_call
+                0x000000000040d0ec                getopt
+ .text          0x000000000040d0f6      0x165 termios.o
+                0x000000000040d0f6                tcgetattr
+                0x000000000040d114                tcsetattr
+                0x000000000040d18d                tcsendbreak
+                0x000000000040d197                tcdrain
+                0x000000000040d1a1                tcflush
+                0x000000000040d1ab                tcflow
+                0x000000000040d1b5                cfmakeraw
+                0x000000000040d227                cfgetispeed
+                0x000000000040d232                cfgetospeed
+                0x000000000040d23d                cfsetispeed
+                0x000000000040d247                cfsetospeed
+                0x000000000040d251                cfsetspeed
+ .text          0x000000000040d25b       0x3d ioctl.o
+                0x000000000040d25b                ioctl
+ .text          0x000000000040d298       0x28 stubs.o
+                0x000000000040d298                gramado_system_call
                 0x000000000040e000                . = ALIGN (0x1000)
- *fill*         0x000000000040d105      0xefb 
+ *fill*         0x000000000040d2c0      0xd40 
 
 .iplt           0x000000000040e000        0x0
  .iplt          0x000000000040e000        0x0 crt0.o
@@ -644,7 +659,7 @@ Linker script and memory map
  *fill*         0x000000000041172f        0x1 
  .rodata        0x0000000000411730       0x89 unistd.o
 
-.eh_frame       0x00000000004117bc     0x3968
+.eh_frame       0x00000000004117bc     0x3b08
  .eh_frame      0x00000000004117bc       0x34 crt0.o
  .eh_frame      0x00000000004117f0      0xc70 main.o
                                         0xc88 (size before relaxing)
@@ -666,49 +681,55 @@ Linker script and memory map
                                          0x38 (size before relaxing)
  .eh_frame      0x0000000000414b40      0x5c0 unistd.o
                                         0x5d8 (size before relaxing)
- .eh_frame      0x0000000000415100       0x24 stubs.o
+ .eh_frame      0x0000000000415100      0x180 termios.o
+                                        0x198 (size before relaxing)
+ .eh_frame      0x0000000000415280       0x20 ioctl.o
+                                         0x38 (size before relaxing)
+ .eh_frame      0x00000000004152a0       0x24 stubs.o
                                          0x3c (size before relaxing)
 
-.rel.dyn        0x0000000000415124        0x0
- .rel.got       0x0000000000415124        0x0 crt0.o
- .rel.iplt      0x0000000000415124        0x0 crt0.o
- .rel.text      0x0000000000415124        0x0 crt0.o
+.rel.dyn        0x00000000004152c4        0x0
+ .rel.got       0x00000000004152c4        0x0 crt0.o
+ .rel.iplt      0x00000000004152c4        0x0 crt0.o
+ .rel.text      0x00000000004152c4        0x0 crt0.o
 
-.data           0x0000000000415140     0x1ec0
-                0x0000000000415140                data = .
-                0x0000000000415140                _data = .
-                0x0000000000415140                __data = .
+.data           0x00000000004152e0     0x1d20
+                0x00000000004152e0                data = .
+                0x00000000004152e0                _data = .
+                0x00000000004152e0                __data = .
  *(.data)
- .data          0x0000000000415140       0x14 crt0.o
- *fill*         0x0000000000415154        0xc 
- .data          0x0000000000415160      0x538 main.o
-                0x0000000000415600                running
-                0x0000000000415604                primary_prompt
-                0x0000000000415608                secondary_prompt
-                0x000000000041560c                remember_on_history
-                0x0000000000415610                current_command_number
-                0x0000000000415614                bashrc_file
-                0x0000000000415618                shell_config_file
-                0x000000000041561c                deltaValue
-                0x0000000000415620                long_args
- *fill*         0x0000000000415698        0x8 
- .data          0x00000000004156a0      0x4a0 shellui.o
- .data          0x0000000000415b40      0x440 api.o
- .data          0x0000000000415f80        0x0 ctype.o
- .data          0x0000000000415f80        0x0 stdio.o
- .data          0x0000000000415f80        0x8 stdlib.o
-                0x0000000000415f80                _infinity
- .data          0x0000000000415f88        0x0 string.o
- .data          0x0000000000415f88        0x0 conio.o
- *fill*         0x0000000000415f88       0x18 
- .data          0x0000000000415fa0      0x4a0 builtins.o
- .data          0x0000000000416440      0x4a8 desktop.o
-                0x00000000004168e0                primary_desktop_folder
-                0x00000000004168e4                secondary_desktop_folder
- .data          0x00000000004168e8        0x0 unistd.o
- .data          0x00000000004168e8        0x0 stubs.o
+ .data          0x00000000004152e0       0x14 crt0.o
+ *fill*         0x00000000004152f4        0xc 
+ .data          0x0000000000415300      0x538 main.o
+                0x00000000004157a0                running
+                0x00000000004157a4                primary_prompt
+                0x00000000004157a8                secondary_prompt
+                0x00000000004157ac                remember_on_history
+                0x00000000004157b0                current_command_number
+                0x00000000004157b4                bashrc_file
+                0x00000000004157b8                shell_config_file
+                0x00000000004157bc                deltaValue
+                0x00000000004157c0                long_args
+ *fill*         0x0000000000415838        0x8 
+ .data          0x0000000000415840      0x4a0 shellui.o
+ .data          0x0000000000415ce0      0x440 api.o
+ .data          0x0000000000416120        0x0 ctype.o
+ .data          0x0000000000416120        0x0 stdio.o
+ .data          0x0000000000416120        0x8 stdlib.o
+                0x0000000000416120                _infinity
+ .data          0x0000000000416128        0x0 string.o
+ .data          0x0000000000416128        0x0 conio.o
+ *fill*         0x0000000000416128       0x18 
+ .data          0x0000000000416140      0x4a0 builtins.o
+ .data          0x00000000004165e0      0x4a8 desktop.o
+                0x0000000000416a80                primary_desktop_folder
+                0x0000000000416a84                secondary_desktop_folder
+ .data          0x0000000000416a88        0x0 unistd.o
+ .data          0x0000000000416a88        0x0 termios.o
+ .data          0x0000000000416a88        0x0 ioctl.o
+ .data          0x0000000000416a88        0x0 stubs.o
                 0x0000000000417000                . = ALIGN (0x1000)
- *fill*         0x00000000004168e8      0x718 
+ *fill*         0x0000000000416a88      0x578 
 
 .got            0x0000000000417000        0x0
  .got           0x0000000000417000        0x0 crt0.o
@@ -763,6 +784,8 @@ Linker script and memory map
  *fill*         0x00000000004270d4        0xc 
  .bss           0x00000000004270e0       0xa0 unistd.o
                 0x00000000004270e0                __execv_environ
+ .bss           0x0000000000427180        0x0 termios.o
+ .bss           0x0000000000427180        0x0 ioctl.o
  .bss           0x0000000000427180        0x0 stubs.o
                 0x0000000000428000                . = ALIGN (0x1000)
  *fill*         0x0000000000427180      0xe80 
@@ -933,6 +956,8 @@ LOAD conio.o
 LOAD builtins.o
 LOAD desktop.o
 LOAD unistd.o
+LOAD termios.o
+LOAD ioctl.o
 LOAD stubs.o
 OUTPUT(SPR.BIN elf32-i386)
 
@@ -950,6 +975,8 @@ OUTPUT(SPR.BIN elf32-i386)
  .comment       0x0000000000000011       0x12 builtins.o
  .comment       0x0000000000000011       0x12 desktop.o
  .comment       0x0000000000000011       0x12 unistd.o
+ .comment       0x0000000000000011       0x12 termios.o
+ .comment       0x0000000000000011       0x12 ioctl.o
  .comment       0x0000000000000011       0x12 stubs.o
 
 .note.GNU-stack
@@ -978,5 +1005,9 @@ OUTPUT(SPR.BIN elf32-i386)
                 0x0000000000000000        0x0 desktop.o
  .note.GNU-stack
                 0x0000000000000000        0x0 unistd.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 termios.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 ioctl.o
  .note.GNU-stack
                 0x0000000000000000        0x0 stubs.o

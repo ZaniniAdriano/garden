@@ -56,9 +56,9 @@ void gramcodeLinesInsertChar ( int line_number, int at, int c );
 
 void *teditorProcedure ( struct window_d *window, 
                          int msg, 
-				         unsigned long long1, 
-				         unsigned long long2 );
-				   
+                         unsigned long long1, 
+                         unsigned long long2 );
+
 
 int
 __SendMessageToProcess ( int pid, 
@@ -101,8 +101,8 @@ void editorClearScreen (){
 	    }
 	};
 	
-	apiSetCursor(0,2);
-};
+	apiSetCursor (0,2);
+}
 
 
 
@@ -195,7 +195,7 @@ int editor_save_file (){
 	if ( number_of_sectors == 0 ){
 		
 	    printf ("editor_save_file:  Limit Fail. (0) sectors to save.\n");
-        return (int) 1;				
+        return (int) 1;
 	}
 	
 	
@@ -205,7 +205,7 @@ int editor_save_file (){
 	{
 	    printf ("editor_save_file:  Limit Fail. (%d) sectors to save.\n",
 		    number_of_sectors );
-        return (int) 1;				
+        return (int) 1;
 	}
 	
 	
@@ -218,12 +218,14 @@ int editor_save_file (){
     //Ret = (int) apiSaveFile ( file_1_name, number_of_sectors, len,            
     //                file_1, 0x20 );     
 
-    Ret = (int) apiSaveFile ( file_1_name, number_of_sectors, len,            
-                    &RAW_TEXT[0], 0x20 );    
-					
+    Ret = (int) apiSaveFile ( file_1_name, 
+                    number_of_sectors, len,            
+                    &RAW_TEXT[0], 
+                    0x20 );    
+
 	//if (Ret == 0)
 	
-	printf("done\n");	
+	printf ("done\n");
 	
 	return (int) Ret;
 }
@@ -239,12 +241,13 @@ void *teditorProcedure ( struct window_d *window,
 				         unsigned long long1, 
 				         unsigned long long2 )
 {
-	unsigned long input_ret;
-    unsigned long compare_return;	
-    int q;	
-	
-	int key_state = -1;
-	
+    unsigned long input_ret;
+    unsigned long compare_return;
+    int q;
+
+    int key_state = -1;
+
+
     switch (msg)
     {
 		//Faz algumas inicializações de posicionamento e dimensões.
@@ -300,11 +303,11 @@ void *teditorProcedure ( struct window_d *window,
 						key_state = (int) system_call ( 138, 
 						                      (unsigned long) VK_CONTROL, 
 						                      (unsigned long) VK_CONTROL, 
-						                      (unsigned long) VK_CONTROL );	
+						                      (unsigned long) VK_CONTROL );
 					    // pressionada
 						if ( key_state == 1 )
 					    {
-						    editor_save_file ();	
+						    editor_save_file ();
 							key_state = -1;
 							break;
 						}
@@ -322,12 +325,11 @@ void *teditorProcedure ( struct window_d *window,
 				//vamos testar usando as teclas de função.
 				//mas no futuro usaremos as setas.
 				//o problema é que o procedimento do sistema também usa isso
-		        
-				
-				//#teste: Isso é um improviso.	
-				//Criando o botão para salvar o arquivo.	
-				case VK_F1:	
-				   saveCreateButton ();	
+
+				//#teste: Isso é um improviso.
+				//Criando o botão para salvar o arquivo.
+				case VK_F1:
+				   saveCreateButton ();
 				   break;
 				
 				
@@ -343,9 +345,31 @@ void *teditorProcedure ( struct window_d *window,
 
 			};
 			break;
-			
+
+
+
 		// MSG_MOUSEKEYDOWN
 		case 30:
+			//qual botão?
+			switch (long1)
+			{
+				case 1:
+					if ( window == save_button )
+					{
+						 //editor_save_file ();
+					}
+					break;
+					
+				case 2:
+					break;
+					
+				case 3:
+					break;
+			}
+			break;
+
+        // mouse key up
+		case 31:
 			//qual botão?
 			switch (long1)
 			{
@@ -363,12 +387,13 @@ void *teditorProcedure ( struct window_d *window,
 					break;
 			}
 			break;
-			
+
+
+
 		default:
 		    break;
-				
 	};
-	
+
 	
 	// #test
 	// Cuidado com isso. 

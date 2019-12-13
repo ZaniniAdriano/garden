@@ -92,45 +92,41 @@ launcherProcedure ( struct window_d *window,
 		    switch (long1)
 			{
 				//botão 1.
-				case 1:
-				    if ( window == launcher_button_1 )
-				    {
-						//APISetFocus ( window );
-						//execve ( (const char *) "noraterm.bin", 
-                           //(const char *) 0, (const char *) 0); 
+                case 1:
+                    if ( window == launcher_button_1 )
+                    {
+                        gramado_system_call ( 9900,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+                            break;
+                    }
 
-						 // #todo:
-						 // Tentar enviar mensagens para o terminal 
-						 //libc_set_output_mode (LIBC_NORMAL_MODE);
-						 //printf ("launcher: Testing ...\n");
-						 
-						 break;
-					}
+                    if ( window == launcher_button_2 )
+                    {
+                        gramado_system_call ( 9900,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+                            break;
+                    }
 
-				    if ( window == launcher_button_2 )
-				    {
-						//PISetFocus ( window );
-						 //execve ( (const char *) "gramcode.bin",
-                            //(const char *) 0, (const char *) 0);
-						 break;
-					}
-				
-				    if ( window == reboot_button )
-				    {
-						apiReboot ();
-						break;
-					}
-					
-					
-				    if ( window == gWindow )
-					{
+                    if ( window == reboot_button )
+                    {
+                        apiReboot ();
+                        break;
+                    }
+
+                    if ( window == gWindow )
+                    {
 						printf("grid window\n");
-					}
+                    }
+
 				    if ( window == mWindow )
 					{
 						printf("menu window\n");
 					}
-					
+
 					//se
 					if ( window == main_window )
 					{
@@ -145,25 +141,33 @@ launcherProcedure ( struct window_d *window,
 			};
 			break;
 
-		case 31:
-		    switch (long1)
-		    {
-				case 1:
-				    if ( window == launcher_button_1 )
-				    {
-						execve ( (const char *) "noraterm.bin", 
-                           (const char *) 0, (const char *) 0); 
-						 break;
-					}
-				    if ( window == launcher_button_2 )
-				    {
-						 execve ( (const char *) "gramcode.bin",
-                            (const char *) 0, (const char *) 0);
-						 break;
-					}
-				    break;
-			};
-			break;
+        case 31:
+            switch (long1)
+            {
+                case 1:
+                    if ( window == launcher_button_1 )
+                    {
+                        gramado_system_call ( 9901,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+                        execve ( (const char *) "noraterm.bin", 
+                           (const char *) 0, (const char *) 0 ); 
+                        break;
+                    }
+                    if ( window == launcher_button_2 )
+                    {
+                        gramado_system_call ( 9901,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+                        execve ( (const char *) "gramcode.bin",
+                            (const char *) 0, (const char *) 0 );
+                            break;
+                    }
+                    break;
+            };
+            break;
 
         default:
             break;

@@ -35,12 +35,13 @@ CFLAGS = -m32 \
 
 
 
-#LIBC    = ../../lib/libc01/include/
-#LIBCOBJ = ../../lib/libc01/obj
+
 LIBC    = ../../lib/libc03/include/
 LIBCOBJ = ../../lib/libc03/obj
-API     = ../../lib/api01/include/
-APIOBJ  = ../../lib/api01/obj
+#API     = ../../lib/api01/include/
+#APIOBJ  = ../../lib/api01/obj
+API     = ../../lib/api02/include/
+APIOBJ  = ../../lib/api02/obj
 
 
 
@@ -57,6 +58,8 @@ unistd.o \
 api.o \
 status.o \
 addrbar.o \
+termios.o \
+ioctl.o \
 stubs.o    
 
 
@@ -76,15 +79,18 @@ all-c:
 	
 	cp $(LIBCOBJ)/ctype.o   .
 	cp $(LIBCOBJ)/stdio.o   .
-	cp $(LIBCOBJ)/stdlib.o  .	
+	cp $(LIBCOBJ)/stdlib.o  .
 	cp $(LIBCOBJ)/string.o  .
 	cp $(LIBCOBJ)/time.o    .
 	cp $(LIBCOBJ)/unistd.o  .
 
-	cp $(LIBCOBJ)/stubs.o   .	
+	cp $(LIBCOBJ)/termios.o  .
+	cp $(LIBCOBJ)/ioctl.o  .
+
+	cp $(LIBCOBJ)/stubs.o   .
 	
 	cp $(APIOBJ)/api.o      .
-		
+
 
 
 gfe-link:

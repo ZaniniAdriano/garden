@@ -57,6 +57,8 @@ unistd.o \
 api.o \
 status.o \
 addrbar.o \
+termios.o \
+ioctl.o \
 stubs.o    
 
 
@@ -80,6 +82,9 @@ all-c:
 	cp $(LIBCOBJ)/string.o  .
 	cp $(LIBCOBJ)/time.o    .
 	cp $(LIBCOBJ)/unistd.o  .
+
+	cp $(LIBCOBJ)/termios.o  .
+	cp $(LIBCOBJ)/ioctl.o  .
 
 	cp $(LIBCOBJ)/stubs.o   .	
 	

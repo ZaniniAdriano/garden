@@ -56,6 +56,8 @@ conio.o \
 builtins.o \
 desktop.o \
 unistd.o \
+termios.o \
+ioctl.o \
 stubs.o    
 
 
@@ -93,6 +95,9 @@ all-c:
 	cp $(LIBCOBJ)/conio.o   .
 	cp $(LIBCOBJ)/wait.o    .
 	cp $(LIBCOBJ)/unistd.o  .
+
+	cp $(LIBCOBJ)/termios.o  .
+	cp $(LIBCOBJ)/ioctl.o  .
 
 	cp $(APIOBJ)/api.o      .	
 
