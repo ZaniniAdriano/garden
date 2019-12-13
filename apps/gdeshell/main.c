@@ -2482,10 +2482,13 @@ do_compare:
         ioctl ( 2, 0666, (int32_t *) &____value );
         ioctl ( 3, 0666, (int32_t *) &____value );
         ioctl ( 4, 0666, (int32_t *) &____value );
-        ioctl ( 5, 0666, (int32_t *) &____value );
-        ioctl ( 6, 0666, (int32_t *) &____value );
-        ioctl ( 7, 0666, (int32_t *) &____value );
-        ioctl ( 8, 0666, (int32_t *) &____value );
+
+        //ioctl ( 7, 0666, (int32_t *) &____value );
+        //ioctl ( 8, 0666, (int32_t *) &____value );
+        
+        ioctl ( -1, 0666, (int32_t *) &____value );
+        ioctl ( 257, 0666, (int32_t *) &____value );
+        
        
         goto exit_cmp;
     }
