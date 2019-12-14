@@ -1956,6 +1956,8 @@ static unsigned long vga_256colors_palette[256] = {
 #define MSG_SYSKEYDOWN    22
 #define MSG_SYSKEYUP      23
 
+
+
 //mouse (30 - 39)
 //tem uma lista de eventos de mouse em events.h
 #define MSG_MOUSEKEYDOWN  30
@@ -1972,6 +1974,8 @@ static unsigned long vga_256colors_palette[256] = {
 #define MSG_MOUSEEXITED	       39
 //#define MSG_MOUSEMOVEBYOFFSET
 //#define MSG_MOUSEMOVETOELEMENT
+
+
 
 //outros (40 - ...)
 #define MSG_COMMAND       40
@@ -3338,6 +3342,7 @@ APIresize_window ( struct window_d *window,
 
 
 //redraw
+//flag= show??
 void 
 APIredraw_window ( struct window_d *window, 
                    unsigned long flags );

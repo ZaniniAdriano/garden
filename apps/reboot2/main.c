@@ -214,24 +214,58 @@ reboot2Procedure ( struct window_d *window,
 		case MSG_MOUSEMOVE:
 		    if (window == main_window)
 		    {
-				printf ("m");
+				//printf ("m");
 			}
 		    break;
 			
 		case MSG_MOUSEOVER:
 		    if (window == main_window)
 		    {
-				printf ("o");
+				//printf ("o");
 			}
 		    break;
 		    
 		case MSG_MOUSEEXITED:
 		    if (window == main_window)
 		    {
-				printf ("e");
+				//printf ("e");
 			}
 		    break;
-
+		    
+		//carrega    
+		case MSG_MOUSE_DRAG:
+		    if (window == main_window)
+		    { 
+				//printf ("D");
+				//APIreplace_window (window, apiGetSystemMetrics ( 20 ), apiGetSystemMetrics ( 21 ) );
+                //APIredraw_window (window, 1);
+                //apiShowWindow (window);
+             }
+             break;
+             
+        case MSG_MOUSE_DROP:
+			 if (window == main_window)
+			 {
+				//printf ("Drop");
+				//APIreplace_window (window, apiGetSystemMetrics ( 20 ), apiGetSystemMetrics ( 21 ) );
+				//raise window.
+	           // system_call ( 9700, 
+	                //(unsigned long) window, 
+		           // (unsigned long) window, 
+		            //(unsigned long) window );                
+                //APIredraw_window (window, 1);
+                //apiShowWindow (window);        
+             }
+             break;
+             
+         case MSG_MOUSE_DOUBLECLICKED:
+             if ( window == main_window )
+             {
+				 APImaximize_window (window);
+				 APIredraw_window (window, 1);
+             }
+             break;
+             
 		default:
 		    break;
 	};
