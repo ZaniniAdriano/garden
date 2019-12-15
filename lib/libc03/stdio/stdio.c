@@ -2239,6 +2239,11 @@ long ftell (FILE *stream){
 }
 
 
+/*
+ * fileno: 
+ *     Gets the file id.
+ *     The kernel gets this value from the stream struct.
+ */
 int fileno ( FILE *stream ){
 	
     return (int) gramado_system_call ( 605, 

@@ -114,7 +114,10 @@ struct window_d *hWindow;
 
 
 
-
+// Será configurado na inicialização.
+int __stdin_fd;
+int __stdout_fd;
+int __stderr_fd;
 
 
 /*
@@ -2869,7 +2872,18 @@ do_compare:
 		printf("~start\n");
 		
 		goto exit_cmp;
-    };
+    }
+
+    //streams
+    if ( strncmp( prompt, "streams", 7 ) == 0 )
+    {
+        printf ("Streams: \n");
+        printf ("__stdin_fd=%d  \n", __stdin_fd  );
+        printf ("__stdout_fd=%d \n", __stdout_fd );
+        printf ("__stderr_fd=%d \n", __stderr_fd );
+        //...
+        goto exit_cmp;
+    }
 
 
     // systeminfo - Informações sobre o sistema.
@@ -7301,9 +7315,19 @@ int main ( int argc, char *argv[] ){
 	
 //#ifdef JOB_CONTROL
   //extern int job_control;
-//#endif	
+//#endif
 	
 	
+	//
+	// File stuff
+	//
+	
+	__stdin_fd  = fileno (stdin);
+	__stdout_fd = fileno (stdout);
+	__stderr_fd = fileno (stderr);
+
+
+
     /* Wait forever if we are debugging a login shell. */
     //  while (debugging_login_shell);	
 	
