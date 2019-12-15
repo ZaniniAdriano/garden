@@ -143,8 +143,22 @@ int sigdelset(sigset_t *set, int signum)
 
 
 
+/*
+void psignal(int sig, const char *s);
+void psignal(int sig, const char *s)
+{}
+*/
 
-  
+/*
+void psiginfo (const siginfo_t *si, const char *s);
+void psiginfo (const siginfo_t *si, const char *s)
+{
+    psignal (si->si_signo, s);
+}
+*/
+
+
+
 //
 // End.
 //

@@ -36,6 +36,11 @@
 #ifndef _TYPES_H_
 #define	_TYPES_H_
 
+
+// #test
+typedef unsigned int id_t;
+
+
 typedef	unsigned char	u_char;
 typedef	unsigned short	u_short;
 typedef	unsigned int	u_int;

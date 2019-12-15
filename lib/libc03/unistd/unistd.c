@@ -19,6 +19,12 @@
 
 #include <limits.h>
 
+//#todo
+//nice() precisa disso.
+#include <sys/time.h>
+#include <sys/resource.h>
+
+
 //#test
 #include <pty.h>
 #include <utmp.h>
@@ -111,8 +117,8 @@ void *unistd_system_call ( unsigned long ax,
 
 char *__execv_environ[] = { NULL, NULL, NULL };
 
-int execv (const char *path, char *const argv[] ){
-	
+int execv (const char *path, char *const argv[] )
+{
     return execve ( path, (char **) argv, __execv_environ );
 }
 
@@ -550,14 +556,43 @@ int fcntl ( int fd, int cmd, ... ){
 }
 
 
+//see: sys/resource.h
+int getpriority(int which, id_t who)
+{
+	return -1;
+}
+
+//see: sys/resource.h
+int setpriority(int which, id_t who, int prio)
+{
+	return -1;
+}
+
+
+
 /*
  * nice:
  *     Change process priority.
  */
 
-int nice (int inc){
-	
-	return -1;    //#todo
+int nice (int inc)
+{
+    return -1;    //#todo
+
+    //#todo
+    /*
+    int prio;
+	errno = 0;
+	prio = getpriority(PRIO_PROCESS, 0);
+	if (prio == -1 && errno)
+		return -1;
+	if (setpriority(PRIO_PROCESS, 0, prio + incr) == -1) {
+		if (errno == EACCES)
+			errno = EPERM;
+		return -1;
+	}
+	return getpriority(PRIO_PROCESS, 0);
+	*/
 }
 
 
@@ -908,12 +943,42 @@ int setusername (const char *name, size_t len){
 }
 
 
+
+
+/*
+ ************** 
+ * ttyname:
+ * 
+ */
+ 
 //POSIX.1-2001, POSIX.1-2008, 4.2BSD.
 //ttyname, ttyname_r - return name of a terminal
-char *ttyname (int fd)
-{ 
-	//errno = ENOTTY;
-    return NULL; 
+//If the file descriptor filedes is associated with a terminal device, 
+//the ttyname function returns a pointer to a statically-allocated, 
+//null-terminated string containing the file name of the terminal file.
+//The value is a null pointer if the file descriptor isn't associated 
+//with a terminal, or the file name cannot be determined. 
+
+// ok
+// então o buffer para esse nome deve ficar aqui na libc em ring3
+// Onde o app pode ler.
+// Chamremos o kernel e diremos, coloque o nome aqui nesse buffer.
+//char __ttyname_buffer[64];
+
+char *ttyname(int fd)
+{
+	static char buf[PATH_MAX];
+	int rv;
+	
+	rv = ttyname_r (fd, buf, sizeof(buf));
+	
+	if (rv != 0)
+	{
+		errno = rv;
+		return NULL;
+	}
+
+	return buf;
 }
 
 
@@ -925,19 +990,28 @@ int ttyname_r(int fd, char *buf, size_t buflen)
 }
 
 
+//#todo
+/*
+int ttyslot (void);
+int ttyslot (void)
+{
+   return -1;
+}
+*/
+
 
 // POSIX.1-2001, POSIX.1-2008, SVr4, 4.3BSD.
-//isatty - test whether a file descriptor refers to a terminal
-int isatty(int fd) 
-{ 
-	//return -1;
+// isatty - test whether a file descriptor refers to a terminal
+// This function returns 1 if filedes is a file descriptor associated 
+// with an open terminal device, and 0 otherwise. 
 
-	struct termios t;
-	
-	return ( tcgetattr(fd, &t) != -1 ); 
+int isatty (int fd){ 
+
+    struct termios t;
+
+
+    return ( tcgetattr(fd, &t) != -1 ); 
 }
-
-
 
 
 int getopt (int argc, char * const argv[], const char *optstring)
