@@ -368,7 +368,8 @@ struct _iobuf
     // Se for um dispositivo então o dispositivo terá
     // na lista deviceList o mesmo offset da stream na list Streams.
     int isDevice;
-	
+    int deviceId;  //índice na lista deviceList[] no kernel.
+    
 	// old stuff
 	// isso pertence a estrutura no formato antigo
 	// e os elementos ainda estão presentes em várias rotinas.

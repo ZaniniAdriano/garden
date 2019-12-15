@@ -2135,7 +2135,17 @@ do_compare:
         desktopInitialize ();
         goto exit_cmp;
 	};
-	
+
+    // devices.
+    // Mostra a lista de dispositivos deviceList[]
+	if ( strncmp( prompt, "devices", 7 ) == 0 )
+	{
+        gramado_system_call (770,
+             (unsigned long) 0,
+             (unsigned long) 0,
+             (unsigned long) 0 );
+        goto exit_cmp;
+	}
 
     // dialog-box
 	//Testing dialog box.
