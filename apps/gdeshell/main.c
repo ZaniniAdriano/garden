@@ -2579,8 +2579,8 @@ do_compare:
     unsigned long __profiler_ints_irq11;  //
     unsigned long __profiler_ints_irq12;  
     unsigned long __profiler_ints_irq13;  //
-    unsigned long __profiler_ints_irq14;  
-    unsigned long __profiler_ints_irq15;  
+    unsigned long __profiler_ints_irq14;      //#bugbug
+    unsigned long __profiler_ints_irq15;      //#bugbug
 
     unsigned long __profiler_ints_gde_services;
 
@@ -2600,8 +2600,8 @@ do_compare:
         __profiler_ints_irq11 = apiGetSystemMetrics (111);
         __profiler_ints_irq12 = apiGetSystemMetrics (112);
         __profiler_ints_irq13 = apiGetSystemMetrics (113);
-        __profiler_ints_irq13 = apiGetSystemMetrics (114);
-        __profiler_ints_irq13 = apiGetSystemMetrics (115);
+        __profiler_ints_irq14 = apiGetSystemMetrics (114);
+        __profiler_ints_irq15 = apiGetSystemMetrics (115);
         
         __profiler_ints_gde_services = apiGetSystemMetrics (117);
         
