@@ -2564,7 +2564,71 @@ do_compare:
         goto exit_cmp;
     }
 
-	
+
+    unsigned long __profiler_ints_irq0;  
+    unsigned long __profiler_ints_irq1;  
+    unsigned long __profiler_ints_irq2;  
+    unsigned long __profiler_ints_irq3;  //
+    unsigned long __profiler_ints_irq4;  //
+    unsigned long __profiler_ints_irq5;  //
+    unsigned long __profiler_ints_irq6;  //
+    unsigned long __profiler_ints_irq7;  //
+    unsigned long __profiler_ints_irq8;   
+    unsigned long __profiler_ints_irq9;   
+    unsigned long __profiler_ints_irq10;  //
+    unsigned long __profiler_ints_irq11;  //
+    unsigned long __profiler_ints_irq12;  
+    unsigned long __profiler_ints_irq13;  //
+    unsigned long __profiler_ints_irq14;  
+    unsigned long __profiler_ints_irq15;  
+
+    unsigned long __profiler_ints_gde_services;
+
+	if ( strncmp( prompt, "ints", 4 ) == 0 )
+	{
+        __profiler_ints_irq0 = apiGetSystemMetrics (100);
+        __profiler_ints_irq1 = apiGetSystemMetrics (101);
+        __profiler_ints_irq2 = apiGetSystemMetrics (102);
+        __profiler_ints_irq3 = apiGetSystemMetrics (103);
+        __profiler_ints_irq4 = apiGetSystemMetrics (104);
+        __profiler_ints_irq5 = apiGetSystemMetrics (105);
+        __profiler_ints_irq6 = apiGetSystemMetrics (106);
+        __profiler_ints_irq7 = apiGetSystemMetrics (107);
+        __profiler_ints_irq8 = apiGetSystemMetrics (108);
+        __profiler_ints_irq9 = apiGetSystemMetrics (109);
+        __profiler_ints_irq10 = apiGetSystemMetrics (110);
+        __profiler_ints_irq11 = apiGetSystemMetrics (111);
+        __profiler_ints_irq12 = apiGetSystemMetrics (112);
+        __profiler_ints_irq13 = apiGetSystemMetrics (113);
+        __profiler_ints_irq13 = apiGetSystemMetrics (114);
+        __profiler_ints_irq13 = apiGetSystemMetrics (115);
+        
+        __profiler_ints_gde_services = apiGetSystemMetrics (117);
+        
+	    printf ("profiler ints:\n");
+	    
+        printf ("irq0: %d (timer)\n",__profiler_ints_irq0);
+        printf ("irq1: %d (ps/2 keyboard)\n",__profiler_ints_irq1);
+        printf ("irq2: %d \n",__profiler_ints_irq2);
+        printf ("irq3: %d \n",__profiler_ints_irq3);
+        printf ("irq4: %d (serial com1)\n",__profiler_ints_irq4);
+        printf ("irq5: %d \n",__profiler_ints_irq5);
+        printf ("irq6: %d \n",__profiler_ints_irq6);
+        printf ("irq7: %d \n",__profiler_ints_irq7);
+        printf ("irq8: %d (rtc)\n",__profiler_ints_irq8);
+        printf ("irq9: %d (nic controller)\n",__profiler_ints_irq9);
+        printf ("irq10: %d \n",__profiler_ints_irq10);
+        printf ("irq11: %d \n",__profiler_ints_irq11);
+        printf ("irq12: %d (ps/2 mouse)\n",__profiler_ints_irq12);
+        printf ("irq13: %d \n",__profiler_ints_irq13);
+        printf ("irq14: %d (ata1)\n",__profiler_ints_irq14);
+        printf ("irq15: %d (ata2)\n",__profiler_ints_irq15);
+                
+        printf ("int 0x80: %d (System interrupt)\n",__profiler_ints_gde_services);
+        goto exit_cmp;
+    }
+
+
     // kernel-info
 	if ( strncmp( prompt, "kernel-info", 11 ) == 0 )
 	{
@@ -2709,6 +2773,35 @@ do_compare:
     };
 	*/
 
+    unsigned long __memorysizeBaseMemory;
+    unsigned long __memorysizeOtherMemory;
+    unsigned long __memorysizeExtendedMemory;
+    unsigned long __memorysizeTotal;
+    unsigned long __memorysizeUsed;
+    unsigned long __memorysizeFree;
+    
+    if (strncmp ( prompt, "ram", 3 ) == 0)
+    {
+        __memorysizeBaseMemory = apiGetSystemMetrics (30);
+        __memorysizeOtherMemory = apiGetSystemMetrics (31);
+        __memorysizeExtendedMemory = apiGetSystemMetrics (32);
+        __memorysizeTotal = apiGetSystemMetrics (33);
+        
+        __memorysizeUsed = apiGetSystemMetrics (34);
+        __memorysizeFree = apiGetSystemMetrics (35);
+                
+        printf (" RAM Memory info:\n");
+        printf ("\n");
+        printf (" BaseMemory     = (%d KB)\n", __memorysizeBaseMemory );
+        printf (" OtherMemory    = (%d KB)\n", __memorysizeOtherMemory );
+        printf (" ExtendedMemory = (%d KB)\n", __memorysizeExtendedMemory );
+        printf (" TotalMemory    = (%d KB)\n", __memorysizeTotal );
+        printf ("\n");
+        printf (" TotalUsed      = (%d KB)\n", __memorysizeUsed );
+        printf (" TotalFree      = (%d KB)\n", __memorysizeFree );
+        goto exit_cmp;
+    }
+    
 	
 	// rename - rename directory or file.
 	// o que segue o comando rename são dois pathnames.
