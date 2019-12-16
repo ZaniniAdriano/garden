@@ -3583,6 +3583,24 @@ do_compare:
     }
 
 
+    if ( strncmp ( prompt, "wait-reason", 11 ) == 0)
+    {
+	    printf ("gdeshell: child ...\n");
+        system_call ( 900, (unsigned long) "launcher.bin", 0, 0 );
+    
+        printf ("gdeshell: still alive 1 ...\n");
+        
+		// wait for a reason. (current thread.)
+		gramado_system_call ( 970, 
+		    WAIT_REASON_TEST, 
+		    WAIT_REASON_TEST, 
+		    WAIT_REASON_TEST );
+		
+		printf ("gdeshell: still alive 2 ...\n");
+		        
+        goto exit_cmp;
+    }
+
 	//
 	// ========= Fim dos comandos ===========
 	//

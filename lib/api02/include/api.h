@@ -2076,6 +2076,22 @@ static unsigned long vga_256colors_palette[256] = {
 
 
 
+typedef enum {
+	
+	WAIT_REASON_NULL,
+	WAIT_REASON_LOOP,           
+	WAIT_REASON_EXIT,
+	WAIT_REASON_BLOCKED,
+	WAIT_REASON_PREMMPTED,      // ?? Esperando a preempção de thread de menor prio.
+	WAIT_REASON_SEMAPHORE,      // ?? Semáforo.
+	WAIT_REASON_WAIT4PID,       // Esperando o processo filho morrer.
+	WAIT_REASON_WAIT4TID,       // Esperando uma thread morrer.
+	WAIT_REASON_TEST            // # Usada pelo desenvolvedor para testes.
+
+	//continua... @todo
+}thread_wait_reason_t;
+
+
 //
 // object support
 //
