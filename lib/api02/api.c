@@ -70,6 +70,7 @@
 
 
 // buttons
+struct window_d *first_responder;
 struct window_d *messagebox_button1;
 struct window_d *messagebox_button2;
 struct window_d *dialogbox_button1;
@@ -923,6 +924,8 @@ void apiInitBackground (){
  *     Types=[1~5]
  *     @todo: Devemos considerar o retorno? E se a chamada falhar?
  */
+ 
+int __mb_current_button; 
 
 // #todo: 
 // usar get system metrics
@@ -957,6 +960,10 @@ int MessageBox ( int type, char *string1, char *string2 ){
     WindowClientAreaColor = xCOLOR_GRAY3;   
     WindowColor = COLOR_TERMINAL2;  
 
+
+    //seleciona o botão 1. first responder;
+    __mb_current_button = 1;
+    first_responder = messagebox_button1;
 
 	// Obs: 
 	// Por enquanto para todos os tipos de messagebox 
@@ -1168,7 +1175,9 @@ exit_messagebox:
 /*
  **************************************************
  * mbProcedure:
- *     O procedimento padrão de message box. */
+ *     O procedimento padrão de message box. 
+ *     #interna
+ */
 
 unsigned long 
 mbProcedure ( struct window_d *window, 
@@ -1176,6 +1185,7 @@ mbProcedure ( struct window_d *window,
               unsigned long long1, 
               unsigned long long2 )
 {
+
     switch (msg)
 	{
 		// MSG_MOUSEKEYDOWN
@@ -1185,24 +1195,60 @@ mbProcedure ( struct window_d *window,
 				case 1://botão 1
 					if ( window == messagebox_button1 )
 					{
-						return (unsigned long) 102;
+                    gramado_system_call ( 9900,   
+                          (unsigned long) window, 
+                          (unsigned long) window, 
+                          (unsigned long) window );
+						  return (unsigned long) 0;
 						break;
 					}	
 					if ( window == messagebox_button2 )
 					{
+                     gramado_system_call ( 9900,   
+                          (unsigned long) window, 
+                          (unsigned long) window, 
+                          (unsigned long) window );
 						return (unsigned long) 0;
 						break;
 					}
 				   break;
 			};
 		    break;
+		    
+		//mouse keyup    
+		case 31:
+		    switch (long1)
+		    {
+				case 1://botão 1
+					if ( window == messagebox_button1 )
+					{
+                    gramado_system_call ( 9901,   
+                          (unsigned long) window, 
+                          (unsigned long) window, 
+                          (unsigned long) window );
+						return (unsigned long) 102; //resposta ok
+						break;
+					}	
+					if ( window == messagebox_button2 )
+					{
+                     gramado_system_call ( 9901,   
+                          (unsigned long) window, 
+                          (unsigned long) window, 
+                          (unsigned long) window );
+						return (unsigned long) 101; //resposta no
+						break;
+					}
+				   break;
+			};
+		    break;
 
-        case MSG_KEYDOWN:
+        case MSG_KEYUP:
             switch(long1)
             {
-                case VK_ESCAPE:
-				    printf ("scape\n");
-                    return (unsigned long) 101;
+				    
+				case VK_RETURN:
+				    //goto __release_current_button;
+				    return (unsigned long) 0;
 				    break;
 				   
                 default:
@@ -1212,18 +1258,61 @@ mbProcedure ( struct window_d *window,
             };
             break;
 
+
+        case MSG_KEYDOWN:
+            switch(long1)
+            {
+                case VK_ESCAPE:
+				    printf ("scape\n");
+                    return (unsigned long) 101; //resposta no
+				    break;
+				    
+				 case VK_TAB:
+				     //if ( __mb_current_button == 1 )
+				     //{
+						// __mb_current_button = 2; 
+						 //first_responder = messagebox_button2; 
+						 //gde_set_focus (first_responder);
+						 //return (unsigned long) 0;
+						 //break; 
+				     //}
+				     //if ( __mb_current_button == 2 )
+				     //{
+						// __mb_current_button = 1; 
+						 //first_responder = messagebox_button1;
+						 //gde_set_focus (first_responder);
+						 //return (unsigned long) 0;
+						 //break; 
+					 //}
+					 return (unsigned long) 0;
+				     break;
+				    
+				case VK_RETURN:
+				    //goto __press_current_button;
+				    return (unsigned long) 0;
+				    break;
+				   
+                default:
+				    //printf ("defaul keydown\n");
+				    return (unsigned long) 0;
+                    break; 
+            };
+            break;
+            
+
         case MSG_SYSKEYDOWN: 
             switch(long1)	       
             {	
 				//Test.
 				case VK_F1:
-				    printf ("f1\n");
-                    return (unsigned long) 102;
+				    printf ("f1 Yes\n");
+                    return (unsigned long) 102; //resposta ok.
 					break;
 					
-                //case VK_F2:
-				    //Nothing.
-				//	break;
+                case VK_F2:
+				    printf ("f2 No\n");
+                    return (unsigned long) 101; //resposta no.
+					break;
 
 				default:
 				    //printf ("default sys key down\n");
@@ -1244,15 +1333,63 @@ mbProcedure ( struct window_d *window,
 		    return (unsigned long) 0;
             break;
 	};
-	
-	//Refresh screen. 
-	//?? deletar.
-	//if(VideoBlock.useGui == 1){
-	//    refresh_screen();
-	//};
 
 	printf ("done\n");
 	return (unsigned long) 0;
+	
+	
+/*	
+__press_current_button:
+
+    // button_down
+    // Quando um botão é clicado ou pressionado,
+    // ele será repintado com a aparência de botão apertado.
+    switch ( __mb_current_button )
+    {
+		case 1:
+        gramado_system_call ( 9900,   
+             (unsigned long) window, 
+             (unsigned long) window, 
+             (unsigned long) window );
+		     break;
+		     
+		case 2:
+        gramado_system_call ( 9900,   
+             (unsigned long) window, 
+             (unsigned long) window, 
+             (unsigned long) window );
+		     break;
+    };
+    return (unsigned long) 0;
+*/
+
+/*
+__release_current_button:
+
+    // button_down
+    // Quando um botão é clicado ou pressionado,
+    // ele será repintado com a aparência de botão apertado.
+    switch ( __mb_current_button )
+    {
+		case 1:
+        gramado_system_call ( 9901,   
+             (unsigned long) window, 
+             (unsigned long) window, 
+             (unsigned long) window );
+             return (unsigned long) 102;
+		     break;
+		     
+		case 2:
+        gramado_system_call ( 9901,   
+             (unsigned long) window, 
+             (unsigned long) window, 
+             (unsigned long) window );
+             return (unsigned long) 101;
+		     break;
+    };
+	return (unsigned long) 0; 
+*/
+   
 }
 
 

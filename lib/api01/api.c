@@ -2643,7 +2643,7 @@ static int nibble_count_16colors = 0;
 int 
 apiDisplayBMP ( char *address, 
                 unsigned long x, 
-				unsigned long y )
+                unsigned long y )
 {
 	int i, j, base, offset;
 	
@@ -2911,7 +2911,7 @@ apiDisplayBMP ( char *address,
 					
 			        //r
 			        c[3] = bmp[offset+1];
-			        c[3] = c[3] & 0x1F;     // 0000 0000 '0001 1111' 										
+			        c[3] = c[3] & 0x1F;     // 0000 0000 '0001 1111' 
 		        
 				    base = base + 2;    
 				//};					
@@ -2942,7 +2942,7 @@ apiDisplayBMP ( char *address,
 	        { 
 				//A
 				//offset = base+3;
-			    c[0] = 0;				
+			    c[0] = 0;
 				
 				offset = base;
 			    c[1] = bmp[offset];
@@ -2957,8 +2957,10 @@ apiDisplayBMP ( char *address,
 	        };
 			
 			
-			system_call ( SYSTEMCALL_BUFFER_PUTPIXEL, (unsigned long) color, 
-				(unsigned long) left, (unsigned long) bottom );
+			system_call ( SYSTEMCALL_BUFFER_PUTPIXEL, 
+			    (unsigned long) color, 
+				(unsigned long) left, 
+				(unsigned long) bottom );
 			
 			// Próximo pixel.
 			left++; 
@@ -2989,8 +2991,8 @@ fail:
 done:	
 	//Debug
 	//printf("w={%d} h={%d}\n", bi->bmpWidth, bi->bmpHeight );
-	return (int) 0;
-};
+	return 0;
+}
 
 
 /*
@@ -3021,11 +3023,12 @@ apiSendMessage ( struct window_d *window,
 }
 
 
-int apiDrawText ( struct window_d *window, 
+int 
+apiDrawText ( struct window_d *window, 
                   unsigned long x, 
-				  unsigned long y, 
-				  unsigned long color, 
-				  char *string )
+                  unsigned long y, 
+                  unsigned long color, 
+                  char *string )
 {
 	
 	unsigned long msg[8];
@@ -3036,51 +3039,73 @@ int apiDrawText ( struct window_d *window,
 	msg[3] = (unsigned long) color;
 	msg[4] = (unsigned long) string;
 	//...
-	
-	return (int) system_call ( SYSTEMCALL_DRAWTEXT , 
-	                (unsigned long) &msg[0], 
-					(unsigned long) &msg[0], 
-					(unsigned long) &msg[0] );		
-};
+
+   return (int) system_call ( SYSTEMCALL_DRAWTEXT , 
+                    (unsigned long) &msg[0], 
+                    (unsigned long) &msg[0], 
+                    (unsigned long) &msg[0] );
+}
 
 
 
 struct window_d *apiGetWSScreenWindow (){
-	
+
     return (struct window_d *) system_call ( 146 , 0, 0, 0 );
-};
+}
 
 
 struct window_d *apiGetWSMainWindow (){
-	
+
     return (struct window_d *) system_call ( 147 , 0, 0, 0 );
-};
+}
 
 
 //create timer;
 struct timer_d *apiCreateTimer ( struct window_d *window, 
                                  unsigned long ms, 
-								 int type )
+                                 int type )
 {
-	return (struct timer_d *) system_call ( 222, (unsigned long) window, 
-							      (unsigned long) ms, (unsigned long) type );
+    return (struct timer_d *) system_call ( 222, 
+                                  (unsigned long) window, 
+                                  (unsigned long) ms, 
+                                  (unsigned long) type );
 }
 
 
 // pega informações varidas sobre o sys time.
 unsigned long apiGetSysTimeInfo ( int n ){
-	
-	return (unsigned long) system_call ( 223, (unsigned long) n, 
-								(unsigned long) n, (unsigned long) n );
+
+   return (unsigned long) system_call ( 223, 
+                             (unsigned long) n, 
+                             (unsigned long) n, 
+                             (unsigned long) n );
 }
 
 
 //mostra uma janela na tela. backbuffer ---> frontbuffer
 void apiShowWindow (struct window_d *window){
 	
-    system_call ( 24, (unsigned long) window, (unsigned long) window, 
-        (unsigned long) window );	
+    system_call ( 24, 
+        (unsigned long) window, 
+        (unsigned long) window, 
+        (unsigned long) window );
 }
+
+
+
+struct window_d *gde_get_screen_window (void)
+{
+	return (struct window_d *) gramado_system_call ( 955, 0, 0, 0 );
+}
+
+
+struct window_d *gde_get_main_window (void)
+{
+	return (struct window_d *) gramado_system_call ( 956, 0, 0, 0 );
+}
+
+
+
 
 
 //

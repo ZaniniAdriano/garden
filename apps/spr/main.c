@@ -558,11 +558,11 @@ shellProcedure ( struct window_d *window,
 				// Finaliza a string e compara.
 				case VK_RETURN:
 				    
-					//#test
-					printf("\r");
-					printf("\n");
+					//#test - não vamos pular pois a barra só tem uma linha.
+					//printf("\r");
+					//printf("\n");
 				
-				    input('\0'); 
+				    input ('\0');  //finalizar a string digitada na barra.
 					
 					//#obs: 
 					//#importante 
@@ -847,8 +847,13 @@ shellProcedure ( struct window_d *window,
                             (unsigned long) window, 
                             (unsigned long) window, 
                             (unsigned long) window );
-						MessageBox ( 3, "*Test", "*Button up");
+						//MessageBox ( 3, "*Test", "*Button up");
                         //printf ("shellProcedure: Testing MessageBox done\n");
+					    //printf("\r");
+					    //printf("\n");
+				        input ('\0'); //finalizar a string digitada na barra. 
+					    shellCompare (window);
+					    goto done;
                         break;
                     }
 					

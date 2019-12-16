@@ -278,9 +278,9 @@ int main ( int argc, char *argv[] ){
     unsigned long deviceHeight = apiGetSystemMetrics (2);
 
     //left = deviceWidth/2;
-    left = 10;
+    left = 4;
     //top = deviceHeight/3;
-    top = 10;
+    top = 4;
 
     /*
     if (deviceWidth > 600)
@@ -291,8 +291,8 @@ int main ( int argc, char *argv[] ){
     }
     */
     
-    width = 480;
-    height = 480;
+    width = deviceWidth -20;
+    height = (deviceHeight/2);
     
     //width = deviceWidth/3;
     //height = deviceHeight/3;

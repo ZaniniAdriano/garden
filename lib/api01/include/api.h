@@ -3451,6 +3451,11 @@ struct timer_d *apiCreateTimer ( struct window_d *window,
 // pega informações varidas sobre o sys time.
 unsigned long apiGetSysTimeInfo ( int n );
 
+
+
+struct window_d *gde_get_screen_window (void);
+struct window_d *gde_get_main_window (void);
+
 //
 //...
 //
