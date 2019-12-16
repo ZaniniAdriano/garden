@@ -535,8 +535,46 @@ int deltaY;
 //int deltaValue = 4;
 int deltaValue = 1;
 
-// Usado para testar o timer.
 
+
+int __count;
+unsigned long CPU_USAGE[10];
+
+// Usado para testar o timer.
+void update_cpu_usage ()
+{
+
+	unsigned long __idle_value;
+	unsigned long __value;
+		
+	int i;
+
+    __count++;
+	printf ("%d ",__count);
+	
+	__idle_value = (unsigned long) gramado_system_call( 777, 0, 0, 0);
+	
+	__value = (100 - __idle_value);
+	CPU_USAGE[__count] = __value;
+	
+    if (__count >= 9)
+    {
+	    __count = 0;
+				
+		for (i=0; i<9; i++)
+		{
+			printf ("%d ", (unsigned long) CPU_USAGE[i]);
+		}
+		printf ("\n");
+    }
+	
+	printf ("fim\n");
+	
+    //printf ("cpu usage: %d percent \n", __value);
+}
+
+
+// Usado para testar o timer.
 void updateObject ()
 {
    //RECT rc;
@@ -1192,12 +1230,17 @@ shellProcedure( struct window_d *window,
 		case MSG_CREATE:
 		    printf("SHELL.BIN: MSG_CREATE\n");
 		    break;
-			
+		
+		
+		//#IMPORTANTE
+		// a API CHAMA ISSO DE TEMPOS EM TEMPOS DE ACORDO
+		//COM A CONFIGURAÇÃO FEITA ANTES POR ESSE APP.
 		//MSG_TIMER ;;#TODO INCLUIR ISS0 NA API.	
 		case 53:
 		    //printf("shell tick\n");
-			updateObject(); //interna
-            break; 		
+			//updateObject(); //interna
+            update_cpu_usage ();
+            break; 
 		
 		case MSG_SETFOCUS:
 		    APISetFocus(window);
@@ -3344,6 +3387,8 @@ do_compare:
 	// de tempos em tempos e é tratado pelo procedimento de janelas.
 	if ( strncmp( prompt, "timer-test", 10 ) == 0 )
 	{
+		__count = 0; //tem que uinicializar;
+		
 		printf("timer-test: Creating timer\n");
 	    printf("%d Hz | sys time %d ms | ticks %d \n", 
 		    apiGetSysTimeInfo(1), 
