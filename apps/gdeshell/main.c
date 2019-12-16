@@ -95,6 +95,7 @@
 
 // A janela principal do aplicativo.
 struct window_d *hWindow;  
+struct window_d *cpu_window;  //cpu usage test;
 
 #define WINDOW_LEFT      0      //10
 #define WINDOW_TOP       0      //10
@@ -538,7 +539,7 @@ int deltaValue = 1;
 
 
 int __count;
-unsigned long CPU_USAGE[10];
+unsigned long CPU_USAGE[32];
 
 // Usado para testar o timer.
 void update_cpu_usage ()
@@ -550,25 +551,31 @@ void update_cpu_usage ()
 	int i;
 
     __count++;
-	printf ("%d ",__count);
+	//printf ("%d ",__count);
 	
 	__idle_value = (unsigned long) gramado_system_call( 777, 0, 0, 0);
 	
-	__value = (100 - __idle_value);
-	CPU_USAGE[__count] = __value;
+	//__value = (100 - __idle_value);
+	//CPU_USAGE[__count] = __value;
+	CPU_USAGE[__count] = __idle_value;
 	
-    if (__count >= 9)
+    if (__count >= 32)
     {
 	    __count = 0;
-				
-		for (i=0; i<9; i++)
+		
+		//limpa
+		APIredraw_window ( cpu_window, 1 );
+		for (i=0; i<32; i++)
 		{
-			printf ("%d ", (unsigned long) CPU_USAGE[i]);
+			//printf ("%d ", (unsigned long) CPU_USAGE[i]);
+		
+		    apiDrawText ( cpu_window, i*8, CPU_USAGE[i], COLOR_BLACK, "+");
 		}
-		printf ("\n");
+		apiShowWindow (cpu_window);
+		//printf ("\n");
     }
 	
-	printf ("fim\n");
+	//printf ("fim\n");
 	
     //printf ("cpu usage: %d percent \n", __value);
 }
@@ -3394,6 +3401,15 @@ do_compare:
 		    apiGetSysTimeInfo(1), 
 			apiGetSysTimeInfo(2), 
 			apiGetSysTimeInfo(3) );
+			
+		enterCriticalSection ();
+		cpu_window = (void *) APICreateWindow ( 1, 1, 1, "shell-main",     
+                                 10, 10, 32*8, 100,    
+                     0, 0, COLOR_YELLOW, COLOR_YELLOW );
+        APIRegisterWindow (hWindow);
+	    apiShowWindow (hWindow);
+	    exitCriticalSection ();	
+
 					
 		//janela, 100 ms, tipo 2= intermitente.
 		//system_call ( 222, (unsigned long) window, 100, 2);
@@ -7946,7 +7962,6 @@ noArgs:
 	// na inicialização.
 	
 	enterCriticalSection ();    
-    
     hWindow = shellCreateMainWindow (1);
 	
 	if ( (void *) hWindow == NULL )
@@ -7959,7 +7974,6 @@ noArgs:
 	
     APIRegisterWindow (hWindow);
 	apiShowWindow (hWindow);
-	
 	exitCriticalSection ();	
 	
 	//#debug

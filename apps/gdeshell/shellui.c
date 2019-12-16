@@ -571,7 +571,6 @@ struct window_d *shellCreateMainWindow ( int status ){
 	w = (void *) APICreateWindow ( 1, 1, 1, "shell-main",     
                      wpWindowLeft, wpWindowTop, wsWindowWidth, wsWindowHeight,    
                      0, 0, xCOLOR_GRAY1, xCOLOR_GRAY1 );
-                     //0, 0, COLOR_RED, COLOR_RED );
 								
 	if ( (void *) w == NULL )
 	{	
