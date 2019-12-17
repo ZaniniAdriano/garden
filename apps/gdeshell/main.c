@@ -3570,7 +3570,35 @@ do_compare:
 	{
 		shellShowWindowInfo();
         goto exit_cmp;
-    };
+    }
+    
+
+	// wscreen - test screen window (root window)
+	//#bugbug: isso não funcionou
+    struct window_d *__screen_window;
+    if ( strncmp( prompt, "wscreen", 7 ) == 0 )
+	{
+		//#obs: se minimizada, por isso não pode ser pintada ou repintada.
+        __screen_window = (struct window_d *) gde_get_screen_window();
+        gde_redraw_window (__screen_window,1);
+        //apiShowWindow (__screen_window);
+        goto exit_cmp;
+    }
+    
+	// wmain - test main window (main window)
+    //#bugbug: isso não funcionou
+    struct window_d *__main_window;
+    if ( strncmp( prompt, "wmain", 5 ) == 0 )
+	{
+		//#obs: se minimizada, por isso não pode ser pintada ou repintada.
+        __main_window =  (struct window_d *) gde_get_main_window ();
+        
+        gde_resize_window (__main_window, 800, 600-40);
+        gde_redraw_window (__main_window,1);
+        //apiShowWindow (__main_window);        
+        goto exit_cmp;
+    }
+
 
 
 	// wait-test - Vamos esperar por qualquer um dos filhos.

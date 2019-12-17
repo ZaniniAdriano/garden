@@ -3487,6 +3487,22 @@ int gde_get_pid (int index){
 }
 
 
+struct window_d *gde_get_screen_window (void)
+{
+	return (struct window_d *) gramado_system_call ( 955, 0, 0, 0 );
+}
+
+
+struct window_d *gde_get_background_window (void)
+{
+	return (struct window_d *) gramado_system_call ( 956, 0, 0, 0 );
+}
+
+
+struct window_d *gde_get_main_window (void)
+{
+	return (struct window_d *) gramado_system_call ( 957, 0, 0, 0 );
+}
 
 //
 // End.

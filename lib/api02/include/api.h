@@ -3746,13 +3746,16 @@ apiUpdateStatusBar ( struct window_d *window,
 
 
 
-
 // Usada para obter o pid de alguns drivers e servidores
 // do sistema. Aqueles servidores que só podem ter um do tipo 
 // rodando ao mesmo tempo.
 int gde_get_pid (int index);
 
 
+
+struct window_d *gde_get_screen_window (void);
+struct window_d *gde_get_background_window (void);
+struct window_d *gde_get_main_window (void);
 
 //
 // Aliases
