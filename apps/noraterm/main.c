@@ -6823,8 +6823,8 @@ noArgs:
 
      __bgleft = 1;
      __bgtop = 1 +36;
-     __bgwidth  = (__wlMaxColumns*8) +40;  //wsWindowWidth -40;
-     __bgheight = (__wlMaxRows*8) +40;     //wsWindowHeight -40 -40;
+     __bgwidth  = (__wlMaxColumns*8) +60;      //wsWindowWidth -40;
+     __bgheight = (__wlMaxRows*8)    +200;     //wsWindowHeight -40 -40;
  
      __barleft = 2;
      __bartop = 2;
@@ -6837,8 +6837,8 @@ noArgs:
 
     terminal_rect.left  = 4;
     terminal_rect.top   = 1 +40;
-    terminal_rect.width  = __bgwidth  -4;  //wsWindowWidth -40 -10;
-    terminal_rect.height = __bgheight -4;  //wsWindowHeight -40 -40 -40 -10;
+    terminal_rect.width  = __bgwidth  -40;  //wsWindowWidth -40 -10;
+    terminal_rect.height = __bgheight -50;  //wsWindowHeight -40 -40 -40 -10;
     
     // #importante
     // Reajustando o limite de caracteres por linha.

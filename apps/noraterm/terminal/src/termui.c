@@ -531,7 +531,7 @@ struct window_d *terminalCreateMainWindow ( int status ){
 	wpWindowLeft = DEFAULT_WINDOW_X;  //0;
 	wpWindowTop =  DEFAULT_WINDOW_Y;  //0;
 	wsWindowWidth  = (__wlMaxColumns*8) +100;  //640;  
-	wsWindowHeight = (__wlMaxRows*8) +100;     //480;  
+	wsWindowHeight = (__wlMaxRows*8)    +300;     //480;  
 
 
 	

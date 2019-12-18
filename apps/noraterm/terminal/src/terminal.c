@@ -848,7 +848,8 @@ void terminal_clear_from_startofline ()
     for (i=0; i<OldX; i++)
     {
 		//coloca um char na posição atual.
-        terminal_write_char ('X');
+        terminal_write_char (' ');
+        //terminal_write_char ('X');
         //terminalInsertCharXY ( i, textCurrentRow, temp );
     }
     
@@ -877,7 +878,8 @@ void terminal_clear_to_endofline ()
     //começa da coluna atual e vai até o fim da linha.
     for ( i=textCurrentCol; i< __wlMaxColumns; i++)
     {
-		terminal_write_char ('Y');
+		terminal_write_char (' ');
+		//terminal_write_char ('Y');
         //terminalInsertCharXY ( i, textCurrentRow, temp );
     }
 
@@ -951,15 +953,18 @@ void terminal_clear_to_endofdisplay ()
         for (x=0; x< __wlMaxColumns; x++)
         {
 			//coloca um char na posição atual.
-            terminal_write_char ('Z');
+            terminal_write_char (' ');
+            //terminal_write_char ('Z');
         };
     };
 
-		MessageBox ( 3,
-		    "terminal_clear_to_endofdisplay",
-		    "fim");
+		//MessageBox ( 3,
+		    //"terminal_clear_to_endofdisplay",
+		    //"fim");
     
-    while(1){}
+    //while(1){}
+    
+    terminalSetCursor ( 0, (__wlMaxRows -3) );
 }
 
 
