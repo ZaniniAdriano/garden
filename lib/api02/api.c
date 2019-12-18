@@ -3507,13 +3507,13 @@ struct window_d *gde_get_main_window (void)
 
 
 //pega o nome do processo dado o pid.
-int gde_getusername (int pid, char *name, size_t len)
+int gde_getprocessname (int pid, char *name, size_t len)
 {
 	int __len_ret;
 	
 	if ( len < 0 || len > 64 ) //HOST_NAME_MAX
 	{
-	    printf ("gde_getusername: len\n");
+	    printf ("gde_getprocessname: len\n");
 	    return -1;
 	}
 
@@ -3527,7 +3527,7 @@ int gde_getusername (int pid, char *name, size_t len)
 
 	if ( __len_ret < 0 || __len_ret > 64 ) //HOST_NAME_MAX
 	{
-	    printf ("gde_getusername: __len_ret\n");
+	    printf ("gde_getprocessname: __len_ret\n");
 	    return -1;
 	}
 
@@ -3539,6 +3539,63 @@ int gde_getusername (int pid, char *name, size_t len)
 
     return 0;
 }
+
+
+//pega o nome do thread dado o tid.
+int gde_getthreadname (int tid, char *name, size_t len)
+{
+	int __len_ret;
+	
+	if ( len < 0 || len > 64 ) //HOST_NAME_MAX
+	{
+	    printf ("gde_getthreadname: len\n");
+	    return -1;
+	}
+
+
+
+    //coloca no buffer interno
+    __len_ret = (int) gramado_system_call ( 883, 
+                        (unsigned long) tid,
+                        (unsigned long) name,
+                        (unsigned long) name );
+
+	if ( __len_ret < 0 || __len_ret > 64 ) //HOST_NAME_MAX
+	{
+	    printf ("gde_getthreadname: __len_ret\n");
+	    return -1;
+	}
+
+	if ( __len_ret > len )
+	{
+		__len_ret = len;
+	}
+
+
+    return 0;
+}
+
+
+
+unsigned long apiGetProcessStats (int pid, int index){
+
+    return (unsigned long) system_call ( 880, 
+                               (unsigned long) pid, 
+                               (unsigned long) index, 
+                               (unsigned long) index );
+}
+
+unsigned long apiGetThreadStats (int tid, int index){
+
+    return (unsigned long) system_call ( 881, 
+                               (unsigned long) tid, 
+                               (unsigned long) index, 
+                               (unsigned long) index );
+}
+
+
+
+
 
 
 //

@@ -3759,10 +3759,12 @@ struct window_d *gde_get_main_window (void);
 
 
 
-int gde_getusername (int pid, char *name, size_t len);
+int gde_getprocessname (int pid, char *name, size_t len);
+int gde_getthreadname (int tid, char *name, size_t len);
 
 
-
+unsigned long apiGetProcessStats (int pid, int index);
+unsigned long apiGetThreadStats (int tid, int index);
 
 //
 // Aliases

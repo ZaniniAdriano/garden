@@ -308,7 +308,7 @@ Linker script and memory map
                 0x0000000000406618                ttyname_r
                 0x0000000000406622                isatty
                 0x0000000000406645                getopt
- .text          0x000000000040664f     0x20f3 api.o
+ .text          0x000000000040664f     0x2170 api.o
                 0x000000000040664f                system_call
                 0x0000000000406677                apiSystem
                 0x0000000000406a7f                system1
@@ -412,36 +412,37 @@ Linker script and memory map
                 0x0000000000408674                gde_get_screen_window
                 0x000000000040868f                gde_get_background_window
                 0x00000000004086aa                gde_get_main_window
-                0x00000000004086c5                gde_getusername
- .text          0x0000000000408742      0x130 status.o
-                0x0000000000408742                statusInitializeStatusBar
-                0x00000000004087dc                update_statuts_bar
- .text          0x0000000000408872       0x9a addrbar.o
-                0x0000000000408872                topbarInitializeTopBar
- .text          0x000000000040890c      0x165 termios.o
-                0x000000000040890c                tcgetattr
-                0x000000000040892a                tcsetattr
-                0x00000000004089a3                tcsendbreak
-                0x00000000004089ad                tcdrain
-                0x00000000004089b7                tcflush
-                0x00000000004089c1                tcflow
-                0x00000000004089cb                cfmakeraw
-                0x0000000000408a3d                cfgetispeed
-                0x0000000000408a48                cfgetospeed
-                0x0000000000408a53                cfsetispeed
-                0x0000000000408a5d                cfsetospeed
-                0x0000000000408a67                cfsetspeed
- .text          0x0000000000408a71       0x3d ioctl.o
-                0x0000000000408a71                ioctl
- .text          0x0000000000408aae       0x28 stubs.o
-                0x0000000000408aae                gramado_system_call
+                0x00000000004086c5                gde_getprocessname
+                0x0000000000408742                gde_getthreadname
+ .text          0x00000000004087bf      0x130 status.o
+                0x00000000004087bf                statusInitializeStatusBar
+                0x0000000000408859                update_statuts_bar
+ .text          0x00000000004088ef       0x9a addrbar.o
+                0x00000000004088ef                topbarInitializeTopBar
+ .text          0x0000000000408989      0x165 termios.o
+                0x0000000000408989                tcgetattr
+                0x00000000004089a7                tcsetattr
+                0x0000000000408a20                tcsendbreak
+                0x0000000000408a2a                tcdrain
+                0x0000000000408a34                tcflush
+                0x0000000000408a3e                tcflow
+                0x0000000000408a48                cfmakeraw
+                0x0000000000408aba                cfgetispeed
+                0x0000000000408ac5                cfgetospeed
+                0x0000000000408ad0                cfsetispeed
+                0x0000000000408ada                cfsetospeed
+                0x0000000000408ae4                cfsetspeed
+ .text          0x0000000000408aee       0x3d ioctl.o
+                0x0000000000408aee                ioctl
+ .text          0x0000000000408b2b       0x28 stubs.o
+                0x0000000000408b2b                gramado_system_call
                 0x0000000000409000                . = ALIGN (0x1000)
- *fill*         0x0000000000408ad6      0x52a 
+ *fill*         0x0000000000408b53      0x4ad 
 
 .iplt           0x0000000000409000        0x0
  .iplt          0x0000000000409000        0x0 crt0.o
 
-.rodata         0x0000000000409000     0x10a6
+.rodata         0x0000000000409000     0x10e6
  .rodata        0x0000000000409000       0x74 crt0.o
  .rodata        0x0000000000409074      0x138 main.o
  *fill*         0x00000000004091ac       0x14 
@@ -453,66 +454,66 @@ Linker script and memory map
  *fill*         0x0000000000409b09        0x3 
  .rodata        0x0000000000409b0c       0x89 unistd.o
  *fill*         0x0000000000409b95        0x3 
- .rodata        0x0000000000409b98      0x4a3 api.o
- .rodata        0x000000000040a03b       0x34 status.o
- *fill*         0x000000000040a06f        0x1 
- .rodata        0x000000000040a070       0x36 addrbar.o
+ .rodata        0x0000000000409b98      0x4e1 api.o
+ .rodata        0x000000000040a079       0x34 status.o
+ *fill*         0x000000000040a0ad        0x3 
+ .rodata        0x000000000040a0b0       0x36 addrbar.o
 
-.eh_frame       0x000000000040a0a8     0x2c30
- .eh_frame      0x000000000040a0a8       0x34 crt0.o
- .eh_frame      0x000000000040a0dc       0x58 main.o
+.eh_frame       0x000000000040a0e8     0x2c50
+ .eh_frame      0x000000000040a0e8       0x34 crt0.o
+ .eh_frame      0x000000000040a11c       0x58 main.o
                                          0x70 (size before relaxing)
- .eh_frame      0x000000000040a134      0x600 stdlib.o
+ .eh_frame      0x000000000040a174      0x600 stdlib.o
                                         0x618 (size before relaxing)
- .eh_frame      0x000000000040a734      0xb74 stdio.o
+ .eh_frame      0x000000000040a774      0xb74 stdio.o
                                         0xb8c (size before relaxing)
- .eh_frame      0x000000000040b2a8      0x4c0 string.o
+ .eh_frame      0x000000000040b2e8      0x4c0 string.o
                                         0x4d8 (size before relaxing)
- .eh_frame      0x000000000040b768      0x600 unistd.o
+ .eh_frame      0x000000000040b7a8      0x600 unistd.o
                                         0x618 (size before relaxing)
- .eh_frame      0x000000000040bd68      0xd4c api.o
-                                        0xd64 (size before relaxing)
- .eh_frame      0x000000000040cab4       0x40 status.o
+ .eh_frame      0x000000000040bda8      0xd6c api.o
+                                        0xd84 (size before relaxing)
+ .eh_frame      0x000000000040cb14       0x40 status.o
                                          0x58 (size before relaxing)
- .eh_frame      0x000000000040caf4       0x20 addrbar.o
+ .eh_frame      0x000000000040cb54       0x20 addrbar.o
                                          0x38 (size before relaxing)
- .eh_frame      0x000000000040cb14      0x180 termios.o
+ .eh_frame      0x000000000040cb74      0x180 termios.o
                                         0x198 (size before relaxing)
- .eh_frame      0x000000000040cc94       0x20 ioctl.o
+ .eh_frame      0x000000000040ccf4       0x20 ioctl.o
                                          0x38 (size before relaxing)
- .eh_frame      0x000000000040ccb4       0x24 stubs.o
+ .eh_frame      0x000000000040cd14       0x24 stubs.o
                                          0x3c (size before relaxing)
 
-.rel.dyn        0x000000000040ccd8        0x0
- .rel.got       0x000000000040ccd8        0x0 crt0.o
- .rel.iplt      0x000000000040ccd8        0x0 crt0.o
- .rel.text      0x000000000040ccd8        0x0 crt0.o
+.rel.dyn        0x000000000040cd38        0x0
+ .rel.got       0x000000000040cd38        0x0 crt0.o
+ .rel.iplt      0x000000000040cd38        0x0 crt0.o
+ .rel.text      0x000000000040cd38        0x0 crt0.o
 
-.data           0x000000000040cce0     0x1320
-                0x000000000040cce0                data = .
-                0x000000000040cce0                _data = .
-                0x000000000040cce0                __data = .
+.data           0x000000000040cd40     0x12c0
+                0x000000000040cd40                data = .
+                0x000000000040cd40                _data = .
+                0x000000000040cd40                __data = .
  *(.data)
- .data          0x000000000040cce0       0x14 crt0.o
- *fill*         0x000000000040ccf4        0xc 
- .data          0x000000000040cd00      0x444 main.o
-                0x000000000040d140                running
- .data          0x000000000040d144        0x0 ctype.o
- *fill*         0x000000000040d144        0x4 
- .data          0x000000000040d148        0x8 stdlib.o
-                0x000000000040d148                _infinity
- .data          0x000000000040d150        0x0 stdio.o
- .data          0x000000000040d150        0x0 string.o
- .data          0x000000000040d150        0x0 unistd.o
- *fill*         0x000000000040d150       0x10 
- .data          0x000000000040d160      0x440 api.o
- .data          0x000000000040d5a0      0x440 status.o
- .data          0x000000000040d9e0      0x440 addrbar.o
- .data          0x000000000040de20        0x0 termios.o
- .data          0x000000000040de20        0x0 ioctl.o
- .data          0x000000000040de20        0x0 stubs.o
+ .data          0x000000000040cd40       0x14 crt0.o
+ *fill*         0x000000000040cd54        0xc 
+ .data          0x000000000040cd60      0x444 main.o
+                0x000000000040d1a0                running
+ .data          0x000000000040d1a4        0x0 ctype.o
+ *fill*         0x000000000040d1a4        0x4 
+ .data          0x000000000040d1a8        0x8 stdlib.o
+                0x000000000040d1a8                _infinity
+ .data          0x000000000040d1b0        0x0 stdio.o
+ .data          0x000000000040d1b0        0x0 string.o
+ .data          0x000000000040d1b0        0x0 unistd.o
+ *fill*         0x000000000040d1b0       0x10 
+ .data          0x000000000040d1c0      0x440 api.o
+ .data          0x000000000040d600      0x440 status.o
+ .data          0x000000000040da40      0x440 addrbar.o
+ .data          0x000000000040de80        0x0 termios.o
+ .data          0x000000000040de80        0x0 ioctl.o
+ .data          0x000000000040de80        0x0 stubs.o
                 0x000000000040e000                . = ALIGN (0x1000)
- *fill*         0x000000000040de20      0x1e0 
+ *fill*         0x000000000040de80      0x180 
 
 .got            0x000000000040e000        0x0
  .got           0x000000000040e000        0x0 crt0.o
