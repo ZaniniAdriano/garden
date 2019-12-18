@@ -489,15 +489,11 @@ void terminalSetCursor ( unsigned long x, unsigned long y ){
 	
 	unsigned long __x, __y;
 	
-	// errado: muito afastado da margem.
-	//__x = (wpWindowLeft + terminal_rect.left + x ); 
-	//__y = (wpWindowTop + terminal_rect.top + y);
-
-	__x = ( ( (wpWindowLeft + terminal_rect.left)/8 ) + x ); 
-	__y = ( ( (wpWindowTop  + terminal_rect.top )/8 ) + y );
+   // Funcionou.
+	__x = ( ( (wpWindowLeft + terminal_rect.left + __barleft   )/8 ) + x ); 
+	__y = ( ( (wpWindowTop  + terminal_rect.top  + __barheight )/8 ) + y );
 	
 	apiSetCursor (__x,__y);
-    //apiSetCursor (x,y);
 }
 
 
@@ -846,8 +842,13 @@ void terminal_clear_from_startofline ()
     OldX = textCurrentCol;
     OldY = textCurrentRow;
     
+
+    //terminalSetCursor ( 1, OldY );
+    //terminal_write_char ('$');
+
     //posiciona no início da linha.
-    terminalSetCursor ( 0, OldY );
+    terminalSetCursor ( 1, OldY );
+    //terminal_write_char ('X');
     
     for (i=0; i<textCurrentCol; i++)
     {
@@ -856,6 +857,8 @@ void terminal_clear_from_startofline ()
         //terminalInsertCharXY ( i, textCurrentRow, temp );
     }
     
+    //Esse está funcionando.
+    //A rotina acima que não está.
     terminalSetCursor ( OldX, OldY );
 }
 
@@ -870,7 +873,7 @@ void terminal_clear_to_endofline ()
 
     char temp;
 
-    temp = 'X';
+    temp = 'Y';
     
     //save
     OldX = textCurrentCol;

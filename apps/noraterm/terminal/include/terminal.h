@@ -381,7 +381,19 @@ int textMaxWheelDelta;  //máximo que se pode rolar o texto
 //
 
 
-
+    //
+    // Bg window.
+    // 
+ 
+     unsigned long __bgleft;
+     unsigned long __bgtop;
+     unsigned long __bgwidth;
+     unsigned long __bgheight;
+ 
+     unsigned long __barleft;
+     unsigned long __bartop;
+     unsigned long __barwidth;
+     unsigned long __barheight;
 
 
 

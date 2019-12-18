@@ -21,6 +21,12 @@
 //https://tforgione.fr/posts/ansi-escape-codes/
 
 
+
+
+     
+     
+     
+
 /*
 Style	Code
 Bold	        \x1B[1m
@@ -6848,21 +6854,18 @@ noArgs:
 	// #obs
 	// terminalTerminal() inicializou todas as globais.
 
+
+
+     __bgleft = 1;
+     __bgtop = 1 +36;
+     __bgwidth = wsWindowWidth -40;
+     __bgheight = wsWindowHeight -40 -40;
  
-    //
-    // Bg window.
-    // 
- 
-     unsigned long __bgleft = 1;
-     unsigned long __bgtop = 1 +36;
-     unsigned long __bgwidth = wsWindowWidth -40;
-     unsigned long __bgheight = wsWindowHeight -40 -40;
- 
-     unsigned long __barleft = 2;
-     unsigned long __bartop = 2;
-     unsigned long __barwidth = wsWindowWidth -40 -10;
-     unsigned long __barheight = 40;
-     
+     __barleft = 2;
+     __bartop = 2;
+     __barwidth = wsWindowWidth -40 -10;
+     __barheight = 40;
+
     //
     // Client window.
     //
