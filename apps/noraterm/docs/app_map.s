@@ -582,7 +582,7 @@ Linker script and memory map
                 0x000000000040d155                gws_init
                 0x000000000040d187                serverInit
                 0x000000000040d1a4                serverDialog
- .text          0x000000000040d332      0xb7f terminal.o
+ .text          0x000000000040d332      0xb7d terminal.o
                 0x000000000040d332                terminalInsertNextChar
                 0x000000000040d360                terminalInsertNullTerminator
                 0x000000000040d370                terminalInsertLF
@@ -618,24 +618,24 @@ Linker script and memory map
                 0x000000000040dc40                move_to
                 0x000000000040dc6c                pad_to
                 0x000000000040dcbe                terminal_clear_from_startofline
-                0x000000000040dd20                terminal_clear_to_endofline
-                0x000000000040dd73                terminal_clear_to_endofdisplay
-                0x000000000040ddc1                terminal_scroll_display
-                0x000000000040de2e                terminalCopyToScroll
- .text          0x000000000040deb1      0x882 termui.o
-                0x000000000040deb1                termui_fntos
-                0x000000000040dfcb                terminalTopbarProcedure
-                0x000000000040e12f                terminalCreateEditBox
-                0x000000000040e19d                terminalCreateMainWindow
-                0x000000000040e259                terminalCreateWindow
-                0x000000000040e2eb                terminalDisplayBMP
-                0x000000000040e35f                terminalDisplayBMPEx
-                0x000000000040e3eb                terminalTestDisplayBMP
-                0x000000000040e44d                bmpDisplayBMP
-                0x000000000040e46a                terminalCreateTaskBar
-                0x000000000040e5a5                terminalTestButtons
+                0x000000000040dd1e                terminal_clear_to_endofline
+                0x000000000040dd71                terminal_clear_to_endofdisplay
+                0x000000000040ddbf                terminal_scroll_display
+                0x000000000040de2c                terminalCopyToScroll
+ .text          0x000000000040deaf      0x882 termui.o
+                0x000000000040deaf                termui_fntos
+                0x000000000040dfc9                terminalTopbarProcedure
+                0x000000000040e12d                terminalCreateEditBox
+                0x000000000040e19b                terminalCreateMainWindow
+                0x000000000040e257                terminalCreateWindow
+                0x000000000040e2e9                terminalDisplayBMP
+                0x000000000040e35d                terminalDisplayBMPEx
+                0x000000000040e3e9                terminalTestDisplayBMP
+                0x000000000040e44b                bmpDisplayBMP
+                0x000000000040e468                terminalCreateTaskBar
+                0x000000000040e5a3                terminalTestButtons
                 0x000000000040f000                . = ALIGN (0x1000)
- *fill*         0x000000000040e733      0x8cd 
+ *fill*         0x000000000040e731      0x8cf 
 
 .iplt           0x000000000040f000        0x0
  .iplt          0x000000000040f000        0x0 crt0.o

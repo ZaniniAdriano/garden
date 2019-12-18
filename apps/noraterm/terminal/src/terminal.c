@@ -847,10 +847,12 @@ void terminal_clear_from_startofline ()
     //terminal_write_char ('$');
 
     //posiciona no início da linha.
-    terminalSetCursor ( 1, OldY );
+    //terminalSetCursor ( 1, OldY );
     //terminal_write_char ('X');
     
-    for (i=0; i<textCurrentCol; i++)
+    terminalSetCursor ( 0, OldY );
+    
+    for (i=0; i<OldX; i++)
     {
 		//coloca um char na posição atual.
         terminal_write_char ('X');
