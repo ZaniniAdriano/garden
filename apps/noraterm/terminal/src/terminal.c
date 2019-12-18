@@ -827,6 +827,7 @@ void reset_terminal(){
 */
 
 
+//funcionou
 // preencher com espaços do início da linha
 //até a coluna atual
 void terminal_clear_from_startofline ()
@@ -841,15 +842,7 @@ void terminal_clear_from_startofline ()
     //save
     OldX = textCurrentCol;
     OldY = textCurrentRow;
-    
 
-    //terminalSetCursor ( 1, OldY );
-    //terminal_write_char ('$');
-
-    //posiciona no início da linha.
-    //terminalSetCursor ( 1, OldY );
-    //terminal_write_char ('X');
-    
     terminalSetCursor ( 0, OldY );
     
     for (i=0; i<OldX; i++)
@@ -865,7 +858,7 @@ void terminal_clear_from_startofline ()
 }
 
 
-
+//funcionou
 //preenche com espaço da coluna atual até o fim da linha.
 void terminal_clear_to_endofline ()
 {
@@ -897,25 +890,49 @@ void terminal_clear_to_endofline ()
 void terminal_clear_to_endofdisplay ()
 {
     unsigned long x, y;
+    
+    unsigned long OldX, OldY;
+    unsigned long NewX, NewY;    
+
+    //save
+    OldX = textCurrentCol;
+    OldY = textCurrentRow;
+
 
     // Step1
     // Limpa o resto da linha atual.
-    
+    // mas o cursor volta na posição original.
+        
     terminal_clear_to_endofline ();
 
+    NewX = 0;
+    NewY = OldY+1;
+    
+    //terminalSetCursor ( NewX, NewY );
+    
     // Step2
     // Limpa as linhas que faltam.
     // Começa da próxima linha. 
-
-    for ( y=textCurrentRow+1; y<wlMaxRows; y++ )
+ 
+    if ( wlMaxRows > DEFAULT_MAX_ROWS )
     {
-        //limpa uma linha
-        for (x=0; x<wlMaxColumns; x++)
+		MessageBox (3,"terminal_clear_to_endofdisplay","wlMaxRows limits");
+    }
+
+    //for ( y=NewY; y<(NewY+8); y++ ) //funciona
+    for ( y=NewY; y<wlMaxRows; y++ )
+    {
+		terminalSetCursor ( NewX, y );
+		
+        //limpa uma linha desde o '0'.
+        for (x=NewX; x<wlMaxColumns; x++)
         {
 			//coloca um char na posição atual.
             terminal_write_char ('Z');
         };
     };
+    
+    //while(1){}
 }
 
 

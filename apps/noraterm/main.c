@@ -4729,9 +4729,13 @@ void terminalTerminal (){
 	//limits.
 	//quantidade de linhas de colunas da janela.
 	//na verdade deve ser da área de cliente.
-    wlMaxColumns = (wsWindowWidth/8);    
-    wlMaxRows = (wsWindowHeight/8);         
- 
+    //wlMaxColumns = (wsWindowWidth/8);    
+    //wlMaxRows = (wsWindowHeight/8);     
+    
+    wlMaxColumns = DEFAULT_MAX_COLUMNS;    
+    wlMaxRows = DEFAULT_MAX_ROWS; 
+     
+    /* 
     if ( wlMaxColumns < wlMinColumns )
 	{
 	    wlMaxColumns = wlMinColumns;	
@@ -4741,6 +4745,7 @@ void terminalTerminal (){
 	{
 		wlMaxRows = wlMinRows;
 	}
+	*/
 	
 	//...	
 
@@ -4970,12 +4975,15 @@ int terminalInit ( struct window_d *window ){
 	//
 	
 	
-#ifdef SHELL_VERBOSE		
+//#ifdef SHELL_VERBOSE		
 	//columns and rows
 	printf("wlMaxColumns={%d} \n", wlMaxColumns );
 	printf("wlMaxRows={%d} \n", wlMaxRows );	
-#endif
+//#endif
 	
+	//
+	printf ("debug *breakpoint");
+	while(1){}
 	
 	//
 	// Process support.
@@ -6878,11 +6886,11 @@ noArgs:
     // #importante
     // Reajustando o limite de caracteres por linha.
     // Pois isso depende do tamanho da área de cliente.
+    
+    
     wlMaxColumns = (terminal_rect.width / 8);
     wlMaxRows = (terminal_rect.height / 8);
-
-
-
+    //wlMaxRows = DEFAULT_MAX_ROWS; //25
 
     //
     // Bg Window.
@@ -7076,6 +7084,7 @@ noArgs:
 	// 1 = tente inicializar o programa que vai rodar no terminal
 	// 0 = Inicialine o shell interno para gerenciamento do terminal.
 	
+	/*
 	if ( _init_app == 1 )
 	{
 		printf ("noraterm: Tentando executar um aplicativo usando fork\n");
@@ -7126,7 +7135,7 @@ noArgs:
 			//goto do_run_internal_shell;
 		}	
 	};
-	
+	*/
 	
 	
 	
