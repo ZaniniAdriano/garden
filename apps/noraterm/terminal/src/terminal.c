@@ -448,7 +448,8 @@ void terminalClearScreen (){
  * terminalSetCursor:
  *     Configurando o cursor. (stdio.h).
  *
- * @todo: Aqui quando definimos os valores o cursor no shell 
+ * @todo: 
+ * Aqui quando definimos os valores o cursor no shell 
  * devemos considerar que a janela com o foco de entrada tambem tem um cursor...
  * Temos que atualizar o cursor da janela com foco de entrada se quizermos 
  * escrever corretamente dentro dela.
@@ -467,21 +468,36 @@ void terminalSetCursor ( unsigned long x, unsigned long y ){
 	{
 		y = (wlMaxRows-1);
 	}	
-		
-	// Coisas do kernel. Setando o cursor usado pelo kernel base.
-    apiSetCursor (x,y);
-	
-//Atualizando as variáveis globais usadas somente aqui no shell.
-//setGlobals:	
-	
+
+
+    //Atualizando as variáveis globais usadas somente aqui no shell.
+    // Não sei se precisamos disso. talvez deletar.
     g_cursor_x = (unsigned long) x;
     g_cursor_y = (unsigned long) y;
-	
-	//
-	// Coisas do screen buffer.
-	//
-    
+
+
+	// Atualiza os ponteiros para o buffer de texto. (estrutura) 
 	move_to ( x, y);
+	
+	// Coisas do kernel. 
+	// Setando o cursor usado pelo kernel base.
+	// Se isso for (0,0) então ficará no início da tela ???
+	
+	// #test
+	// usaremos um posicionamento relativo.
+	// considerando a janela do terminal.
+	
+	unsigned long __x, __y;
+	
+	// errado: muito afastado da margem.
+	//__x = (wpWindowLeft + terminal_rect.left + x ); 
+	//__y = (wpWindowTop + terminal_rect.top + y);
+
+	__x = ( ( (wpWindowLeft + terminal_rect.left)/8 ) + x ); 
+	__y = ( ( (wpWindowTop  + terminal_rect.top )/8 ) + y );
+	
+	apiSetCursor (__x,__y);
+    //apiSetCursor (x,y);
 }
 
 
@@ -815,45 +831,16 @@ void reset_terminal(){
 */
 
 
-
-//preenche com espaço da caluna atual até o fim da linha.
-void terminal_clear_to_endofline ()
-{
-
-    int i;
-
-    unsigned long OldX, OldY;
-
-    char temp;
-
-    temp = ' ';
-    
-    //save
-    OldX = textCurrentCol;
-    OldY = textCurrentRow;
-
-    //começa da coluna atual e vai até o fim da linha.
-    for ( i=textCurrentCol; i<wlMaxColumns; i++)
-    {
-        terminalInsertCharXY ( i, textCurrentRow, temp );
-    }
-
-    terminalSetCursor ( OldX, OldY );
-}
-
-
-
 // preencher com espaços do início da linha
 //até a coluna atual
 void terminal_clear_from_startofline ()
 {
     int i;
-
     unsigned long OldX, OldY;
 
     char temp;
 
-    temp = ' ';
+    temp = 'X';
 
     //save
     OldX = textCurrentCol;
@@ -864,7 +851,9 @@ void terminal_clear_from_startofline ()
     
     for (i=0; i<textCurrentCol; i++)
     {
-        terminalInsertCharXY ( i, textCurrentRow, temp );
+		//coloca um char na posição atual.
+        terminal_write_char ('X');
+        //terminalInsertCharXY ( i, textCurrentRow, temp );
     }
     
     terminalSetCursor ( OldX, OldY );
@@ -872,26 +861,54 @@ void terminal_clear_from_startofline ()
 
 
 
+//preenche com espaço da coluna atual até o fim da linha.
+void terminal_clear_to_endofline ()
+{
 
+    int i;
+    unsigned long OldX, OldY;
+
+    char temp;
+
+    temp = 'X';
+    
+    //save
+    OldX = textCurrentCol;
+    OldY = textCurrentRow;
+
+    //começa da coluna atual e vai até o fim da linha.
+    for ( i=textCurrentCol; i<wlMaxColumns; i++)
+    {
+		terminal_write_char ('Y');
+        //terminalInsertCharXY ( i, textCurrentRow, temp );
+    }
+
+    terminalSetCursor ( OldX, OldY );
+}
+
+
+
+// Isso funcionou pacialmente ... a primeira parte falhou.
 void terminal_clear_to_endofdisplay ()
 {
     unsigned long x, y;
 
     // Step1
-    // Limpa o resto da linha atual
+    // Limpa o resto da linha atual.
+    
     terminal_clear_to_endofline ();
 
     // Step2
-    // Limpa as linhas que faltam
+    // Limpa as linhas que faltam.
+    // Começa da próxima linha. 
 
-    //começa da próxima linha 
-    for ( y=textCurrentRow+1; y< wlMaxRows; y++)
+    for ( y=textCurrentRow+1; y<wlMaxRows; y++ )
     {
         //limpa uma linha
         for (x=0; x<wlMaxColumns; x++)
         {
 			//coloca um char na posição atual.
-            terminal_write_char (' ');
+            terminal_write_char ('Z');
         };
     };
 }

@@ -310,7 +310,26 @@ static STREscape strescseq;
 
 #define VT102_ID "\033[?6c"
 
+
+//
+// Windows.
+//
+
+//main window
 struct window_d *main_window;
+
+//client area.
+struct window_d *client_background_window;
+struct window_d *client_window;
+
+// bar buttons
+struct window_d *bar_button_1; 
+struct window_d *bar_button_2;
+struct window_d *bar_button_3;
+    
+//...
+
+
 
 // Input flags.
 #define SHELLFLAG_NULL 0
@@ -1430,30 +1449,47 @@ void *noratermProcedure ( struct window_d *window,
 		
 		case MSG_SYSKEYDOWN:
 		    switch (long1)
-			{	        
+			{	     
+				
+				//posiciona na próxima coluna.   
 				case VK_F1:  
+				    textCurrentCol++;
+				    terminalSetCursor ( textCurrentCol, textCurrentRow );
 				    //MessageBox ( 3, "Noraterm", "F1" ); 
 				    //shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2008, 0);
-		            printf ("*SCROLL\n");
-		            terminal_scroll_display ();
-		            shellPrompt ();	
+		            //printf ("*SCROLL\n");
+		            //terminal_scroll_display ();
+		            //shellPrompt ();	
 					break;
-					
+				
+				//posiciona na proxima linha
 				case VK_F2:
+				    textCurrentRow++;
+				    terminalSetCursor ( textCurrentCol, textCurrentRow );
 					//MessageBox ( 3, "Noraterm", "F2" );
-					shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2020, 0);
+					//shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2020, 0);
 					break;
 
+                //posiciona no início da linha atual 
 				case VK_F3:
-				    //testChangeVisibleArea();				
+				    textCurrentCol = 0;
+				    terminalSetCursor ( 0, textCurrentRow );
+				    //testChangeVisibleArea();
 				    //terminalRefreshVisibleArea();
-					textSetCurrentRow ( (int) 0 );
-					textSetCurrentCol ( (int) 0 );
+					//textSetCurrentRow ( (int) 0 );
+					//textSetCurrentCol ( (int) 0 );
 					//shellTestLoadFile ();
 					//inicializa a área visível.
 					//textTopRow = 0;
 	                //textBottomRow = 0 + 24;
 					break;
+					
+				//posiciona no inpicio da área de cliente.	
+				case VK_F4:
+				    terminalSetCursor ( 0, 0 );
+				    break;
+					
+					
 					
 				// Não usar esses.
 				// No momento são gerenciados pelo procedimento de janelas
@@ -1773,8 +1809,37 @@ void *noratermProcedure ( struct window_d *window,
 		    switch (long1)
 			{
 				case 1:
-				
 				    //#obs: No keydown a gente só abaixa o botão.
+					
+					
+                    if ( window == bar_button_1 )
+                    {
+                        gramado_system_call ( 9900,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+                            break;
+                    }
+
+                    if ( window == bar_button_2 )
+                    {
+                        gramado_system_call ( 9900,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+                            break;
+                    }
+
+
+                    if ( window == bar_button_3 )
+                    {
+                        gramado_system_call ( 9900,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+                            break;
+                    }
+
 					
 				    //#debug
 					//printf("button 1\n");     
@@ -1880,8 +1945,47 @@ void *noratermProcedure ( struct window_d *window,
 		// MSG_MOUSEKEYUP	
 		case 31:
 		    switch (long1)
-			{		
+			{
 				case 1:
+
+                    if ( window == bar_button_1 )
+                    {
+                        gramado_system_call ( 9901,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+                        //apiDrawText ( client_window, 4, 40 +32, COLOR_BLACK, "test 1 ...");
+                        //refresh_screen ();
+                        terminal_clear_from_startofline ();
+                        break;
+                    }
+
+                    if ( window == bar_button_2 )
+                    {
+                        gramado_system_call ( 9901,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+                        //apiDrawText ( client_window, 4, 40 +32, COLOR_BLACK, "test 2 ...");
+                        //refresh_screen ();
+                        terminal_clear_to_endofline ();
+                        break;
+                    }
+
+                    if ( window == bar_button_3 )
+                    {
+                        gramado_system_call ( 9901,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+                        //apiDrawText ( client_window, 4, 40 +32, COLOR_BLACK, "test 3 ...");
+                        //refresh_screen ();
+                        terminal_clear_to_endofdisplay ();
+                        break;
+                    }
+
+
+				
 				    //printf("up button 1\n");
 					if (window == taskbar_button1)
 					{
@@ -4481,8 +4585,16 @@ void terminalInitWindowLimits (){
     //quantidade de linhas e colunas na área de cliente.
     wlMinColumns = 80;
     wlMinRows = 1;
-    wlMaxColumns = (wlFullScreenWidth / 8);
-    wlMaxRows = (wlFullScreenHeight / 8);
+
+    // número máximo de colunas e linhas;
+    // #bugbug: isso depende do tamanho da área de cliente
+    //então configuraremos depois, quando atribuirmos o tamanho da área de cliente;
+    
+    //wlMaxColumns = (wlMaxWindowWidth / 8);
+    //wlMaxRows = (wlMaxWindowHeight / 8);
+    
+    wlMaxColumns = DEFAULT_MAX_COLUMNS;
+    wlMaxRows = DEFAULT_MAX_ROWS;
 	
 	//dado em quantidade de linhas.
     textMinWheelDelta = 1;  //mínimo que se pode rolar o texto
@@ -4598,7 +4710,7 @@ void terminalTerminal (){
 	terminalInitWindowSizes ();
 	
 	//inicializar a posição da janela.
-	terminalInitWindowPosition ();
+	//terminalInitWindowPosition ();
  
  
     //
@@ -6467,11 +6579,6 @@ int main ( int argc, char *argv[] ){
 	// A janela principal do aplicativo.
 	struct window_d *hWindow;    
 
-	//JANELA CRIADA NA ÁREA DE CLIENTE DA JANELA PRINCIPAL.
-    struct window_d *hWindow2;       
-	
-	//struct message_d *m;
-
 	
 	int Status = 0;
 	//char *s;    //String	
@@ -6694,75 +6801,27 @@ noArgs:
 	terminalTerminal (); 	
 	
 	
-	//
-	// # Desktop mode #
-	//		
-	
-	// #test
-	// No modo desktop, criaremos a barra de tarefas e não criaremos a janela do shell.
-	// Esse modo pode ter seu proprio loop de mensagens e procedimento de janela.
-	// O modo desktop criá sua barra de tarefas.
-	
-	int desktopReturn = -1;
-	
-	if ( desktop == 1 )
-	{
-		//#importante
-		//main pode fechar o shell depois de ter usado o modo desktop.
-		
-	    desktopReturn = shellStartDesktopMode ();
-		
-		//printf ("Exiting shell ...\n");
-		//exit (0);
-		
-		printf ("Initializing desktop mode loop ...\n");
-		goto Mainloop;
-		
-		//while(1){}
+    //
+    // Main window.
+    //
 	
 	
-	//#importante
-	//se não estamos no modo shell.	
+   mainwindow_used = 1;
+
+	//++
+	//termui.c
+	enterCriticalSection ();    
+    hWindow = (struct window_d *) terminalCreateMainWindow (1);
+	exitCriticalSection ();
+	    //--
+
+	//if ( (void *) hWindow == NULL )
+	//{}
 	
-	}else{
-	
-	    //  # taskbar #
-        if ( taskbar == 1 )
-	    {
-		    mainwindow_used = 0;
-		
-            terminalCreateTaskBar ();	
-		
-	        // # Main window #		
-	    }else{
-		
-		    mainwindow_used = 1;
-		
-			//termui.c
-	        enterCriticalSection ();    
-            hWindow = (struct window_d *) terminalCreateMainWindow (1);
-	        exitCriticalSection ();
-	        
-	        // Setup a global pointer for main window.
-	        main_window = hWindow;
-	        
-	        //if ( (void *) hWindow == NULL )
-		    //{}
-		    
-		    shell_info.main_window = ( struct window_d * ) hWindow;
-	    };	
-		
-	    // # Headless #
-	    //nesse modo não teremos janela alguma
-	
-	    if (headless == 1)
-	    {
-	        //#todo;
-     	}
-		
-		//...
-	};
-	
+	// Setup a global pointer for main window.
+	main_window = hWindow;
+	shell_info.main_window = ( struct window_d * ) hWindow;	
+
 	
 	// #test 
 	// Criando um timer.
@@ -6788,66 +6847,51 @@ noArgs:
 
 	// #obs
 	// terminalTerminal() inicializou todas as globais.
-	
-	
-    if ( mainwindow_used == 1 ){
-		
-	    terminal_rect.left = wpWindowLeft;
-	    terminal_rect.top = wpWindowTop +36;
-	    terminal_rect.width = wsWindowWidth;
-	    terminal_rect.height = wsWindowHeight -36;	
-	    
-	}else{
-			
-	    terminal_rect.left = wpWindowLeft;
-	    terminal_rect.top = wpWindowTop;
-	    terminal_rect.width = wsWindowWidth;
-	    terminal_rect.height = wsWindowHeight;
-	    
-	};
-	
-    //#debug
-    //printf ("terminal_rect: l={%d} t={%d} w={%d} h={%d}\n", 
-	//    terminal_rect.left, terminal_rect.top,
-	//	  terminal_rect.width, terminal_rect.height );	
-    //while (1){ asm ("pause"); }	
-	
 
-	//
-	// ## Se der problema no tamanho da área de cliente ##
-	//
-	
-	/*
-	if ( terminal_rect.left < wpWindowLeft ||
-         terminal_rect.top < wpWindowTop ||	
-	     terminal_rect.width > wsWindowWidth ||
-		 terminal_rect.height > wsWindowHeight )
-	{
-        //#debug
-		printf("## fail ## \n");
-	    printf("terminal_rect: 2\n");	
-        printf("l={%d} t={%d} w={%d} h={%d}\n", 
-	        terminal_rect.left, 
-			terminal_rect.top,
-		    terminal_rect.width, 
-			terminal_rect.height );
-		
-        while (1){ asm ("pause"); }			
-	}	
-     */ 
+ 
+    //
+    // Bg window.
+    // 
+ 
+     unsigned long __bgleft = 1;
+     unsigned long __bgtop = 1 +36;
+     unsigned long __bgwidth = wsWindowWidth -40;
+     unsigned long __bgheight = wsWindowHeight -40 -40;
+ 
+     unsigned long __barleft = 2;
+     unsigned long __bartop = 2;
+     unsigned long __barwidth = wsWindowWidth -40 -10;
+     unsigned long __barheight = 40;
+     
+    //
+    // Client window.
+    //
+
+    terminal_rect.left  = 4;
+    terminal_rect.top   = 1 +40;
+    terminal_rect.width = wsWindowWidth -40 -10;
+    terminal_rect.height = wsWindowHeight -40 -40 -40 -10;
+    
+    // #importante
+    // Reajustando o limite de caracteres por linha.
+    // Pois isso depende do tamanho da área de cliente.
+    wlMaxColumns = (terminal_rect.width / 8);
+    wlMaxRows = (terminal_rect.height / 8);
+
+
 
 
     //
-    // Bg
+    // Bg Window.
     //
 
     struct window_d *client_bg;
     
+    //++
     client_bg = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "NORATERM-CLIENT-bg",
-                            1, 37, 
-                            (terminal_rect.width - 38), (terminal_rect.height - 26), 
-                            hWindow, 0, COLOR_BLACK, COLOR_BLACK );
-
+                            __bgleft, __bgtop, __bgwidth, __bgheight,
+                            hWindow, 0, COLOR_RED, COLOR_RED ); 
+                            //hWindow, 0, COLOR_BLACK, COLOR_BLACK );
 
     if ( (void *) client_bg == NULL )
     {
@@ -6855,12 +6899,15 @@ noArgs:
 		die( ":(");
     }else{
         APIRegisterWindow (client_bg);
-        apiShowWindow (client_bg);
+        apiShowWindow (client_bg );
+        
+        client_background_window = client_bg;
     };
+    //--
 
 
 	//
-	// Draw window.
+	// Client window.
 	//
 	
 	// #Atenção
@@ -6868,12 +6915,15 @@ noArgs:
 	// É uma janela filha que se sobrepoe ao bg da janela mãe.
 	
 
+	//JANELA CRIADA NA ÁREA DE CLIENTE DA JANELA PRINCIPAL.
+    struct window_d *hWindow2;  
 	//++
     //apiBeginPaint ();
-    hWindow2 = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "NORATERM-CLIENT-WINDOW",
-                            1, 1, 
-                            (terminal_rect.width - 39), (terminal_rect.height - 27),
-                            client_bg, 0, COLOR_TERMINAL2, COLOR_TERMINAL2 );
+    hWindow2 = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "NORATERM-CLIENT-window",
+                            terminal_rect.left, terminal_rect.top, 
+                            terminal_rect.width, terminal_rect.height,
+                            client_bg, 0, COLOR_BLUE, COLOR_BLUE );
+                            //client_bg, 0, COLOR_TERMINAL2, COLOR_TERMINAL2 );
 
     if ( (void *) hWindow2 == NULL )
     {
@@ -6881,18 +6931,11 @@ noArgs:
     }else{
 
         APIRegisterWindow (hWindow2);
-        //APISetActiveWindow (hWindow2);
-        
-        // #bugbug
-        // Temos que setar o foco por causa do teclado do shell interno.
-        // Mas se setarmos o foco a janela mãe irá repintar (errada).
         APISetFocus (hWindow2);
         apiShowWindow (hWindow2);
+        
+        client_window = hWindow2;
 
-		//janela usada para input de textos ...
-	    //o input de texto pode vir de várias fontes.
-	    //api_set_window_with_text_input(hWindow);
-	    
 	    //Terminal window.
 	    // #importante
 	    // Definindo a janela como sendo uma janela de terminal.
@@ -6912,8 +6955,103 @@ noArgs:
 	//--
 
 
-    //printf ("*debug");
-    //while(1){}
+
+    //
+    // Vamos fazer botões na barra de ferramentas.. 
+    // que será o início do bg da área de cliente.
+    //
+
+
+    struct window_d *client_bar_Window;
+
+	//++
+	enterCriticalSection ();  
+	client_bar_Window = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "client-bar",     
+                                __barleft, __bartop, 
+                                __barwidth, __barheight, 
+                                client_bg, 0, 0x404040, 0x404040 );
+	if ( (void *) client_bar_Window == NULL)
+	{	
+		printf(".. fail");
+		refresh_screen();
+		while(1){}
+	}
+	APIRegisterWindow (client_bar_Window);
+	apiShowWindow (client_bar_Window);
+	exitCriticalSection ();  
+	//--
+
+
+    //
+    // ============ Bar buttons =========
+    //
+    
+	//++
+    enterCriticalSection (); 
+	bar_button_1 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " 1 ",  
+                                     1, 1, 
+                                     50, 32,    
+                                     client_bar_Window, 0, 
+                                     xCOLOR_GRAY3, xCOLOR_GRAY3 );
+
+    if ( (void *) bar_button_1 == NULL )
+    {
+		printf ("Couldn't create PID button\n");
+		return 1;
+    }else{
+        APIRegisterWindow (bar_button_1);
+        apiShowWindow (bar_button_1);
+        refresh_screen ();
+    };
+    exitCriticalSection (); 
+	//--
+
+
+    
+	//++
+    enterCriticalSection (); 
+	bar_button_2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " 2 ", 
+                                     50 +1, 1,
+                                     100, 32,   
+                                     client_bar_Window, 0, 
+                                     xCOLOR_GRAY3, xCOLOR_GRAY3 );
+	
+	if ( (void *) bar_button_2 == NULL )
+	{
+		printf ("Couldn't create State button\n");
+		return 1;
+	}else{
+
+        APIRegisterWindow (bar_button_2);
+        apiShowWindow (bar_button_2);
+        refresh_screen ();
+	};
+    exitCriticalSection (); 
+	//--
+
+
+	//++
+    enterCriticalSection (); 
+	bar_button_3 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " 3 ", 
+                                     50 +1 +100 +1, 1,
+                                     200, 32,   
+                                     client_bar_Window, 0, 
+                                     xCOLOR_GRAY3, xCOLOR_GRAY3 );
+	
+	if ( (void *) bar_button_3 == NULL )
+	{
+		printf ("Couldn't create Priority button\n");
+		return 1;
+	}else{
+
+        APIRegisterWindow (bar_button_3);
+        apiShowWindow (bar_button_3);
+        refresh_screen ();
+	};
+    exitCriticalSection (); 
+	//--
+
+
 
 
 	//
@@ -6984,7 +7122,7 @@ noArgs:
 			while(1){}
 			//goto do_run_internal_shell;
 		}	
-	}
+	};
 	
 	
 	
@@ -7095,7 +7233,8 @@ no_internal_shell:
     //system_call ( 900, (unsigned long) "hello3.bin", 0, 0 );
 
 	printf ("noraterm: Executing default child process launcher ...\n");
-    system_call ( 900, (unsigned long) "launcher.bin", 0, 0 );
+    system_call ( 900, (unsigned long) "hello3.bin", 0, 0 );
+    //system_call ( 900, (unsigned long) "launcher.bin", 0, 0 );
     
     printf ("noraterm: noraterm is still alive!\n");
     printf ("noraterm: No internal shell\n"); 

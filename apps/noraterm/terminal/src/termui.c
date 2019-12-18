@@ -505,6 +505,9 @@ void terminalCreateEditBox (){
  
 struct window_d *terminalCreateMainWindow ( int status ){
 
+
+	struct window_d *w;
+	
 	unsigned long left;
 	unsigned long top;
 	unsigned long width;
@@ -515,8 +518,7 @@ struct window_d *terminalCreateMainWindow ( int status ){
 	//unsigned long ScreenWidth = apiGetSystemMetrics(1);
     //unsigned long ScreenHeight = apiGetSystemMetrics(2); 
 	
-	//printf ("Creating taskbar ... %d %d\n", ScreenWidth, ScreenHeight);	
-	
+
 	
     // #imporante
 	// Essas sao as dimensões da janela principal.
@@ -532,7 +534,7 @@ struct window_d *terminalCreateMainWindow ( int status ){
 	height = wsWindowHeight;
 
 	
-	struct window_d *w;
+
 	
 	//apiBeginPaint ();
 	
@@ -560,7 +562,7 @@ struct window_d *terminalCreateMainWindow ( int status ){
 	//apiEndPaint();
 	
 	return w;
-};
+}
 
 
 
