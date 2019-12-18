@@ -3757,6 +3757,13 @@ struct window_d *gde_get_screen_window (void);
 struct window_d *gde_get_background_window (void);
 struct window_d *gde_get_main_window (void);
 
+
+
+int gde_getusername (int pid, char *name, size_t len);
+
+
+
+
 //
 // Aliases
 //

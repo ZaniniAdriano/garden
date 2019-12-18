@@ -36,8 +36,10 @@ LIBC    = ../../lib/libc03/include/
 LIBCOBJ = ../../lib/libc03/obj
 
 #todo: usar api02
-API     = ../../lib/api01/include/
-APIOBJ  = ../../lib/api01/obj
+#API     = ../../lib/api01/include/
+#APIOBJ  = ../../lib/api01/obj
+API     = ../../lib/api02/include/
+APIOBJ  = ../../lib/api02/obj
 
 
 

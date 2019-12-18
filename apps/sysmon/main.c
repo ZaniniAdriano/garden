@@ -64,6 +64,9 @@ sysmonProcedure ( struct window_d *window,
                   unsigned long long1, 
                   unsigned long long2 )
 {
+	
+	//salvaremos o nome do processo aqui.
+   char __processname_buffer[64];
 
     switch (msg)
     {
@@ -206,7 +209,27 @@ sysmonProcedure ( struct window_d *window,
                             (unsigned long) window, 
                             (unsigned long) window, 
                             (unsigned long) window );
-                        apiDrawText ( client_window, 4, 40 +32, COLOR_BLACK, "info 1 ...");
+                            
+                            
+                         gde_getusername  ( 100,  
+                             __processname_buffer, 
+                             sizeof(__processname_buffer) ); 
+                        apiDrawText ( client_window, 4, 40 +32, COLOR_BLACK, "100" );
+                        apiDrawText ( client_window, 40, 40 +32, COLOR_BLACK, (char *) __processname_buffer );
+                        
+                         gde_getusername  ( 101,  
+                             __processname_buffer, 
+                             sizeof(__processname_buffer) ); 
+                        apiDrawText ( client_window, 4,  40 +32 +32, COLOR_BLACK, "101" );     
+                        apiDrawText ( client_window, 40,  40 +32 +32, COLOR_BLACK, (char *) __processname_buffer );
+                        
+                         gde_getusername  ( 102,  
+                             __processname_buffer, 
+                             sizeof(__processname_buffer) ); 
+                        apiDrawText ( client_window, 4,  40 +32 +32 +32, COLOR_BLACK, "102" );
+                        apiDrawText ( client_window, 40,  40 +32 +32 +32, COLOR_BLACK, (char *) __processname_buffer );                        
+                        
+                        //apiDrawText ( client_window, 4, 40 +32, COLOR_BLACK, "info 1 ...");
                         refresh_screen ();
 						break;
 					}

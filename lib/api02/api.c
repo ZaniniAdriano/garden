@@ -3504,6 +3504,43 @@ struct window_d *gde_get_main_window (void)
 	return (struct window_d *) gramado_system_call ( 957, 0, 0, 0 );
 }
 
+
+
+//pega o nome do processo dado o pid.
+int gde_getusername (int pid, char *name, size_t len)
+{
+	int __len_ret;
+	
+	if ( len < 0 || len > 64 ) //HOST_NAME_MAX
+	{
+	    printf ("gde_getusername: len\n");
+	    return -1;
+	}
+
+
+
+    //coloca no buffer interno
+    __len_ret = (int) gramado_system_call ( 882, 
+                        (unsigned long) pid,
+                        (unsigned long) name,
+                        (unsigned long) name );
+
+	if ( __len_ret < 0 || __len_ret > 64 ) //HOST_NAME_MAX
+	{
+	    printf ("gde_getusername: __len_ret\n");
+	    return -1;
+	}
+
+	if ( __len_ret > len )
+	{
+		__len_ret = len;
+	}
+
+
+    return 0;
+}
+
+
 //
 // End.
 //
