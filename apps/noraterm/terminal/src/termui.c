@@ -523,10 +523,17 @@ struct window_d *terminalCreateMainWindow ( int status ){
     // #imporante
 	// Essas sao as dimensões da janela principal.
 	
-	wpWindowLeft = 40;     //0;
-	wpWindowTop =  40;     //0;
-	wsWindowWidth = 640;   //1024;
-	wsWindowHeight = 480;  //600; //768;
+	//wpWindowLeft = 40;     //0;
+	//wpWindowTop =  40;     //0;
+	//wsWindowWidth = 640;   //1024;
+	//wsWindowHeight = 480;  //600; //768;
+
+	wpWindowLeft = DEFAULT_WINDOW_X;  //0;
+	wpWindowTop =  DEFAULT_WINDOW_Y;  //0;
+	wsWindowWidth  = (__wlMaxColumns*8) +100;  //640;  
+	wsWindowHeight = (__wlMaxRows*8) +100;     //480;  
+
+
 	
 	left = wpWindowLeft;
 	top = wpWindowTop;

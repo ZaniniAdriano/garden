@@ -8,10 +8,15 @@
 #define DEFAULT_WINDOW_X 0
 #define DEFAULT_WINDOW_Y 0
 
-//Obs: aumentar essas constantes aumenta o tamanho da janela.
-#define DEFAULT_MAX_COLUMNS 80
-#define DEFAULT_MAX_ROWS    50 //25 
+
+
+// Obs: 
+// aumentar essas constantes aumenta o tamanho da janela.
+
+#define DEFAULT_MAX_COLUMNS 80   //80
+#define DEFAULT_MAX_ROWS    25   //50  
   
+
 
 //linux 
 //#define SCREEN_START 0xb8000
@@ -324,11 +329,18 @@ unsigned long wlMinWindowHeight;
 unsigned long wlMaxWindowWidth;
 unsigned long wlMaxWindowHeight;
 
+
+
+//
+// Linhas
+//
+
 //quantidade de linhas e colunas na área de cliente.
 int wlMinColumns;
 int wlMinRows;
-int wlMaxColumns;
-int wlMaxRows;
+
+int __wlMaxColumns;
+int __wlMaxRows;
 
 
 //

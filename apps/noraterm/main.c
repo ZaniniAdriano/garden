@@ -2439,7 +2439,7 @@ NewCmdLine:
 	        
 			//Limits
 		    j++;
-			if ( j > wlMaxColumns )
+			if ( j > __wlMaxColumns )
 			{
 			   //#debug
                //Isso significa que uma string 
@@ -2471,7 +2471,7 @@ NewCmdLine:
 	        goto exit_cmp;	
 	    }		
 	    
-		int line_rest = (wlMaxColumns-j);
+		int line_rest = ( __wlMaxColumns-j);
 		
 		//copia todo o resto da linha para o inpicio da linha.
         for ( j=0; j<line_rest; j++ )
@@ -4592,15 +4592,7 @@ void terminalInitWindowLimits (){
     wlMinColumns = 80;
     wlMinRows = 1;
 
-    // número máximo de colunas e linhas;
-    // #bugbug: isso depende do tamanho da área de cliente
-    //então configuraremos depois, quando atribuirmos o tamanho da área de cliente;
-    
-    //wlMaxColumns = (wlMaxWindowWidth / 8);
-    //wlMaxRows = (wlMaxWindowHeight / 8);
-    
-    wlMaxColumns = DEFAULT_MAX_COLUMNS;
-    wlMaxRows = DEFAULT_MAX_ROWS;
+
 	
 	//dado em quantidade de linhas.
     textMinWheelDelta = 1;  //mínimo que se pode rolar o texto
@@ -4725,52 +4717,10 @@ void terminalTerminal (){
 	
 	textTopRow = 0;
 	textBottomRow = 24;
-	
-	//limits.
-	//quantidade de linhas de colunas da janela.
-	//na verdade deve ser da área de cliente.
-    //wlMaxColumns = (wsWindowWidth/8);    
-    //wlMaxRows = (wsWindowHeight/8);     
-    
-    wlMaxColumns = DEFAULT_MAX_COLUMNS;    
-    wlMaxRows = DEFAULT_MAX_ROWS; 
-     
-    /* 
-    if ( wlMaxColumns < wlMinColumns )
-	{
-	    wlMaxColumns = wlMinColumns;	
-	}
-		
-	if ( wlMaxRows < wlMinRows )
-	{
-		wlMaxRows = wlMinRows;
-	}
-	*/
-	
+
+
 	//...	
 
-	//
-	// Setup buffers.
-	//
-	
-
-	// #inportante:
-	// #bugbug: Não podemos deixar o stdout como screenbuffer 
-	// pois no screen buffer os caracteres tem atributos ...
-	// e no stdout podemos ter um arquivo normal ...
-	//ou saída normal que servirá de entrada para  
-	//outro processo.
-    // reiniciando as variáveis na estrutura do output
-	
-	//obs: Ao cancelarmos isso o std volta a ser 
-	//o antigo e já configurado stdout.
-	//stdout->_base = &screen_buffer[0];
-	//stdout->_ptr = stdout->_base;
-	//stdout->_cnt = PROMPT_MAX_DEFAULT;
-	//stdout->_file = 1;
-	//stdout->_tmpfname = "shell_stdout";
-	
-	//...	
 	
 	// Obs:
 	// prompt[] - Aqui ficam as digitações. 
@@ -4790,9 +4740,6 @@ void terminalTerminal (){
 	//        o kernel configuroru???
 	//
 	
-	// Número máximo de colunas e linhas.
-	g_columns = wlMaxColumns;  // 80;
-	g_rows = wlMaxRows;        // 25;
     //...
 	
 	
@@ -4977,13 +4924,13 @@ int terminalInit ( struct window_d *window ){
 	
 //#ifdef SHELL_VERBOSE		
 	//columns and rows
-	printf("wlMaxColumns={%d} \n", wlMaxColumns );
-	printf("wlMaxRows={%d} \n", wlMaxRows );	
+	//printf("__wlMaxColumns={%d} \n", __wlMaxColumns );
+	//printf("__wlMaxRows={%d} \n", __wlMaxRows );	
 //#endif
 	
 	//
-	printf ("debug *breakpoint");
-	while(1){}
+	//printf ("debug *breakpoint");
+	//while(1){}
 	
 	//
 	// Process support.
@@ -5466,8 +5413,9 @@ void shellShowInfo (){
 	}
   
 	printf ("Process info: PID={%d} PPID={%d} \n", PID, PPID );
-	printf ("wlMaxColumns={%d} \n", wlMaxColumns );
-	printf ("wlMaxRows={%d} \n", wlMaxRows );	
+	
+	printf ("__wlMaxColumns={%d} \n", __wlMaxColumns );
+	printf ("__wlMaxRows={%d} \n", __wlMaxRows );	
 	//...
 }
 
@@ -6501,7 +6449,7 @@ void terminal_write_char ( int c){
     // #bugbug: esse if não funcionou,
     // o scroll do kernel foi acionado.
     
-	if ( textCurrentRow >= wlMaxRows )
+	if ( textCurrentRow >= __wlMaxRows )
 	{
 		//printf ("*SCROLL\n");
 		//terminal_scroll_display ();
@@ -6550,6 +6498,15 @@ void terminal_write_char ( int c){
  */
  
 int main ( int argc, char *argv[] ){
+	
+	//#importante: Isso será definido somente uma vez.
+	__wlMaxColumns = DEFAULT_MAX_COLUMNS;
+	__wlMaxRows = DEFAULT_MAX_ROWS;
+	
+	// Número máximo de colunas e linhas.
+	g_columns = __wlMaxColumns;  // 80;
+	g_rows = __wlMaxRows;        // 25;
+
 	
 	//int arg_index = 1;
 	
@@ -6866,8 +6823,8 @@ noArgs:
 
      __bgleft = 1;
      __bgtop = 1 +36;
-     __bgwidth = wsWindowWidth -40;
-     __bgheight = wsWindowHeight -40 -40;
+     __bgwidth  = (__wlMaxColumns*8) +40;  //wsWindowWidth -40;
+     __bgheight = (__wlMaxRows*8) +40;     //wsWindowHeight -40 -40;
  
      __barleft = 2;
      __bartop = 2;
@@ -6880,17 +6837,15 @@ noArgs:
 
     terminal_rect.left  = 4;
     terminal_rect.top   = 1 +40;
-    terminal_rect.width = wsWindowWidth -40 -10;
-    terminal_rect.height = wsWindowHeight -40 -40 -40 -10;
+    terminal_rect.width  = __bgwidth  -4;  //wsWindowWidth -40 -10;
+    terminal_rect.height = __bgheight -4;  //wsWindowHeight -40 -40 -40 -10;
     
     // #importante
     // Reajustando o limite de caracteres por linha.
     // Pois isso depende do tamanho da área de cliente.
     
     
-    wlMaxColumns = (terminal_rect.width / 8);
-    wlMaxRows = (terminal_rect.height / 8);
-    //wlMaxRows = DEFAULT_MAX_ROWS; //25
+
 
     //
     // Bg Window.

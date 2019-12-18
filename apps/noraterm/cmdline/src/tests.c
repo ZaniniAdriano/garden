@@ -96,7 +96,7 @@ void testScrollChar ( int c ){
 	
     int i;
 	
-    for ( i=0; i < (wlMaxColumns*26); i++ )
+    for ( i=0; i < (__wlMaxColumns*26); i++ )
 	{
 	    //se chegamos no limite do screen_buffer
 		//...

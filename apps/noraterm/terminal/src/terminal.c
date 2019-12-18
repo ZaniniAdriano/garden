@@ -80,7 +80,7 @@ void terminalInsertCR (){
 void lf (void){
 	
 	//enquanto for menor que o limite de linhas, avança.
-	if ( textCurrentRow+1 < wlMaxRows )
+	if ( textCurrentRow+1 < __wlMaxRows )
 	{
 		textCurrentRow++; 
 		return;
@@ -152,7 +152,7 @@ char
 terminalGetCharXY ( unsigned long x, 
                     unsigned long y )
 {	
-	if ( x >= wlMaxColumns || y >= wlMaxRows )
+	if ( x >= __wlMaxColumns || y >= __wlMaxRows )
 	{	
 		return;
 	}
@@ -169,7 +169,7 @@ terminalInsertCharXY ( unsigned long x,
                        unsigned long y, 
                        char c )
 {
-	if ( x >= wlMaxColumns || y >= wlMaxRows )
+	if ( x >= __wlMaxColumns || y >= __wlMaxRows )
 	{	
 		return;
 	}
@@ -290,7 +290,7 @@ void terminalRefreshCurrentChar (){
 
 void terminalRefreshChar ( int line_number, int col_number ){
 	
-	if ( col_number > wlMaxColumns || line_number > wlMaxRows )
+	if ( col_number > __wlMaxColumns || line_number > __wlMaxRows )
 		return;
 	
 	terminalSetCursor ( col_number, line_number );
@@ -306,7 +306,7 @@ void terminalRefreshChar ( int line_number, int col_number ){
 
 void terminalRefreshLine ( int line_number ){
 	
-	if ( line_number > wlMaxRows )
+	if ( line_number > __wlMaxRows )
 		return;	
 	
 	int lin = (int) line_number; 
@@ -327,7 +327,7 @@ void terminalRefreshLine ( int line_number ){
 	terminalSetCursor ( col, lin );
 		
 	//colunas.
-	for ( col=0; col < wlMaxColumns; col++ )
+	for ( col=0; col < __wlMaxColumns; col++ )
 	{
 	    //Mostra um char do screen buffer.
 		printf ( "%c", LINES[lin].CHARS[col] );
@@ -459,14 +459,14 @@ void terminalClearScreen (){
 void terminalSetCursor ( unsigned long x, unsigned long y ){
 
     //filtro
-	if ( x >= wlMaxColumns)
+	if ( x >= __wlMaxColumns)
 	{
-		x = (wlMaxColumns-1);
+		x = (__wlMaxColumns-1);
 	} 
 	
-	if( y >= wlMaxRows )
+	if( y >= __wlMaxRows )
 	{
-		y = (wlMaxRows-1);
+		y = (__wlMaxRows-1);
 	}	
 
 
@@ -712,7 +712,7 @@ void clearLine ( int line_number ){
 	terminalSetCursor ( col, lin );
 		
 	//colunas.
-	for ( col=0; col < wlMaxColumns; col++ )
+	for ( col=0; col < __wlMaxColumns; col++ )
 	{
 	    //Mostra um char do screen buffer.
 		printf( "%c", screen_buffer[Offset] );
@@ -784,7 +784,7 @@ int textGetCurrentCol ()
 
 void move_to ( unsigned long x, unsigned long y ){
 	
-	if ( x > wlMaxColumns || y > wlMaxRows )
+	if ( x > __wlMaxColumns || y > __wlMaxRows )
 		return;
 	
 	//screen_buffer_x = x;
@@ -793,7 +793,7 @@ void move_to ( unsigned long x, unsigned long y ){
 	textCurrentCol = x;
 	textCurrentRow = y;
 	
-	//screen_buffer_pos = ( screen_buffer_y * wlMaxColumns + screen_buffer_x ) ;
+	//screen_buffer_pos = ( screen_buffer_y * __wlMaxColumns + screen_buffer_x ) ;
 }
 
 
@@ -875,7 +875,7 @@ void terminal_clear_to_endofline ()
     OldY = textCurrentRow;
 
     //começa da coluna atual e vai até o fim da linha.
-    for ( i=textCurrentCol; i<wlMaxColumns; i++)
+    for ( i=textCurrentCol; i< __wlMaxColumns; i++)
     {
 		terminal_write_char ('Y');
         //terminalInsertCharXY ( i, textCurrentRow, temp );
@@ -908,31 +908,58 @@ void terminal_clear_to_endofdisplay ()
     NewX = 0;
     NewY = OldY+1;
     
-    //terminalSetCursor ( NewX, NewY );
-    
+
     // Step2
     // Limpa as linhas que faltam.
     // Começa da próxima linha. 
  
-    if ( wlMaxRows > DEFAULT_MAX_ROWS )
+    if ( __wlMaxRows != DEFAULT_MAX_ROWS )
     {
-		MessageBox (3,"terminal_clear_to_endofdisplay","wlMaxRows limits");
+		MessageBox (3,
+		    "terminal_clear_to_endofdisplay",
+		    "__wlMaxRows limits");
+    }
+
+    if ( __wlMaxColumns != DEFAULT_MAX_COLUMNS )
+    {
+		MessageBox (3,
+		    "terminal_clear_to_endofdisplay",
+		    "__wlMaxColumns limits");
+    }
+
+
+    if ( NewY >= __wlMaxRows )
+    {
+		MessageBox ( 3,
+		    "terminal_clear_to_endofdisplay",
+		    "NewY fail");
+    }
+
+    if ( NewX >= __wlMaxColumns )
+    {
+		MessageBox ( 3,
+		    "terminal_clear_to_endofdisplay",
+		    "NewX fail");
     }
 
     //for ( y=NewY; y<(NewY+8); y++ ) //funciona
-    for ( y=NewY; y<wlMaxRows; y++ )
+    for ( y=NewY; y< (__wlMaxRows -2); y++ )
     {
-		terminalSetCursor ( NewX, y );
+		terminalSetCursor ( 0, y );
 		
         //limpa uma linha desde o '0'.
-        for (x=NewX; x<wlMaxColumns; x++)
+        for (x=0; x< __wlMaxColumns; x++)
         {
 			//coloca um char na posição atual.
             terminal_write_char ('Z');
         };
     };
+
+		MessageBox ( 3,
+		    "terminal_clear_to_endofdisplay",
+		    "fim");
     
-    //while(1){}
+    while(1){}
 }
 
 
@@ -958,10 +985,10 @@ void terminal_scroll_display ()
     // vamos limpar a última linha.
     
     // vamos posicionar o cursor no início da última linha.
-    terminalSetCursor ( 0, wlMaxRows-1 );
+    terminalSetCursor ( 0, __wlMaxRows-1 );
      
     //limpa uma linha
-    for (i=0; i<wlMaxColumns; i++)
+    for (i=0; i<__wlMaxColumns; i++)
     {
 		//coloca um char na posição atual.
         terminal_write_char (' ');
