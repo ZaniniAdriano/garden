@@ -1589,7 +1589,7 @@ void *noratermProcedure ( struct window_d *window,
                     //shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2020, 0);
                     //updateVisibleArea (0);
                     //terminal_scroll_display ();
-                    terminal_scroll_down ();
+                    terminal_scroll_down (); //funcionou.
                     break;
                 
                 //full screen
@@ -2179,6 +2179,18 @@ void *noratermProcedure ( struct window_d *window,
 			
 		case MSG_KILLFOCUS:
             break;
+            
+            
+         //#test
+         case 8811:
+             terminal_scroll_down ();
+             break;   
+
+         //#test
+         case 8812:
+             terminal_scroll_up ();
+             break;   
+
 
 		//@todo: isso ainda não existe na biblioteca. criar.	
         //case MSG_CLS:
@@ -2382,11 +2394,15 @@ void *noratermProcedure ( struct window_d *window,
     // Nothing for now !
 	
 done:
+
+    return NULL;
 	
-	return NULL;
+	// #bugbug
+	// Chamar o procedimento aqui deu problema.
+	// Mas essa chamada funciona em outro aplicativo.
 	//obs: essa rotina existe nas libs do projeto gramado.
-	//return (void *) gde_system_procedure ( window, msg, long1, long2 );
-	//return (unsigned long) apiDefDialog ( window, msg, long1, long2 );
+
+    //return (void *) gde_system_procedure ( window, msg, long1, long2 );
 }
 
 
