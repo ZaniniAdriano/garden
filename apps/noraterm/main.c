@@ -1586,20 +1586,25 @@ void *noratermProcedure ( struct window_d *window,
                     
                 case VK_F10:
                     //MessageBox ( 3, "Noraterm", "F10" );
-                    shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2020, 0);
+                    //shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2020, 0);
+                    updateVisibleArea (0);
+                    terminal_scroll_display ();
                     break;
                 
                 //full screen
                 //colocar em full screen somente a área de cliente. 
 		        case VK_F11:
 		            //MessageBox ( 3, "Noraterm", "F11" );
-					shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2020, 0);
+					//shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2020, 0);
+					updateVisibleArea (1);
+					terminal_scroll_display ();
 					break;
 					
 				case VK_F12:
 				    //MessageBox ( 3, "Noraterm", "F12" );
 				    //shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2020, 0);
 				    terminal_write_char ('A');
+				    terminalNewVisibleArea (0, 15); //fazer isso uma  vez.
 				    break;
 				
 				//...

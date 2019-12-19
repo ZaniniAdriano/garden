@@ -388,20 +388,18 @@ void terminalRefreshScreen (){
            ">");
 	}
 
+    //
+    // # hack hack
+    //
+    
+    //textBottomRow = textTopRow +23;
 
     // Copiar o texto para a tela.
-    for ( i=textTopRow; i<textBottomRow; i++ )
+    //for ( i=textTopRow; i<textBottomRow; i++ ) //toda a área visível. ()
+    for ( i=textTopRow; i < textBottomRow; i++ )
 	{
 		for ( j=0; j<80; j++ )
 		{
-		    //LINES[i].CHARS[j] = (char) 'x';
-		    //LINES[i].ATTRIBUTES[j] = (char) 7;
-			//printf ("%c", LINES[i].CHARS[j] );
-			//terminal_write_char ('+');
-			
-			// #bugbug: isso recolocaria no buffer de arquivo.
-			//terminal_write_char ( (int) LINES[i].CHARS[j] );
-			
 			// isso não coloca no buffer de arquivo.
 		    apiPutChar  ( (int) LINES[i].CHARS[j] );
 		}
@@ -1125,14 +1123,6 @@ void terminal_scroll_display ()
     OldY = textCurrentRow;
 
 
-    //
-    // #todo: 
-    // Incrementar a área visível para rodar o texto.
-    //
-    
-    //updateVisibleArea (0); //down
-    //updateVisibleArea (1); //up    
-    
     // Limpa a tela e  
     // copia o conteúdo do buffer na tela limpa.
     // #importante: Mostra apenas a área visível do buffer de arquivo.
@@ -1163,7 +1153,6 @@ void terminal_scroll_display ()
         terminal_write_char ('$');
         //terminal_write_char (' ');
     };
-
 
     //terminalSetCursor ( OldX, OldY );
     terminalSetCursor ( 0, __wlMaxRows-3 );
