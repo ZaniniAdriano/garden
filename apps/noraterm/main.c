@@ -2395,14 +2395,18 @@ void *noratermProcedure ( struct window_d *window,
 	
 done:
 
-    return NULL;
+    if ( (void *) window == NULL )
+    {
+		return NULL;
+    }
+    //return NULL;
 	
 	// #bugbug
 	// Chamar o procedimento aqui deu problema.
 	// Mas essa chamada funciona em outro aplicativo.
 	//obs: essa rotina existe nas libs do projeto gramado.
 
-    //return (void *) gde_system_procedure ( window, msg, long1, long2 );
+    return (void *) gde_system_procedure ( window, msg, long1, long2 );
 }
 
 
