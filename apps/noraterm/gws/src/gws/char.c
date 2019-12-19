@@ -1,4 +1,8 @@
 
+
+
+//#include <stddef.h>
+
 #include <api.h>
 #include <gws.h>
 
@@ -13,13 +17,16 @@
 
 //void charBuiltCharBackBuffer( unsigned long x, unsigned long y, unsigned long color, unsigned long c)
 
-void my_buffer_char_blt ( unsigned long x, 
-                          unsigned long y, 
-						  unsigned long color, 
-						  unsigned long c )
+
+void 
+my_buffer_char_blt ( unsigned long x, 
+                     unsigned long y, 
+                     unsigned long color, 
+                     unsigned long c )
 {
-    gws_drawchar_transparent ( x, y, color, c );								
+    gws_drawchar_transparent ( x, y, color, c );
 }
+
 
 
 void set_char_width ( int width ){

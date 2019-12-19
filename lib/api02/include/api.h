@@ -46,6 +46,9 @@
  *     2017 - Revisão.
  */
 
+// #teste
+#include <types.h>      
+#include <stddef.h>
  
 //
 // @todo: Fazer suporte a objetos. estruturas.

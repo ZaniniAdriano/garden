@@ -576,3 +576,11 @@ void terminal_clear_from_startofline ();
 void terminal_clear_to_endofdisplay ();
 void terminal_scroll_display ();
 void terminalCopyToScroll ();
+
+
+
+ 
+void terminalNewVisibleArea ( int text_top_row, int text_bottom_row );
+
+
+

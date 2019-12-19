@@ -999,6 +999,16 @@ void techo(char *buf, int len) {
 
 // #todo
 // See: https://github.com/gramado/st/blob/tlvince/st.c
+
+		// #Atenção: A libc do app foi configurada dinamicamente
+		// para que printf coloque chars no arquivo. Mas 
+		// a libc desse terminal ainda não foi. Então a printf
+		// desse terminal escreve no backbuffer e exibe na tela.
+        // #bugbug: O problema é que dessa forma nada foi colocado no buffer de arquivo.
+        
+//#todo
+// fazer essa função colocar os chars no buffer de arquivo. Usaremos no scroll.
+
 void tputc (char *c, int len){
 	
 	 //int c = (int) *c;
@@ -1019,7 +1029,7 @@ void tputc (char *c, int len){
 	 
 	 //string normal
 	 //if(term.esc & ESC_STR) 
-	 if(__sequence_status == 0)
+	 if (__sequence_status == 0)
 	 {
 		 switch (ascii)
 		 {
@@ -1031,15 +1041,27 @@ void tputc (char *c, int len){
                  __sequence_status = 1;
                  break;
              
-             //Imprimindo caracteres normais.
-             //#todo: talvez possamos usar a API para isso.
-             //como acontece nos caracteres digitados no shell interno.
+             
+             //
+             // #importante
+             // 
+             
+             // Imprimindo caracteres normais.
+             // #todo: talvez possamos usar a API para isso.
+             // como acontece nos caracteres digitados no shell interno.
              default:
-                 printf ("%c",ascii);
-                 return;			          
+             
+                 // #importante
+                 // Isso vai exibir o caractere mas também
+                 // na colocar ele no buffer ba posição atual.
+                 
+                 //printf ("%c",ascii);
+                 terminal_write_char ( (int) ascii); 
+                 return;
          }
-	 }		 
-	 
+	 }
+
+
 	 //control codes. (dentro de um range)
 	 if(control){
 		 
@@ -1055,7 +1077,8 @@ void tputc (char *c, int len){
 		    case '\f': /* LF */
             case '\n': /* LF */
                 //#deixa o kernel lidar com isso por enquanto.
-                printf ("%c",ascii);
+                //printf ("%c",ascii);
+                terminal_write_char ( (int) ascii);
                 return;	
                 break;
 		    
@@ -1065,7 +1088,8 @@ void tputc (char *c, int len){
 		    case '\x1b':
 		        term.esc = ESC_START;
 		        __sequence_status = 1;
-		        printf (" {ESCAPE} ");
+		        //printf (" {ESCAPE} ");
+		        terminal_write_char ( (int) '$');
 		        return;
 		        break;
 		        
@@ -1077,7 +1101,8 @@ void tputc (char *c, int len){
 		    case '\032':	/* SUB */
 		    case '\030':	/* CAN */
 			    //csireset ();
-			    printf (" {reset?} ");
+			    //printf (" {reset?} ");
+                terminal_write_char ( (int) '$');
                 return;
 		        break;
 		            
@@ -1107,7 +1132,8 @@ void tputc (char *c, int len){
 		     	case 'm':
 		     	    term.esc = 0;
 			        __sequence_status = 0;
-			        printf (" {m} ");
+			        //printf (" {m} ");
+			        terminal_write_char ( (int) '$');
 			        return;
 			        break;  
 			     
@@ -1120,7 +1146,8 @@ void tputc (char *c, int len){
 			     //para analizarmos depois.
 			     //Colocamos no tail e retiramos no head.
 		         default:
-		              printf (" {.} ");
+		              //printf (" {.} ");
+		              terminal_write_char ( (int) '$');
 		              CSI_BUFFER[__csi_buffer_tail] = ascii;
 		              __csi_buffer_tail++;
 		              if ( __csi_buffer_tail >= CSI_BUFFER_SIZE )
@@ -1158,7 +1185,8 @@ void tputc (char *c, int len){
 		   {
 			 case '[':
 			     term.esc |= ESC_CSI;
-			     printf (" {CSI} ");
+			     //printf (" {CSI} ");
+			     terminal_write_char ( (int) '$');
 			     return;
 			     break; 
 			       
@@ -1188,45 +1216,53 @@ void tputc (char *c, int len){
                 
              case 'D': /* IND -- Linefeed */
                  term.esc = 0;
-                 printf (" {IND} ");
+                 //printf (" {IND} ");
+                 terminal_write_char ( (int) '$');
                  break;
                  
              case 'E': /* NEL -- Next line */
                  term.esc = 0;
-                 printf (" {NEL} ");
+                 //printf (" {NEL} ");
+                 terminal_write_char ( (int) '$');
                  break;
                         			
 			   
 			 case 'H': /* HTS -- Horizontal tab stop */  
                  term.esc = 0;
-                 printf (" {HTS} ");
+                 //printf (" {HTS} ");
+                 terminal_write_char ( (int) '$');
                  break;
                  
  			 case 'M': /* RI -- Reverse index */    
                  term.esc = 0;
-                 printf (" {RI} ");
+                 //printf (" {RI} ");
+                 terminal_write_char ( (int) '$');
                  break;
                  
                  			     
 			  case 'Z': /* DECID -- Identify Terminal */   
                  term.esc = 0;
-                 printf (" {DECID} ");
+                 //printf (" {DECID} ");
+                 terminal_write_char ( (int) '$');
                  break;
                  
                  			 
 			 case 'c': /* RIS -- Reset to inital state */
                  term.esc = 0;
-                 printf (" {reset?} ");
+                 //printf (" {reset?} ");
+                 terminal_write_char ( (int) '$');
                  break; 
                  
 			 case '=': /* DECPAM -- Application keypad */
                  term.esc = 0;
-                 printf (" {=} ");
+                 //printf (" {=} ");
+                 terminal_write_char ( (int) '$');
                  break;
                  			 
 			 case '>': /* DECPNM -- Normal keypad */
                  term.esc = 0;
-                 printf (" {>} ");
+                 //printf (" {>} ");
+                 terminal_write_char ( (int) '$');
                  break;
                  			 
 			 //case '7': /* DECSC -- Save Cursor */    
@@ -1244,31 +1280,41 @@ void tputc (char *c, int len){
   
   			 //erro    
 			 //default:
-			     //break;               
-			     			   
+			     //break;          
 		   }
 		};	 
 	    
 	     //...
 	     
 	     return;
-	 };	 
+	 };
 	 
 	 //...
 }
-	
-	
-//O buffer está cheio.
+
+
+
+/*
+ ********************************** 
+ * print_buffer
+ * 
+ *     Print line buffer.
+ * 
+ */
+
+//O buffer de linha está cheio.
 //vamos mostrar na tela.
 
 int print_buffer (void){
-	
-	int c;
-	int i;
-	
+
+    int c;
+    int i;
+
+    int charsize = 1;    /* size of utf8 char in bytes */
+
 	//int sequence_status = 0;
 	
-	int charsize = 1; /* size of utf8 char in bytes */
+
 	
 	//provisorio
     //printf (LINE_BUFFER); 
@@ -1282,25 +1328,41 @@ int print_buffer (void){
     
     if ( len >= LINE_BUFFER_SIZE )
     {
-		//printf ( "print_buffer: buffer limit\n");
-		MessageBox (3,"noraterm","print_buffer: buffer limit");
-		return -1;
-	}
-    
+        MessageBox (3,"noraterm","print_buffer: buffer limit");
+        return -1;
+    }
+
+
     for (i=0; i<len; i++)
     {
-	    //tputc (char *c, int len);
-	      tputc ( (char *) &LINE_BUFFER[i], (int) 1 );	
-	}
-	 
+		// See: Função interna. Logo acima.
+		// uma rotian especial, pois vai tratar as escape sequencies. 
+        // Desejamos que o caractere seja exibido na tela e
+        // que entre no buffer de arquivo.        
+        //IN: char, len
+         tputc ( (char *) &LINE_BUFFER[i], (int) 1 );
+    };
+
+ 
 	terminal_write_char ( (int) '\n'); 
 	 
-	//Depois de lido o buffer podemos reinicali-lo 
+	// Depois de lido o buffer podemos reinicali-lo.
+	// Limpando só o buffer de linha. Não é o buffer de arquivo. 
     initialize_buffer();
 	    
     return 0;	
 }
 
+
+
+
+
+/*
+ ********************************** 
+ * initialize_buffer 
+ * 
+ * 
+ */
 
 //
 // Inicializando o buffer.
@@ -1309,6 +1371,9 @@ int print_buffer (void){
 // #bugbug
 // E o arquivo ??
 // Em que momento o arquivo chega ao EOF ?
+
+// #importante:
+// Limpando só o buffer de linha. Não é o buffer de arquivo. 
 
 void initialize_buffer (void){
 	
@@ -1324,6 +1389,10 @@ void initialize_buffer (void){
     
     line_buffer_buffersize = LINE_BUFFER_SIZE;	
 }
+
+
+
+
 
 
 //int bufferInsertChar();
@@ -1640,6 +1709,7 @@ void *noratermProcedure ( struct window_d *window,
 				case 2008:
 					
 					// #importante: 
+					// Inicializa o 'line buffer' e não o buffer de texto.
 					initialize_buffer();
 					
 					//rewind (stdout);
@@ -1962,7 +2032,8 @@ void *noratermProcedure ( struct window_d *window,
                             (unsigned long) window );
                         //apiDrawText ( client_window, 4, 40 +32, COLOR_BLACK, "test 1 ...");
                         //refresh_screen ();
-                        terminal_clear_from_startofline ();
+                        //terminal_clear_from_startofline ();
+                        terminalCopyToScroll ();
                         break;
                     }
 
@@ -1974,7 +2045,8 @@ void *noratermProcedure ( struct window_d *window,
                             (unsigned long) window );
                         //apiDrawText ( client_window, 4, 40 +32, COLOR_BLACK, "test 2 ...");
                         //refresh_screen ();
-                        terminal_clear_to_endofline ();
+                        //terminal_clear_to_endofline ();
+                        terminal_scroll_display ();
                         break;
                     }
 
@@ -1986,7 +2058,8 @@ void *noratermProcedure ( struct window_d *window,
                             (unsigned long) window );
                         //apiDrawText ( client_window, 4, 40 +32, COLOR_BLACK, "test 3 ...");
                         //refresh_screen ();
-                        terminal_clear_to_endofdisplay ();
+                        //terminal_clear_to_endofdisplay ();
+                        terminalShowScreenBuffer ();
                         break;
                     }
 
@@ -6829,14 +6902,14 @@ noArgs:
      __barleft = 2;
      __bartop = 2;
      __barwidth = wsWindowWidth -40 -10;
-     __barheight = 40;
+     __barheight = 40; //40;
 
     //
     // Client window.
     //
 
     terminal_rect.left  = 4;
-    terminal_rect.top   = 1 +40;
+    terminal_rect.top   = 1 +50;  //1 +40;
     terminal_rect.width  = __bgwidth  -40;  //wsWindowWidth -40 -10;
     terminal_rect.height = __bgheight -50;  //wsWindowHeight -40 -40 -40 -10;
     
@@ -6888,9 +6961,9 @@ noArgs:
     hWindow2 = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "NORATERM-CLIENT-window",
                             terminal_rect.left, terminal_rect.top, 
                             terminal_rect.width, terminal_rect.height,
-                            client_bg, 0, COLOR_BLUE, COLOR_BLUE );
-                            //client_bg, 0, COLOR_TERMINAL2, COLOR_TERMINAL2 );
-
+                            client_bg, 0, COLOR_TERMINAL2, COLOR_TERMINAL2 );
+                            //client_bg, 0, COLOR_BLUE, COLOR_BLUE );
+    
     if ( (void *) hWindow2 == NULL )
     {
         die ("NORATERM: hWindow2 \n");
@@ -6900,7 +6973,18 @@ noArgs:
         APISetFocus (hWindow2);
         apiShowWindow (hWindow2);
         
+        //
+        // Saving ...
+        //
+        
+        // Salvamos para uso nesse documento.
         client_window = hWindow2;
+
+        // Salva ponteiro da janela do terminal.
+        // Poderemos usar em outros documentos.  
+        shell_info.terminal_window = ( struct window_d * ) hWindow2;
+
+
 
 	    //Terminal window.
 	    // #importante
@@ -6911,11 +6995,10 @@ noArgs:
 	    // # provavelmente isso marca os limites para a 
 	    // impressão de caractere em modo terminal 
         
-        system_call ( SYSTEMCALL_SETTERMINALWINDOW, (unsigned long) hWindow2, 
-		    (unsigned long) hWindow2, (unsigned long) hWindow2 );
-		
-	    // Salva ponteiro da janela do terminal.  
-	    shell_info.terminal_window = ( struct window_d * ) hWindow2;
+        system_call ( SYSTEMCALL_SETTERMINALWINDOW, 
+            (unsigned long) hWindow2, 
+            (unsigned long) hWindow2, 
+            (unsigned long) hWindow2 );
     };
 	//apiEndPaint ();
 	//--

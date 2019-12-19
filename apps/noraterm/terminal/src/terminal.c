@@ -212,8 +212,13 @@ static void restore_cur (void){
 void terminalRefreshCurrentChar2 (){
 	
 	int c = (int) LINES[textCurrentRow].CHARS[textCurrentCol];
-	
-	apiPutChar (c);
+
+
+    //
+    // Exibe o char usando a api.
+    //
+
+    apiPutChar (c);
 		
 	// Atualiza os deslocamanentos dentro do buffer.
 	
@@ -342,10 +347,11 @@ void terminalRefreshLine ( int line_number ){
  *     #importante 
  *      
        #OBS
-       NA VERDADE SE REFERE AO REFRESH DA ÁREA DE CLIENTE DO SHELL.
+       NA VERDADE SE REFERE AO REFRESH DA ÁREA DE CLIENTE.
  *
  *     Copia o conteúdo do (screen_buffer) buffer de output 
  * para a tela. (dentro da janela). 
+ * 
  * ## Acho que se trata de stdout.
  * É uma memória VGA virtual com caractere e atributo.
  * na hora de efetuar refresh precisamos considerar o atributo 
@@ -354,26 +360,64 @@ void terminalRefreshLine ( int line_number ){
 
 void terminalRefreshScreen (){
 
-	//desabilita o cursor
-	system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
-	
-	int i=0;
-	int j=0;
-	
-	for ( i=textTopRow; i<textBottomRow; i++ )
+    int i=0;
+    int j=0;
+
+	// Desabilita o cursor
+    system_call ( 245, 
+        (unsigned long) 0, 
+        (unsigned long) 0, 
+        (unsigned long) 0);
+
+
+    // Colocaremos o texto do buffer no início da área de cliente.
+    terminalSetCursor ( 0, 0 );
+
+
+	if ( textTopRow == textBottomRow )
+	{
+        MessageBox ( 3,
+           "terminalRefreshScreen",
+           "==");
+	}
+	    
+	if ( textTopRow > textBottomRow )
+	{
+        MessageBox ( 3,
+           "terminalRefreshScreen",
+           ">");
+	}
+
+
+    // Copiar o texto para a tela.
+    for ( i=textTopRow; i<textBottomRow; i++ )
 	{
 		for ( j=0; j<80; j++ )
 		{
 		    //LINES[i].CHARS[j] = (char) 'x';
 		    //LINES[i].ATTRIBUTES[j] = (char) 7;
-	        
-			printf ("%c", LINES[i].CHARS[j] );
+			//printf ("%c", LINES[i].CHARS[j] );
+			//terminal_write_char ('+');
+			
+			// #bugbug: isso recolocaria no buffer de arquivo.
+			//terminal_write_char ( (int) LINES[i].CHARS[j] );
+			
+			// isso não coloca no buffer de arquivo.
+		    apiPutChar  ( (int) LINES[i].CHARS[j] );
 		}
-		printf ("\n");
+
+		//printf ("\n");
+	    terminal_write_char ('\n');
 	};
 
-	//reabilita o cursor
-	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);	
+    //#teste
+    terminalSetCursor ( 0, __wlMaxRows -2 );
+        
+	// Reabilita o cursor
+    system_call ( 244, 
+        (unsigned long) 0, 
+        (unsigned long) 0, 
+        (unsigned long) 0);
 }
 
 
@@ -412,8 +456,8 @@ void terminalClearScreen (){
         
 	    // Copiamos o conteúdo do screenbuffer para 
 	    // a área de cliente do shell.
-        //terminalRefreshScreen ();	
-	    //shellRefreshVisibleArea();			
+        //terminalRefreshScreen ();
+	    //shellRefreshVisibleArea();
 
 		// Cursor.
         // Ajusta o cursor.
@@ -506,12 +550,12 @@ void terminalSetCursor ( unsigned long x, unsigned long y ){
  */
 
 void terminalClearBuffer (){
-	
-	int i=0;
-	int j=0;	
 
-	for ( i=0; i<32; i++ )
-	{
+    int i=0;
+    int j=0;
+
+    for ( i=0; i<32; i++ )
+    {
 		for ( j=0; j<80; j++ )
 		{
 		    LINES[i].CHARS[j] = (char) ' ';
@@ -521,7 +565,7 @@ void terminalClearBuffer (){
 		LINES[i].left = 0;
 		LINES[i].right = 0;
 		LINES[i].pos = 0;
-	};
+    };
 }
 
 
@@ -586,36 +630,35 @@ non_blank_line ( int row,
 
 
 // Mostra a área visível dentro do buffer de linhas.
-
 void terminalRefreshVisibleArea (){
-	
-	//desabilita o cursor
-	system_call ( 245, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);
-	
-	
-	//seta o cursor no início da janela.
-	
-	unsigned long left, top, right, bottom;
- 
-    left = (terminal_rect.left/8);
-    top = (terminal_rect.top/8);
-	
-    terminalSetCursor ( left, top );
-	
+
+    unsigned long left, top, right, bottom;
+    int i=0;
+    int j=0;
+
+    
+    //desabilita o cursor
+    system_call ( 245, 
+        (unsigned long) 0, 
+        (unsigned long) 0, 
+        (unsigned long) 0);
+
+    // Coloca o cursor no início da área de cliente.
+    terminalSetCursor ( 0, 0 );
+
 	// efetua o refresh do char atual, que agora é o primeiro 
 	// depois os outros consecutivos.
-	
-	int i=0;
-	int j=0;
 	
 	//textTopRow = 3;
 	//textBottomRow = 3 + 25;
 	
 	if ( textTopRow > textBottomRow )
 	{
-		printf("shellRefreshVisibleArea: textTopRow fail");
+		//#todo: usar MessageBox.
+		printf ("shellRefreshVisibleArea: textTopRow fail");
 	}
-	
+
+
 	//toda a área visível.
 	//for ( i=0; i<25; i++ )	
 	for ( i=textTopRow; i<textBottomRow; i++ )
@@ -623,12 +666,16 @@ void terminalRefreshVisibleArea (){
 		for ( j=0; j<80; j++ )
 		{	
 	        //refresh
-            printf ("%c", LINES[i].CHARS[j] );						
+            //printf ("%c", LINES[i].CHARS[j] );
+            apiPutChar ( (int) LINES[i].CHARS[j]);
 		}
 	};
 
 	//reabilita o cursor
-	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0);	
+	system_call ( 244, 
+	    (unsigned long) 0, 
+	    (unsigned long) 0, 
+	    (unsigned long) 0);	
 }
 
 
@@ -650,6 +697,30 @@ void updateVisibleArea ( int direction ){
 }
 
 
+
+void terminalNewVisibleArea ( int text_top_row, int text_bottom_row )
+{
+	if ( text_top_row == text_bottom_row )
+	{
+        MessageBox ( 3,
+           "terminalNewVisibleArea",
+           "==");
+	}
+	    
+	if ( text_top_row > text_bottom_row )
+	{
+        MessageBox ( 3,
+           "terminalNewVisibleArea",
+           ">");
+	}
+    
+    
+    //#todo:
+    // Checar limites dos argumentos.
+
+	textTopRow    = text_top_row;
+	textBottomRow = text_bottom_row;
+}
 
 
 void testChangeVisibleArea()
@@ -888,7 +959,7 @@ void terminal_clear_to_endofline ()
 
 
 
-// Isso funcionou pacialmente ... a primeira parte falhou.
+// Isso funcionou pacialmente ... 
 void terminal_clear_to_endofdisplay ()
 {
     unsigned long x, y;
@@ -969,95 +1040,119 @@ void terminal_clear_to_endofdisplay ()
 
 
 
+
+// Interna. 
+// Usada por terminal_scroll_display, logo abaixo.
+void terminalCopyToScroll (){
+
+    unsigned long left, top, right, bottom;
+
+    // Desabilita o cursor
+    system_call ( 245, 
+        (unsigned long) 0, 
+        (unsigned long) 0, 
+        (unsigned long) 0);
+
+
+    //
+    // A janela do terminal.
+    //
+    
+    if ( (void *) shell_info.terminal_window != NULL )
+    {
+
+		// Redraw window.
+		// Isso limpa a janela. (client area)
+		// O Window server usar a estrutura de janela
+		// para redezenhar ela.
+		// Cor ??
+		APIredraw_window ( shell_info.terminal_window, 1 );
+
+		//#todo
+		//Limpa o buffer,
+		//terminalClearBuffer ();
+
+        // Cursor. Ajusta o cursor para 0,0.
+        //terminalSetCursor ( left, top );
+        
+	    //??
+	    // Copiamos o conteúdo do screen buffer para 
+	    // a área de cliente do terminal.
+	    
+	    // Vamos colocar uma área visível maior possível para teste.
+	    //pois pode ter coisa só no fim.
+	    terminalNewVisibleArea (0,23);  
+        terminalRefreshScreen ();
+	    //terminalRefreshVisibleArea();
+
+
+        // Cursor. Ajusta o cursor para 0,0.
+        //terminalSetCursor ( left, top );
+
+
+        // show client window.
+        // Agora com um novo texto nela.
+        apiShowWindow (shell_info.terminal_window);
+    }
+
+    //shellRefreshVisibleArea();
+ 
+    // Reabilita o cursor
+    system_call ( 244, 
+        (unsigned long) 0, 
+        (unsigned long) 0, 
+        (unsigned long) 0);
+}
+
+
+
 void terminal_scroll_display ()
 {
+    int i;
     unsigned long OldX, OldY;
+    
     char temp;
     temp = ' ';
     
-    int i;
-
 
     //save
     OldX = textCurrentCol;
     OldY = textCurrentRow;
 
- 
-    //limpa a tela, copia o conteúdo do buffer na tela limpa.
+
+    
+    // Limpa a tela e  
+    // copia o conteúdo do buffer na tela limpa.
+    // Não meche no cursor.
     terminalCopyToScroll ();
-    
-    
-    // vamos limpar a última linha.
+
+    //
+    // Last line.
+    //
+
+    // Vamos limpar a última linha.
     
     // vamos posicionar o cursor no início da última linha.
-    terminalSetCursor ( 0, __wlMaxRows-1 );
+    //terminalSetCursor ( 0, __wlMaxRows-1 );
+    terminalSetCursor ( 0, __wlMaxRows-3 );  //teste
+     
+    if ( __wlMaxColumns != DEFAULT_MAX_COLUMNS )
+    {
+        MessageBox ( 3,
+           "terminal_scroll_display",
+           "fail");
+    }
      
     //limpa uma linha
     for (i=0; i<__wlMaxColumns; i++)
     {
-		//coloca um char na posição atual.
-        terminal_write_char (' ');
+        //coloca um char na posição atual.
+        terminal_write_char ('$');
     };
 
-    terminalSetCursor ( OldX, OldY );
+
+    //terminalSetCursor ( OldX, OldY );
+    terminalSetCursor ( 0, __wlMaxRows-3 );
 }
-
-
- 
-
-void terminalCopyToScroll (){
-
-	unsigned long left, top, right, bottom;
-	
-    // Desabilita o cursor
-	system_call ( 245, (unsigned long) 0, (unsigned long) 0, 
-	    (unsigned long) 0);
-	
-	
-	if ( (void *) shell_info.terminal_window != NULL )
-	{
-		//Limpa o buffer,
-		//terminalClearBuffer ();
-		
-		//#todo:
-		//limpar a janela.
-		
-		//redraw window.
-		//isso limpa a janela
-		APIredraw_window ( shell_info.terminal_window, 1 );
-		
-		// Cursor.
-        // Ajusta o cursor.
-        //left = (terminal_rect.left/8);
-        //top = (terminal_rect.top/8);
-        //terminalSetCursor ( left, top );
-        
-	    // Copiamos o conteúdo do screenbuffer para 
-	    // a área de cliente do shell.
-        //terminalRefreshScreen ();	
-	    //shellRefreshVisibleArea();
-
-		// Cursor.
-        // Ajusta o cursor.
-        //#bugbug: o tamano do char foi determinado.
-        left = (terminal_rect.left/8);
-        top = (terminal_rect.top/8);
-        terminalSetCursor ( left, top );
-	    
-	    // show client window.
-	    apiShowWindow (shell_info.terminal_window);
-	}
-
-
-    //shellRefreshVisibleArea();
- 
-	// Reabilita o cursor
-	system_call ( 244, (unsigned long) 0, (unsigned long) 0, 
-	    (unsigned long) 0);	
-}
-
-
-
-
 
 
