@@ -1043,6 +1043,11 @@ void terminal_clear_to_endofdisplay ()
 
 // Interna. 
 // Usada por terminal_scroll_display, logo abaixo.
+
+    // Limpa a tela e  
+    // copia o conteúdo do buffer na tela limpa.
+    // #importante: Mostra apenas a área visível do buffer de arquivo.
+    // Não meche no cursor.
 void terminalCopyToScroll (){
 
     unsigned long left, top, right, bottom;
@@ -1081,7 +1086,7 @@ void terminalCopyToScroll (){
 	    
 	    // Vamos colocar uma área visível maior possível para teste.
 	    //pois pode ter coisa só no fim.
-	    terminalNewVisibleArea (0,23);  
+	    //terminalNewVisibleArea (0,23);  
         terminalRefreshScreen ();
 	    //terminalRefreshVisibleArea();
 
@@ -1120,12 +1125,20 @@ void terminal_scroll_display ()
     OldY = textCurrentRow;
 
 
+    //
+    // #todo: 
+    // Incrementar a área visível para rodar o texto.
+    //
+    
+    //updateVisibleArea (0); //down
+    //updateVisibleArea (1); //up    
     
     // Limpa a tela e  
     // copia o conteúdo do buffer na tela limpa.
+    // #importante: Mostra apenas a área visível do buffer de arquivo.
     // Não meche no cursor.
     terminalCopyToScroll ();
-
+    
     //
     // Last line.
     //
@@ -1148,6 +1161,7 @@ void terminal_scroll_display ()
     {
         //coloca um char na posição atual.
         terminal_write_char ('$');
+        //terminal_write_char (' ');
     };
 
 

@@ -1598,7 +1598,8 @@ void *noratermProcedure ( struct window_d *window,
 					
 				case VK_F12:
 				    //MessageBox ( 3, "Noraterm", "F12" );
-				    shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2020, 0);
+				    //shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2020, 0);
+				    terminal_write_char ('A');
 				    break;
 				
 				//...
@@ -6522,10 +6523,17 @@ void terminal_write_char ( int c){
     // #bugbug: esse if não funcionou,
     // o scroll do kernel foi acionado.
     
+    //atualizar a área visível
+    //rodando up ou down.
+    // updateVisibleArea (0); //down
+    //updateVisibleArea (1); //up    
+    
 	if ( textCurrentRow >= __wlMaxRows )
 	{
-		//printf ("*SCROLL\n");
-		//terminal_scroll_display ();
+		updateVisibleArea (0); //down
+		     
+        //MessageBox ( 3, "terminal_write_char:","*Scroll" )
+		terminal_scroll_display ();
 	}
 
 
