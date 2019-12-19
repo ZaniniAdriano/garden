@@ -1587,8 +1587,9 @@ void *noratermProcedure ( struct window_d *window,
                 case VK_F10:
                     //MessageBox ( 3, "Noraterm", "F10" );
                     //shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2020, 0);
-                    updateVisibleArea (0);
-                    terminal_scroll_display ();
+                    //updateVisibleArea (0);
+                    //terminal_scroll_display ();
+                    terminal_scroll_down ();
                     break;
                 
                 //full screen
@@ -1596,15 +1597,17 @@ void *noratermProcedure ( struct window_d *window,
 		        case VK_F11:
 		            //MessageBox ( 3, "Noraterm", "F11" );
 					//shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2020, 0);
-					updateVisibleArea (1);
-					terminal_scroll_display ();
+					//updateVisibleArea (1);
+					//terminal_scroll_display ();
+					terminal_scroll_up ();
 					break;
 					
 				case VK_F12:
 				    //MessageBox ( 3, "Noraterm", "F12" );
 				    //shellSendMessage ( NULL, MSG_TERMINALCOMMAND, 2020, 0);
 				    terminal_write_char ('A');
-				    terminalNewVisibleArea (0, 15); //fazer isso uma  vez.
+				    //terminalNewVisibleArea (0, 15); //fazer isso uma  vez.
+				    terminalNewVisibleArea (0, 20); //fazer isso uma  vez.
 				    break;
 				
 				//...
@@ -4791,11 +4794,14 @@ void terminalTerminal (){
  
  
     //
-	// initi visible area.
+	// initialize visible area.
 	// #todo: criar função para isso
+	// É melhor que seja pequena por enquanto pra não ativar
+	// o scroll do kernel e só usar o scroll desse terminal.
 	
-	textTopRow = 0;
-	textBottomRow = 24;
+	//textTopRow = 0;
+	//textBottomRow = 24;
+    terminalNewVisibleArea ( 0, 19);
 
 
 	//...	

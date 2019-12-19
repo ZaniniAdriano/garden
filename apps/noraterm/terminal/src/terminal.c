@@ -1159,3 +1159,21 @@ void terminal_scroll_display ()
 }
 
 
+
+void terminal_scroll_down ()
+{
+    updateVisibleArea (0);
+    terminal_scroll_display ();
+}
+
+
+void terminal_scroll_up ()
+{
+    updateVisibleArea (1);
+    terminal_scroll_display ();
+}
+
+
+
+
+

@@ -583,4 +583,9 @@ void terminalCopyToScroll ();
 void terminalNewVisibleArea ( int text_top_row, int text_bottom_row );
 
 
+void terminal_scroll_down ();
+void terminal_scroll_up ();
+
+
+
 
