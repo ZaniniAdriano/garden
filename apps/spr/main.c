@@ -959,7 +959,6 @@ shellProcedure ( struct window_d *window,
             break; 		
 		
 		case MSG_SETFOCUS:
-		    APISetFocus(window);
 			break;
 			
 		case MSG_KILLFOCUS:

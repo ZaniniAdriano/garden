@@ -328,7 +328,8 @@ struct window_d *main_window;
 struct window_d *client_background_window;
 struct window_d *client_window;
 
-// bar buttons
+// bar 
+struct window_d *client_bar_Window;
 struct window_d *bar_button_1; 
 struct window_d *bar_button_2;
 struct window_d *bar_button_3;
@@ -1971,12 +1972,13 @@ void *noratermProcedure ( struct window_d *window,
 					if ( window == main_window )
 					{
 						//raise window.
-	                     system_call ( 9700, 
-	                         (unsigned long) window, 
-		                     (unsigned long) window, 
-		                     (unsigned long) window );
+	                     //system_call ( 9700, 
+	                         //(unsigned long) window, 
+		                     //(unsigned long) window, 
+		                     //(unsigned long) window );
+		                 gde_set_focus (window);  
 		                 break;
-					}					
+					}
 					
 					// ??
 					APISetActiveWindow (window);
@@ -2167,12 +2169,28 @@ void *noratermProcedure ( struct window_d *window,
 			testsTimerUpdateObject ();
             //printf("shell timer tick\n");
 			break; 		
-		
+
+        // Uma janela recebe esse mensagem logo após ganhar 
+        // o foco de entrada.
 		case MSG_SETFOCUS:
-		    APISetFocus (window);
+		    if ( window == main_window )
+		    {
+				//MessageBox (3,"noraterm","set focus");
+				//repinta janelas filhas.
+				gde_redraw_window ( main_window, 1);
+				gde_redraw_window ( client_background_window, 1);
+				gde_redraw_window ( client_window, 1);
+				gde_redraw_window ( client_bar_Window, 1);
+				gde_redraw_window ( bar_button_1, 1); //botões
+				gde_redraw_window ( bar_button_2, 1); //botões
+				gde_redraw_window ( bar_button_3, 1); //botões 
+			}
 			break;
-			
+
+        // Uma janela recebe esse mensagem logo após perder 
+        // o foco de entrada.
 		case MSG_KILLFOCUS:
+		    MessageBox (3,"noraterm","kill focus");
             break;
             
             
@@ -7047,8 +7065,6 @@ noArgs:
     // que será o início do bg da área de cliente.
     //
 
-
-    struct window_d *client_bar_Window;
 
 	//++
 	enterCriticalSection ();  
