@@ -800,7 +800,13 @@ void *gde_system_procedure ( struct window_d *window,
     message_buffer[1] = (unsigned long) msg;
     message_buffer[2] = (unsigned long) long1;
     message_buffer[3] = (unsigned long) long2;
-
+    
+    
+    // Isso evita muitos problemas.
+    if ( (void *) window == NULL )
+    {
+		return NULL;
+    }
 
     return (void *) system_call ( SYSTEMCALL_CALL_SYSTEMPROCEDURE, 
                         (unsigned long) &message_buffer[0], 

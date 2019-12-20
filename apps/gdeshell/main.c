@@ -2695,9 +2695,9 @@ do_compare:
 	// Mostra algumas informações de métrica do sistema.
 	if ( strncmp( prompt, "metrics", 7 ) == 0 )
 	{
-		shellShowMetrics();
+		shellShowMetrics ();
         goto exit_cmp;
-	};	
+	}
 
 
 	// new
@@ -2724,8 +2724,68 @@ do_compare:
 	    shellShowPCIInfo();
         goto exit_cmp;
     };	
-	
-	
+
+    //process-stats
+    //testando informações estatísticas sobre os processos.
+
+    unsigned long __process_image_pa;    
+    unsigned long __process_image_va;
+    unsigned long __process_image_size;
+    if ( strncmp( prompt, "process-stats", 13 ) == 0 )
+    {
+
+        //image size. A estrutura de processo ainda não tem esse valor.
+        //não foi calculado pelo kernel
+         
+        __process_image_pa  = apiGetProcessStats (100,18);
+        __process_image_va  = apiGetProcessStats (100,17);
+        __process_image_size = apiGetProcessStats (100,51);                
+        printf ("pid 100 - image size = %d ", __process_image_size);
+        printf ("pa = %x ", __process_image_pa);
+        printf ("va = %x \n", __process_image_va);
+        
+        __process_image_pa  = apiGetProcessStats (101,18);
+        __process_image_va  = apiGetProcessStats (101,17);        
+        __process_image_size = apiGetProcessStats (101,51);                
+        printf ("pid 101 - image size = %d ", __process_image_size);
+        printf ("pa = %x ", __process_image_pa);
+        printf ("va = %x \n", __process_image_va);
+
+        __process_image_pa  = apiGetProcessStats (102,18);
+        __process_image_va  = apiGetProcessStats (102,17);        
+        __process_image_size = apiGetProcessStats (102,51);                
+        printf ("pid 102 - image size = %d ", __process_image_size);
+        printf ("pa = %x ", __process_image_pa);
+        printf ("va = %x \n", __process_image_va);
+
+        __process_image_pa  = apiGetProcessStats (103,18);
+        __process_image_va  = apiGetProcessStats (103,17);        
+        __process_image_size = apiGetProcessStats (103,51);                
+        printf ("pid 103 - image size = %d ", __process_image_size);
+        printf ("pa = %x ", __process_image_pa);
+        printf ("va = %x \n", __process_image_va);
+
+        //===========
+        __process_image_pa  = apiGetProcessStats (104,18);
+        __process_image_va  = apiGetProcessStats (104,17);        
+        __process_image_size = apiGetProcessStats (104,51);                
+        printf ("pid 104 - image size = %d ", __process_image_size);
+        printf ("pa = %x ", __process_image_pa);
+        printf ("va = %x \n", __process_image_va);
+
+        __process_image_pa  = apiGetProcessStats (105,18);
+        __process_image_va  = apiGetProcessStats (105,17);        
+        __process_image_size = apiGetProcessStats (105,51);                
+        printf ("pid 105 - image size = %d ", __process_image_size);
+        printf ("pa = %x ", __process_image_pa);
+        printf ("va = %x \n", __process_image_va);
+
+
+        goto exit_cmp;
+    }
+
+
+
     // puts - testing puts, from libc.
 	if ( strncmp( prompt, "puts", 4 ) == 0 )
 	{
@@ -2733,7 +2793,8 @@ do_compare:
         goto exit_cmp;
 	};	
 	
-	
+
+    //?? mudar o nome desse comando. OU mudar de lugar.
 	if ( strncmp ( prompt, "current-process", 15 ) == 0 )
 	{
 		system_call ( SYSTEMCALL_CURRENTPROCESSINFO, 0, 0, 0 );
@@ -2741,14 +2802,13 @@ do_compare:
 	}
 	
 	// pwd - print working directory
-	
 	if ( strncmp( prompt, "pwd", 3 ) == 0 )
 	{
 		pwd_builtins ();
 	    goto exit_cmp;
-	};		
+	}
 
-	
+
     // reboot
     // @todo: Isso será um aplicativo. reboot.bin
 	// obs: testando comando reboot.bin

@@ -395,6 +395,14 @@ void *teditorProcedure ( struct window_d *window,
 	};
 
 	
+    // done
+
+    // Esse tratamento pode ir para essa chamada na api.
+    if ( (void *) window == NULL )
+    {
+		return NULL;
+    }
+	
 	// #test
 	// Cuidado com isso. 
 	// Podemos chamar duas rotinas quando pressionarmos alguma tecla. 

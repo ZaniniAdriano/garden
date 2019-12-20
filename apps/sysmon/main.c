@@ -67,6 +67,7 @@ sysmonProcedure ( struct window_d *window,
 	
 	//salvaremos o nome do processo aqui.
    char __processname_buffer[64];
+   char __tmp_buffer[64];
 
     switch (msg)
     {
@@ -210,26 +211,48 @@ sysmonProcedure ( struct window_d *window,
                             (unsigned long) window, 
                             (unsigned long) window );
                             
+                         unsigned long __process_priority;
                             
+                         //----   
                          gde_getprocessname  ( 100,  
                              __processname_buffer, 
-                             sizeof(__processname_buffer) ); 
-                        apiDrawText ( client_window, 4, 40 +32, COLOR_BLACK, "100" );
-                        apiDrawText ( client_window, 40, 40 +32, COLOR_BLACK, (char *) __processname_buffer );
+                             sizeof(__processname_buffer) );
+                        __process_priority = apiGetProcessStats (100,33);      
+                        itoa(__process_priority, __tmp_buffer);
+                        apiDrawText ( client_window,   4, 40 +32, COLOR_BLACK, "100" );
+                        apiDrawText ( client_window,  40, 40 +32, COLOR_BLACK, (char *) __processname_buffer );
+                        apiDrawText ( client_window, 200, 40 +32, COLOR_BLACK, (char *) __tmp_buffer ); 
                         
+                         //----
                          gde_getprocessname  ( 101,  
                              __processname_buffer, 
                              sizeof(__processname_buffer) ); 
-                        apiDrawText ( client_window, 4,  40 +32 +32, COLOR_BLACK, "101" );     
-                        apiDrawText ( client_window, 40,  40 +32 +32, COLOR_BLACK, (char *) __processname_buffer );
-                        
-                         gde_getprocessname  ( 102,  
+                        __process_priority = apiGetProcessStats (101,33);      
+                        itoa(__process_priority, __tmp_buffer);
+                        apiDrawText ( client_window,   4, 40 +32 +32, COLOR_BLACK, "101" );     
+                        apiDrawText ( client_window,  40, 40 +32 +32, COLOR_BLACK, (char *) __processname_buffer );
+                        apiDrawText ( client_window, 200, 40 +32 +32, COLOR_BLACK, (char *) __tmp_buffer );
+                                                
+                        //----
+                        gde_getprocessname  ( 102,  
                              __processname_buffer, 
                              sizeof(__processname_buffer) ); 
-                        apiDrawText ( client_window, 4,  40 +32 +32 +32, COLOR_BLACK, "102" );
-                        apiDrawText ( client_window, 40,  40 +32 +32 +32, COLOR_BLACK, (char *) __processname_buffer );                        
-                        
-                        //apiDrawText ( client_window, 4, 40 +32, COLOR_BLACK, "info 1 ...");
+                        __process_priority = apiGetProcessStats (102,33);      
+                        itoa(__process_priority, __tmp_buffer);
+                        apiDrawText ( client_window,   4, 40 +32 +32 +32, COLOR_BLACK, "102" );
+                        apiDrawText ( client_window,  40, 40 +32 +32 +32, COLOR_BLACK, (char *) __processname_buffer );                        
+                        apiDrawText ( client_window, 200, 40 +32 +32 +32, COLOR_BLACK, (char *) __tmp_buffer );
+
+                        //----
+                        gde_getprocessname  ( 103,  
+                             __processname_buffer, 
+                             sizeof(__processname_buffer) ); 
+                        __process_priority = apiGetProcessStats (103,33);      
+                        itoa(__process_priority, __tmp_buffer);
+                        apiDrawText ( client_window,   4, 40 +32 +32 +32 +32, COLOR_BLACK, "103" );
+                        apiDrawText ( client_window,  40, 40 +32 +32 +32 +32, COLOR_BLACK, (char *) __processname_buffer );                        
+                        apiDrawText ( client_window, 200, 40 +32 +32 +32 +32, COLOR_BLACK, (char *) __tmp_buffer );
+                                                
                         refresh_screen ();
 						break;
 					}
