@@ -271,7 +271,8 @@ reboot2Procedure ( struct window_d *window,
 	};
 
 
-    return 0;
+    //return 0;
+    return (int) gde_system_procedure ( window, msg, long1, long2 );
 }
 
 
