@@ -178,12 +178,13 @@ reboot2Procedure ( struct window_d *window,
 					}
 					if (window == main_window)
 					{
+						//gde_set_focus(window);
 						//raise window.
-	                     system_call ( 9700, 
-	                         (unsigned long) window, 
-		                     (unsigned long) window, 
-		                     (unsigned long) window );
-						//gde_set_focus(window); 
+	                     //system_call ( 9700, 
+	                         //(unsigned long) window, 
+		                     //(unsigned long) window, 
+		                     //(unsigned long) window );
+						 
 						//MessageBox(3,"x","main");
 						//printf("Main\n");
 						break;
