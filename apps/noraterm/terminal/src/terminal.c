@@ -677,20 +677,38 @@ void terminalRefreshVisibleArea (){
 }
 
 
-//terminal stuff
+/*
+ **********************************************
+ * updateVisibleArea:
+ *     Muda a área visível do buffer de arquivo.
+ *     IN: 0=down 1=up
+ */
+
 void updateVisibleArea ( int direction ){
-	
+
+    // Limits.
+    
+    if (direction < 0)
+        return;
+    
+    if (direction > 1)
+        return;
+    
     switch (direction)
     {
+		// down
 	    case 0:
+	        if ( textBottomRow == DEFAULT_BUFFER_MAX_ROWS ){ return; }
 	        textTopRow += textWheelDelta;
-	        textBottomRow += textWheelDelta;			
-            break; 		
-			
+	        textBottomRow += textWheelDelta;
+            break; 
+		
+		//up
 	    case 1:
+	        if ( textTopRow == 0 ){ return; }
 	        textTopRow -= textWheelDelta;
-	        textBottomRow -= textWheelDelta;					
-            break; 		
+	        textBottomRow -= textWheelDelta;
+            break;
 	}	
 }
 

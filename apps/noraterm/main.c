@@ -1865,29 +1865,24 @@ void *noratermProcedure ( struct window_d *window,
 				//default:
 				//break;
 			}
-		    break; 		
-		
+		    break; 
+
+
 		//Essa mensagem pode ser acionada clidando um botão.
-		case MSG_CLOSE:
-		    //??
-		    //isso deve fechar qualquer janela que esteja usando esse procedimento.
-			//pode ser uma janela filha ou ainda uma janela de dialogo criada pelo sistema.
-			//??
-		    printf ("noraterm: MSG_CLOSE\n");
-			//exit_builtins ();
-			//exit ();
-			
-			//@todo: Criar essa função na api.
-			//apiExitProcess(0);
-			break;
-		
+        case MSG_CLOSE:
+            printf ("noraterm: MSG_CLOSE\n");
+            gde_close_window (main_window);
+            gde_exit (0);
+            break;
+
+
 		//Essa mensagem pode ser acionada clidando um botão.
-		case MSG_DESTROY:
-		    printf ("noraterm: MSG_DESTROY\n");
-			//exit_builtins ();
-			//exit ();
-		    break;
-			
+        case MSG_DESTROY:
+            printf ("noraterm: MSG_DESTROY\n");
+            gde_exit (0);
+            break;
+
+
 		// MSG_MOUSEKEYDOWN	
 		case 30:
 			//qual botão?
@@ -2182,13 +2177,16 @@ void *noratermProcedure ( struct window_d *window,
             
             
          //#test
-         case 8811:
-             terminal_scroll_down ();
+         case MSG_HSCROLL:
+             //#todo
              break;   
 
          //#test
-         case 8812:
-             terminal_scroll_up ();
+         case MSG_VSCROLL:
+             if ( long1 == 0 )
+             { terminal_scroll_down (); };
+             if ( long1 == 1 )
+             { terminal_scroll_up (); };
              break;   
 
 

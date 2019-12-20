@@ -13,6 +13,7 @@
 // Obs: 
 // aumentar essas constantes aumenta o tamanho da janela.
 
+// Isso é o máximo que se pode exibir na tela.
 #define DEFAULT_MAX_COLUMNS 80   //80
 #define DEFAULT_MAX_ROWS    25   //50  
   
@@ -39,8 +40,10 @@
 // mas apenas uma parte do buffer será mostrada na tela por vez.
 //
 
-#define DEFAULT_BUFFER_MAX_COLUMNS 80
-#define DEFAULT_BUFFER_MAX_ROWS    25
+// Isso é o buffer de arquivo. ele pode ser maior que
+// a quantidade de linhas que a área de cliente pode mostrar.
+#define DEFAULT_BUFFER_MAX_COLUMNS DEFAULT_MAX_COLUMNS  //80
+#define DEFAULT_BUFFER_MAX_ROWS    32                   //25
 #define SCREEN_BUFFER_SIZE ( ((DEFAULT_BUFFER_MAX_COLUMNS*DEFAULT_BUFFER_MAX_ROWS)*2)+1)
 
 
@@ -110,7 +113,7 @@ unsigned long foregroung_color;  //texto.
 struct terminal_line
 {
     char CHARS[80];
-    char ATTRIBUTES[80];	
+    char ATTRIBUTES[80];
 	
 	//início e fim da string dentro da linha.
 	//o resto é espaço.
@@ -135,7 +138,7 @@ struct terminal_line
 // Um arquivo no servidor de recursos gráficos pode ser usado para escrevermos 
 // nele usando as rotinas da libc.
 
-struct terminal_line LINES[32]; 
+struct terminal_line LINES[32]; //DEFAULT_BUFFER_MAX_ROWS
 
 
 

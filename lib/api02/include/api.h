@@ -2034,6 +2034,15 @@ static unsigned long vga_256colors_palette[256] = {
 
 
 
+// o evento de rolagem aconteceu ...
+// O número do evento será entregue em long1.
+#define MSG_HSCROLL 2000
+#define MSG_VSCROLL 2001
+
+
+
+
+
 #define CMD_ABOUT 1000
 #define CMD_EXIT 1001
 //#define CMD_??? 1002
