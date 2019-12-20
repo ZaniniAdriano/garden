@@ -2150,14 +2150,27 @@ void *noratermProcedure ( struct window_d *window,
         // MSG_CREATE, se o aplicativo retornar -1, então a rotina em kernel mode que 
         // esta criando a janela, cancela a janela que está criando e retorn NULL.		
 		case MSG_CREATE:
-		    printf ("noraterm: MSG_CREATE\n");
+		    printf ("noraterm: MSG_CREATE *debug\n");
+		    //exit(0); //debug
 		    break;
 			
 		//isso pinta os elementos da área de cliente.
         //essa mensagem é enviada para o aplicativo quando 
-        //a função 'update window'	é chamada.	
+        //a função 'update window'	é chamada.
         case MSG_PAINT:
-            printf ("noraterm: MSG_PAINT\n");
+            //printf ("noraterm: MSG_PAINT\n");
+		    if ( window == main_window )
+		    {
+				//MessageBox (3,"noraterm","set focus");
+				//repinta janelas filhas.
+				gde_redraw_window ( main_window, 1);
+				gde_redraw_window ( client_background_window, 1);
+				gde_redraw_window ( client_window, 1);
+				gde_redraw_window ( client_bar_Window, 1);
+				gde_redraw_window ( bar_button_1, 1); //botões
+				gde_redraw_window ( bar_button_2, 1); //botões
+				gde_redraw_window ( bar_button_3, 1); //botões 
+			}
 			break;
 			
 		// MSG_TIMER 

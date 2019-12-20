@@ -75,14 +75,14 @@ reboot2Procedure ( struct window_d *window,
         case MSG_CREATE:
 	        //++
             enterCriticalSection (); 
-            test_button = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " Test ",  
+            test_button = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "MSG_CREATE",  
                                        (width/3), ((height/4)*3), 
                                        (width/3), (height/8),   
                                         NULL, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
 
-            if ( (void *) reboot_button == NULL )
+            if ( (void *) test_button == NULL )
             {
-                printf ("Couldn't create button\n");
+                printf ("Couldn't create test_button\n");
                 return 1;
             }else{
 

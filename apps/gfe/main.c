@@ -19,9 +19,11 @@ int running = 1;
 
 
     //
-	// ## Janelas de teste ##
+	// ## Janelas ##
 	//
 
+    struct window_d *main_window;
+    
     struct window_d *gWindow;  //grid 
     struct window_d *mWindow;  //menu
 
@@ -54,6 +56,10 @@ gfeProcedure ( struct window_d *window,
 
     switch (msg)
     {
+		case MSG_CREATE:
+		    printf ("MSG_CREATE:\n");
+		    break;
+		    
 		case MSG_SYSKEYDOWN:
 		    switch (long1)
 			{  
@@ -65,17 +71,17 @@ gfeProcedure ( struct window_d *window,
 				    printf ("F2\n"); 
 					break;
 					
-				case VK_F3:
- 				    printf ("F3\n");
-					break;
+				//case VK_F3:
+ 				    //printf ("F3\n");
+					//break;
 					
 				//...
 				
                 //full screen
                 //colocar em full screen somente a área de cliente. 
-		        case VK_F11:
+		        //case VK_F11:
 				    
-					break;
+					//break;
 					
 				//...
 
@@ -91,23 +97,59 @@ gfeProcedure ( struct window_d *window,
 				case 1:
 				    if ( window == gWindow )
 					{
-						printf ("grid window\n");
+						//printf ("grid window\n");
 					}
 				    if ( window == mWindow )
 					{
-						printf("menu window\n");
+						//printf("menu window\n");
 					}
 
 					break;
 			};
 			break;
 		
+		//up
+		case 31:
+		    switch (long1)
+			{
+				//botão 1.
+				case 1:
+				    if ( window == main_window )
+				    {
+						gde_set_focus (window);
+					}
+				    if ( window == gWindow )
+					{
+						printf ("grid window\n");
+					}
+				    if ( window == mWindow )
+					{
+						printf("menu window\n");
+					}
+					break;
+			};
+			break;
+		
+		case MSG_SETFOCUS:
+		    if ( window == main_window )
+			{
+				gde_redraw_window ( main_window, 1);
+				gde_redraw_window ( gWindow, 1);
+				gde_redraw_window ( mWindow, 1);
+		    }
+		    break;
+		    
+		case MSG_KILLFOCUS:
+		    break;
+
+
 		default:
 		    break;
     };
 
 
-    return 0;
+    //return 0;
+    return (int) gde_system_procedure (window,msg,long1,long2);
 }
 
 
@@ -129,7 +171,7 @@ int main ( int argc, char *argv[] ){
 #ifdef TEDITOR_VERBOSE
 	printf("\n");
 	printf("Initializing File explorer:\n");
-	printf("mainTextEditor: # argv={%s} # \n", &argv[0] );
+	//printf("mainTextEditor: # argv={%s} # \n", &argv[0] );
 #endif
 
 
@@ -173,6 +215,7 @@ int main ( int argc, char *argv[] ){
 
         APIRegisterWindow (hWindow);
         apiShowWindow (hWindow);
+        main_window = hWindow;
     };
 	apiEndPaint ();
     //--
@@ -360,8 +403,10 @@ int main ( int argc, char *argv[] ){
 	 // mas usaremos apenas o posicionamento da janela mãe. left top
 	 // ou o ponteiro do mouse, quando clicarmos com o botão direito.
 
-     system_call ( 149, (unsigned long) mWindow, 
-         (unsigned long) mWindow, (unsigned long) mWindow );  
+     system_call ( 149, 
+         (unsigned long) mWindow, 
+         (unsigned long) mWindow, 
+         (unsigned long) mWindow );  
 
 
 
