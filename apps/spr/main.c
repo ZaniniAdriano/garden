@@ -727,19 +727,13 @@ shellProcedure ( struct window_d *window,
 
 		//Essa mensagem pode ser acionada clidando um botão.
 		case MSG_CLOSE:
-		    //??
-		    //isso deve fechar qualquer janela que esteja usando esse procedimento.
-			//pode ser uma janela filha ou ainda uma janela de dialogo criada pelo sistema.
-			//??
-		    printf("SHELL.BIN: MSG_CLOSE\n");
-			
-			//@todo: Criar essa função na api.
-			//apiExitProcess(0);
+            printf ("spr: MSG_CLOSE\n");
+			apiExit (0);
 			break;
 		
 		//Essa mensagem pode ser acionada clidando um botão.
 		case MSG_DESTROY:
-		    printf("SHELL.BIN: MSG_DESTROY\n");
+		    printf ("spr: MSG_DESTROY\n");
 		    break;
 
 		//double click
@@ -754,12 +748,9 @@ shellProcedure ( struct window_d *window,
 		    switch (long1)
 			{
 				case 1:
-				
-				    //#obs: No keydown a gente só abaixa o botão.
-
+				    // #obs: No keydown a gente só abaixa o botão.
 					if ( window == editboxWindow )
 					{
-					    //APISetFocus (window);
 						break;
 					}
 					
@@ -831,6 +822,10 @@ shellProcedure ( struct window_d *window,
 			{
 
 				case 1:
+				    if ( window == hWindow )
+				    {
+						APISetFocus (window);
+					}
 
 					if ( window == editboxWindow )
 					{
@@ -868,8 +863,8 @@ shellProcedure ( struct window_d *window,
 					//botão de reboot;
 					if ( window == reboot_button )
                     {
-					    printf("Rebooting...\n");
-		                system("reboot"); 	
+					    printf ("Rebooting...\n");
+		                system ("reboot"); 	
 					}
 					
 					//botão de close
@@ -958,17 +953,31 @@ shellProcedure ( struct window_d *window,
 			updateObject(); //interna
             break; 		
 		
+
 		case MSG_SETFOCUS:
-			break;
-			
+		    if (window == hWindow )
+		    {
+		        gde_redraw_window (hWindow, 1);
+		        gde_redraw_window (editboxWindow, 1);
+		        gde_redraw_window (navbar_button, 1);
+		    }
+		    if (window == editboxWindow )
+		    {
+				 gde_redraw_window (window, 1);
+				 gde_redraw_window (navbar_button, 1);
+			}
+		    break;
+		
 		case MSG_KILLFOCUS:
-            break;
+		    MessageBox (3, "spr","MSG_KILLFOCUS");
+		    break;
+
 
 		//isso pinta os elementos da área de cliente.
         //essa mensagem é enviada para o aplicativo quando 
         //a função 'update window'	é chamada.	
         case MSG_PAINT:
-            printf("SHELL.BIN: MSG_PAINT\n");
+            printf("spr: MSG_PAINT\n");
 			break;
 			
 
@@ -1170,9 +1179,11 @@ shellProcedure ( struct window_d *window,
     };
 
     // Nothing for now !
+
 done:
-	return (unsigned long) apiDefDialog ( window, msg, long1, long2 );
-};
+
+	return (int) gde_system_procedure (window,msg,long1,long2);
+}
 
 
 /*

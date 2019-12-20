@@ -172,13 +172,27 @@ launcherProcedure ( struct window_d *window,
                     break;
             };
             break;
+            
+			
+		case MSG_SETFOCUS:
+		    gde_redraw_window (main_window, 1);
+		    gde_redraw_window (launcher_button_1, 1);
+		    gde_redraw_window (launcher_button_2, 1);
+		    break;
+		
+		case MSG_KILLFOCUS:
+		    MessageBox (3, "launcher","MSG_KILLFOCUS");
+		    break;
+
 
         default:
             break;
     };
 
 
-    return 0;
+    //return 0;
+
+    return (int) gde_system_procedure (window,msg,long1,long2);
 }
 
 

@@ -199,6 +199,10 @@ reboot2Procedure ( struct window_d *window,
 		    switch(long1)
 		    {
 				case 1:
+					if (window == main_window)
+					{
+						gde_set_focus (window);
+					}
 				    if ( window == reboot_button )
 				    {
                         gramado_system_call ( 9901,   
@@ -210,6 +214,16 @@ reboot2Procedure ( struct window_d *window,
 				    break;
 			};
 			break;
+			
+			
+		case MSG_SETFOCUS:
+		    gde_redraw_window (main_window, 1);
+		    gde_redraw_window (reboot_button, 1);
+		    break;
+		
+		case MSG_KILLFOCUS:
+		    MessageBox (3, "reboot2","MSG_KILLFOCUS");
+		    break;
 
 		case MSG_MOUSEMOVE:
 		    if (window == main_window)
