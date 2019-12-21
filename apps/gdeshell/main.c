@@ -576,7 +576,6 @@ void update_cpu_usage ()
     }
 	
 	//printf ("fim\n");
-	
     //printf ("cpu usage: %d percent \n", __value);
 }
 
@@ -3558,8 +3557,8 @@ do_compare:
 		cpu_window = (void *) APICreateWindow ( 1, 1, 1, "shell-main",     
                                  10, 10, 32*8, 100,    
                      0, 0, COLOR_YELLOW, COLOR_YELLOW );
-        APIRegisterWindow (hWindow);
-	    apiShowWindow (hWindow);
+        APIRegisterWindow (cpu_window);
+	    apiShowWindow (cpu_window);
 	    exitCriticalSection ();	
 
 					

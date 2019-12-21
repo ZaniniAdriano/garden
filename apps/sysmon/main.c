@@ -21,13 +21,13 @@ int running = 1;
 	//
 	
     struct window_d *main_window;
-    struct window_d *client_window;
 
-    struct window_d *gWindow;          // grid 
-    struct window_d *mWindow;          // menu
-    struct window_d *reboot_button;    // reboot button;
-    
-    
+    struct window_d *client_window;
+        
+    struct window_d *client_bar_Window;
+
+
+
     // launcher buttons
     struct window_d *launcher_button_1;
     struct window_d *launcher_button_2;
@@ -36,6 +36,11 @@ int running = 1;
     struct window_d *bar_button_1; 
     struct window_d *bar_button_2;
     struct window_d *bar_button_3;
+
+    //suspensos.
+    struct window_d *gWindow;          // grid 
+    struct window_d *mWindow;          // menu
+    struct window_d *reboot_button;    // reboot button;
 
 
 //static char *dest_argv[] = { "-sujo0","-sujo1","-sujo2",NULL };
@@ -50,6 +55,57 @@ sysmonProcedure ( struct window_d *window,
                   unsigned long long1, 
                   unsigned long long2 );
  
+
+
+
+struct window_d *cpu_window;  //cpu usage test;
+int __count;
+unsigned long CPU_USAGE[32];
+
+// Interna.
+// Usado para testar o timer.
+void update_cpu_usage ()
+{
+
+	unsigned long __idle_value;
+	unsigned long __value;
+		
+	int i;
+
+    __count++;
+	//printf ("%d ",__count);
+	
+	__idle_value = (unsigned long) gramado_system_call( 777, 0, 0, 0);
+	
+	//__value = (100 - __idle_value);
+	//CPU_USAGE[__count] = __value;
+	CPU_USAGE[__count] = __idle_value;
+	
+    if (__count >= 32)
+    {
+	    __count = 0;
+		
+		//limpa
+		APIredraw_window ( cpu_window, 1 );
+		for (i=0; i<32; i++)
+		{
+			//printf ("%d ", (unsigned long) CPU_USAGE[i]);
+		
+		    apiDrawText ( cpu_window, i*8, CPU_USAGE[i], COLOR_BLACK, "+");
+		}
+		apiShowWindow (cpu_window);
+		//printf ("\n");
+    }
+	
+	//printf ("fim\n");
+    //printf ("cpu usage: %d percent \n", __value);
+}
+
+
+
+
+
+
 
 
 /*
@@ -71,6 +127,14 @@ sysmonProcedure ( struct window_d *window,
 
     switch (msg)
     {
+		
+		case MSG_CREATE:
+		    break;
+		    
+		        
+		case MSG_TIMER:
+		    update_cpu_usage ();
+		    break;
 
 		case MSG_SYSKEYDOWN:
 		    switch (long1)
@@ -96,6 +160,17 @@ sysmonProcedure ( struct window_d *window,
 			};
 			break;
 
+        case MSG_SETFOCUS:
+            gde_redraw_window (main_window, 1);
+            gde_redraw_window (main_window, 1);
+            gde_redraw_window (main_window, 1);
+            gde_redraw_window (main_window, 1);
+            gde_redraw_window (main_window, 1);
+            gde_redraw_window (main_window, 1);
+            break;
+            
+        case MSG_KILLFOCUS:
+            break;
 
 		// MSG_MOUSEKEYDOWN
         case 30:
@@ -167,11 +242,12 @@ sysmonProcedure ( struct window_d *window,
 					//se
 					if ( window == main_window )
 					{
+						gde_set_focus (window);
 						//raise window.
-	                     system_call ( 9700, 
-	                         (unsigned long) main_window, 
-		                     (unsigned long) main_window, 
-		                     (unsigned long) main_window );
+	                     //system_call ( 9700, 
+	                         //(unsigned long) main_window, 
+		                     //(unsigned long) main_window, 
+		                     //(unsigned long) main_window );
 					}
 
 					break;
@@ -190,8 +266,33 @@ sysmonProcedure ( struct window_d *window,
                             (unsigned long) window, 
                             (unsigned long) window, 
                             (unsigned long) window );
-						execve ( (const char *) "noraterm.bin", 
-                           (const char *) 0, (const char *) 0); 
+						//execve ( (const char *) "noraterm.bin", 
+                           //(const char *) 0, (const char *) 0); 
+						 //====================================
+	                     // timer-test
+	                     // Essa rotina cria um objeto timer que gera um interrupção 
+	                     // de tempos em tempos e é tratado pelo procedimento de janelas.
+		                 __count = 0; //tem que uinicializar;
+		                 //printf("Creating timer\n");
+	                     //printf("%d Hz | sys time %d ms | ticks %d \n", 
+		                 //apiGetSysTimeInfo(1), 
+			             //apiGetSysTimeInfo(2), 
+			             //apiGetSysTimeInfo(3) );
+		                 enterCriticalSection ();
+		                 cpu_window = (void *) APICreateWindow ( 1, 1, 1, "cpu-usage",     
+                                     2, 36 +2, 
+                                     32*8, 100,    
+                                     main_window, 0, COLOR_YELLOW, COLOR_YELLOW );
+                         APIRegisterWindow (cpu_window);
+	                     apiShowWindow (cpu_window);
+	                     exitCriticalSection ();	
+	                     // Atualizar à cada 2000 ms. 
+		                 //janela, 100 ms, tipo 2= intermitente.
+		                 //system_call ( 222, (unsigned long) window, 100, 2);
+                         apiCreateTimer ( (struct window_d *) window, 
+                            (unsigned long) 80, (int) 2 );
+                         //printf ("done\n");
+						 //====================================
 						 break;
 					}
 				    if ( window == launcher_button_2 )
@@ -288,7 +389,8 @@ sysmonProcedure ( struct window_d *window,
     };
 
 
-    return 0;
+    //return 0;
+    return (int) gde_system_procedure (window, msg, long1, long2);
 }
 
 
@@ -338,7 +440,9 @@ int main ( int argc, char *argv[] ){
     */
     
     width = deviceWidth -20;
-    height = (deviceHeight/2);
+    height = (deviceHeight-20);
+    //height = (deviceHeight/2);
+    
     
     //width = deviceWidth/3;
     //height = deviceHeight/3;
@@ -611,7 +715,7 @@ int main ( int argc, char *argv[] ){
 	//++
     enterCriticalSection (); 
 	launcher_button_1 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "1",  
-                                     10, 36 +10, 
+                                     (32*8) +10, 36 +10, 
                                      40, 40,    
                                      hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
 
@@ -632,7 +736,7 @@ int main ( int argc, char *argv[] ){
 	//++
     enterCriticalSection (); 
 	launcher_button_2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "2", 
-                                     10 +40 +10, 36 +10,
+                                     (32*8) +10 +40 +10, 36 +10,
                                      40, 40,   
                                      hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
 	
@@ -656,35 +760,38 @@ int main ( int argc, char *argv[] ){
     // ========= Client background =====================
     //
 
-    struct window_d *client_bg_Window;
+
     
 	//++
 	enterCriticalSection ();  
-	client_bg_Window = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "client-bg",     
-                                4, 80 +10, 
-                                width -4 -42, height -36 -40 -20 -20, 
-                                hWindow, 0, 0xF5DEB3, 0xF5DEB3 );
-	if ( (void *) client_bg_Window == NULL)
+	client_window = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "client-bg",     
+                                4, 100 +36, 
+                                width -4 -42, height -36 -100 -40, 
+                                hWindow, 0, COLOR_PINK, COLOR_PINK); //0xF5DEB3, 0xF5DEB3 );
+	
+	if ( (void *) client_window == NULL)
 	{	
 		printf("edit box fail");
 		refresh_screen();
 		while(1){}
 	}
-	client_window = ( struct window_d *) client_bg_Window;
-	APIRegisterWindow (client_bg_Window);
-	apiShowWindow (client_bg_Window);
+	APIRegisterWindow (client_window);
+	apiShowWindow (client_window);
 	exitCriticalSection ();  
 	//--
 
 
-    struct window_d *client_bar_Window;
+    //
+    // ========= Client bar =====================
+    //
+
 
 	//++
 	enterCriticalSection ();  
 	client_bar_Window = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "client-bar",     
-                                2, 2, 
+                                2, 2,//2, 2, 
                                 width -4 -40, 40, 
-                                client_bg_Window, 0, 0x404040, 0x404040 );
+                                client_window, 0, 0x404040, 0x404040 );
 	if ( (void *) client_bar_Window == NULL)
 	{	
 		printf(".. fail");
