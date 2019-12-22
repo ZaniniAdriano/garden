@@ -2407,17 +2407,27 @@ ssize_t getline (char **lineptr, size_t *n, FILE *stream)
 /*
  *****************************************
  * fputc:
+ * 
+ *     Isso é chamado por putchar quando a libc está no modo normal
+ * e não no modo draw.
  */
 
 int fputc ( int ch, FILE *stream ){
 
+     
      // Coloca um char numa stream.
+     // Chama essa mesma rotina no kernel. sys_fputc.
+     // A stream é essa indicada no argumento.
+     
      gramado_system_call ( 196, 
          (unsigned long) ch,  
          (unsigned long) stream,  
          (unsigned long) stream );    
 
 
+	// #importante
+	// Notificaremos o terminal somente se o char for '\n'	
+	
 	// #importante:
 	// Se não for \n, não precisa notificar o terminal.
 
@@ -2444,8 +2454,7 @@ int fputc ( int ch, FILE *stream ){
 	*/
 		
 					 
-	// #importante
-	// Notificaremos o terminal somente se o char for '\n'	
+
 	
     //
     // Terminal.
@@ -2469,8 +2478,12 @@ int fputc ( int ch, FILE *stream ){
 	
 	    if ( terminal___PID < 0 )
 	    {
+			// #fail
+			// Como exibir uma mensagem de erro se estamos no modo normal?
+			
 			//libc_set_output_mode (LIBC_DRAW_MODE);
-		    //printf_draw ("fprintf:fail\n");
+		    //printf_draw ("fputc:fail\n");
+		    
              return -1;
         }
 

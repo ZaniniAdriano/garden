@@ -22,8 +22,8 @@
 
 
 
-
-     
+//ja deve ter sido definodo em outro lugar.
+//#define RESPONSE "\033[?1;2c"     
      
      
 
@@ -758,6 +758,12 @@ void terminal_test_write ();
 // ======== ## Internal functions ## ========
 //
 
+
+/*
+void __respond (void)
+{
+}
+*/
 
 void terminal_test_write ()
 {
@@ -1674,7 +1680,9 @@ void *noratermProcedure ( struct window_d *window,
 					
 				// Hello	
 				case 2001:
-					apiDrawText ( NULL, 0, 0, COLOR_RED, " # NORATERM # ");
+					apiDrawText ( NULL, 
+					    0, 0, COLOR_RED, 
+					    "noraterm: Hello friend, I'm alive! \n");
 					refresh_screen ();
 					break;
 					
@@ -1731,8 +1739,10 @@ void *noratermProcedure ( struct window_d *window,
 						
                     while (1)
                     {
-						// Qual stream ? See: gde_serv.c
-						// stream = CurrentTTY
+						// See: gde_serv.c
+						// Isso lê no buffer da tty CurrentTTY.
+						// Mas poderia ser alguma stream passada 
+						// para o processo vilho na hora de clonar.
                         xxx_ch = (int) gramado_system_call ( 1002, 0, 0, 0 );
 
                         // Chegamos no fim do arquivo antes de acabar a sring?
@@ -2428,8 +2438,7 @@ done:
     {
 		return NULL;
     }
-    //return NULL;
-	
+
 	// #bugbug
 	// Chamar o procedimento aqui deu problema.
 	// Mas essa chamada funciona em outro aplicativo.
@@ -4070,9 +4079,11 @@ do_compare:
 		// registrando teminal.
 		system_call ( 1003, getpid(), 0, 0 );
 		
+		// Isso funciona.
 		//>>> clona e executa o filho dado o nome do filho.
+		system_call ( 900, (unsigned long) "hello3.bin", 0, 0 );
+		
 		//system_call ( 900, (unsigned long) "hello.bin", 0, 0 );
-		system_call ( 900, (unsigned long) "hello3.bin", 0, 0 );		
 		//system_call ( 900, (unsigned long) "gdeshell.bin", 0, 0 );
          
         //printf ("t21: done\n"); 
@@ -4935,8 +4946,9 @@ int terminalInit ( struct window_d *window ){
 	PID = getpid ();
 	
 	// Registrar o terminal na estrutura de tty.
-	system_call ( 1003, PID, 0, 0 );
-	
+	system_call ( 1003, PID, PID, PID );
+
+
 	// #bugbug:
     //     Esse ponteiro de estrutura está em kernel mode. 
 	//     Não podemos usá-lo.
@@ -7344,12 +7356,14 @@ no_internal_shell:
     
     // #importante
     // >>> clona e executa o filho dado o nome do filho.
+    printf ("noraterm: Executing default child process launcher ...\n");
+    system_call ( 900, (unsigned long) "hello3.bin", 0, 0 );
+
+
+
 
 	//printf ("noraterm: Executing default child process hello3 ...\n");
     //system_call ( 900, (unsigned long) "hello3.bin", 0, 0 );
-
-	printf ("noraterm: Executing default child process launcher ...\n");
-    system_call ( 900, (unsigned long) "hello3.bin", 0, 0 );
     //system_call ( 900, (unsigned long) "launcher.bin", 0, 0 );
     
     printf ("noraterm: noraterm is still alive!\n");
