@@ -165,7 +165,9 @@ launcherProcedure ( struct window_d *window,
                             (unsigned long) window );
                         //execve ( (const char *) "gramcode.bin",
                             //(const char *) 0, (const char *) 0 );
-                        execve ( (const char *) "reboot2.bin",
+                        //execve ( (const char *) "reboot2.bin",
+                            //(const char *) 0, (const char *) 0 );
+                        execve ( (const char *) "gwm.bin",
                             (const char *) 0, (const char *) 0 );
                             break;
                     }
@@ -535,7 +537,7 @@ int main ( int argc, char *argv[] ){
 
 	//++
     enterCriticalSection (); 
-	launcher_button_2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, "Reboot2", 
+	launcher_button_2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " gwm ", 
                                      (width/3), ((height/4)*3), 
                                      (width/3), (height/8),   
                                      hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );

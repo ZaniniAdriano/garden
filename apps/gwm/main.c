@@ -1,173 +1,761 @@
-
-// Window manager simples com uma barra
-// e poucas janelas no modo tiling.
-
-// gwm - Gramado Window Manager.
-// a window manager for Gramado Window Server; (gws)
-// + initialization and main loop;
+// main.c 
+// app launcher
 
 
+#include "launcher.h"
 
-// #todo c headers.
-#include <types.h>
-#include <stddef.h>
-#include <stdio.h>
 
-#include <api.h>
+//#define TEDITOR_VERBOSE 1
 
-#include "gwm.h" 
+
+#define GRID_HORIZONTAL 1000
+#define GRID_VERTICAL 2000
+
+
+//static int running = 1;
+int running = 1;
 
 
 
-int _running = 1;
+//typedef 
+struct Client {
 
-unsigned long 
-gwm_procedure ( struct window_d *window, 
-                int msg, 
-				unsigned long long1, 
-				unsigned long long2 );
+    struct window_d *window;
+    
+    int tag;
+    
+    unsigned long x;
+    unsigned long y;    
+    unsigned long w;
+    unsigned long h;
+
+};
+
+unsigned long clientList[8];
+unsigned long windowList[8];
+
+	//
+	// ## Janelas de teste ##
+	//
+	
+    // gui->screen window ou gui->main window
+    struct window_d *root;
+
+	
+    struct window_d *main_window;
+
+    struct window_d *gWindow;          // grid 
+    struct window_d *mWindow;          // menu
+    struct window_d *reboot_button;    // reboot button;
+    struct window_d *launcher_button_1;
+    struct window_d *launcher_button_2;
+
+
+
+//static char *dest_argv[] = { "-sujo0","-sujo1","-sujo2",NULL };
+//static unsigned char *dest_envp[] = { "-sujo", NULL };
+//static unsigned char dest_msg[512];
+
+ 
+
+int 
+launcherProcedure ( struct window_d *window, 
+                    int msg, 
+                    unsigned long long1, 
+                    unsigned long long2 );
+ 
 
 
 
 
-unsigned long 
-gwm_procedure ( struct window_d *window, 
-                int msg, 
-				unsigned long long1, 
-				unsigned long long2 )
+//testando tiling
+void tiling (void)
 {
+	int n;
+    int i;
+    int j;
+    int status;
+    
+    
+    struct window_d *__window;
+    	
+    unsigned long left = 0;
+    unsigned long top = 0;
+    unsigned long width;
+    unsigned long height;
 
-    //switch()
+    unsigned long deviceWidth = apiGetSystemMetrics (1); 
+    unsigned long deviceHeight = apiGetSystemMetrics (2);
+
+     
+     j=0; //não temos janela;
+     
+     printf ("tiling: for ...\n");
+
+     // sonda por várias janelas pra saber se ela é overlaped ou não;
+     for (i=0; i<64; i++)
+     {
+		 //veja se essa é overlapped.
+		 status = (int) gramado_system_call (400,i,i,i);
+		 
+		 //sim essa é overlapped
+		if (status == 1)
+		{
+			//salva o ponteiro pra janela.
+		    windowList[j] = (unsigned long) gramado_system_call (401,i,i,i);  
+		    j++; //temos uma janela
+		    
+		    //não podemos ter mais que 4.
+		    if (j >= 4)
+		        goto __ok;
+		}
+     };
+
+    // se não temos janela.
+    if (j <= 0)
+    {
+		printf ("tiling: no windows!\n");
+		exit(1);
+    }
+
+
+
+__ok:
+
+
+    printf ("tiling: j=%d \n",j);
+
+	// se só temos uma janela.
+	if (j == 1)
+	{
+		left = 60;
+		top =  60; //altura da barra
+		width  = (deviceWidth/2);
+		height = (deviceHeight/2); //menos a altura barra. 
+	}
+
+    //calculando a altura das janelas.
+	if (j > 1)
+	{
+		width  = (deviceWidth) / j;
+		height = (deviceHeight - 50) / j;
+	}
+	
+
+    for (i=0; i<4; i++)
+    {
+		__window = (struct window_d *) windowList[i];
 		
-	return 0;
+		if (j > 1)
+		    left = width*i;
+
+		if ( (void *) __window != NULL )
+		{
+			//printf ("%d %d %d %d\n", left, top, width, height); //debug
+			//exit(1);
+			gde_replace_window (__window, left, top );
+		    gde_resize_window (__window, width, height );
+		    gde_redraw_window  (__window, 1 );
+        }
+    };
+    
+    
+   //if (j==1)
+       //printf ("j=%d %d %d %d %d\n",j, left, top, width, height);
+   
+   printf ("tiling: done\n");
+   refresh_screen();
 }
 
 
+/*
+ * *********************************
+ * launcherProcedure:
+ *     Procedimento de janela.
+ */
 
-// main:
+int 
+launcherProcedure ( struct window_d *window, 
+                    int msg, 
+                    unsigned long long1, 
+                    unsigned long long2 )
+{
+    switch (msg)
+    {
+
+		case MSG_SYSKEYDOWN:
+		    switch (long1)
+			{  
+				case VK_F1:
+						
+					break;
+					
+				case VK_F2:
+ 
+					break;
+					
+				case VK_F3:
+ 
+					break;
+					
+				//...
+				
+                //full screen
+                //colocar em full screen somente a área de cliente. 
+		        case VK_F11:
+				    
+					break;
+					
+				//...
+
+			};
+			break;
+		
+		// MSG_MOUSEKEYDOWN
+		case 30:
+		    switch (long1)
+			{
+				//botão 1.
+                case 1:
+                    if ( window == launcher_button_1 )
+                    {
+                        gramado_system_call ( 9900,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+                            break;
+                    }
+
+                    if ( window == launcher_button_2 )
+                    {
+                        gramado_system_call ( 9900,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+                            break;
+                    }
+
+                    if ( window == reboot_button )
+                    {
+                        apiReboot ();
+                        break;
+                    }
+
+                    if ( window == gWindow )
+                    {
+						printf("grid window\n");
+                    }
+
+				    if ( window == mWindow )
+					{
+						printf("menu window\n");
+					}
+
+					//se
+					if ( window == main_window )
+					{
+						//raise window.
+	                     system_call ( 9700, 
+	                         (unsigned long) window, 
+		                     (unsigned long) window, 
+		                     (unsigned long) window );
+		                 break;
+					}
+
+					break;
+			};
+			break;
+
+        //mouse key up
+        case 31:
+            switch (long1)
+            {
+                case 1:
+                    if ( window == launcher_button_1 )
+                    {
+                        gramado_system_call ( 9901,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+                        //execve ( (const char *) "noraterm.bin", 
+                           //(const char *) 0, (const char *) 0 ); 
+                        tiling();
+                        break;
+                    }
+                    if ( window == launcher_button_2 )
+                    {
+                        gramado_system_call ( 9901,   
+                            (unsigned long) window, 
+                            (unsigned long) window, 
+                            (unsigned long) window );
+                        //execve ( (const char *) "gramcode.bin",
+                            //(const char *) 0, (const char *) 0 );
+                        execve ( (const char *) "reboot2.bin",
+                            (const char *) 0, (const char *) 0 );
+                            break;
+                    }
+                    break;
+            };
+            break;
+            
+			
+		case MSG_SETFOCUS:
+		    gde_redraw_window (main_window, 1);
+		    gde_redraw_window (launcher_button_1, 1);
+		    gde_redraw_window (launcher_button_2, 1);
+		    break;
+		
+		case MSG_KILLFOCUS:
+		    MessageBox (3, "launcher","MSG_KILLFOCUS");
+		    break;
+
+
+        default:
+            break;
+    };
+
+
+    //return 0;
+
+    return (int) gde_system_procedure (window,msg,long1,long2);
+}
+
+
+/*
+ ********************************************
+ * main:
+ */
 
 int main ( int argc, char *argv[] ){
 
+    struct window_d *hWindow;
+
+    FILE *fp;
+
+    int ch;
+    int char_count = 0;
+
+    //#bugbug
+    //Ele falha se a largura for pouco.
+
+    //unsigned long left = 600;
+    //unsigned long top = 100;
+    //unsigned long width = 320;
+    //unsigned long height = 480;
+    
+    unsigned long left;
+    unsigned long top;
+    unsigned long width;
+    unsigned long height;
+
+    unsigned long deviceWidth = apiGetSystemMetrics (1); 
+    unsigned long deviceHeight = apiGetSystemMetrics (2);
+
+	unsigned long font_width  = apiGetSystemMetrics (7);	
+	unsigned long font_height = apiGetSystemMetrics (8);	
+
+
+    int __wm_pid = -1;
+        
+    
+     //hello
+    apiSetCursor (0,0);
+    printf ("gwm:\n");
+
+    root = (struct window_d *) gde_get_screen_window ();
+
+    //fail
+    //gde_redraw_window (root,1);
+   
+    // 514 - get wm PID
+    __wm_pid = (int) gramado_system_call (514,0,0,0);
+    
+    if (__wm_pid < 0)
+    {
+        printf ("Fail. Another wm is already running!\n");
+        //while(1){}
+        exit(1);
+     }   
+    
+    __wm_pid = (int) getpid();
+    
+    // 515 - set wm PID
+    gramado_system_call (515,__wm_pid,__wm_pid,__wm_pid);
+    
+    //
+    // Bar
+    //
+
+    
+    //left = deviceWidth/2;
+    //top = deviceHeight/3;
+    //top = 10;    
+    //width = 320;
+    //height = 480;
+    
+    left = top = 0;
+    width = deviceWidth;
+    //height = font_height + 4;
+    //height = font_height *3;
+    height = 50;
+    
+
+
+//#ifdef TEDITOR_VERBOSE
+	//printf("\n");
+	//printf("Initializing File explorer:\n");
+	//printf("mainTextEditor: # argv={%s} # \n", &argv[0] );
+//#endif
+
 	//
-	// args;
-	// 
+	// ## vamos repetir o que dá certo ...
+	//
+
+	//vamos passar mais coisas via registrador.
+
+	//ok
+	//foi passado ao crt0 via registrador
+	//printf("argc={%d}\n", argc ); 
 	
-	// Se não há argumentos.
-	if (argc < 1)
+	//foi passado ao crt0 via memória compartilhada.
+	//printf("argvAddress={%x}\n", &argv[0] ); //endereço.
+	
+	
+	//unsigned char* buf = (unsigned char*) (0x401000 - 0x100) ;
+	//printf("argvString={%s}\n" ,  &argv[0] );
+	//printf("argvString={%s}\n" , &buf[0] );
+	
+	//printf("argv={%s}\n", &argv[2] );
+
+	//
+	// ## app window ##
+	//
+
+	//green crocodile = 0x44541C 
+	//orange royal = 0xF9812A
+	//window = 0xF5DEB3
+	//client window = 0x2d89ef 
+	//...
+
+    //++
+    apiBeginPaint (); 
+    //hWindow = (void *) APICreateWindow (  WT_OVERLAPPED, 1, 1, 
+    hWindow = (void *) APICreateWindow (  WT_SIMPLE, 1, 1, 
+                           "App Launcher",
+                           left, top, width, height,    
+                           0, 0, 0x44541C, 0xF9812A ); //0, 0, 0xF5DEB3, 0x2d89ef );  
+
+    if ( (void *) hWindow == NULL )
+    {
+		printf ("launcher: hWindow fail\n");
+		apiEndPaint ();
+
+		goto fail;
+    }else{
+
+		//Registrar e mostrar.
+        APIRegisterWindow (hWindow);
+	    apiShowWindow (hWindow);
+        
+        
+        //#test
+        //global, pra acessar via procedimento de janela.
+        main_window = ( struct window_d *) hWindow;
+    };
+    apiEndPaint ();
+    //--
+
+
+	//printf("Nothing for now! \n");
+    //goto done;
+
+	//apiBeginPaint();    
+	//topbarInitializeTopBar();
+	//statusInitializeStatusBar();
+	//update_statuts_bar("# Status bar string 1","# Status bar string 2");
+	//apiEndPaint();
+	
+	//
+	//  ## Testing file support. ##
+	//
+	
+	//++
+	/*
+	void *b = (void *) malloc (1024*30); 	 
+    
+	if ( (void *) b == NULL )
 	{
-		//printf("No args !\n");
-		//#Test.
-        //fprintf( stderr,"Starting Shell with no arguments...\n");	 	
-		//die ("No args");
+		printf ("gfe: allocation fail\n");
 		
-		//goto noArgs; 
-		
+		goto fail;
 	}else{
 		
-		//argv[0] = Tipo de shell: interativo ou não
-		//argv[1] = Tipo de uso: login ... outros ?? 
+        // @todo: 
+	    // Usar alguma rotina da API específica para carregar arquivo.
+	    // na verdade tem que fazer essas rotinas na API.
+	
+	    system_call ( SYSTEMCALL_READ_FILE, (unsigned long) "BMP1    BMP", 
+		    (unsigned long) b, (unsigned long) b );	
+		    
+		apiDisplayBMP ( (char *) b, 200, 200 ); 
 		
-		//printf("Testing args ...\n");
-		
-		//#todo: (possibilidades)
-		//As flags poderia começar com f. Ex: fInteractive, fLoginShell,
-		
-	    if ( strncmp ( (char *) argv[0], "-interactive", 12 ) == 0 ){
-			
-			//interactive = 1;
-            
-            //printf("Initializing an interactive shell ...\n");
-            //printf("arg[0]={%s}\n",argv[0]);			
-        };
-
-        //Se o shell foi iniciado com um arquivo de script para ser 
-        //executado.
-		//a Flag -f indica que o que segue é um arquivo de script.
-        //if( strncmp( (char *) argv[0], "-f", 2 ) == 0 )
-        //{
-		//	goto dosh2;
-		//}			
-		
-	    if ( strncmp ( (char *) argv[1], "-login", 6 ) == 0 ){
-			
-			//login_shell = 1;
-			
-			//printf("Initializing login ...\n");
-            //printf("arg[1]={%s}\n",argv[1]);    
-        };	
-		
-		//Nome passado viar argumento.
-		//shell_name = (char*) argv[2];
-
-        //...		
+		//não sei se é necessário.
+		refresh_screen ();		
 	};
+	 */
+    //--
+
 	
+
 	
-	
+	//
+    // ## testes ##
     //
-	// **** Mensagens  ****
+ 
+
+	
+	//
+	// Grid.
 	//
 	
-	//printf("Tentando pegar mensagem enviada para o procedimento de janela.");
-	//refresh_screen();
-	
-	//isso é um teste pegar um valor por vez não é a melhor opção.
-	
-	//struct window_d *msg_Window;
-	int msg_Message;
-	void *msg_Long1;
-	void *msg_Long2;
-	
-	//struct shell_message_d *msg;
-	
+	/*
+	//++
+	apiBeginPaint (); 
+	gWindow = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "GRID-WINDOW",
+	                       (1024-150), 10, 100, 320,    
+                           hWindow, 0, 0x303030, 0x303030 );	  
+	if ( (void *) gWindow == NULL )
+	{	
+		printf ("gfe: gWindow fail");
+		apiEndPaint ();
 
-	// Get Message: 
-	// Systemcall get message
-	// Enviamos um ponteiro de estrutura de janela para que o Kernel possa 
-	// pegar a mensagem que esta dentro da estrutura. Essa estrtura fica 
-	// protegida no Kernel.
+		goto fail;
+	}else{
 		
-	// #bugbug: ??
-	// Na verdade essa rotina está pegando a mensagem na janela 
-	// com o foco de entrada. Esse argumento foi passado mas não foi usado.
+        APIRegisterWindow (gWindow);		
 		
-	unsigned long message_buffer[5];	
+		// #bugbug
+		// problemas na largura dos ítens quando pintamos no modo vertical;
+		// ver a rotina no kgws,
 		
-Mainloop:
-    
-	/* Nesse teste vamos enviar um ponteiro de array, pegarmos os quatro 
-	   elementos da mensagem e depois zerar o buffer */
+	    //#obs: Acho que isso cria grid.
+	    int s = (int) system_call ( 148, (unsigned long) gWindow, 
+	                      4, (unsigned long) GRID_VERTICAL );
+	                      //4, (unsigned long) GRID_HORIZONTAL );		
 	
-	while (_running)
+        if (s == 1)	
+        {
+		    printf ("gfe: 148 fail.\n");
+	        apiEndPaint ();
+	        
+	        goto fail;
+	    }
+	    
+	    apiShowWindow (gWindow);
+	};
+	apiEndPaint ();
+	//--
+	*/
+	
+	
+	//
+	// Menu.
+	//
+	
+	/*
+	//++
+	apiBeginPaint (); 
+	mWindow = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "MENU-WINDOW",
+	                       (1024-350), 400, 320, 200,
+	                       hWindow, 0, COLOR_PINK, COLOR_PINK );	    
+                           //hWindow, 0, 0x303030, 0x303030 );	  
+
+	if ( (void *) mWindow == NULL )
+	{	
+		printf ("gfe: mWindow fail");
+		apiEndPaint ();
+		
+		goto fail;
+	}else{
+		
+        APIRegisterWindow (mWindow);		
+
+	    // #obs: Acho que isso cria menu.
+	    // Criaremos o menu de acordo com a janela mãe
+	    // mas usaremos apenas o posicionamento da janela mãe. left top
+	    // ou o ponteiro do mouse, quando clicarmos com o botão direito.
+	    
+        system_call ( 149, (unsigned long) mWindow, 
+            (unsigned long) mWindow, (unsigned long) mWindow );
+            
+    	apiShowWindow (mWindow);            
+	};
+	apiEndPaint ();
+    //--	
+	*/
+	
+	
+	//
+	// ## Mostrando bmps dentro da área de cliente ##
+	//
+	
+	// #todo:
+	// Ainda em planejamento.
+	 	
+	//struct window *tmpWindow;
+	//struct window *icon1;
+	//struct window *icon2;
+	//struct window *icon3;
+	//struct window *icon4;
+	//...
+	
+	/*
+	int i;
+	for ( i=0; i<15; i++ )
 	{
-		//#obs: O retorno será 1 se tiver mensagem e 0 se não tiver.
-		enterCriticalSection(); 
-		system_call ( 111,
+		// #isso é um teste.
+		// Criando janelas para os ícones, mas deveria 
+		// criar grid ou menu.
+		// #bugbug: Não temos acesso aos elementos da estrutura 
+		// da janela, pois estão em ring0.
+	    
+        apiBeginPaint(); 
+	    tmpWindow = (void*) APICreateWindow( WT_SIMPLE, 1, 1,"ICON-WINDOW",
+	                    20, 1+20+(i*24), 
+						800-40, 24,    
+                        0, 0, COLOR_BLUE, COLOR_BLUE );	  
+
+	    if((void*) tmpWindow == NULL)
+	    {	
+		    printf("WINDOW-FAIL");
+		    apiEndPaint();
+		    goto fail;
+	    }
+        apiEndPaint();		
+		
+		
+		
+	    //Usando a API para exibir o bmp carregado. 
+	    //ACHO QUE ISSO SOMENTE PINTA NO BACKBUFFER
+	    apiDisplayBMP ( (char *) b, 40, 1 + 60 + (i*24) ); 
+    };
+    */
+    
+    
+    
+	 //
+	 // Novo menu.
+	 //
+	 
+	 // #obs: Acho que isso cria menu.
+	 // Criaremos o menu de acordo com a janela mãe
+	 // mas usaremos apenas o posicionamento da janela mãe. left top
+	 // ou o ponteiro do mouse, quando clicarmos com o botão direito.
+	    
+     //system_call ( 149, (unsigned long) hWindow, 
+     //    (unsigned long) hWindow, (unsigned long) hWindow );    
+	
+			
+	//
+	// ## Refresh Window ##
+	//
+	
+	// #bugbug
+	// Talvez não precisemos disso.
+	//refresh_screen ();
+
+
+
+
+	//++
+    enterCriticalSection (); 
+	launcher_button_1 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " Tag1",  
+                                     ((width/8) *0), 2, 
+                                      (width/8), height -4,    
+                                     hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
+
+    if ( (void *) launcher_button_1 == NULL )
+    {
+		printf ("Couldn't create button\n");
+		return 1;
+    }else{
+        APIRegisterWindow (launcher_button_1);
+        apiShowWindow (launcher_button_1);
+        refresh_screen ();
+    };
+    exitCriticalSection (); 
+	//--
+
+
+
+	//++
+    enterCriticalSection (); 
+	launcher_button_2 = (void *) APICreateWindow ( WT_BUTTON, 1, 1, " Tag2 ", 
+                                     ((width/8) *1), 2, 
+                                     (width/8), height -4,   
+                                     hWindow, 0, xCOLOR_GRAY3, xCOLOR_GRAY3 );
+	
+	if ( (void *) launcher_button_2 == NULL )
+	{
+		printf ("Couldn't create button\n");
+		return 1;
+	}else{
+
+        APIRegisterWindow (launcher_button_2);
+        apiShowWindow (launcher_button_2);
+        refresh_screen ();
+	};
+    exitCriticalSection (); 
+	//--
+
+
+
+
+	//
+	//  ## Loop ##
+	//
+
+
+    unsigned long message_buffer[5];
+
+Mainloop:
+
+    while (running)
+    {
+        enterCriticalSection (); 
+        system_call ( 111,
 		    (unsigned long) &message_buffer[0],
 			(unsigned long) &message_buffer[0],
 			(unsigned long) &message_buffer[0] );
-		exitCriticalSection(); 
+		exitCriticalSection (); 
 			
 		if ( message_buffer[1] != 0 )
-        {
-            //printf(".");			
-		}	
-		
-		if ( message_buffer[1] != 0 )
 		{
-	        gwm_procedure ( (struct window_d *) message_buffer[0], 
+	        launcherProcedure ( (struct window_d *) message_buffer[0], 
 		        (int) message_buffer[1], 
 		        (unsigned long) message_buffer[2], 
 		        (unsigned long) message_buffer[3] );
-			
-			message_buffer[0] = 0;
+
+            message_buffer[0] = 0;
             message_buffer[1] = 0;
             message_buffer[3] = 0;
-            message_buffer[4] = 0;	
-        };				
-	};	
-		
+            message_buffer[4] = 0;
+        };
+    };
+
+
+
+fail:
+    printf ("fail.\n");
+
+
+done:
+    
+	//running = 0;
+
     return 0;
 }
+
+
 
 
