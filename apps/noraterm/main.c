@@ -4927,26 +4927,32 @@ void terminalTerminal (){
 // Essa rotina contém coisas de terminal e de shell
 // precisa organizar isso.
 
+	// #bugbug ??
+	// O ponteiro do argumento pode ser inválido, pois 
+	// é uma variável local.
+	// Agora é global.
+
 int terminalInit ( struct window_d *window ){
-	
-	//#bugbug 
-	//o ponteiro do argumento pode ser inválido, pois 
-	//é uma variáveç local.
-	
-	int PID;
-	int PPID;
-	int ActiveWindowId = 0;
-	int WindowWithFocusId = 0;
-	void *P;
-	//int CurrentVolumeID = 0;
-		
-	char buffer[512];
-	
-	
-	PID = getpid ();
-	
+
+    int PID;
+    int PPID;
+
+    int ActiveWindowId = 0;
+    int WindowWithFocusId = 0;
+
+    // ?
+    void *P;
+
+
+    char buffer[512];
+
+
+
 	// Registrar o terminal na estrutura de tty.
-	system_call ( 1003, PID, PID, PID );
+    
+    PID = getpid ();
+    system_call ( 1003, PID, PID, PID );
+
 
 
 	// #bugbug:
@@ -4957,49 +4963,6 @@ int terminalInit ( struct window_d *window ){
 	//stream status
 	shell_info.stream_status = 0;
 	
-		
-	//
-	// ## buffer support ##
-	//
-	
-	
-    /* 
-	Line buffer output for stderr. 
-    If your machine doesn't have either of setlinebuf or setvbuf,
-    you can just comment out the buffering commands, and the shell
-    will still work.  It will take more cycles, though. 
-	*/
-	
-/*++ HAVE_SETLINEBUF */	
-/*
-#if defined (HAVE_SETLINEBUF)
-    setlinebuf(stderr);
-    setlinebuf(stdout);
-#else
-# if defined (_IOLBF)
-    setvbuf( stderr, (char *) NULL, _IOLBF, BUFSIZ );
-    setvbuf( stdout, (char *) NULL, _IOLBF, BUFSIZ );
-# endif
-#endif
-*/ 
-/*-- HAVE_SETLINEBUF */
-	
-	
-	// Antes dessa função ser chamada, o foco foi setado 
-	// na janela do aplicativo.
-	// Test: Não mechemos no cursor nesse momento, deicharemos 
-	// a função SetFocus configurar o curso.
-	// Não mostraremos o prompt, somente depois dos testes de inicialização.
-	
-    //bugbug	
-	//cursor
-	//terminalSetCursor(0,4);
-	
-	//pointer
-	//shellPrompt();
-    
-	// message.
-    //printf("shellInit: Running tests ...\n");	
 
 
 	//
@@ -5012,7 +4975,9 @@ int terminalInit ( struct window_d *window ){
 	
 	if ( (void *) window == NULL )
 	{
-	    printf("shellInit: window fail.\n"); 
+	    printf ("shellInit: window fail.\n"); 
+	    
+	    //# hang??
 		
 	} else {
 		
@@ -6708,8 +6673,13 @@ int main ( int argc, char *argv[] ){
 	//char *s;    //String	
 	
 	
+	//
+	// Debug
+	//
 	
-	// #debug
+	// Serial debug.
+	gde_debug_print ("noraterm: Initializing ...\n");
+	
 	
 	//printf ("SHELL.BIN is alive");
 	//while (1){ asm ("pause"); }
@@ -6932,21 +6902,24 @@ noArgs:
 	
    mainwindow_used = 1;
 
-	//++
-	//termui.c
-	enterCriticalSection ();    
+
+
+    //++
+    //termui.c
+    enterCriticalSection ();    
     hWindow = (struct window_d *) terminalCreateMainWindow (1);
-	exitCriticalSection ();
-	    //--
+    //if ( (void *) hWindow == NULL )
+    //{}
+    // Setup a global pointer for main window.
+    main_window = hWindow;
+    shell_info.main_window = ( struct window_d * ) hWindow;	
+    exitCriticalSection ();
+    //--
 
-	//if ( (void *) hWindow == NULL )
-	//{}
-	
-	// Setup a global pointer for main window.
-	main_window = hWindow;
-	shell_info.main_window = ( struct window_d * ) hWindow;	
 
-	
+
+
+
 	// #test 
 	// Criando um timer.
 	// janela, 100 ms, tipo 2= intermitente.
@@ -6988,10 +6961,28 @@ noArgs:
     // Client window.
     //
 
-    terminal_rect.left  = 4;
-    terminal_rect.top   = 1 +50;  //1 +40;
-    terminal_rect.width  = __bgwidth  -40;  //wsWindowWidth -40 -10;
-    terminal_rect.height = __bgheight -50;  //wsWindowHeight -40 -40 -40 -10;
+    //#todo
+    // Essa estrutura não deve guardar um posicionamento relativo
+    // Pois ela será usada para redraw.
+
+    //relativo: usado para desenhar agora em relação
+    //a sua janela mãe.
+    //unsigned long __terminal_left  = 4;
+    //unsigned long __terminal_top   = 1 +50; 
+    //unsigned long __terminal_width  = __bgwidth  -40; 
+    //unsigned long __terminal_height = __bgheight -50;  
+
+    unsigned long __terminal_left  = 1;
+    unsigned long __terminal_top   = __barheight +1; 
+    unsigned long __terminal_width  = __bgwidth  -1 -1; 
+    unsigned long __terminal_height = __bgheight -__barheight -1 -1;  
+
+
+    //aboluto: usado para redraw
+    terminal_rect.left  = wpWindowLeft + __terminal_left;
+    terminal_rect.top   = wpWindowTop + __terminal_top; 
+    terminal_rect.width  = __terminal_width; 
+    terminal_rect.height = __terminal_height;  
     
     // #importante
     // Reajustando o limite de caracteres por linha.
@@ -7019,7 +7010,6 @@ noArgs:
     }else{
         APIRegisterWindow (client_bg);
         apiShowWindow (client_bg );
-        
         client_background_window = client_bg;
     };
     //--
@@ -7039,11 +7029,12 @@ noArgs:
 	//++
     //apiBeginPaint ();
     hWindow2 = (void *) APICreateWindow ( WT_SIMPLE, 1, 1, "NORATERM-CLIENT-window",
-                            terminal_rect.left, terminal_rect.top, 
-                            terminal_rect.width, terminal_rect.height,
+                            __terminal_left, 
+                            __terminal_top, 
+                            __terminal_width, 
+                            __terminal_height,
                             client_bg, 0, COLOR_TERMINAL2, COLOR_TERMINAL2 );
-                            //client_bg, 0, COLOR_BLUE, COLOR_BLUE );
-    
+ 
     if ( (void *) hWindow2 == NULL )
     {
         die ("NORATERM: hWindow2 \n");
@@ -7060,8 +7051,16 @@ noArgs:
         // Salvamos para uso nesse documento.
         client_window = hWindow2;
 
+
+        //
+        // Terminal window.
+        //
+
         // Salva ponteiro da janela do terminal.
-        // Poderemos usar em outros documentos.  
+        // Essa é a janela da área de cliente.
+        // Ela que será repintada para apagar o texto.
+        // Poderemos usar em outros documentos. 
+        
         shell_info.terminal_window = ( struct window_d * ) hWindow2;
 
 
@@ -7269,10 +7268,14 @@ do_run_internal_shell:
 	// Set cursor.
 	// Enable cursor.	
 	
-	terminalSetCursor ( (terminal_rect.left / 8) , ( terminal_rect.top/8) );
+	terminalSetCursor ( ( terminal_rect.left / 8 ), 
+	    ( terminal_rect.top / 8 ) );
 	
-	system_call ( 244, (unsigned long) 0, (unsigned long) 0, (unsigned long) 0 );
-		
+	system_call ( 244, 
+	    (unsigned long) 0, 
+	    (unsigned long) 0, 
+	    (unsigned long) 0 );
+
 	//===========================
 	
 

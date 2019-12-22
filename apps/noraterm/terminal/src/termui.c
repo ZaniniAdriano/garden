@@ -500,20 +500,22 @@ void terminalCreateEditBox (){
 
 /*
  ******************** 
- * Create main window;
+ * terminalCreateMainWindow:
+ *     Create main window;
  */
  
 struct window_d *terminalCreateMainWindow ( int status ){
 
 
-	struct window_d *w;
-	
-	unsigned long left;
-	unsigned long top;
-	unsigned long width;
-	unsigned long height;
+    struct window_d *w;
 
-	
+    unsigned long left;
+    unsigned long top;
+    unsigned long width;
+    unsigned long height;
+
+
+
 	// Tamanho da tela.	
 	//unsigned long ScreenWidth = apiGetSystemMetrics(1);
     //unsigned long ScreenHeight = apiGetSystemMetrics(2); 
@@ -522,19 +524,17 @@ struct window_d *terminalCreateMainWindow ( int status ){
 	
     // #imporante
 	// Essas sao as dimensões da janela principal.
+
+
+	//wpWindowLeft = DEFAULT_WINDOW_X;  //0;
+	//wpWindowTop =  DEFAULT_WINDOW_Y;  //0;
+	wpWindowLeft = 20;  //0;
+	wpWindowTop =  40;  //0;
 	
-	//wpWindowLeft = 40;     //0;
-	//wpWindowTop =  40;     //0;
-	//wsWindowWidth = 640;   //1024;
-	//wsWindowHeight = 480;  //600; //768;
-
-	wpWindowLeft = DEFAULT_WINDOW_X;  //0;
-	wpWindowTop =  DEFAULT_WINDOW_Y;  //0;
-	wsWindowWidth  = (__wlMaxColumns*8) +100;  //640;  
-	wsWindowHeight = (__wlMaxRows*8)    +300;     //480;  
+	wsWindowWidth  = (__wlMaxColumns*8) +100;    //640;  
+	wsWindowHeight = (__wlMaxRows*8)    +300;    //480;  
 
 
-	
 	left = wpWindowLeft;
 	top = wpWindowTop;
 	width = wsWindowWidth;

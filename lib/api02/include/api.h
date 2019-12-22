@@ -3778,6 +3778,11 @@ int gde_getthreadname (int tid, char *name, size_t len);
 unsigned long apiGetProcessStats (int pid, int index);
 unsigned long apiGetThreadStats (int tid, int index);
 
+
+// Envia uma string para a porta serial COM1
+void gde_debug_print (char *string);
+
+
 //
 // Aliases
 //

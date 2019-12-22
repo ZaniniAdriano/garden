@@ -7574,7 +7574,19 @@ int main ( int argc, char *argv[] ){
 //#ifdef JOB_CONTROL
   //extern int job_control;
 //#endif
+
+
 	
+	//
+	// Debug
+	//
+	
+	// Serial debug.
+	gde_debug_print ("gdeshell: Initializing ...\n");
+	
+
+
+
 	
 	//
 	// File stuff

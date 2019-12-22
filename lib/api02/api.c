@@ -3601,6 +3601,16 @@ unsigned long apiGetThreadStats (int tid, int index){
 
 
 
+// Envia uma string para a porta serial COM1
+void gde_debug_print (char *string)
+{
+    gramado_system_call ( 289, 
+        (unsigned long) string,
+        (unsigned long) string,
+        (unsigned long) string );
+}
+
+
 
 
 

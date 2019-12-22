@@ -517,7 +517,6 @@ void terminalSetCursor ( unsigned long x, unsigned long y ){
     g_cursor_x = (unsigned long) x;
     g_cursor_y = (unsigned long) y;
 
-
 	// Atualiza os ponteiros para o buffer de texto. (estrutura) 
 	move_to ( x, y);
 	
@@ -530,11 +529,10 @@ void terminalSetCursor ( unsigned long x, unsigned long y ){
 	// considerando a janela do terminal.
 	
 	unsigned long __x, __y;
-	
-   // Funcionou.
-	__x = ( ( (wpWindowLeft + terminal_rect.left + __barleft   )/8 ) + x ); 
-	__y = ( ( (wpWindowTop  + terminal_rect.top  + __barheight )/8 ) + y );
-	
+
+	__x = ( ( terminal_rect.left /8 ) + x ); 
+	__y = ( ( terminal_rect.top  /8 ) + y );
+
 	apiSetCursor (__x,__y);
 }
 
