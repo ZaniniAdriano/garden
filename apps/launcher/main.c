@@ -147,6 +147,12 @@ launcherProcedure ( struct window_d *window,
             switch (long1)
             {
                 case 1:
+					if (window == main_window)
+					{
+						gde_set_focus (window);
+					    gde_redraw_window (window,1);
+					}
+                                     
                     if ( window == launcher_button_1 )
                     {
                         gramado_system_call ( 9901,   

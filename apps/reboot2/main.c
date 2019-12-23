@@ -203,6 +203,7 @@ reboot2Procedure ( struct window_d *window,
 					if (window == main_window)
 					{
 						gde_set_focus (window);
+					    gde_redraw_window (window,1);
 					}
 				    if ( window == reboot_button )
 				    {
@@ -210,11 +211,12 @@ reboot2Procedure ( struct window_d *window,
                             (unsigned long) window, 
                             (unsigned long) window, 
                             (unsigned long) window );
-						//apiReboot ();
+						apiReboot ();
 						
-						gde_replace_window (main_window, 60, 60);
-						gde_resize_window (main_window, 350, 350);
-						gde_redraw_window (main_window,1);
+						//gde_replace_window (main_window, 70, 70);
+						//gde_resize_window (main_window, 200,200);
+						//gde_set_focus (main_window);
+						//gde_redraw_window (main_window,1);
 					}
 				    break;
 			};
@@ -363,6 +365,7 @@ int main ( int argc, char *argv[] ){
         printf ("Reboot2: hWindow fail");
         apiEndPaint ();
         goto fail;
+        
     }else{
 
 		//Registrar e mostrar.
@@ -599,7 +602,7 @@ int main ( int argc, char *argv[] ){
 
         APIRegisterWindow (reboot_button);
         apiShowWindow (reboot_button);
-        refresh_screen ();
+        refresh_screen (); //deletar
     };
     exitCriticalSection (); 
 	//--
@@ -628,7 +631,7 @@ int main ( int argc, char *argv[] ){
     }else{
         APIRegisterWindow (__icon1);
         apiShowWindow (__icon1);
-        refresh_screen ();
+        refresh_screen ();  //deletar
     };
     exitCriticalSection (); 
 	//--
