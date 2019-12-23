@@ -442,8 +442,11 @@ int main ( int argc, char *argv[] ){
 
     //++
     apiBeginPaint (); 
-    //hWindow = (void *) APICreateWindow (  WT_OVERLAPPED, 1, 1, 
-    hWindow = (void *) APICreateWindow (  WT_SIMPLE, 1, 1, 
+    
+    // #bugbug
+    // Com simple os botões não funcionam, mas com overlapped eles funcionam
+    //hWindow = (void *) APICreateWindow (  WT_SIMPLE, 1, 1, 
+    hWindow = (void *) APICreateWindow (  WT_OVERLAPPED, 1, 1, 
                            "App Launcher",
                            left, top, width, height,    
                            0, 0, 0x44541C, 0xF9812A ); //0, 0, 0xF5DEB3, 0x2d89ef );  
