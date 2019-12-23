@@ -3605,6 +3605,16 @@ do_compare:
     }
 
 
+
+    if ( strncmp( prompt, "user-info", 9 ) == 0 )
+	{
+		// IN: service, user id.
+		// Mas mostraremos as informações so usuário atual.
+		gramado_system_call (156, 0,0,0);
+		goto exit_cmp;
+    }
+
+
 	// version
 	//?? isso pode ser um programa
     if ( strncmp( prompt, "version", 7 ) == 0 )
