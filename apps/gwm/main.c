@@ -460,6 +460,8 @@ int main ( int argc, char *argv[] ){
         APIRegisterWindow (hWindow);
 	    apiShowWindow (hWindow);
         
+        //para receber mensagens,
+        gde_set_focus (hWindow);
         
         //#test
         //global, pra acessar via procedimento de janela.
