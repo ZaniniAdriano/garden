@@ -210,7 +210,11 @@ reboot2Procedure ( struct window_d *window,
                             (unsigned long) window, 
                             (unsigned long) window, 
                             (unsigned long) window );
-						apiReboot ();
+						//apiReboot ();
+						
+						gde_replace_window (main_window, 60, 60);
+						gde_resize_window (main_window, 350, 350);
+						gde_redraw_window (main_window,1);
 					}
 				    break;
 			};

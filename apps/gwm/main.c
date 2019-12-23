@@ -128,15 +128,17 @@ __ok:
 	// se só temos uma janela.
 	if (j == 1)
 	{
-		left = 60;
-		top =  60; //altura da barra
-		width  = (deviceWidth/2);
-		height = (deviceHeight/2); //menos a altura barra. 
+		left = 100;
+		top =  100; //altura da barra
+		width  = (deviceWidth/3);
+		height = (deviceHeight/3); //menos a altura barra. 
 	}
 
     //calculando a altura das janelas.
 	if (j > 1)
 	{
+		left = 100;
+		top =  100; //altura da barra
 		width  = (deviceWidth) / j;
 		height = (deviceHeight - 50) / j;
 	}
@@ -153,6 +155,7 @@ __ok:
 		{
 			//printf ("%d %d %d %d\n", left, top, width, height); //debug
 			//exit(1);
+
 			gde_replace_window (__window, left, top );
 		    gde_resize_window (__window, width, height );
 		    gde_redraw_window  (__window, 1 );
